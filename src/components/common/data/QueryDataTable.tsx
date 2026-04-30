@@ -17,6 +17,7 @@ interface QueryDataTableProps<TData> {
   meta: PaginationMeta;
   query: string;
   onQueryChange: (nextValue: string) => void;
+  queryDebounceInMilliseconds?: number;
   loading: boolean;
   errorMessage?: string;
   onRetry?: () => void;
@@ -38,6 +39,7 @@ export const QueryDataTable = <TData,>({
   meta,
   query,
   onQueryChange,
+  queryDebounceInMilliseconds = 300,
   loading,
   errorMessage,
   onRetry,
@@ -62,7 +64,11 @@ export const QueryDataTable = <TData,>({
         spacing={spacingScale.xs}
         sx={{ alignItems: { xs: 'stretch', sm: 'center' }, justifyContent: 'space-between' }}
       >
-        <SearchBar value={query} onChange={onQueryChange} />
+        <SearchBar
+          value={query}
+          onChange={onQueryChange}
+          debounceInMilliseconds={queryDebounceInMilliseconds}
+        />
         {hasFilter ? (
           <Button
             variant="outlined"
@@ -75,7 +81,7 @@ export const QueryDataTable = <TData,>({
         ) : null}
       </Stack>
 
-      {loading ? <CircularLoader label="Carregando dados..." /> : null}
+      {loading ? <CircularLoader ariaLabel="Carregando dados" /> : null}
       {!loading && hasError ? <ErrorState message={errorMessage} onRetry={onRetry} /> : null}
       {!loading && !hasError && rows.length === 0 ? (
         <EmptyState title={emptyTitle} description={emptyDescription} />

@@ -1,4 +1,4 @@
-import { fireEvent, render } from '@testing-library/react';
+import { fireEvent, render, waitFor } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 import { QueryDataTable } from '../../components/common/data/QueryDataTable';
 import type { PaginationMeta } from '../../models/pagination';
@@ -18,7 +18,7 @@ const meta: PaginationMeta = {
 };
 
 describe('QueryDataTable', () => {
-  it('renders rows and search interaction', () => {
+  it('renders rows and search interaction', async () => {
     const handleQueryChange = vi.fn();
 
     const { getByText, getByPlaceholderText } = render(
@@ -34,6 +34,7 @@ describe('QueryDataTable', () => {
         ]}
         meta={meta}
         query=""
+        queryDebounceInMilliseconds={0}
         onQueryChange={handleQueryChange}
         loading={false}
         onPageChange={() => undefined}
@@ -43,6 +44,8 @@ describe('QueryDataTable', () => {
 
     expect(getByText('Nome')).toBeInTheDocument();
     fireEvent.change(getByPlaceholderText('Buscar...'), { target: { value: 'Al' } });
-    expect(handleQueryChange).toHaveBeenCalledWith('Al');
+    await waitFor(() => {
+      expect(handleQueryChange).toHaveBeenCalledWith('Al');
+    });
   });
 });
