@@ -11,6 +11,9 @@
 - Avoid magic strings and magic numbers in business/UI logic.
 - Avoid magic spacing in `sx`; use theme spacing tokens.
 - Shared components must provide theme-based defaults and controlled customization props.
+- Prefer color tokens from `src/theme/uiColors.ts` whenever possible.
+- If a new design requires a different color, add it to `src/theme/uiColors.ts` (do not hardcode in feature files).
+- Any new color token must include both light and dark mode values.
 
 ## Component Customization Policy (Mandatory)
 
@@ -18,6 +21,8 @@
 - Keep defaults driven by theme/tokens.
 - Allow contextual overrides via focused props (`sx`, labels, handlers, variants).
 - Do not create duplicate components for minor style changes.
+- Avoid over-componentization: do not create tiny wrapper/passthrough components when page-level composition is already clear.
+- Create a new component only when there is concrete reuse, shared complexity, or a clear boundary gain.
 
 ## No Magic Values Policy (Mandatory)
 

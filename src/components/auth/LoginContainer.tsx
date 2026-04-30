@@ -4,20 +4,25 @@ import { LoginForm } from '../auth/LoginForm';
 import type { LoginSchema } from '../../forms/validators';
 import { useAsync } from '../../hooks/useAsync/useAsync';
 import { useAuth } from '../../hooks/useAuth/useAuth';
+import { AUTH_DOMAIN } from '../../models/auth/auth';
 import { layoutSpacing } from '../../theme/spacing';
 
 export const LoginContainer = () => {
-  const { setToken } = useAuth();
+  const { completeAuthentication } = useAuth();
   const { loading, execute } = useAsync(async () => Promise.resolve('fake-token-in-memory'));
 
   const handleSubmit = useCallback(
     async (data: LoginSchema) => {
       const token = await execute();
       if (token !== null && data.email.length > 0) {
-        setToken(token);
+        completeAuthentication(AUTH_DOMAIN.PLATFORM, {
+          accessToken: token,
+          refreshToken: token,
+          sessionId: 'local-session',
+        });
       }
     },
-    [execute, setToken],
+    [completeAuthentication, execute],
   );
 
   return (

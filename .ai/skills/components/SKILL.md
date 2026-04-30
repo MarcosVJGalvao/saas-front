@@ -12,3 +12,4 @@ Guidelines:
 - Reuse first.
 - If extension is needed, evolve generic component instead of duplicating.
 - Keep accessibility labels and keyboard support.
+- Avoid wrapper-only components with no real reuse/abstraction value.

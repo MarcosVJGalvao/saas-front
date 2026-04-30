@@ -19,7 +19,7 @@ export const SnackbarError = ({ error, onClose }: SnackbarErrorProps) => (
     open={Boolean(error)}
     autoHideDuration={5000}
     onClose={onClose}
-    anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+    anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
   >
     <Alert onClose={onClose} severity="error" variant="filled" sx={{ width: '100%' }}>
       <Stack direction="column" spacing={0.5}>
