@@ -1,3 +1,4 @@
+import { useRef } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
@@ -10,17 +11,7 @@ export const TotpCodeBoxes = ({ name }: TotpCodeBoxesProps) => {
   const { control, setValue, watch } = useFormContext();
   const currentValue = String(watch(name) ?? '');
   const digits = Array.from({ length: 6 }, (_, index) => currentValue[index] ?? '');
-  const focusPreviousInput = (target: HTMLInputElement, index: number) => {
-    const maybeContainer = target.parentElement?.parentElement;
-    if (maybeContainer === null || maybeContainer === undefined) {
-      return;
-    }
-    const inputElements = Array.from(maybeContainer.querySelectorAll('input'));
-    const previousInput = inputElements[index - 1];
-    if (previousInput instanceof HTMLInputElement) {
-      previousInput.focus();
-    }
-  };
+  const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
 
   return (
     <Controller
@@ -38,13 +29,13 @@ export const TotpCodeBoxes = ({ name }: TotpCodeBoxesProps) => {
                 baseDigits[index] = nextDigit || ' ';
                 const nextValue = baseDigits.join('').replace(/\s/g, '');
                 setValue(name, nextValue, { shouldValidate: true, shouldDirty: true });
+                if (nextDigit) {
+                  inputRefs.current[index + 1]?.focus();
+                }
               }}
               onKeyDown={(event) => {
-                if (!(event.target instanceof HTMLInputElement)) {
-                  return;
-                }
                 if (event.key === 'Backspace' && digit.length === 0 && index > 0) {
-                  focusPreviousInput(event.target, index);
+                  inputRefs.current[index - 1]?.focus();
                 }
               }}
               onFocus={(event) => {
@@ -52,6 +43,9 @@ export const TotpCodeBoxes = ({ name }: TotpCodeBoxesProps) => {
               }}
               slotProps={{
                 htmlInput: {
+                  ref: (el: HTMLInputElement | null) => {
+                    inputRefs.current[index] = el;
+                  },
                   maxLength: 1,
                   inputMode: 'numeric',
                   style: { textAlign: 'center', fontSize: 28, fontWeight: 600, width: 42 },
