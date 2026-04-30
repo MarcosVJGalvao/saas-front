@@ -1,12 +1,15 @@
 import { createContext, useContext, useMemo, useState, type ReactNode } from 'react';
 import { AUTH_FLOW_STEP, type AuthDomain, type AuthFlowStep } from '../../models/auth/auth';
 import type { PlatformTotpSetupResponse } from '../../services/platform/auth/types';
-
-interface AuthSession {
-  accessToken: string;
-  refreshToken: string;
-  sessionId: string;
-}
+import {
+  clearClientSessionStorage,
+  clearPlatformSessionStorage,
+  readClientSession,
+  readPlatformSession,
+  writeClientSession,
+  writePlatformSession,
+} from '../../services/client/auth/sessionStorage';
+import type { AuthSession } from '../../services/client/auth/types';
 
 interface AuthContextValue {
   authDomain: AuthDomain | null;
@@ -17,17 +20,25 @@ interface AuthContextValue {
   startMfaChallenge: (domain: AuthDomain, challengeToken: string, requiresSetup: boolean) => void;
   setTotpSetup: (setup: PlatformTotpSetupResponse | null) => void;
   completeAuthentication: (domain: AuthDomain, session: AuthSession) => void;
+  updateClientSessionFromRefresh: (session: AuthSession) => void;
   clearAuth: () => void;
 }
 
 const AuthContext = createContext<AuthContextValue | undefined>(undefined);
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
-  const [authDomain, setAuthDomain] = useState<AuthDomain | null>(null);
-  const [flowStep, setFlowStep] = useState<AuthFlowStep>(AUTH_FLOW_STEP.IDLE);
+  const initialClientSession = readClientSession();
+  const initialPlatformSession = readPlatformSession();
+  const initialSession = initialClientSession ?? initialPlatformSession;
+  const initialDomain: AuthDomain | null =
+    initialClientSession !== null ? 'client' : initialPlatformSession !== null ? 'platform' : null;
+  const [authDomain, setAuthDomain] = useState<AuthDomain | null>(initialDomain);
+  const [flowStep, setFlowStep] = useState<AuthFlowStep>(
+    initialSession === null ? AUTH_FLOW_STEP.IDLE : AUTH_FLOW_STEP.AUTHENTICATED,
+  );
   const [challengeToken, setChallengeToken] = useState<string | null>(null);
   const [totpSetup, setTotpSetup] = useState<PlatformTotpSetupResponse | null>(null);
-  const [session, setSession] = useState<AuthSession | null>(null);
+  const [session, setSession] = useState<AuthSession | null>(initialSession);
 
   const value = useMemo<AuthContextValue>(
     () => ({
@@ -52,6 +63,19 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         setChallengeToken(null);
         setTotpSetup(null);
         setSession(nextSession);
+        if (domain === 'client') {
+          writeClientSession(nextSession);
+        } else {
+          writePlatformSession(nextSession);
+        }
+        setFlowStep(AUTH_FLOW_STEP.AUTHENTICATED);
+      },
+      updateClientSessionFromRefresh: (nextSession) => {
+        setAuthDomain('client');
+        setChallengeToken(null);
+        setTotpSetup(null);
+        setSession(nextSession);
+        writeClientSession(nextSession);
         setFlowStep(AUTH_FLOW_STEP.AUTHENTICATED);
       },
       clearAuth: () => {
@@ -59,6 +83,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         setChallengeToken(null);
         setTotpSetup(null);
         setSession(null);
+        clearClientSessionStorage();
+        clearPlatformSessionStorage();
         setFlowStep(AUTH_FLOW_STEP.IDLE);
       },
     }),

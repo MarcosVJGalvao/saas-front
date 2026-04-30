@@ -12,6 +12,8 @@ const PlatformMfaSetupPage = lazy(() => import('./pages/platform/auth/MfaSetupPa
 const PlatformDashboardPage = lazy(() => import('./pages/platform/dashboard/DashboardPage'));
 const PlatformHomePage = lazy(() => import('./pages/platform/home/HomePage'));
 const ClientLoginPage = lazy(() => import('./pages/client/auth/LoginPage'));
+const ClientForgotPasswordPage = lazy(() => import('./pages/client/auth/ForgotPasswordPage'));
+const ClientResetPasswordPage = lazy(() => import('./pages/client/auth/ResetPasswordPage'));
 const ClientDashboardPage = lazy(() => import('./pages/client/dashboard/DashboardPage'));
 
 const App = () => (
@@ -35,6 +37,8 @@ const App = () => (
       <Route path="/platform/mfa" element={<PlatformMfaPage />} />
       <Route path="/platform/mfa-setup" element={<PlatformMfaSetupPage />} />
       <Route path="/client/login" element={<ClientLoginPage />} />
+      <Route path="/client/forgot-password" element={<ClientForgotPasswordPage />} />
+      <Route path="/client/reset-password" element={<ClientResetPasswordPage />} />
 
       <Route element={<AppShell />}>
         <Route

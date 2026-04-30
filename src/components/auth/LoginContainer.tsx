@@ -18,6 +18,7 @@ export const LoginContainer = () => {
         completeAuthentication(AUTH_DOMAIN.PLATFORM, {
           accessToken: token,
           refreshToken: token,
+          expiresIn: '15m',
           sessionId: 'local-session',
         });
       }

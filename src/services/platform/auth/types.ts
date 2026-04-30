@@ -12,6 +12,7 @@ export interface PlatformTotpSetupResponse {
 export interface PlatformVerifyTotpResponse {
   accessToken: string;
   refreshToken: string;
+  expiresIn: string;
   sessionId: string;
 }
 
