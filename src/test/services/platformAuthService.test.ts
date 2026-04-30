@@ -14,7 +14,7 @@ describe('platformAuthService', () => {
 
     const response = await platformAuthService.login('admin@empresa.com', 'senha123');
 
-    expect(postSpy).toHaveBeenCalledWith('/platform/auth/login', {
+    expect(postSpy).toHaveBeenCalledWith('/api/platform/auth/login', {
       email: 'admin@empresa.com',
       password: 'senha123',
     });
