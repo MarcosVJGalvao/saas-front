@@ -21,7 +21,7 @@ export const LoginForm = memo(({ onSubmit, loading }: LoginFormProps) => {
       <Typography variant="h1" sx={{ fontSize: { xs: '1.5rem', sm: '1.75rem', md: '2rem' } }}>
         Acessar plataforma
       </Typography>
-      <Alert severity="info">Validação imediata com Zod + RHF.</Alert>
+      <Alert severity="info">Validacao imediata com Zod + RHF.</Alert>
       <FormTextField<LoginSchema> name="email" label="Email" type="email" />
       <FormTextField<LoginSchema> name="password" label="Senha" type="password" />
       <Button

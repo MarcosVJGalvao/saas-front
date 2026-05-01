@@ -15,6 +15,7 @@ interface QueryDataTableProps<TData> {
   rows: TData[];
   columns: DataTableColumn<TData>[];
   meta: PaginationMeta;
+  getRowId?: (row: TData, index: number) => string;
   query: string;
   onQueryChange: (nextValue: string) => void;
   queryDebounceInMilliseconds?: number;
@@ -37,6 +38,7 @@ export const QueryDataTable = <TData,>({
   rows,
   columns,
   meta,
+  getRowId,
   query,
   onQueryChange,
   queryDebounceInMilliseconds = 300,
@@ -91,6 +93,7 @@ export const QueryDataTable = <TData,>({
           rows={rows}
           columns={columns}
           meta={meta}
+          getRowId={getRowId}
           onPageChange={onPageChange}
           onRowsPerPageChange={onRowsPerPageChange}
         />

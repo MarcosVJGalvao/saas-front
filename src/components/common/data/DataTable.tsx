@@ -26,6 +26,7 @@ interface DataTableProps<TData> {
   columns: DataTableColumn<TData>[];
   meta: PaginationMeta;
   loading?: boolean;
+  getRowId?: (row: TData, index: number) => string;
   onPageChange: (nextPage: number) => void;
   onRowsPerPageChange: (nextLimit: number) => void;
 }
@@ -34,6 +35,7 @@ export const DataTable = <TData,>({
   rows,
   columns,
   meta,
+  getRowId,
   onPageChange,
   onRowsPerPageChange,
 }: DataTableProps<TData>) => {
@@ -44,7 +46,10 @@ export const DataTable = <TData,>({
     return (
       <>
         {rows.map((row, rowIndex) => (
-          <Paper key={rowIndex} sx={{ p: spacingScale.sm, mb: spacingScale.xs }}>
+          <Paper
+            key={getRowId ? getRowId(row, rowIndex) : String(rowIndex)}
+            sx={{ p: spacingScale.sm, mb: spacingScale.xs }}
+          >
             {columns.map((column) => (
               <Typography key={column.key} variant="body2" sx={{ mb: spacingScale.xxs }}>
                 <strong>{column.header}:</strong>{' '}
@@ -80,7 +85,7 @@ export const DataTable = <TData,>({
         </TableHead>
         <TableBody>
           {rows.map((row, rowIndex) => (
-            <TableRow key={rowIndex} hover>
+            <TableRow key={getRowId ? getRowId(row, rowIndex) : String(rowIndex)} hover>
               {columns.map((column) => (
                 <TableCell key={column.key} align={column.align ?? 'left'}>
                   {column.render(row)}
