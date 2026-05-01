@@ -1,6 +1,7 @@
 import type { ReactNode } from 'react';
 import { Navigate } from 'react-router-dom';
-import { AUTH_FLOW_STEP, type AuthDomain } from '../../../models/auth/auth';
+import type { AuthDomain } from '../../../models/auth/auth';
+import { isAuthenticatedForDomain } from '../../../models/auth/guards';
 import { useAuth } from '../../../hooks/useAuth/useAuth';
 
 interface DomainProtectedRouteProps {
@@ -15,8 +16,7 @@ export const DomainProtectedRoute = ({
   children,
 }: DomainProtectedRouteProps) => {
   const { session, authDomain, flowStep } = useAuth();
-  const isAuthenticatedForDomain =
-    session !== null && authDomain === domain && flowStep === AUTH_FLOW_STEP.AUTHENTICATED;
+  const isAuthenticated = isAuthenticatedForDomain(authDomain, flowStep, session, domain);
 
-  return isAuthenticatedForDomain ? children : <Navigate to={loginPath} replace />;
+  return isAuthenticated ? children : <Navigate to={loginPath} replace />;
 };

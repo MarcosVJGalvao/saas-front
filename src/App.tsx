@@ -15,6 +15,7 @@ const ClientLoginPage = lazy(() => import('./pages/client/auth/LoginPage'));
 const ClientForgotPasswordPage = lazy(() => import('./pages/client/auth/ForgotPasswordPage'));
 const ClientResetPasswordPage = lazy(() => import('./pages/client/auth/ResetPasswordPage'));
 const ClientDashboardPage = lazy(() => import('./pages/client/dashboard/DashboardPage'));
+const ClientHomePage = lazy(() => import('./pages/client/home/HomePage'));
 
 const App = () => (
   <Suspense
@@ -54,6 +55,14 @@ const App = () => (
           element={
             <DomainProtectedRoute domain={AUTH_DOMAIN.PLATFORM} loginPath="/platform/login">
               <PlatformDashboardPage />
+            </DomainProtectedRoute>
+          }
+        />
+        <Route
+          path="/client/home"
+          element={
+            <DomainProtectedRoute domain={AUTH_DOMAIN.CLIENT} loginPath="/client/login">
+              <ClientHomePage />
             </DomainProtectedRoute>
           }
         />

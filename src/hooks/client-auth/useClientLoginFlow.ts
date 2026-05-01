@@ -34,7 +34,7 @@ export const useClientLoginFlow = () => {
       });
       const session = await clientAuthService.login(data.email, data.password);
       completeAuthentication(AUTH_DOMAIN.CLIENT, session, data.rememberMe);
-      void navigate('/client', { replace: true });
+      void navigate('/client/home', { replace: true });
     } catch (error) {
       pushError(ErrorHandler.normalize(error));
     } finally {
