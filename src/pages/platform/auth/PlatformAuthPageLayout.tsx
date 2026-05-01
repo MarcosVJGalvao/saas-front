@@ -2,12 +2,16 @@ import type { ReactNode } from 'react';
 import BarChartOutlinedIcon from '@mui/icons-material/BarChartOutlined';
 import GroupsOutlinedIcon from '@mui/icons-material/GroupsOutlined';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
+import DarkModeOutlinedIcon from '@mui/icons-material/DarkModeOutlined';
+import LightModeOutlinedIcon from '@mui/icons-material/LightModeOutlined';
 import SecurityOutlinedIcon from '@mui/icons-material/SecurityOutlined';
 import VerifiedUserOutlinedIcon from '@mui/icons-material/VerifiedUserOutlined';
 import Box from '@mui/material/Box';
+import IconButton from '@mui/material/IconButton';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import { useTheme } from '@mui/material/styles';
+import { useThemePreference } from '@/hooks/useThemePreference';
 import { getUiColorTokens } from '@/theme/uiColors';
 
 const BUILDING_IMAGE_URL = '/assets/auth/buildings.webp';
@@ -36,6 +40,7 @@ const HIGHLIGHTS = [
 
 export const PlatformAuthPageLayout = ({ children }: PlatformAuthPageLayoutProps) => {
   const theme = useTheme();
+  const { theme: themeMode, setTheme } = useThemePreference();
   const authUi = getUiColorTokens(theme.palette.mode);
 
   return (
@@ -45,8 +50,24 @@ export const PlatformAuthPageLayout = ({ children }: PlatformAuthPageLayoutProps
         height: '100dvh',
         p: { xs: 0, md: 1.25 },
         overflow: 'hidden',
+        position: 'relative',
       }}
     >
+      <IconButton
+        aria-label={themeMode === 'dark' ? 'Ativar tema claro' : 'Ativar tema escuro'}
+        onClick={() => setTheme(themeMode === 'dark' ? 'light' : 'dark')}
+        sx={{
+          position: 'absolute',
+          top: { xs: 10, md: 18 },
+          right: { xs: 10, md: 18 },
+          zIndex: 5,
+          border: 1,
+          borderColor: 'divider',
+          bgcolor: 'background.paper',
+        }}
+      >
+        {themeMode === 'dark' ? <LightModeOutlinedIcon /> : <DarkModeOutlinedIcon />}
+      </IconButton>
       <Box
         sx={{
           height: { xs: '100dvh', md: 'calc(100dvh - 34px)' },

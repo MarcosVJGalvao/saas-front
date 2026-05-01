@@ -28,7 +28,7 @@ import { PageHeader } from '../../components/common/page/PageHeader';
 import { SectionCard } from '../../components/common/page/SectionCard';
 import { AvatarUploader } from '../../components/common/upload/AvatarUploader';
 import { FileUpload } from '../../components/common/upload/FileUpload';
-import { AppShell } from '../../components/layout/AppShell';
+import { AppLayout } from '../../components/layout/admin-navigation/AppLayout';
 
 describe('components smoke', () => {
   it('exports components not individually covered yet', () => {
@@ -61,6 +61,6 @@ describe('components smoke', () => {
     expect(SectionCard).toBeTruthy();
     expect(AvatarUploader).toBeTruthy();
     expect(FileUpload).toBeTruthy();
-    expect(AppShell).toBeTruthy();
+    expect(AppLayout).toBeTruthy();
   });
 });

@@ -4,6 +4,8 @@ const CLIENT_AUTH_SESSION_KEY = 'client_auth_session';
 const PLATFORM_AUTH_SESSION_KEY = 'platform_auth_session';
 
 const isBrowser = () => typeof window !== 'undefined';
+const isRecord = (value: unknown): value is Record<string, unknown> =>
+  typeof value === 'object' && value !== null && !Array.isArray(value);
 
 const readSessionByKey = (storage: Storage, key: string): AuthSession | null => {
   const rawValue = storage.getItem(key);
@@ -13,24 +15,19 @@ const readSessionByKey = (storage: Storage, key: string): AuthSession | null => 
 
   try {
     const parsedValue: unknown = JSON.parse(rawValue);
-    if (
-      typeof parsedValue === 'object' &&
-      parsedValue !== null &&
-      'accessToken' in parsedValue &&
-      'refreshToken' in parsedValue &&
-      'expiresIn' in parsedValue &&
-      'sessionId' in parsedValue
-    ) {
-      const accessToken = Reflect.get(parsedValue, 'accessToken');
-      const refreshToken = Reflect.get(parsedValue, 'refreshToken');
-      const expiresIn = Reflect.get(parsedValue, 'expiresIn');
-      const sessionId = Reflect.get(parsedValue, 'sessionId');
-      if (
-        typeof accessToken === 'string' &&
-        typeof refreshToken === 'string' &&
-        typeof expiresIn === 'string' &&
-        typeof sessionId === 'string'
-      ) {
+    if (isRecord(parsedValue) && 'accessToken' in parsedValue && 'refreshToken' in parsedValue) {
+      const accessToken = parsedValue.accessToken;
+      const refreshToken = parsedValue.refreshToken;
+      const rawExpiresIn = parsedValue.expiresIn;
+      const rawSessionId = parsedValue.sessionId;
+      const expiresIn =
+        typeof rawExpiresIn === 'string'
+          ? rawExpiresIn
+          : typeof rawExpiresIn === 'number'
+            ? `${rawExpiresIn}s`
+            : '1h';
+      const sessionId = typeof rawSessionId === 'string' ? rawSessionId : 'unknown-session';
+      if (typeof accessToken === 'string' && typeof refreshToken === 'string') {
         return { accessToken, refreshToken, expiresIn, sessionId };
       }
     }

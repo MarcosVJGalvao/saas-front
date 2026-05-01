@@ -19,7 +19,7 @@ const ClientHomePage = () => {
           Home do Cliente
         </Typography>
         <Typography sx={{ fontSize: 16, color: 'text.secondary', mb: 3 }}>
-          Autenticacao concluida com sucesso.
+          Autenticação concluída com sucesso.
         </Typography>
 
         {content}

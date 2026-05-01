@@ -3,7 +3,7 @@ import Box from '@mui/material/Box';
 import CircularProgress from '@mui/material/CircularProgress';
 import { Navigate, Route, Routes } from 'react-router-dom';
 import { DomainProtectedRoute } from './components/common/access/DomainProtectedRoute';
-import { AppShell } from './components/layout/AppShell';
+import { AppLayout } from './components/layout/admin-navigation/AppLayout';
 import { AUTH_DOMAIN } from './models/auth/auth';
 
 const PlatformLoginPage = lazy(() => import('./pages/platform/auth/LoginPage'));
@@ -41,7 +41,7 @@ const App = () => (
       <Route path="/client/forgot-password" element={<ClientForgotPasswordPage />} />
       <Route path="/client/reset-password" element={<ClientResetPasswordPage />} />
 
-      <Route element={<AppShell />}>
+      <Route element={<AppLayout />}>
         <Route
           path="/platform/home"
           element={
