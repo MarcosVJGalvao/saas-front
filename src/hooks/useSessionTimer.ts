@@ -2,6 +2,8 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 
 const WARNING_THRESHOLD_SECONDS = 10 * 60;
 const CRITICAL_THRESHOLD_SECONDS = 5 * 60;
+const isRecord = (value: unknown): value is Record<string, unknown> =>
+  typeof value === 'object' && value !== null && !Array.isArray(value);
 
 const decodeJwtPayload = (token: string): Record<string, unknown> | null => {
   const tokenParts = token.split('.');
@@ -14,7 +16,7 @@ const decodeJwtPayload = (token: string): Record<string, unknown> | null => {
   try {
     const decoded = window.atob(paddedPayload);
     const parsed: unknown = JSON.parse(decoded);
-    if (parsed === null || typeof parsed !== 'object' || Array.isArray(parsed)) return null;
+    if (!isRecord(parsed)) return null;
     return parsed;
   } catch {
     return null;
