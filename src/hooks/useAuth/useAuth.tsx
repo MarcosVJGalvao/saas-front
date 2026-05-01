@@ -4,6 +4,7 @@ import type { PlatformTotpSetupResponse } from '../../services/platform/auth/typ
 import {
   clearClientSessionStorage,
   clearPlatformSessionStorage,
+  hasClientPersistentSession,
   readClientSession,
   readPlatformSession,
   writeClientSession,
@@ -17,9 +18,14 @@ interface AuthContextValue {
   challengeToken: string | null;
   totpSetup: PlatformTotpSetupResponse | null;
   session: AuthSession | null;
-  startMfaChallenge: (domain: AuthDomain, challengeToken: string, requiresSetup: boolean) => void;
+  startMfaChallenge: (
+    domain: AuthDomain,
+    challengeToken: string,
+    requiresSetup: boolean,
+    rememberMe?: boolean,
+  ) => void;
   setTotpSetup: (setup: PlatformTotpSetupResponse | null) => void;
-  completeAuthentication: (domain: AuthDomain, session: AuthSession) => void;
+  completeAuthentication: (domain: AuthDomain, session: AuthSession, rememberMe?: boolean) => void;
   updateClientSessionFromRefresh: (session: AuthSession) => void;
   clearAuth: () => void;
 }
@@ -39,6 +45,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [challengeToken, setChallengeToken] = useState<string | null>(null);
   const [totpSetup, setTotpSetup] = useState<PlatformTotpSetupResponse | null>(null);
   const [session, setSession] = useState<AuthSession | null>(initialSession);
+  const [rememberMePreference, setRememberMePreference] = useState(false);
 
   const value = useMemo<AuthContextValue>(
     () => ({
@@ -47,9 +54,10 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       challengeToken,
       totpSetup,
       session,
-      startMfaChallenge: (domain, nextChallengeToken, requiresSetup) => {
+      startMfaChallenge: (domain, nextChallengeToken, requiresSetup, rememberMe = false) => {
         setAuthDomain(domain);
         setChallengeToken(nextChallengeToken);
+        setRememberMePreference(rememberMe);
         setSession(null);
         setFlowStep(
           requiresSetup ? AUTH_FLOW_STEP.MFA_SETUP_REQUIRED : AUTH_FLOW_STEP.MFA_REQUIRED,
@@ -58,15 +66,15 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       setTotpSetup: (setup) => {
         setTotpSetup(setup);
       },
-      completeAuthentication: (domain, nextSession) => {
+      completeAuthentication: (domain, nextSession, rememberMe = rememberMePreference) => {
         setAuthDomain(domain);
         setChallengeToken(null);
         setTotpSetup(null);
         setSession(nextSession);
         if (domain === 'client') {
-          writeClientSession(nextSession);
+          writeClientSession(nextSession, rememberMe);
         } else {
-          writePlatformSession(nextSession);
+          writePlatformSession(nextSession, rememberMe);
         }
         setFlowStep(AUTH_FLOW_STEP.AUTHENTICATED);
       },
@@ -75,7 +83,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         setChallengeToken(null);
         setTotpSetup(null);
         setSession(nextSession);
-        writeClientSession(nextSession);
+        writeClientSession(nextSession, hasClientPersistentSession());
         setFlowStep(AUTH_FLOW_STEP.AUTHENTICATED);
       },
       clearAuth: () => {
@@ -83,12 +91,13 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         setChallengeToken(null);
         setTotpSetup(null);
         setSession(null);
+        setRememberMePreference(false);
         clearClientSessionStorage();
         clearPlatformSessionStorage();
         setFlowStep(AUTH_FLOW_STEP.IDLE);
       },
     }),
-    [authDomain, flowStep, challengeToken, totpSetup, session],
+    [authDomain, flowStep, challengeToken, totpSetup, session, rememberMePreference],
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

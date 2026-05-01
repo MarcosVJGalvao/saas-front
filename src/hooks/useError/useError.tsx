@@ -11,6 +11,7 @@ const ErrorContext = createContext<ErrorContextValue | undefined>(undefined);
 
 export const ErrorProvider = ({ children }: { children: ReactNode }) => {
   const [snackbarError, setSnackbarError] = useState<AppError | null>(null);
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [modalError, setModalError] = useState<AppError | null>(null);
 
   const pushError = useCallback((error: AppError) => {
@@ -19,6 +20,7 @@ export const ErrorProvider = ({ children }: { children: ReactNode }) => {
       return;
     }
     setSnackbarError(error);
+    setSnackbarOpen(true);
   }, []);
 
   const value = useMemo(() => ({ pushError }), [pushError]);
@@ -26,7 +28,12 @@ export const ErrorProvider = ({ children }: { children: ReactNode }) => {
   return (
     <ErrorContext.Provider value={value}>
       {children}
-      <SnackbarError error={snackbarError} onClose={() => setSnackbarError(null)} />
+      <SnackbarError
+        open={snackbarOpen}
+        error={snackbarError}
+        onClose={() => setSnackbarOpen(false)}
+        onExited={() => setSnackbarError(null)}
+      />
       <ModalError error={modalError} onClose={() => setModalError(null)} />
     </ErrorContext.Provider>
   );

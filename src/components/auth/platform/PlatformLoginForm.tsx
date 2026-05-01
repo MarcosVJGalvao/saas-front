@@ -22,7 +22,7 @@ interface PlatformLoginFormProps {
 
 export const PlatformLoginForm = memo(
   ({ onSubmitLogin, onSubmitTotp, loading, showTotp }: PlatformLoginFormProps) => {
-    const loginForm = useForm(loginSchema, { email: '', password: '' });
+    const loginForm = useForm(loginSchema, { email: '', password: '', rememberMe: false });
     const totpForm = useForm(totpCodeSchema, { totpCode: '' });
 
     if (showTotp) {

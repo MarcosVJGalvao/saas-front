@@ -11,7 +11,8 @@ import type { AuthSession } from './client/auth/types';
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 const CLIENT_REFRESH_PATH = '/api/client/auth/refresh';
-const CLIENT_LOGIN_PATH = '/api/client/login';
+const CLIENT_API_BASE_PATH = '/api/client';
+const AUTH_REQUEST_PATHS = ['/api/client/auth/login', '/api/platform/auth/login'] as const;
 
 interface RetriableRequestConfig extends AxiosRequestConfig {
   _retry?: boolean;
@@ -61,13 +62,18 @@ httpClient.interceptors.response.use(
   ) => {
     const originalRequest = toRetriableRequestConfig(error.config);
     const status = error.response?.status;
-    const isRefreshCall = originalRequest?.url?.includes(CLIENT_REFRESH_PATH) ?? false;
+    const requestUrl = originalRequest?.url ?? '';
+    const isRefreshCall = requestUrl.includes(CLIENT_REFRESH_PATH);
+    const isAuthRequest = AUTH_REQUEST_PATHS.some((path) => requestUrl.includes(path));
+    const isClientApiRequest = requestUrl.includes(CLIENT_API_BASE_PATH);
 
     if (
       status === 401 &&
       originalRequest !== undefined &&
       !originalRequest._retry &&
-      !isRefreshCall
+      !isRefreshCall &&
+      isClientApiRequest &&
+      !isAuthRequest
     ) {
       originalRequest._retry = true;
       const currentRefreshPromise = refreshPromise ?? refreshClientSession();
@@ -82,9 +88,6 @@ httpClient.interceptors.response.use(
         .catch((refreshError) => {
           refreshPromise = null;
           clearClientSessionStorage();
-          if (typeof window !== 'undefined') {
-            window.location.replace(CLIENT_LOGIN_PATH);
-          }
           return Promise.reject(
             refreshError instanceof Error ? refreshError : new Error('Falha ao atualizar sessao.'),
           );

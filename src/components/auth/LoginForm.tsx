@@ -14,7 +14,7 @@ interface LoginFormProps {
 }
 
 export const LoginForm = memo(({ onSubmit, loading }: LoginFormProps) => {
-  const form = useForm(loginSchema, { email: '', password: '' });
+  const form = useForm(loginSchema, { email: '', password: '', rememberMe: false });
 
   return (
     <AppForm form={form} onSubmit={onSubmit}>

@@ -184,10 +184,22 @@ export const PlatformLoginFormCard = ({
         <Box
           sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mt: -0.3 }}
         >
-          <FormControlLabel
-            control={<Checkbox size="small" />}
-            label={labels.rememberMe}
-            sx={{ color: theme.palette.text.secondary, ml: -0.2 }}
+          <Controller
+            name="rememberMe"
+            control={form.control}
+            render={({ field }) => (
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    size="small"
+                    checked={field.value}
+                    onChange={(_event, checked) => field.onChange(checked)}
+                  />
+                }
+                label={labels.rememberMe}
+                sx={{ color: theme.palette.text.secondary, ml: -0.2 }}
+              />
+            )}
           />
           <Link href="#" underline="none" sx={{ fontSize: 15 }}>
             {labels.forgotPassword}

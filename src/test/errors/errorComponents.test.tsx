@@ -21,7 +21,7 @@ describe('Error components', () => {
     });
 
     const { getByText, getByLabelText } = render(
-      <SnackbarError error={errorMock} onClose={() => undefined} />,
+      <SnackbarError open error={errorMock} onClose={() => undefined} onExited={() => undefined} />,
     );
 
     expect(getByText('o campo não pode estar vazio')).toBeInTheDocument();
