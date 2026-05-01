@@ -6,27 +6,39 @@ export interface PermissionResolver {
 }
 
 const platformDefaultPermissions = [
-  'dashboard:read',
-  'panel:read',
-  'users:read',
-  'roles:read',
-  'groups:read',
-  'invites:read',
-  'access-logs:read',
-  'registry:read',
-  'finance:read',
-  'reports:read',
-  'settings:read',
-  'audit:read',
+  'platform:dashboard:read',
+  'platform:panel:read',
+  'platform:users:read',
+  'platform:roles:read',
+  'platform:groups:read',
+  'platform:invites:read',
+  'platform:access-logs:read',
+  'platform:registry:read',
+  'platform:finance:read',
+  'platform:reports:read',
+  'platform:settings:read',
+  'platform:audit:read',
 ];
 
 const clientDefaultPermissions = [
-  'dashboard:read',
-  'panel:read',
-  'users:read',
-  'finance:read',
-  'reports:read',
+  'client:dashboard:read',
+  'client:panel:read',
+  'client:users:read',
+  'client:finance:read',
+  'client:reports:read',
 ];
+
+const hasPermission = (permissions: string[], requiredPermission: string): boolean => {
+  if (permissions.includes(requiredPermission)) {
+    return true;
+  }
+
+  const [context, resource] = requiredPermission.split(':');
+  const contextWildcard = `${context}:*`;
+  const resourceWildcard = `${context}:${resource}:*`;
+
+  return permissions.includes(contextWildcard) || permissions.includes(resourceWildcard);
+};
 
 export const localPermissionResolver: PermissionResolver = {
   getPermissions: (domain) =>
@@ -37,12 +49,10 @@ export const filterNavigationByPermissions = (
   items: NavigationItem[],
   permissions: string[],
 ): NavigationItem[] => {
-  const allowedSet = new Set(permissions);
-
   return items
-    .filter((item) => allowedSet.has(item.permission))
+    .filter((item) => hasPermission(permissions, item.permission))
     .map((item) => ({
       ...item,
-      children: item.children?.filter((child) => allowedSet.has(child.permission)),
+      children: item.children?.filter((child) => hasPermission(permissions, child.permission)),
     }));
 };

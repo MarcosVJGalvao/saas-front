@@ -7,7 +7,7 @@ import PaidOutlinedIcon from '@mui/icons-material/PaidOutlined';
 import PeopleOutlineOutlinedIcon from '@mui/icons-material/PeopleOutlineOutlined';
 import SettingsOutlinedIcon from '@mui/icons-material/SettingsOutlined';
 import ShieldOutlinedIcon from '@mui/icons-material/ShieldOutlined';
-import type { AuthDomain } from '../../../models/auth/auth';
+import { AUTH_DOMAIN, type AuthDomain } from '../../../models/auth/auth';
 import type { LayoutBrandConfig, NavigationItem } from '../../../models/navigation';
 
 const navigationBase: NavigationItem[] = [
@@ -102,18 +102,29 @@ const navigationBase: NavigationItem[] = [
   },
 ];
 
-const mapItemWithPrefix = (item: NavigationItem, prefix: string): NavigationItem => ({
+const buildPermissionForDomain = (domain: AuthDomain, permission: string): string =>
+  `${domain}:${permission}`;
+
+const mapItemWithPrefix = (
+  item: NavigationItem,
+  prefix: string,
+  domain: AuthDomain,
+): NavigationItem => ({
   ...item,
   href: item.href ? `${prefix}${item.href}` : undefined,
+  permission: buildPermissionForDomain(domain, item.permission),
   children: item.children?.map((child) => ({
     ...child,
     href: child.href ? `${prefix}${child.href}` : undefined,
+    permission: buildPermissionForDomain(domain, child.permission),
   })),
 });
 
 export const navigationByDomain: Record<AuthDomain, NavigationItem[]> = {
-  platform: navigationBase.map((item) => mapItemWithPrefix(item, '/platform')),
-  client: navigationBase.map((item) => mapItemWithPrefix(item, '/client')),
+  platform: navigationBase.map((item) =>
+    mapItemWithPrefix(item, '/platform', AUTH_DOMAIN.PLATFORM),
+  ),
+  client: navigationBase.map((item) => mapItemWithPrefix(item, '/client', AUTH_DOMAIN.CLIENT)),
 };
 
 export const brandByDomain: Record<AuthDomain, LayoutBrandConfig> = {
