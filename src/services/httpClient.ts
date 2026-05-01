@@ -12,7 +12,10 @@ import type { AuthSession } from './client/auth/types';
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 const CLIENT_REFRESH_PATH = '/api/client/auth/refresh';
 const CLIENT_API_BASE_PATH = '/api/client';
-const AUTH_REQUEST_PATHS = ['/api/client/auth/login', '/api/platform/auth/login'] as const;
+const AUTH_REQUEST_PATHS: ReadonlyArray<string> = [
+  '/api/client/auth/login',
+  '/api/platform/auth/login',
+];
 
 interface RetriableRequestConfig extends AxiosRequestConfig {
   _retry?: boolean;

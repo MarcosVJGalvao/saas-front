@@ -2,7 +2,27 @@ import { useCallback, useMemo, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import type { NavigationItem } from '../models/navigation';
 
-export const useSidebarContentState = (items: NavigationItem[], closeMobile?: () => void) => {
+export interface SidebarChildItem extends NavigationItem {
+  isActive: boolean;
+}
+
+export interface SidebarMappedItem extends NavigationItem {
+  hasChildren: boolean;
+  isActive: boolean;
+  isOpen: boolean;
+  children?: SidebarChildItem[];
+}
+
+interface SidebarContentStateResult {
+  mappedItems: SidebarMappedItem[];
+  toggleGroup: (itemId: string) => void;
+  onItemClick: (href?: string) => void;
+}
+
+export const useSidebarContentState = (
+  items: NavigationItem[],
+  closeMobile?: () => void,
+): SidebarContentStateResult => {
   const location = useLocation();
   const navigate = useNavigate();
   const [openGroups, setOpenGroups] = useState<Record<string, boolean>>({ usuarios: true });
@@ -29,7 +49,7 @@ export const useSidebarContentState = (items: NavigationItem[], closeMobile?: ()
     }));
   }, []);
 
-  const mappedItems = useMemo(
+  const mappedItems = useMemo<SidebarMappedItem[]>(
     () =>
       items.map((item) => {
         const hasChildren = (item.children?.length ?? 0) > 0;
@@ -38,10 +58,12 @@ export const useSidebarContentState = (items: NavigationItem[], closeMobile?: ()
           hasChildren,
           isActive: isItemActive(item.href),
           isOpen: openGroups[item.id] ?? false,
-          children: item.children?.map((child) => ({
-            ...child,
-            isActive: isItemActive(child.href),
-          })),
+          children: item.children?.map(
+            (child): SidebarChildItem => ({
+              ...child,
+              isActive: isItemActive(child.href),
+            }),
+          ),
         };
       }),
     [isItemActive, items, openGroups],

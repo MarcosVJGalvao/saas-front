@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
@@ -6,42 +5,44 @@ import { Controller } from 'react-hook-form';
 import { AppForm } from '@/components/common/form/AppForm';
 import { useForm } from '@/forms/useForm';
 import { loginSchema } from '@/forms/validators';
-import { clientAuthService } from '@/services/client/auth/service';
+import { useForgotPasswordState } from '@/hooks/client-auth/useForgotPasswordState';
 import { PlatformAuthPageLayout } from '@/pages/platform/auth/PlatformAuthPageLayout';
 
+const MESSAGES = {
+  title: 'Esqueci minha senha',
+  emailLabel: 'E-mail',
+  submit: 'Enviar',
+  sent: 'Se o e-mail existir, enviaremos as instruções para redefinição de senha.',
+} as const;
+
 const ForgotPasswordPage = () => {
-  const [sent, setSent] = useState(false);
+  const { sent, submitForgotPassword } = useForgotPasswordState();
   const form = useForm(loginSchema.pick({ email: true }), { email: '' });
 
   const handleSubmit = async (data: { email: string }) => {
-    await clientAuthService.forgotPassword(data.email);
-    setSent(true);
+    await submitForgotPassword(data.email);
   };
 
   return (
     <PlatformAuthPageLayout>
       <AppForm form={form} onSubmit={handleSubmit}>
-        <Typography variant="h4">Esqueci minha senha</Typography>
+        <Typography variant="h4">{MESSAGES.title}</Typography>
         <Controller
           name="email"
           control={form.control}
           render={({ field, fieldState }) => (
             <TextField
               {...field}
-              label="E-mail"
+              label={MESSAGES.emailLabel}
               error={fieldState.invalid}
               helperText={fieldState.error?.message}
             />
           )}
         />
         <Button type="submit" variant="contained">
-          Enviar
+          {MESSAGES.submit}
         </Button>
-        {sent ? (
-          <Typography>
-            Se o e-mail existir, enviaremos as instrucoes para redefinicao de senha.
-          </Typography>
-        ) : null}
+        {sent ? <Typography>{MESSAGES.sent}</Typography> : null}
       </AppForm>
     </PlatformAuthPageLayout>
   );

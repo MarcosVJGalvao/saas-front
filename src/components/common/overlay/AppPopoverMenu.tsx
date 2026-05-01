@@ -3,6 +3,7 @@ import IconButton from '@mui/material/IconButton';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import { memo, useCallback, useState } from 'react';
+import { commonOverlayMessages } from '../messages';
 
 interface AppPopoverMenuItem {
   label: string;
@@ -22,10 +23,15 @@ export const AppPopoverMenu = memo(({ items }: AppPopoverMenuProps) => {
 
   return (
     <>
-      <IconButton onClick={openMenu} aria-label="Abrir menu">
+      <IconButton onClick={openMenu} aria-label={commonOverlayMessages.openMenuAriaLabel}>
         <MoreVertIcon />
       </IconButton>
-      <Menu anchorEl={anchor} open={anchor !== null} onClose={closeMenu}>
+      <Menu
+        anchorEl={anchor}
+        open={anchor !== null}
+        onClose={closeMenu}
+        slotProps={{ transition: { timeout: 180 } }}
+      >
         {items.map((item) => (
           <MenuItem
             key={item.label}

@@ -3,6 +3,7 @@ import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
+import { useTheme } from '@mui/material/styles';
 import type { ReactNode } from 'react';
 
 interface BaseModalProps {
@@ -29,19 +30,32 @@ export const BaseModal = ({
   maxWidth = 'sm',
   onConfirm,
   onClose,
-}: BaseModalProps) => (
-  <Dialog open={open} onClose={onClose} fullWidth={fullWidth} maxWidth={maxWidth}>
-    <DialogTitle>{title}</DialogTitle>
-    <DialogContent>{content}</DialogContent>
-    <DialogActions>
-      <Button onClick={onClose} disabled={loading}>
-        {cancelText}
-      </Button>
-      {onConfirm !== undefined ? (
-        <Button onClick={onConfirm} variant="contained" disabled={loading}>
-          {confirmText}
+}: BaseModalProps) => {
+  const theme = useTheme();
+
+  return (
+    <Dialog
+      open={open}
+      onClose={onClose}
+      fullWidth={fullWidth}
+      maxWidth={maxWidth}
+      transitionDuration={{
+        enter: theme.transitions.duration.enteringScreen,
+        exit: theme.transitions.duration.leavingScreen,
+      }}
+    >
+      <DialogTitle>{title}</DialogTitle>
+      <DialogContent>{content}</DialogContent>
+      <DialogActions>
+        <Button onClick={onClose} disabled={loading}>
+          {cancelText}
         </Button>
-      ) : null}
-    </DialogActions>
-  </Dialog>
-);
+        {onConfirm !== undefined ? (
+          <Button onClick={onConfirm} variant="contained" disabled={loading}>
+            {confirmText}
+          </Button>
+        ) : null}
+      </DialogActions>
+    </Dialog>
+  );
+};

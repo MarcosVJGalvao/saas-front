@@ -1,81 +1,41 @@
 import type { ReactNode } from 'react';
 import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
-import WarningAmberOutlinedIcon from '@mui/icons-material/WarningAmberOutlined';
+import { useTheme } from '@mui/material/styles';
 import AttachMoneyOutlinedIcon from '@mui/icons-material/AttachMoneyOutlined';
 import DescriptionOutlinedIcon from '@mui/icons-material/DescriptionOutlined';
 import PersonOutlineOutlinedIcon from '@mui/icons-material/PersonOutlineOutlined';
 import SchoolOutlinedIcon from '@mui/icons-material/SchoolOutlined';
+import WarningAmberOutlinedIcon from '@mui/icons-material/WarningAmberOutlined';
 import { Outlet } from 'react-router-dom';
-import { useAuth } from '../../../hooks/useAuth/useAuth';
 import { useAppLayoutState, buildUserInitials } from '../../../hooks/useAppLayoutState';
+import { useAuth } from '../../../hooks/useAuth/useAuth';
 import { useDensityPreference } from '../../../hooks/useDensityPreference';
 import { useMediaQuery } from '../../../hooks/useMediaQuery';
 import { useSidebarNavigation } from '../../../hooks/useSidebarNavigation';
 import { useSidebarState } from '../../../hooks/useSidebarState';
 import { useThemePreference } from '../../../hooks/useThemePreference';
 import { densityMetrics } from '../../../models/density';
-import { brandByDomain } from './config';
+import { getUiColorTokens } from '../../../theme/uiColors';
 import { CommandPalette } from './CommandPalette';
+import { brandByDomain } from './config';
+import { appLayoutMessages, appLayoutNotifications } from './messages';
 import { NotificationsMenu } from './NotificationsMenu';
 import { ProfileMenu } from './ProfileMenu';
 import { SidebarContent } from './SidebarContent';
 import { TopBar } from './TopBar';
 
-const notifications = [
-  {
-    id: 'matricula',
-    title: 'Nova matrícula realizada',
-    description: 'A matrícula #12345 foi realizada com sucesso.',
-    time: 'Há 2 minutos',
-    unread: true,
-    icon: <SchoolOutlinedIcon sx={{ fontSize: 18 }} />,
-    iconBg: 'rgba(99,102,241,0.14)',
-    iconColor: '#6366F1',
-  },
-  {
-    id: 'pagamento',
-    title: 'Pagamento recebido',
-    description: 'Você recebeu um pagamento de R$ 1.250,00',
-    time: 'Há 15 minutos',
-    unread: true,
-    icon: <AttachMoneyOutlinedIcon sx={{ fontSize: 18 }} />,
-    iconBg: 'rgba(34,197,94,0.14)',
-    iconColor: '#16A34A',
-  },
-  {
-    id: 'vencimento',
-    title: 'Vencimento em 3 dias',
-    description: 'A mensalidade da matrícula #98765 vence em 3 dias.',
-    time: 'Há 1 hora',
-    unread: true,
-    icon: <WarningAmberOutlinedIcon sx={{ fontSize: 18 }} />,
-    iconBg: 'rgba(245,158,11,0.16)',
-    iconColor: '#D97706',
-  },
-  {
-    id: 'boleto',
-    title: 'Boleto gerado',
-    description: 'Foi gerado um novo boleto para a matrícula #54321.',
-    time: 'Há 2 horas',
-    unread: false,
-    icon: <DescriptionOutlinedIcon sx={{ fontSize: 18 }} />,
-    iconBg: 'rgba(59,130,246,0.14)',
-    iconColor: '#2563EB',
-  },
-  {
-    id: 'usuario',
-    title: 'Novo usuário cadastrado',
-    description: 'O usuário Marcos Silva foi cadastrado no sistema.',
-    time: 'Há 3 horas',
-    unread: false,
-    icon: <PersonOutlineOutlinedIcon sx={{ fontSize: 18 }} />,
-    iconBg: 'rgba(139,92,246,0.14)',
-    iconColor: '#7C3AED',
-  },
-];
+const notificationIconsById: Record<string, ReactNode> = {
+  matricula: <SchoolOutlinedIcon sx={{ fontSize: 18 }} />,
+  pagamento: <AttachMoneyOutlinedIcon sx={{ fontSize: 18 }} />,
+  vencimento: <WarningAmberOutlinedIcon sx={{ fontSize: 18 }} />,
+  boleto: <DescriptionOutlinedIcon sx={{ fontSize: 18 }} />,
+  usuario: <PersonOutlineOutlinedIcon sx={{ fontSize: 18 }} />,
+};
 
 export const AppLayout = ({ children }: { children?: ReactNode }) => {
+  const themeObj = useTheme();
+  const uiColors = getUiColorTokens(themeObj.palette.mode);
   const { authDomain, session, clearAuth } = useAuth();
   const { density, setDensity } = useDensityPreference();
   const { theme, setTheme } = useThemePreference();
@@ -96,9 +56,16 @@ export const AppLayout = ({ children }: { children?: ReactNode }) => {
     sidebarWidth,
   } = useAppLayoutState(navigationItems, isMobile, isCollapsed);
 
+  const notifications = appLayoutNotifications.map((notification) => ({
+    ...notification,
+    icon: notificationIconsById[notification.id],
+    iconBg: uiColors[notification.iconBgToken],
+    iconColor: uiColors[notification.iconColorToken],
+  }));
+
   const appBarHeight = densityMetrics[density].appBarHeight;
   const brand = brandByDomain[domain];
-  const userName = 'Dev Admin';
+  const userName = appLayoutMessages.defaultUserName;
   const userInitials = buildUserInitials(userName);
 
   return (
@@ -110,7 +77,7 @@ export const AppLayout = ({ children }: { children?: ReactNode }) => {
             flexShrink: 0,
             borderRight: 1,
             borderColor: 'divider',
-            transition: 'width 220ms ease',
+            transition: themeObj.transitions.create('width'),
           }}
         >
           <SidebarContent
@@ -130,6 +97,7 @@ export const AppLayout = ({ children }: { children?: ReactNode }) => {
           top: 0,
           right: 0,
           left: { lg: `${sidebarWidth}px`, xs: 0 },
+          transition: themeObj.transitions.create('left'),
           zIndex: 40,
           borderBottom: 1,
           borderColor: 'divider',
@@ -157,21 +125,7 @@ export const AppLayout = ({ children }: { children?: ReactNode }) => {
         {children ?? <Outlet />}
       </Box>
 
-      <Drawer
-        anchor="left"
-        open={mobileOpen}
-        onClose={closeMobileMenu}
-        slotProps={{
-          paper: {
-            sx: {
-              width: '86vw',
-              maxWidth: 380,
-              bgcolor: 'background.paper',
-              backgroundImage: 'none',
-            },
-          },
-        }}
-      >
+      <Drawer anchor="left" open={mobileOpen} onClose={closeMobileMenu}>
         <SidebarContent
           isCollapsed={false}
           onToggle={() => setIsCollapsed(false)}
@@ -196,6 +150,7 @@ export const AppLayout = ({ children }: { children?: ReactNode }) => {
         onClose={closeProfileMenu}
         userName={userName}
         userInitials={userInitials}
+        userEmail={appLayoutMessages.defaultUserEmail}
         theme={theme}
         density={density}
         onSetTheme={setTheme}

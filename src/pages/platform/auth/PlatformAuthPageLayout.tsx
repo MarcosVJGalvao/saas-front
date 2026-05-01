@@ -1,9 +1,9 @@
-import type { ReactNode } from 'react';
+import { memo, type ReactNode } from 'react';
 import BarChartOutlinedIcon from '@mui/icons-material/BarChartOutlined';
-import GroupsOutlinedIcon from '@mui/icons-material/GroupsOutlined';
-import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import DarkModeOutlinedIcon from '@mui/icons-material/DarkModeOutlined';
+import GroupsOutlinedIcon from '@mui/icons-material/GroupsOutlined';
 import LightModeOutlinedIcon from '@mui/icons-material/LightModeOutlined';
+import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import SecurityOutlinedIcon from '@mui/icons-material/SecurityOutlined';
 import VerifiedUserOutlinedIcon from '@mui/icons-material/VerifiedUserOutlined';
 import Box from '@mui/material/Box';
@@ -15,10 +15,18 @@ import { useThemePreference } from '@/hooks/useThemePreference';
 import { getUiColorTokens } from '@/theme/uiColors';
 
 const BUILDING_IMAGE_URL = '/assets/auth/buildings.webp';
-
-interface PlatformAuthPageLayoutProps {
-  children: ReactNode;
-}
+const PLATFORM_AUTH_MESSAGES = {
+  switchToLight: 'Ativar tema claro',
+  switchToDark: 'Ativar tema escuro',
+  brandPrefix: 'SaaS',
+  brandHighlight: 'Platform',
+  mainTitle: 'Gestão centralizada da sua plataforma',
+  mainDescription:
+    'Administre tenants, usuários, planos e configurações de forma segura e eficiente.',
+  secureEnvironment: 'Ambiente seguro da plataforma',
+  copyright: '© 2024 SaaS Platform. Todos os direitos reservados.',
+  cityAlt: 'Cidade',
+} as const;
 
 const HIGHLIGHTS = [
   {
@@ -36,7 +44,49 @@ const HIGHLIGHTS = [
     description: 'Dashboards e relatórios para decisões rápidas e inteligentes.',
     icon: BarChartOutlinedIcon,
   },
-];
+] as const;
+
+interface PlatformAuthPageLayoutProps {
+  children: ReactNode;
+}
+
+const HighlightList = memo(({ heroCardBackground }: { heroCardBackground: string }) => (
+  <Stack spacing={{ md: 2.4, lg: 2.9 }} sx={{ position: 'relative', zIndex: 2 }}>
+    {HIGHLIGHTS.map((item) => {
+      const Icon = item.icon;
+      return (
+        <Stack
+          key={item.title}
+          direction="row"
+          spacing={{ md: 1.1, lg: 1.4 }}
+          sx={{ alignItems: 'flex-start' }}
+        >
+          <Box
+            sx={{
+              width: { md: 50, lg: 54 },
+              height: { md: 50, lg: 54 },
+              borderRadius: 2,
+              bgcolor: heroCardBackground,
+              display: 'grid',
+              placeItems: 'center',
+              flexShrink: 0,
+            }}
+          >
+            <Icon sx={{ fontSize: { md: 24, lg: 26 } }} />
+          </Box>
+          <Box>
+            <Typography sx={{ fontSize: { md: 14, lg: 16 }, fontWeight: 700, mb: 0.3 }}>
+              {item.title}
+            </Typography>
+            <Typography sx={{ fontSize: { md: 10, lg: 12 }, lineHeight: 1.42, maxWidth: 320 }}>
+              {item.description}
+            </Typography>
+          </Box>
+        </Stack>
+      );
+    })}
+  </Stack>
+));
 
 export const PlatformAuthPageLayout = ({ children }: PlatformAuthPageLayoutProps) => {
   const theme = useTheme();
@@ -54,7 +104,11 @@ export const PlatformAuthPageLayout = ({ children }: PlatformAuthPageLayoutProps
       }}
     >
       <IconButton
-        aria-label={themeMode === 'dark' ? 'Ativar tema claro' : 'Ativar tema escuro'}
+        aria-label={
+          themeMode === 'dark'
+            ? PLATFORM_AUTH_MESSAGES.switchToLight
+            : PLATFORM_AUTH_MESSAGES.switchToDark
+        }
         onClick={() => setTheme(themeMode === 'dark' ? 'light' : 'dark')}
         sx={{
           position: 'absolute',
@@ -75,7 +129,7 @@ export const PlatformAuthPageLayout = ({ children }: PlatformAuthPageLayoutProps
           overflow: 'hidden',
           display: 'grid',
           gridTemplateColumns: { xs: '1fr', md: '44% 56%' },
-          boxShadow: '0 8px 30px rgba(8,31,77,.08)',
+          boxShadow: theme.shadows[4],
         }}
       >
         <Box
@@ -109,13 +163,12 @@ export const PlatformAuthPageLayout = ({ children }: PlatformAuthPageLayoutProps
               <VerifiedUserOutlinedIcon fontSize="small" />
             </Box>
             <Typography sx={{ fontSize: { md: 22, lg: 18 }, fontWeight: 700, lineHeight: 1 }}>
-              SaaS{' '}
+              {PLATFORM_AUTH_MESSAGES.brandPrefix}{' '}
               <Box component="span" sx={{ color: authUi.heroAccent }}>
-                Platform
+                {PLATFORM_AUTH_MESSAGES.brandHighlight}
               </Box>
             </Typography>
           </Stack>
-
           <Typography
             sx={{
               fontSize: { md: 32, lg: 44 },
@@ -127,7 +180,7 @@ export const PlatformAuthPageLayout = ({ children }: PlatformAuthPageLayoutProps
               zIndex: 2,
             }}
           >
-            Gestão centralizada da sua plataforma
+            {PLATFORM_AUTH_MESSAGES.mainTitle}
           </Typography>
           <Typography
             sx={{
@@ -138,7 +191,7 @@ export const PlatformAuthPageLayout = ({ children }: PlatformAuthPageLayoutProps
               zIndex: 2,
             }}
           >
-            Administre tenants, usuários, planos e configurações de forma segura e eficiente.
+            {PLATFORM_AUTH_MESSAGES.mainDescription}
           </Typography>
           <Box
             sx={{
@@ -151,49 +204,11 @@ export const PlatformAuthPageLayout = ({ children }: PlatformAuthPageLayoutProps
               zIndex: 2,
             }}
           />
-
-          <Stack spacing={{ md: 2.4, lg: 2.9 }} sx={{ position: 'relative', zIndex: 2 }}>
-            {HIGHLIGHTS.map((item) => {
-              const Icon = item.icon;
-              return (
-                <Stack
-                  key={item.title}
-                  direction="row"
-                  spacing={{ md: 1.1, lg: 1.4 }}
-                  sx={{ alignItems: 'flex-start' }}
-                >
-                  <Box
-                    sx={{
-                      width: { md: 50, lg: 54 },
-                      height: { md: 50, lg: 54 },
-                      borderRadius: 2,
-                      bgcolor: authUi.heroCardBackground,
-                      display: 'grid',
-                      placeItems: 'center',
-                      flexShrink: 0,
-                    }}
-                  >
-                    <Icon sx={{ fontSize: { md: 24, lg: 26 } }} />
-                  </Box>
-                  <Box>
-                    <Typography sx={{ fontSize: { md: 14, lg: 16 }, fontWeight: 700, mb: 0.3 }}>
-                      {item.title}
-                    </Typography>
-                    <Typography
-                      sx={{ fontSize: { md: 10, lg: 12 }, lineHeight: 1.42, maxWidth: 320 }}
-                    >
-                      {item.description}
-                    </Typography>
-                  </Box>
-                </Stack>
-              );
-            })}
-          </Stack>
-
+          <HighlightList heroCardBackground={authUi.heroCardBackground} />
           <Box
             component="img"
             src={BUILDING_IMAGE_URL}
-            alt="Cidade"
+            alt={PLATFORM_AUTH_MESSAGES.cityAlt}
             sx={{
               position: 'absolute',
               left: 0,
@@ -207,7 +222,6 @@ export const PlatformAuthPageLayout = ({ children }: PlatformAuthPageLayoutProps
             }}
           />
         </Box>
-
         <Box
           sx={{
             bgcolor: 'background.default',
@@ -225,13 +239,14 @@ export const PlatformAuthPageLayout = ({ children }: PlatformAuthPageLayoutProps
             sx={{ mt: 2, color: 'text.secondary', alignItems: 'center' }}
           >
             <SecurityOutlinedIcon fontSize="small" />
-            <Typography sx={{ fontSize: 14 }}>Ambiente seguro da plataforma</Typography>
+            <Typography sx={{ fontSize: 14 }}>
+              {PLATFORM_AUTH_MESSAGES.secureEnvironment}
+            </Typography>
           </Stack>
         </Box>
       </Box>
-
       <Typography sx={{ textAlign: 'center', color: 'text.secondary', pt: 0.5, fontSize: 13 }}>
-        © 2024 SaaS Platform. Todos os direitos reservados.
+        {PLATFORM_AUTH_MESSAGES.copyright}
       </Typography>
     </Box>
   );

@@ -55,6 +55,13 @@ export default tseslint.config(
       '@typescript-eslint/ban-ts-comment': 'error',
       '@typescript-eslint/consistent-type-imports': ['error', { prefer: 'type-imports' }],
       '@typescript-eslint/consistent-type-assertions': ['error', { assertionStyle: 'never' }],
+      'no-restricted-syntax': [
+        'error',
+        {
+          selector: "TSAsExpression > TSTypeReference > Identifier[name='const']",
+          message: 'as const não é permitido fora de testes.',
+        },
+      ],
       'import/no-default-export': 'off',
     },
   },
@@ -64,15 +71,66 @@ export default tseslint.config(
       complexity: ['error', 3],
       'no-restricted-imports': [
         'error',
-        { patterns: ['../services/*', '../hooks/*', '../utils/*'] },
+        {
+          patterns: ['../services/*', '../hooks/*', '../utils/*', '@/services/*'],
+        },
       ],
       'no-restricted-syntax': [
         'error',
         {
-          selector: 'FunctionDeclaration[params.length>1]',
-          message: 'Pages devem apenas compor layout e componentes.',
+          selector:
+            "CallExpression[callee.name=/^use(State|Effect|Memo|Callback|Reducer|Ref)$/]",
+          message: 'Pages devem ser composição; mova lógica para hooks.',
+        },
+        {
+          selector:
+            "CallExpression[callee.object.name=/.+Service$/], CallExpression[callee.object.name=/.+Client$/]",
+          message: 'Pages não devem chamar services/clients diretamente; use hooks.',
         },
       ],
+    },
+  },
+  {
+    files: ['src/components/common/**/*.{ts,tsx}'],
+    rules: {
+      complexity: ['error', 12],
+      'no-restricted-imports': [
+        'error',
+        { patterns: ['../services/*', '../../services/*', '@/services/*'] },
+      ],
+      'no-restricted-syntax': [
+        'error',
+        {
+          selector:
+            "CallExpression[callee.object.name=/.+Service$/], CallExpression[callee.object.name=/.+Client$/]",
+          message: 'Componentes comuns não devem chamar services/clients; use hooks.',
+        },
+      ],
+    },
+  },
+  {
+    files: ['src/components/**/*.{ts,tsx}'],
+    ignores: ['src/components/common/**/*.{ts,tsx}'],
+    rules: {
+      complexity: ['error', 8],
+      'no-restricted-imports': [
+        'error',
+        { patterns: ['../services/*', '../../services/*', '@/services/*'] },
+      ],
+      'no-restricted-syntax': [
+        'error',
+        {
+          selector:
+            "CallExpression[callee.object.name=/.+Service$/], CallExpression[callee.object.name=/.+Client$/]",
+          message: 'Componentes não devem chamar services/clients diretamente; use hooks.',
+        },
+      ],
+    },
+  },
+  {
+    files: ['src/components/layout/admin-navigation/**/*.{ts,tsx}'],
+    rules: {
+      complexity: ['error', 10],
     },
   },
   {
@@ -86,7 +144,10 @@ export default tseslint.config(
       '@typescript-eslint/no-non-null-assertion': 'off',
       '@typescript-eslint/ban-ts-comment': 'off',
       '@typescript-eslint/consistent-type-assertions': 'off',
+      '@typescript-eslint/unbound-method': 'off',
+      'no-restricted-syntax': 'off',
       'id-length': 'off',
     },
   },
 );
+

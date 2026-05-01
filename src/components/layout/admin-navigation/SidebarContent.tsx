@@ -16,7 +16,10 @@ import MenuIcon from '@mui/icons-material/Menu';
 import { densityMetrics, type DensityMode } from '../../../models/density';
 import type { NavigationItem } from '../../../models/navigation';
 import type { LayoutBrandConfig } from '../../../models/navigation';
-import { useSidebarContentState } from '../../../hooks/useSidebarContentState';
+import {
+  useSidebarContentState,
+  type SidebarMappedItem,
+} from '../../../hooks/useSidebarContentState';
 
 interface SidebarContentProps {
   isCollapsed: boolean;
@@ -27,6 +30,106 @@ interface SidebarContentProps {
   mobileMode?: boolean;
   closeMobile?: () => void;
 }
+
+const SidebarMenuButton = ({
+  isCollapsed,
+  mobileMode,
+  onToggle,
+  closeMobile,
+}: {
+  isCollapsed: boolean;
+  mobileMode: boolean;
+  onToggle: () => void;
+  closeMobile?: () => void;
+}) => (
+  <IconButton
+    onClick={mobileMode ? () => closeMobile?.() : onToggle}
+    size="small"
+    aria-label={mobileMode ? 'Fechar menu lateral' : 'Alternar menu lateral'}
+  >
+    {mobileMode ? <CloseIcon /> : isCollapsed ? <MenuIcon /> : <ChevronLeftIcon />}
+  </IconButton>
+);
+
+const SidebarItemChildren = ({
+  item,
+  submenuItemHeight,
+  onItemClick,
+}: {
+  item: SidebarMappedItem;
+  submenuItemHeight: number;
+  onItemClick: (href?: string) => void;
+}) =>
+  item.children?.map((child) => (
+    <ListItemButton
+      key={child.id}
+      sx={{ borderRadius: 1.5, minHeight: submenuItemHeight, pl: 3.5 }}
+      selected={child.isActive}
+      onClick={() => onItemClick(child.href)}
+    >
+      <ListItemText primary={child.label} />
+    </ListItemButton>
+  ));
+
+const onSidebarItemClick = (
+  hasChildren: boolean,
+  itemId: string,
+  href: string | undefined,
+  onItemClickHandler: (nextHref?: string) => void,
+  toggleGroupHandler: (nextItemId: string) => void,
+) => {
+  if (hasChildren) {
+    toggleGroupHandler(itemId);
+    return;
+  }
+  onItemClickHandler(href);
+};
+
+const SidebarMenuItem = ({
+  item,
+  isCollapsed,
+  sidebarItemHeight,
+  submenuItemHeight,
+  onItemClick,
+  toggleGroup,
+}: {
+  item: SidebarMappedItem;
+  isCollapsed: boolean;
+  sidebarItemHeight: number;
+  submenuItemHeight: number;
+  onItemClick: (href?: string) => void;
+  toggleGroup: (itemId: string) => void;
+}) => {
+  const showExpandIcon = !isCollapsed && item.hasChildren;
+  const showChildren = !isCollapsed && item.hasChildren && item.isOpen;
+
+  return (
+    <Box key={item.id}>
+      <ListItemButton
+        selected={item.isActive}
+        onClick={() =>
+          onSidebarItemClick(item.hasChildren, item.id, item.href, onItemClick, toggleGroup)
+        }
+        sx={{ borderRadius: 2, minHeight: sidebarItemHeight, color: 'text.primary' }}
+      >
+        <ListItemIcon sx={{ minWidth: 36 }}>
+          {item.icon !== undefined ? <item.icon /> : <HomeOutlinedIcon />}
+        </ListItemIcon>
+        {!isCollapsed ? <ListItemText primary={item.label} /> : null}
+        {showExpandIcon ? item.isOpen ? <ExpandLessIcon /> : <ExpandMoreIcon /> : null}
+      </ListItemButton>
+      {showChildren ? (
+        <List sx={{ px: 1, py: 0.75, border: 1, borderColor: 'divider', borderRadius: 2 }}>
+          <SidebarItemChildren
+            item={item}
+            submenuItemHeight={submenuItemHeight}
+            onItemClick={onItemClick}
+          />
+        </List>
+      ) : null}
+    </Box>
+  );
+};
 
 export const SidebarContent = memo(
   ({
@@ -71,59 +174,26 @@ export const SidebarContent = memo(
               </Typography>
             ) : null}
           </Box>
-          <IconButton
-            onClick={mobileMode ? () => closeMobile?.() : onToggle}
-            size="small"
-            aria-label={mobileMode ? 'Fechar menu lateral' : 'Alternar menu lateral'}
-          >
-            {mobileMode ? <CloseIcon /> : isCollapsed ? <MenuIcon /> : <ChevronLeftIcon />}
-          </IconButton>
+          <SidebarMenuButton
+            isCollapsed={isCollapsed}
+            mobileMode={mobileMode}
+            onToggle={onToggle}
+            closeMobile={closeMobile}
+          />
         </Box>
         <Divider />
         <List sx={{ p: 1.5, display: 'flex', flexDirection: 'column', gap: 1 }}>
-          {mappedItems.map((item) => {
-            const ItemIcon = item.icon;
-            return (
-              <Box key={item.id}>
-                <ListItemButton
-                  selected={item.isActive}
-                  onClick={() => {
-                    if (item.hasChildren) toggleGroup(item.id);
-                    else onItemClick(item.href);
-                  }}
-                  sx={{ borderRadius: 2, minHeight: sidebarItemHeight, color: 'text.primary' }}
-                >
-                  <ListItemIcon sx={{ minWidth: 36 }}>
-                    {ItemIcon !== undefined ? <ItemIcon /> : <HomeOutlinedIcon />}
-                  </ListItemIcon>
-                  {!isCollapsed ? <ListItemText primary={item.label} /> : null}
-                  {!isCollapsed && item.hasChildren ? (
-                    item.isOpen ? (
-                      <ExpandLessIcon />
-                    ) : (
-                      <ExpandMoreIcon />
-                    )
-                  ) : null}
-                </ListItemButton>
-                {!isCollapsed && item.hasChildren && item.isOpen ? (
-                  <List
-                    sx={{ px: 1, py: 0.75, border: 1, borderColor: 'divider', borderRadius: 2 }}
-                  >
-                    {item.children?.map((child) => (
-                      <ListItemButton
-                        key={child.id}
-                        sx={{ borderRadius: 1.5, minHeight: submenuItemHeight, pl: 3.5 }}
-                        selected={child.isActive}
-                        onClick={() => onItemClick(child.href)}
-                      >
-                        <ListItemText primary={child.label} />
-                      </ListItemButton>
-                    ))}
-                  </List>
-                ) : null}
-              </Box>
-            );
-          })}
+          {mappedItems.map((item) => (
+            <SidebarMenuItem
+              key={item.id}
+              item={item}
+              isCollapsed={isCollapsed}
+              sidebarItemHeight={sidebarItemHeight}
+              submenuItemHeight={submenuItemHeight}
+              onItemClick={onItemClick}
+              toggleGroup={toggleGroup}
+            />
+          ))}
         </List>
       </Box>
     );

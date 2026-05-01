@@ -6,10 +6,13 @@ import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
+import { useTheme } from '@mui/material/styles';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import MenuIcon from '@mui/icons-material/Menu';
 import NotificationsOutlinedIcon from '@mui/icons-material/NotificationsOutlined';
 import SearchOutlinedIcon from '@mui/icons-material/SearchOutlined';
+import { getUiColorTokens } from '../../../theme/uiColors';
+import { appLayoutMessages } from './messages';
 import { SessionTimer } from './SessionTimer';
 
 interface TopBarProps {
@@ -25,6 +28,30 @@ interface TopBarProps {
   onOpenProfileMenu: MouseEventHandler<HTMLElement>;
 }
 
+const TopBarSearchShortcut = ({ isMobile }: { isMobile: boolean }) =>
+  !isMobile ? (
+    <Box sx={{ px: 1, py: 0.25, border: 1, borderColor: 'divider', borderRadius: 1 }}>
+      {appLayoutMessages.keyboardShortcut}
+    </Box>
+  ) : null;
+
+const TopBarUserInfo = ({ isMobile, userName }: { isMobile: boolean; userName: string }) =>
+  !isMobile ? (
+    <Box
+      sx={{
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'flex-start',
+        lineHeight: 1.15,
+      }}
+    >
+      <Typography sx={{ fontWeight: 600, fontSize: 16 }}>{userName}</Typography>
+      <Typography sx={{ color: 'text.secondary', fontSize: 14 }}>
+        {appLayoutMessages.roleLabel}
+      </Typography>
+    </Box>
+  ) : null;
+
 export const TopBar = ({
   appBarHeight,
   isMobile,
@@ -36,86 +63,71 @@ export const TopBar = ({
   onOpenCommandPalette,
   onOpenNotificationsMenu,
   onOpenProfileMenu,
-}: TopBarProps) => (
-  <Toolbar sx={{ minHeight: `${appBarHeight}px !important`, px: { xs: 2, lg: 3 }, gap: 2 }}>
-    {isMobile ? (
-      <IconButton aria-label="Abrir menu" onClick={onOpenMobileMenu}>
-        <MenuIcon />
-      </IconButton>
-    ) : null}
-    <Button
-      onClick={onOpenCommandPalette}
-      startIcon={<SearchOutlinedIcon />}
-      sx={{
-        width: { xs: '100%', sm: 300, md: 360, lg: 560 },
-        maxWidth: { xs: 220, sm: 'none' },
-        justifyContent: isMobile ? 'flex-start' : 'space-between',
-        textTransform: 'none',
-        border: 1,
-        borderColor: 'divider',
-        borderRadius: 1.5,
-        px: 1.5,
-        py: 1,
-        color: 'text.secondary',
-        '& .MuiButton-startIcon': { mr: isMobile ? 0.75 : 1 },
-        '& .MuiButton-endIcon': { ml: 1 },
-      }}
-    >
-      Buscar no sistema...
-      {!isMobile ? (
-        <Box sx={{ px: 1, py: 0.25, border: 1, borderColor: 'divider', borderRadius: 1 }}>
-          Ctrl + K
-        </Box>
+}: TopBarProps) => {
+  const themeObj = useTheme();
+  const uiColors = getUiColorTokens(themeObj.palette.mode);
+
+  return (
+    <Toolbar sx={{ minHeight: `${appBarHeight}px !important`, px: { xs: 2, lg: 3 }, gap: 2 }}>
+      {isMobile ? (
+        <IconButton aria-label={appLayoutMessages.openMenuAriaLabel} onClick={onOpenMobileMenu}>
+          <MenuIcon />
+        </IconButton>
       ) : null}
-    </Button>
-    <Box sx={{ ml: 'auto', display: 'flex', alignItems: 'center', gap: 1.5 }}>
-      <SessionTimer
-        expiresIn={sessionExpiresIn ?? '1h'}
-        accessToken={sessionAccessToken}
-        compact={isMobile}
-      />
-      <IconButton onClick={onOpenNotificationsMenu} aria-label="Notifica��es">
-        <Badge color="primary" variant="dot">
-          <NotificationsOutlinedIcon />
-        </Badge>
-      </IconButton>
       <Button
-        onClick={onOpenProfileMenu}
-        sx={{ textTransform: 'none', color: 'text.primary' }}
-        endIcon={<ExpandMoreIcon />}
+        onClick={onOpenCommandPalette}
+        startIcon={<SearchOutlinedIcon />}
+        sx={{
+          width: { xs: '100%', sm: 300, md: 360, lg: 560 },
+          maxWidth: { xs: 220, sm: 'none' },
+          justifyContent: isMobile ? 'flex-start' : 'space-between',
+          textTransform: 'none',
+          border: 1,
+          borderColor: 'divider',
+          borderRadius: 1.5,
+          px: 1.5,
+          py: 1,
+          color: 'text.secondary',
+        }}
       >
-        <Avatar
-          sx={{
-            width: isMobile ? 34 : 36,
-            height: isMobile ? 34 : 36,
-            mr: isMobile ? 0 : 1,
-            background: 'linear-gradient(135deg, #5B6CFF 0%, #6C4BFF 100%)',
-            color: '#fff',
-            fontWeight: 700,
-            fontSize: isMobile ? 13 : 14,
-            letterSpacing: 0,
-            lineHeight: 1,
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-          }}
+        {appLayoutMessages.searchPlaceholder}
+        <TopBarSearchShortcut isMobile={isMobile} />
+      </Button>
+      <Box sx={{ ml: 'auto', display: 'flex', alignItems: 'center', gap: 1.5 }}>
+        <SessionTimer
+          expiresIn={sessionExpiresIn ?? '1h'}
+          accessToken={sessionAccessToken}
+          compact={isMobile}
+        />
+        <IconButton
+          onClick={onOpenNotificationsMenu}
+          aria-label={appLayoutMessages.notificationsAriaLabel}
         >
-          {userInitials}
-        </Avatar>
-        {!isMobile ? (
-          <Box
+          <Badge color="primary" variant="dot">
+            <NotificationsOutlinedIcon />
+          </Badge>
+        </IconButton>
+        <Button
+          onClick={onOpenProfileMenu}
+          sx={{ textTransform: 'none', color: 'text.primary' }}
+          endIcon={<ExpandMoreIcon />}
+        >
+          <Avatar
             sx={{
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'flex-start',
-              lineHeight: 1.15,
+              width: isMobile ? 34 : 36,
+              height: isMobile ? 34 : 36,
+              mr: isMobile ? 0 : 1,
+              background: uiColors.topBarAvatarGradient,
+              color: 'common.white',
+              fontWeight: 700,
+              fontSize: isMobile ? 13 : 14,
             }}
           >
-            <Typography sx={{ fontWeight: 600, fontSize: 16 }}>{userName}</Typography>
-            <Typography sx={{ color: 'text.secondary', fontSize: 14 }}>Administrador</Typography>
-          </Box>
-        ) : null}
-      </Button>
-    </Box>
-  </Toolbar>
-);
+            {userInitials}
+          </Avatar>
+          <TopBarUserInfo isMobile={isMobile} userName={userName} />
+        </Button>
+      </Box>
+    </Toolbar>
+  );
+};

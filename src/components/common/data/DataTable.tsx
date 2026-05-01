@@ -1,3 +1,4 @@
+import { useCallback, useMemo, type ReactNode } from 'react';
 import Paper from '@mui/material/Paper';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -6,10 +7,9 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TablePagination from '@mui/material/TablePagination';
 import TableRow from '@mui/material/TableRow';
-import useMediaQuery from '@mui/material/useMediaQuery';
-import { useTheme } from '@mui/material/styles';
 import Typography from '@mui/material/Typography';
-import type { ReactNode } from 'react';
+import { useTheme } from '@mui/material/styles';
+import useMediaQuery from '@mui/material/useMediaQuery';
 import type { PaginationMeta } from '../../../models/pagination';
 import { spacingScale } from '../../../theme/spacing';
 
@@ -25,11 +25,13 @@ interface DataTableProps<TData> {
   rows: TData[];
   columns: DataTableColumn<TData>[];
   meta: PaginationMeta;
-  loading?: boolean;
   getRowId?: (row: TData, index: number) => string;
   onPageChange: (nextPage: number) => void;
   onRowsPerPageChange: (nextLimit: number) => void;
 }
+
+const ROWS_PER_PAGE_OPTIONS = [10, 20, 50];
+const EMPTY_MOBILE_VALUE = '-';
 
 export const DataTable = <TData,>({
   rows,
@@ -42,18 +44,21 @@ export const DataTable = <TData,>({
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
+  const currentPage = useMemo(() => Math.max(meta.page - 1, 0), [meta.page]);
+  const resolveRowId = useCallback(
+    (row: TData, rowIndex: number) => (getRowId ? getRowId(row, rowIndex) : String(rowIndex)),
+    [getRowId],
+  );
+
   if (isMobile) {
     return (
       <>
         {rows.map((row, rowIndex) => (
-          <Paper
-            key={getRowId ? getRowId(row, rowIndex) : String(rowIndex)}
-            sx={{ p: spacingScale.sm, mb: spacingScale.xs }}
-          >
+          <Paper key={resolveRowId(row, rowIndex)} sx={{ p: spacingScale.sm, mb: spacingScale.xs }}>
             {columns.map((column) => (
               <Typography key={column.key} variant="body2" sx={{ mb: spacingScale.xxs }}>
                 <strong>{column.header}:</strong>{' '}
-                {column.mobileRender !== undefined ? column.mobileRender(row) : '-'}
+                {column.mobileRender !== undefined ? column.mobileRender(row) : EMPTY_MOBILE_VALUE}
               </Typography>
             ))}
           </Paper>
@@ -61,11 +66,11 @@ export const DataTable = <TData,>({
         <TablePagination
           component="div"
           count={meta.total}
-          page={Math.max(meta.page - 1, 0)}
+          page={currentPage}
           rowsPerPage={meta.limit}
           onPageChange={(_, page) => onPageChange(page + 1)}
           onRowsPerPageChange={(event) => onRowsPerPageChange(Number(event.target.value))}
-          rowsPerPageOptions={[10, 20, 50]}
+          rowsPerPageOptions={ROWS_PER_PAGE_OPTIONS}
         />
       </>
     );
@@ -85,7 +90,7 @@ export const DataTable = <TData,>({
         </TableHead>
         <TableBody>
           {rows.map((row, rowIndex) => (
-            <TableRow key={getRowId ? getRowId(row, rowIndex) : String(rowIndex)} hover>
+            <TableRow key={resolveRowId(row, rowIndex)} hover>
               {columns.map((column) => (
                 <TableCell key={column.key} align={column.align ?? 'left'}>
                   {column.render(row)}
@@ -98,11 +103,11 @@ export const DataTable = <TData,>({
       <TablePagination
         component="div"
         count={meta.total}
-        page={Math.max(meta.page - 1, 0)}
+        page={currentPage}
         rowsPerPage={meta.limit}
         onPageChange={(_, page) => onPageChange(page + 1)}
         onRowsPerPageChange={(event) => onRowsPerPageChange(Number(event.target.value))}
-        rowsPerPageOptions={[10, 20, 50]}
+        rowsPerPageOptions={ROWS_PER_PAGE_OPTIONS}
       />
     </TableContainer>
   );
