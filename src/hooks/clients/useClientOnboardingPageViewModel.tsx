@@ -97,7 +97,6 @@ export const useClientOnboardingPageViewModel = (): ClientOnboardingPageViewMode
     maxCompletedStep,
     loading,
     value,
-    isClientDataStepComplete,
     handleNext,
     onCancel: () => void navigate('/platform/clients'),
     onBack: () => setActiveStep((stepIndex) => Math.max(0, stepIndex - 1)),

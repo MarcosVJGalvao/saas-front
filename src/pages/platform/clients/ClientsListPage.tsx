@@ -116,12 +116,10 @@ const ClientsListPage = () => {
         title="Excluir cliente"
         description={`Confirma a exclusão de ${model.view.deleteClientName ?? 'este cliente'}?`}
         confirmLabel="Excluir"
-        confirmColor="error"
         onCancel={() => model.view.setDeleteClientId(undefined)}
         onConfirm={() => {
           void model.view.confirmDelete();
         }}
-        loading={model.view.mutations.loading}
       />
     </Stack>
   );
