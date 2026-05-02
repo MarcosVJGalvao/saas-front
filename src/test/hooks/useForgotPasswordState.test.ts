@@ -15,7 +15,7 @@ describe('useForgotPasswordState', () => {
   });
 
   it('marca envio após sucesso', async () => {
-    vi.mocked(clientAuthService.forgotPassword).mockResolvedValue({ message: 'ok' });
+    vi.mocked(clientAuthService.forgotPassword).mockResolvedValue({ status: 'sent_if_exists' });
     const { result } = renderHook(() => useForgotPasswordState());
 
     await act(async () => {

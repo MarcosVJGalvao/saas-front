@@ -53,17 +53,21 @@ export const useSidebarContentState = (
     () =>
       items.map((item) => {
         const hasChildren = (item.children?.length ?? 0) > 0;
+        const mappedChildren = item.children?.map(
+          (child): SidebarChildItem => ({
+            ...child,
+            isActive: isItemActive(child.href),
+          }),
+        );
+        const hasActiveChild = mappedChildren?.some((child) => child.isActive) ?? false;
+        const isCurrentItemActive = isItemActive(item.href) || hasActiveChild;
+
         return {
           ...item,
           hasChildren,
-          isActive: isItemActive(item.href),
-          isOpen: openGroups[item.id] ?? false,
-          children: item.children?.map(
-            (child): SidebarChildItem => ({
-              ...child,
-              isActive: isItemActive(child.href),
-            }),
-          ),
+          isActive: isCurrentItemActive,
+          isOpen: openGroups[item.id] ?? hasActiveChild,
+          children: mappedChildren,
         };
       }),
     [isItemActive, items, openGroups],

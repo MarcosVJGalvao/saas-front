@@ -62,7 +62,7 @@
 
 ## Quality Gate (required before completion)
 
-1. `npm run lint`
+1. `npm run lint:fix`
 2. `npm run typecheck`
 3. `npm run build`
 4. `npm run test`

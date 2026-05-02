@@ -12,6 +12,8 @@ import { DataTable, type DataTableColumn } from './DataTable';
 import { FilterDrawer } from './FilterDrawer';
 import { SearchBar } from './SearchBar';
 
+const defaultErrorMessage = 'Erro ao carregar dados.';
+
 interface QueryDataTableProps<TData> {
   rows: TData[];
   columns: DataTableColumn<TData>[];
@@ -103,7 +105,7 @@ const QueryDataTableContent = <TData,>({
   }
 
   if (hasError) {
-    return <ErrorState message={errorMessage} onRetry={onRetry} />;
+    return <ErrorState message={errorMessage ?? defaultErrorMessage} onRetry={onRetry} />;
   }
 
   if (rows.length === 0) {

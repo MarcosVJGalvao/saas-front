@@ -63,7 +63,17 @@ const SidebarItemChildren = ({
   item.children?.map((child) => (
     <ListItemButton
       key={child.id}
-      sx={{ borderRadius: 1.5, minHeight: submenuItemHeight, pl: 3.5 }}
+      sx={{
+        borderRadius: 1.5,
+        minHeight: submenuItemHeight - 8,
+        py: 0.5,
+        pl: 3.25,
+        '&.Mui-selected': {
+          bgcolor: 'action.selected',
+          color: 'primary.main',
+          fontWeight: 600,
+        },
+      }}
       selected={child.isActive}
       onClick={() => onItemClick(child.href)}
     >
@@ -83,6 +93,13 @@ const onSidebarItemClick = (
     return;
   }
   onItemClickHandler(href);
+};
+
+const getExpandIndicatorIcon = (showExpandIcon: boolean, isOpen: boolean) => {
+  if (!showExpandIcon) {
+    return null;
+  }
+  return isOpen ? <ExpandLessIcon /> : <ExpandMoreIcon />;
 };
 
 const SidebarMenuItem = ({
@@ -110,16 +127,27 @@ const SidebarMenuItem = ({
         onClick={() =>
           onSidebarItemClick(item.hasChildren, item.id, item.href, onItemClick, toggleGroup)
         }
-        sx={{ borderRadius: 2, minHeight: sidebarItemHeight, color: 'text.primary' }}
+        sx={{
+          borderRadius: 2,
+          minHeight: sidebarItemHeight - 8,
+          color: 'text.primary',
+          '&.Mui-selected': {
+            bgcolor: 'action.selected',
+            color: 'primary.main',
+          },
+          '&.Mui-selected .MuiListItemIcon-root': {
+            color: 'primary.main',
+          },
+        }}
       >
         <ListItemIcon sx={{ minWidth: 36 }}>
           {item.icon !== undefined ? <item.icon /> : <HomeOutlinedIcon />}
         </ListItemIcon>
         {!isCollapsed ? <ListItemText primary={item.label} /> : null}
-        {showExpandIcon ? item.isOpen ? <ExpandLessIcon /> : <ExpandMoreIcon /> : null}
+        {getExpandIndicatorIcon(showExpandIcon, item.isOpen)}
       </ListItemButton>
       {showChildren ? (
-        <List sx={{ px: 1, py: 0.75, border: 1, borderColor: 'divider', borderRadius: 2 }}>
+        <List sx={{ px: 1, py: 0.25, mt: 0 }}>
           <SidebarItemChildren
             item={item}
             submenuItemHeight={submenuItemHeight}
@@ -182,7 +210,7 @@ export const SidebarContent = memo(
           />
         </Box>
         <Divider />
-        <List sx={{ p: 1.5, display: 'flex', flexDirection: 'column', gap: 1 }}>
+        <List sx={{ p: 1, display: 'flex', flexDirection: 'column', gap: 0.25 }}>
           {mappedItems.map((item) => (
             <SidebarMenuItem
               key={item.id}

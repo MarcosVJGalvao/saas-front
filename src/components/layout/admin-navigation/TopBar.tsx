@@ -18,6 +18,7 @@ import { SessionTimer } from './SessionTimer';
 interface TopBarProps {
   appBarHeight: number;
   isMobile: boolean;
+  currentPageLabel: string;
   userName: string;
   userInitials: string;
   sessionExpiresIn?: string;
@@ -28,9 +29,40 @@ interface TopBarProps {
   onOpenProfileMenu: MouseEventHandler<HTMLElement>;
 }
 
+const getSearchContainerSx = (isMobile: boolean) => {
+  if (isMobile) {
+    return {
+      flex: 1,
+      display: 'flex',
+      justifyContent: 'flex-start',
+    };
+  }
+
+  return {
+    display: 'flex',
+    justifyContent: 'flex-start',
+    position: 'absolute',
+    left: '50%',
+    transform: 'translateX(-50%)',
+  };
+};
+
 const TopBarSearchShortcut = ({ isMobile }: { isMobile: boolean }) =>
   !isMobile ? (
-    <Box sx={{ px: 1, py: 0.25, border: 1, borderColor: 'divider', borderRadius: 1 }}>
+    <Box
+      sx={{
+        px: 0.75,
+        py: 0,
+        border: 1,
+        borderColor: 'divider',
+        borderRadius: 1,
+        fontSize: 13,
+        lineHeight: '20px',
+        height: 22,
+        display: 'inline-flex',
+        alignItems: 'center',
+      }}
+    >
       {appLayoutMessages.keyboardShortcut}
     </Box>
   ) : null;
@@ -55,6 +87,7 @@ const TopBarUserInfo = ({ isMobile, userName }: { isMobile: boolean; userName: s
 export const TopBar = ({
   appBarHeight,
   isMobile,
+  currentPageLabel,
   userName,
   userInitials,
   sessionExpiresIn,
@@ -68,31 +101,59 @@ export const TopBar = ({
   const uiColors = getUiColorTokens(themeObj.palette.mode);
 
   return (
-    <Toolbar sx={{ minHeight: `${appBarHeight}px !important`, px: { xs: 2, lg: 3 }, gap: 2 }}>
+    <Toolbar
+      sx={{
+        minHeight: `${appBarHeight}px !important`,
+        px: { xs: 2, lg: 3 },
+        gap: 2,
+        position: 'relative',
+      }}
+    >
       {isMobile ? (
         <IconButton aria-label={appLayoutMessages.openMenuAriaLabel} onClick={onOpenMobileMenu}>
           <MenuIcon />
         </IconButton>
       ) : null}
-      <Button
-        onClick={onOpenCommandPalette}
-        startIcon={<SearchOutlinedIcon />}
+      <Typography
+        variant="h6"
         sx={{
-          width: { xs: '100%', sm: 300, md: 360, lg: 560 },
-          maxWidth: { xs: 220, sm: 'none' },
-          justifyContent: isMobile ? 'flex-start' : 'space-between',
-          textTransform: 'none',
-          border: 1,
-          borderColor: 'divider',
-          borderRadius: 1.5,
-          px: 1.5,
-          py: 1,
-          color: 'text.secondary',
+          fontWeight: 600,
+          fontSize: { xs: 20, lg: 24 },
+          minWidth: 140,
+          maxWidth: { xs: 160, lg: 220 },
+          overflow: 'hidden',
+          textOverflow: 'ellipsis',
+          whiteSpace: 'nowrap',
         }}
       >
-        {appLayoutMessages.searchPlaceholder}
-        <TopBarSearchShortcut isMobile={isMobile} />
-      </Button>
+        {currentPageLabel}
+      </Typography>
+      <Box sx={getSearchContainerSx(isMobile)}>
+        <Button
+          onClick={onOpenCommandPalette}
+          startIcon={<SearchOutlinedIcon />}
+          sx={{
+            width: { xs: '100%', sm: 220, md: 260, lg: 340 },
+            maxWidth: { xs: 200, sm: 'none' },
+            justifyContent: isMobile ? 'flex-start' : 'space-between',
+            textTransform: 'none',
+            border: 1,
+            borderColor: 'divider',
+            borderRadius: 1.5,
+            px: 1.25,
+            py: 0.25,
+            height: 38,
+            minHeight: 38,
+            color: 'text.secondary',
+            '& .MuiButton-startIcon': {
+              mr: 0.75,
+            },
+          }}
+        >
+          {appLayoutMessages.searchPlaceholder}
+          <TopBarSearchShortcut isMobile={isMobile} />
+        </Button>
+      </Box>
       <Box sx={{ ml: 'auto', display: 'flex', alignItems: 'center', gap: 1.5 }}>
         <SessionTimer
           expiresIn={sessionExpiresIn ?? '1h'}

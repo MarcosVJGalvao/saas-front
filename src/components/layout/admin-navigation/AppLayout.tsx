@@ -7,7 +7,7 @@ import DescriptionOutlinedIcon from '@mui/icons-material/DescriptionOutlined';
 import PersonOutlineOutlinedIcon from '@mui/icons-material/PersonOutlineOutlined';
 import SchoolOutlinedIcon from '@mui/icons-material/SchoolOutlined';
 import WarningAmberOutlinedIcon from '@mui/icons-material/WarningAmberOutlined';
-import { Outlet } from 'react-router-dom';
+import { Outlet, useLocation } from 'react-router-dom';
 import { useAppLayoutState, buildUserInitials } from '../../../hooks/useAppLayoutState';
 import { useAuth } from '../../../hooks/useAuth/useAuth';
 import { useDensityPreference } from '../../../hooks/useDensityPreference';
@@ -16,6 +16,7 @@ import { useSidebarNavigation } from '../../../hooks/useSidebarNavigation';
 import { useSidebarState } from '../../../hooks/useSidebarState';
 import { useThemePreference } from '../../../hooks/useThemePreference';
 import { densityMetrics } from '../../../models/density';
+import type { NavigationItem } from '../../../models/navigation';
 import { getUiColorTokens } from '../../../theme/uiColors';
 import { CommandPalette } from './CommandPalette';
 import { brandByDomain } from './config';
@@ -33,7 +34,20 @@ const notificationIconsById: Record<string, ReactNode> = {
   usuario: <PersonOutlineOutlinedIcon sx={{ fontSize: 18 }} />,
 };
 
+const getCurrentPageLabel = (pathname: string, navigationItems: NavigationItem[]): string => {
+  const entries = navigationItems.reduce<NavigationItem[]>(
+    (accumulator, item) => accumulator.concat(item, item.children ?? []),
+    [],
+  );
+  const activeItem = entries
+    .filter((entry) => entry.href !== undefined && pathname.startsWith(entry.href))
+    .sort((left, right) => (right.href?.length ?? 0) - (left.href?.length ?? 0))[0];
+
+  return activeItem?.label ?? 'Dashboard';
+};
+
 export const AppLayout = ({ children }: { children?: ReactNode }) => {
+  const location = useLocation();
   const themeObj = useTheme();
   const uiColors = getUiColorTokens(themeObj.palette.mode);
   const { authDomain, session, clearAuth } = useAuth();
@@ -67,6 +81,7 @@ export const AppLayout = ({ children }: { children?: ReactNode }) => {
   const brand = brandByDomain[domain];
   const userName = appLayoutMessages.defaultUserName;
   const userInitials = buildUserInitials(userName);
+  const currentPageLabel = getCurrentPageLabel(location.pathname, navigationItems);
 
   return (
     <Box sx={{ display: 'flex', minHeight: '100vh', bgcolor: 'background.default' }}>
@@ -107,6 +122,7 @@ export const AppLayout = ({ children }: { children?: ReactNode }) => {
         <TopBar
           appBarHeight={appBarHeight}
           isMobile={isMobile}
+          currentPageLabel={currentPageLabel}
           userName={userName}
           userInitials={userInitials}
           sessionExpiresIn={session?.expiresIn}

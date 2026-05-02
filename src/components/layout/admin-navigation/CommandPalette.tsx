@@ -55,15 +55,43 @@ export const CommandPalette = ({
   );
 
   return (
-    <Dialog open={isOpen} onClose={onClose} fullWidth maxWidth={false} onKeyDown={onKeyDown}>
-      <Box sx={{ p: 2.25 }}>
+    <Dialog
+      open={isOpen}
+      onClose={onClose}
+      fullWidth
+      maxWidth={false}
+      onKeyDown={onKeyDown}
+      slotProps={{
+        paper: {
+          sx: {
+            width: { xs: '88vw', md: '62vw', lg: '54vw' },
+            maxWidth: 760,
+            height: { xs: '74vh', md: '68vh', lg: '64vh' },
+            maxHeight: '72vh',
+            borderRadius: 2,
+            border: 1,
+            borderColor: 'divider',
+            bgcolor: 'background.paper',
+            overflow: 'hidden',
+          },
+        },
+      }}
+    >
+      <Box sx={{ p: 2, height: '100%', display: 'flex', flexDirection: 'column' }}>
         <Box sx={{ position: 'relative' }}>
           <TextField
             autoFocus
-            fullWidth
+            size="small"
             placeholder="Buscar no sistema..."
             value={query}
             onChange={(event) => onQueryChange(event.target.value)}
+            sx={{
+              width: '100%',
+              '& .MuiOutlinedInput-root': {
+                height: 42,
+                bgcolor: 'transparent',
+              },
+            }}
             slotProps={{
               input: {
                 startAdornment: <SearchOutlinedIcon sx={{ mr: 1, opacity: 0.75 }} />,
@@ -89,7 +117,14 @@ export const CommandPalette = ({
         </Tabs>
 
         <List
-          sx={{ mt: 1, maxHeight: '56vh', overflowY: 'auto', borderTop: 1, borderColor: 'divider' }}
+          sx={{
+            mt: 1,
+            flex: 1,
+            minHeight: 0,
+            overflowY: 'auto',
+            borderTop: 1,
+            borderColor: 'divider',
+          }}
         >
           <Box sx={{ px: 1.5, py: 1, display: 'flex', justifyContent: 'space-between' }}>
             <Typography variant="body2" sx={{ fontWeight: 600 }}>
@@ -112,7 +147,7 @@ export const CommandPalette = ({
             sx={{ px: 1.5, pt: 1.25, pb: 0.75, display: 'flex', justifyContent: 'space-between' }}
           >
             <Typography variant="body2" sx={{ fontWeight: 600 }}>
-              Sugest�es
+              Sugestões
             </Typography>
             <Typography variant="caption" color="primary">
               Ver mais
@@ -156,7 +191,7 @@ export const CommandPalette = ({
         <Typography
           variant="caption"
           color="text.secondary"
-          sx={{ display: 'block', mt: 1, textAlign: 'center' }}
+          sx={{ display: 'block', mt: 1, pt: 0.5, textAlign: 'center' }}
         >
           Use ? ? para navegar, Enter para selecionar, Esc para fechar
         </Typography>

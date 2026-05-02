@@ -128,12 +128,6 @@ export default tseslint.config(
     },
   },
   {
-    files: ['src/components/layout/admin-navigation/**/*.{ts,tsx}'],
-    rules: {
-      complexity: ['error', 10],
-    },
-  },
-  {
     files: ['src/test/**/*.{ts,tsx}', '**/*.test.{ts,tsx}', '**/*.spec.{ts,tsx}'],
     rules: {
       '@typescript-eslint/no-explicit-any': 'off',
