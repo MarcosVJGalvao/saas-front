@@ -18,6 +18,7 @@ const platformDefaultPermissions = [
   'platform:reports:read',
   'platform:settings:read',
   'platform:audit:read',
+  'platform:clients:*',
 ];
 
 const clientDefaultPermissions = [

@@ -35,6 +35,7 @@ interface QueryDataTableProps<TData> {
   onClearFilter?: () => void;
   emptyTitle?: string;
   emptyDescription?: string;
+  hideToolbar?: boolean;
 }
 
 const QueryDataTableToolbar = ({
@@ -145,19 +146,22 @@ export const QueryDataTable = <TData,>({
   onClearFilter,
   emptyTitle = commonDataMessages.emptyTitle,
   emptyDescription = commonDataMessages.emptyDescription,
+  hideToolbar = false,
 }: QueryDataTableProps<TData>) => {
   const hasFilter = filterContent !== undefined;
   const hasError = errorMessage !== undefined && errorMessage.length > 0;
 
   return (
     <Stack spacing={spacingScale.sm}>
-      <QueryDataTableToolbar
-        query={query}
-        onQueryChange={onQueryChange}
-        queryDebounceInMilliseconds={queryDebounceInMilliseconds}
-        showFilter={hasFilter}
-        onOpenFilter={onOpenFilter}
-      />
+      {!hideToolbar ? (
+        <QueryDataTableToolbar
+          query={query}
+          onQueryChange={onQueryChange}
+          queryDebounceInMilliseconds={queryDebounceInMilliseconds}
+          showFilter={hasFilter}
+          onOpenFilter={onOpenFilter}
+        />
+      ) : null}
 
       <QueryDataTableContent
         loading={loading}

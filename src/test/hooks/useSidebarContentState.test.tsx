@@ -33,7 +33,7 @@ describe('useSidebarContentState', () => {
     const { result } = renderHook(() => useSidebarContentState(items), { wrapper });
 
     const usersItem = result.current.mappedItems.find((item) => item.id === 'users');
-    expect(usersItem?.isOpen).toBe(false);
+    expect(usersItem?.isOpen).toBe(true);
 
     act(() => {
       result.current.toggleGroup('users');

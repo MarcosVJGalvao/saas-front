@@ -29,23 +29,13 @@ interface TopBarProps {
   onOpenProfileMenu: MouseEventHandler<HTMLElement>;
 }
 
-const getSearchContainerSx = (isMobile: boolean) => {
-  if (isMobile) {
-    return {
-      flex: 1,
-      display: 'flex',
-      justifyContent: 'flex-start',
-    };
-  }
-
-  return {
-    display: 'flex',
-    justifyContent: 'flex-start',
-    position: 'absolute',
-    left: '50%',
-    transform: 'translateX(-50%)',
-  };
-};
+const getSearchContainerSx = (isMobile: boolean) => ({
+  display: 'flex',
+  justifyContent: 'flex-start',
+  ...(isMobile
+    ? { flex: 1 }
+    : { position: 'absolute', left: '50%', transform: 'translateX(-50%)' }),
+});
 
 const TopBarSearchShortcut = ({ isMobile }: { isMobile: boolean }) =>
   !isMobile ? (
@@ -66,6 +56,11 @@ const TopBarSearchShortcut = ({ isMobile }: { isMobile: boolean }) =>
       {appLayoutMessages.keyboardShortcut}
     </Box>
   ) : null;
+
+const sessionTimerContainerSx = {
+  display: { xs: 'none', md: 'none', lg: 'flex' },
+  alignItems: 'center',
+};
 
 const TopBarUserInfo = ({ isMobile, userName }: { isMobile: boolean; userName: string }) =>
   !isMobile ? (
@@ -155,11 +150,13 @@ export const TopBar = ({
         </Button>
       </Box>
       <Box sx={{ ml: 'auto', display: 'flex', alignItems: 'center', gap: 1.5 }}>
-        <SessionTimer
-          expiresIn={sessionExpiresIn ?? '1h'}
-          accessToken={sessionAccessToken}
-          compact={isMobile}
-        />
+        <Box sx={sessionTimerContainerSx}>
+          <SessionTimer
+            expiresIn={sessionExpiresIn ?? '1h'}
+            accessToken={sessionAccessToken}
+            compact={isMobile}
+          />
+        </Box>
         <IconButton
           onClick={onOpenNotificationsMenu}
           aria-label={appLayoutMessages.notificationsAriaLabel}

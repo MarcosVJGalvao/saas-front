@@ -111,7 +111,7 @@ export const AppLayout = ({ children }: { children?: ReactNode }) => {
           position: 'fixed',
           top: 0,
           right: 0,
-          left: { lg: `${sidebarWidth}px`, xs: 0 },
+          left: isMobile ? 0 : `${sidebarWidth}px`,
           transition: themeObj.transitions.create('left'),
           zIndex: 40,
           borderBottom: 1,

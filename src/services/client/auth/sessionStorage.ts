@@ -69,6 +69,13 @@ export const hasClientPersistentSession = (): boolean => {
   return readSessionByKey(window.localStorage, CLIENT_AUTH_SESSION_KEY) !== null;
 };
 
+export const hasPlatformPersistentSession = (): boolean => {
+  if (!isBrowser()) {
+    return false;
+  }
+  return readSessionByKey(window.localStorage, PLATFORM_AUTH_SESSION_KEY) !== null;
+};
+
 export const readClientSession = (): AuthSession | null => {
   if (!isBrowser()) {
     return null;

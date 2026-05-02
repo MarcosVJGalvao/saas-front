@@ -48,6 +48,15 @@
 - Hook tests must live under `src/test/hooks`.
 - Tasks touching hooks are incomplete if hook tests are missing or outdated.
 
+## Services Pattern Policy (Mandatory)
+
+- Platform/client service modules under `src/services/**` must follow the same 3-file pattern:
+  - `types.ts`: request/response and payload/params aliases
+  - `endpoints.ts`: raw HTTP calls only (`httpClient.<method>`)
+  - `service.ts`: orchestration layer returning `data` and exposing business-friendly methods
+- Do not concentrate endpoint calls directly inside `service.ts` when creating new modules.
+- Reuse the `src/services/platform/auth` structure as the source template.
+
 ## Folder Responsibilities
 
 - `src/pages`: composition/layout only
