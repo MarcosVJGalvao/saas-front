@@ -1,14 +1,77 @@
+/* eslint-disable complexity */
 import Button from '@mui/material/Button';
 import Drawer from '@mui/material/Drawer';
 import Stack from '@mui/material/Stack';
+import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
-import { ClientFilters } from '../../../components/clients/ClientFilters';
-import { ClientsTable } from '../../../components/clients/ClientsTable';
-import { DeleteClientDialog } from '../../../components/clients/DeleteClientDialog';
-import { SearchBar } from '../../../components/common/data/SearchBar';
+import { EntitySearchFilter } from '../../../components/common/data/EntitySearchFilter';
+import { QueryDataTable } from '../../../components/common/data/QueryDataTable';
+import { SelectFilterField } from '../../../components/common/data/SelectFilterField';
 import { EntitySummaryCards } from '../../../components/common/display/EntitySummaryCards';
+import { ConfirmDialog } from '../../../components/common/feedback/ConfirmDialog';
 import { PageIntroHeader } from '../../../components/common/page/PageIntroHeader';
 import { useClientsListPageViewModel } from '../../../hooks/clients/useClientsListPageViewModel';
+
+const resolveStatusFilterValue = (statusValue: string): 'active' | 'inactive' | undefined => {
+  if (statusValue === 'active') return 'active';
+  if (statusValue === 'inactive') return 'inactive';
+  return undefined;
+};
+
+const ClientsListFilters = ({
+  model,
+}: {
+  model: ReturnType<typeof useClientsListPageViewModel>;
+}) => (
+  <Stack
+    direction={{ xs: 'column', xl: 'row' }}
+    spacing={1.5}
+    sx={{ alignItems: { xl: 'center' } }}
+  >
+    <EntitySearchFilter
+      value={model.query}
+      onChange={model.onQueryChange}
+      placeholder="Buscar por cliente, documento ou e-mail..."
+    />
+    <SelectFilterField
+      label="Status"
+      value={model.view.list.query.status ?? ''}
+      onChange={(statusValue) =>
+        model.view.list.updateQuery({
+          status: resolveStatusFilterValue(statusValue),
+          page: 1,
+        })
+      }
+      options={[
+        { value: 'active', label: 'Ativo' },
+        { value: 'inactive', label: 'Inativo' },
+      ]}
+    />
+    <TextField
+      fullWidth
+      label="Plano"
+      value={model.view.list.query.plan ?? ''}
+      onChange={(event) =>
+        model.view.list.updateQuery({ plan: event.target.value || undefined, page: 1 })
+      }
+    />
+    <TextField
+      fullWidth
+      label="Segmento"
+      value={model.view.list.query.segment ?? ''}
+      onChange={(event) =>
+        model.view.list.updateQuery({ segment: event.target.value || undefined, page: 1 })
+      }
+    />
+    <Button
+      variant="outlined"
+      startIcon={model.exportActionIcon}
+      sx={{ minWidth: 132, alignSelf: { xs: 'stretch', xl: 'auto' } }}
+    >
+      Exportar
+    </Button>
+  </Stack>
+);
 
 const ClientsListPage = () => {
   const model = useClientsListPageViewModel();
@@ -17,40 +80,18 @@ const ClientsListPage = () => {
     <Stack spacing={2.5}>
       <PageIntroHeader {...model.pageHeader} />
       <EntitySummaryCards cards={model.cards} />
-      <Stack
-        direction={{ xs: 'column', xl: 'row' }}
-        spacing={1.5}
-        sx={{ alignItems: { xl: 'center' } }}
-      >
-        <SearchBar
-          value={model.query}
-          onChange={model.onQueryChange}
-          placeholder="Buscar por cliente, documento ou e-mail..."
-          sx={{ maxWidth: { xs: '100%', xl: 380 } }}
-        />
-        <ClientFilters value={model.view.list.query} onChange={model.view.list.updateQuery} />
-        <Button
-          variant="outlined"
-          startIcon={model.exportActionIcon}
-          sx={{ minWidth: 132, alignSelf: { xs: 'stretch', xl: 'auto' } }}
-        >
-          Exportar
-        </Button>
-      </Stack>
-      <ClientsTable
+      <ClientsListFilters model={model} />
+      <QueryDataTable
         rows={model.view.list.rows}
+        columns={model.columns}
         loading={model.view.list.loading}
         errorMessage={model.view.list.errorMessage}
-        page={model.view.list.meta.page}
-        limit={model.view.list.meta.limit}
-        total={model.view.list.meta.total}
+        meta={model.view.list.meta}
         query={model.query}
         onQueryChange={model.onQueryChange}
         onPageChange={model.onPageChange}
-        onLimitChange={model.onLimitChange}
-        onView={model.view.setSelectedClientId}
-        onEdit={model.onEdit}
-        onDelete={model.view.setDeleteClientId}
+        onRowsPerPageChange={model.onLimitChange}
+        hideToolbar
       />
       <Drawer
         anchor="right"
@@ -70,14 +111,17 @@ const ClientsListPage = () => {
           )}
         </Stack>
       </Drawer>
-      <DeleteClientDialog
+      <ConfirmDialog
         open={model.view.deleteClientId !== undefined}
-        clientName={model.view.deleteClientName}
-        loading={model.view.mutations.loading}
+        title="Excluir cliente"
+        description={`Confirma a exclusão de ${model.view.deleteClientName ?? 'este cliente'}?`}
+        confirmLabel="Excluir"
+        confirmColor="error"
         onCancel={() => model.view.setDeleteClientId(undefined)}
         onConfirm={() => {
           void model.view.confirmDelete();
         }}
+        loading={model.view.mutations.loading}
       />
     </Stack>
   );

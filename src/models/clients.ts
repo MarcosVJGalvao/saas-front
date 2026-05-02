@@ -34,6 +34,15 @@ export type Client = AuditFields & {
   notes?: string | null;
   tenantSlug?: string | null;
   planName?: string | null;
+  tenant?: {
+    id: string;
+    name: string;
+    subscriptions?: Array<{
+      id: string;
+      status: string;
+      plan?: { id: string; name: string } | null;
+    }>;
+  } | null;
 };
 
 export type CreateClientRequest = {

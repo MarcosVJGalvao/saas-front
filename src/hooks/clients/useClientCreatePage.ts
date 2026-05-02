@@ -16,17 +16,20 @@ const initialValue: CreateClientRequest = {
 export const useClientCreatePage = () => {
   const navigate = useNavigate();
   const mutations = useClientsMutations();
-  const [value, setValue] = useState<CreateClientRequest>(initialValue);
+  const [value] = useState<CreateClientRequest>(initialValue);
 
-  const handleSubmit = useCallback(async (): Promise<void> => {
-    const created = await mutations.create(value);
-    if (created) {
-      void navigate(`/platform/clients/${created.id}`);
-    }
-  }, [mutations, navigate, value]);
+  const handleSubmit = useCallback(
+    async (payload: CreateClientRequest): Promise<void> => {
+      const created = await mutations.create(payload);
+      if (created) {
+        void navigate(`/platform/clients/${created.id}`);
+      }
+    },
+    [mutations, navigate],
+  );
 
   return useMemo(
-    () => ({ value, setValue, loading: mutations.loading, handleSubmit }),
+    () => ({ value, loading: mutations.loading, handleSubmit }),
     [handleSubmit, mutations.loading, value],
   );
 };

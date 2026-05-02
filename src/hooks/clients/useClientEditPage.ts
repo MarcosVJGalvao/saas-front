@@ -34,15 +34,18 @@ export const useClientEditPage = () => {
     });
   }, [id]);
 
-  const handleSubmit = useCallback(async (): Promise<void> => {
-    const updated = await mutations.update(id, value);
-    if (updated) {
-      void navigate(`/platform/clients/${updated.id}`);
-    }
-  }, [id, mutations, navigate, value]);
+  const handleSubmit = useCallback(
+    async (payload: CreateClientRequest): Promise<void> => {
+      const updated = await mutations.update(id, payload);
+      if (updated) {
+        void navigate(`/platform/clients/${updated.id}`);
+      }
+    },
+    [id, mutations, navigate],
+  );
 
   return useMemo(
-    () => ({ value, setValue, loading: mutations.loading, handleSubmit }),
+    () => ({ value, loading: mutations.loading, handleSubmit }),
     [handleSubmit, mutations.loading, value],
   );
 };
