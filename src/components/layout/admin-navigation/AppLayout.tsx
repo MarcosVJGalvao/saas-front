@@ -26,6 +26,8 @@ import { ProfileMenu } from './ProfileMenu';
 import { SidebarContent } from './SidebarContent';
 import { TopBar } from './TopBar';
 
+const TOKEN_EXPIRED_EVENT = 'app:token-expired';
+
 const notificationIconsById: Record<string, ReactNode> = {
   matricula: <SchoolOutlinedIcon sx={{ fontSize: 18 }} />,
   pagamento: <AttachMoneyOutlinedIcon sx={{ fontSize: 18 }} />,
@@ -127,6 +129,10 @@ export const AppLayout = ({ children }: { children?: ReactNode }) => {
           userInitials={userInitials}
           sessionExpiresIn={session?.expiresIn}
           sessionAccessToken={session?.accessToken}
+          onSessionExpired={() => {
+            window.dispatchEvent(new CustomEvent(TOKEN_EXPIRED_EVENT));
+            clearAuth();
+          }}
           onOpenMobileMenu={openMobileMenu}
           onOpenCommandPalette={palette.open}
           onOpenNotificationsMenu={openNotificationsMenu}

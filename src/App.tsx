@@ -1,13 +1,9 @@
 ﻿import { lazy, Suspense, useEffect, useState } from 'react';
 import Box from '@mui/material/Box';
 import CircularProgress from '@mui/material/CircularProgress';
-import Button from '@mui/material/Button';
-import Dialog from '@mui/material/Dialog';
-import DialogActions from '@mui/material/DialogActions';
-import DialogContent from '@mui/material/DialogContent';
-import DialogTitle from '@mui/material/DialogTitle';
 import { Navigate, Route, Routes } from 'react-router-dom';
 import { DomainProtectedRoute } from './components/common/access/DomainProtectedRoute';
+import { SessionExpiredDialog } from './components/common/feedback/SessionExpiredDialog';
 import { AppLayout } from './components/layout/admin-navigation/AppLayout';
 import { AUTH_DOMAIN } from './models/auth/auth';
 
@@ -153,15 +149,10 @@ const App = () => {
         </Routes>
       </Suspense>
 
-      <Dialog open={sessionExpiredModalOpen} onClose={handleCloseSessionExpiredModal}>
-        <DialogTitle>Sessão expirada</DialogTitle>
-        <DialogContent>Sua sessão expirou. Faça login novamente para continuar.</DialogContent>
-        <DialogActions>
-          <Button onClick={handleCloseSessionExpiredModal} variant="contained">
-            OK
-          </Button>
-        </DialogActions>
-      </Dialog>
+      <SessionExpiredDialog
+        open={sessionExpiredModalOpen}
+        onClose={handleCloseSessionExpiredModal}
+      />
     </>
   );
 };

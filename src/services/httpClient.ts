@@ -27,6 +27,7 @@ const UNAUTHORIZED_ERROR_CODE = 'UNAUTHORIZED';
 const TOKEN_EXPIRED_ERROR_CODE = 'TOKEN_EXPIRED';
 const REFRESH_TOKEN_INVALID_ERROR_CODE = 'REFRESH_TOKEN_INVALID';
 const TOKEN_EXPIRED_EVENT = 'app:token-expired';
+const SESSION_UPDATED_EVENT = 'app:session-updated';
 const isRecord = (value: unknown): value is Record<string, unknown> =>
   typeof value === 'object' && value !== null && !Array.isArray(value);
 
@@ -124,6 +125,12 @@ const shouldRefreshToken = (session: AuthSession | null): boolean => {
   return remainingSeconds !== null && remainingSeconds <= REFRESH_THRESHOLD_SECONDS;
 };
 
+const dispatchSessionUpdatedEvent = (): void => {
+  if (typeof window !== 'undefined') {
+    window.dispatchEvent(new CustomEvent(SESSION_UPDATED_EVENT));
+  }
+};
+
 httpClient.interceptors.request.use((config) => {
   const requestUrl = config.url ?? '';
   const isClientRequest = requestUrl.includes(CLIENT_API_BASE_PATH);
@@ -159,6 +166,7 @@ httpClient.interceptors.request.use((config) => {
       } else if (isPlatformRequest) {
         writePlatformSession(nextSession, hasPlatformPersistentSession());
       }
+      dispatchSessionUpdatedEvent();
       return config;
     })
     .catch((refreshError) => {
@@ -216,6 +224,7 @@ httpClient.interceptors.response.use(
           refreshPromise = null;
           originalRequest.headers = originalRequest.headers ?? {};
           originalRequest.headers.Authorization = `Bearer ${session.accessToken}`;
+          dispatchSessionUpdatedEvent();
           return httpClient.request(originalRequest);
         })
         .catch((refreshError) => {

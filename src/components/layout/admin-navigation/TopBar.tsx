@@ -23,6 +23,7 @@ interface TopBarProps {
   userInitials: string;
   sessionExpiresIn?: string;
   sessionAccessToken?: string;
+  onSessionExpired?: () => void;
   onOpenMobileMenu: () => void;
   onOpenCommandPalette: () => void;
   onOpenNotificationsMenu: MouseEventHandler<HTMLElement>;
@@ -57,7 +58,7 @@ const TopBarSearchShortcut = ({ isMobile }: { isMobile: boolean }) =>
   ) : null;
 
 const sessionTimerContainerSx = {
-  display: { xs: 'none', xl: 'flex' },
+  display: { xs: 'none', md: 'flex' },
   alignItems: 'center',
   minWidth: 0,
 };
@@ -87,6 +88,7 @@ export const TopBar = ({
   userInitials,
   sessionExpiresIn,
   sessionAccessToken,
+  onSessionExpired,
   onOpenMobileMenu,
   onOpenCommandPalette,
   onOpenNotificationsMenu,
@@ -167,6 +169,7 @@ export const TopBar = ({
             expiresIn={sessionExpiresIn ?? '1h'}
             accessToken={sessionAccessToken}
             compact={isMobile}
+            onExpired={onSessionExpired}
           />
         </Box>
         <IconButton
