@@ -35,6 +35,8 @@ export const ClientOnboardingForm = ({ loading, onSubmit, onCancel }: Props) => 
     setUiExtras,
     summary,
     isClientDataStepComplete,
+    planOptions,
+    plansLoading,
   } = useClientOnboardingForm();
   const [committedSummary, setCommittedSummary] = useState(summary);
   const [maxCompletedStep, setMaxCompletedStep] = useState(0);
@@ -82,11 +84,16 @@ export const ClientOnboardingForm = ({ loading, onSubmit, onCancel }: Props) => 
     const stepComponents = [
       <ClientDataStep key="client-data" {...sharedProps} />,
       <TenantStep key="tenant" {...sharedProps} />,
-      <PlanStep key="plan" {...sharedProps} />,
+      <PlanStep
+        key="plan"
+        {...sharedProps}
+        planOptions={planOptions}
+        plansLoading={plansLoading}
+      />,
       <AdminStep key="admin" {...sharedProps} />,
     ] as const;
     return stepComponents[activeStep] ?? stepComponents[0];
-  }, [activeStep, setUiExtras, setValue, uiExtras, value]);
+  }, [activeStep, planOptions, plansLoading, setUiExtras, setValue, uiExtras, value]);
 
   return (
     <Stack
@@ -111,8 +118,13 @@ export const ClientOnboardingForm = ({ loading, onSubmit, onCancel }: Props) => 
           onCancel={onCancel}
           onNext={handleNext}
           isLastStep={isLastStep}
+          nextLoading={loading && isLastStep}
           nextLabel={isLastStep ? 'Finalizar onboarding' : 'Próximo'}
-          nextDisabled={(activeStep === 0 && !isClientDataStepComplete) || (loading && isLastStep)}
+          nextDisabled={
+            (activeStep === 0 && !isClientDataStepComplete) ||
+            (activeStep === 2 && value.planId.length === 0) ||
+            (loading && isLastStep)
+          }
         >
           {stepContent}
         </StepperWizard>

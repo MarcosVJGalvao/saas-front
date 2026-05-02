@@ -90,4 +90,22 @@ describe('QueryDataTable', () => {
     expect(getByText('Nenhum registro encontrado')).toBeInTheDocument();
     expect(getByText('Ajuste os filtros e tente novamente.')).toBeInTheDocument();
   });
+
+  it('renders inline toolbar content', () => {
+    const { getByText } = render(
+      <QueryDataTable
+        rows={[{ id: '1', name: 'Alice' }]}
+        columns={columns}
+        meta={meta}
+        query=""
+        onQueryChange={() => undefined}
+        loading={false}
+        onPageChange={() => undefined}
+        onRowsPerPageChange={() => undefined}
+        toolbarContent={<div>Filtro inline</div>}
+      />,
+    );
+
+    expect(getByText('Filtro inline')).toBeInTheDocument();
+  });
 });

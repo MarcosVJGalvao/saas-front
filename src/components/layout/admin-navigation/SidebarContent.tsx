@@ -12,7 +12,6 @@ import CloseIcon from '@mui/icons-material/Close';
 import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import HomeOutlinedIcon from '@mui/icons-material/HomeOutlined';
-import MenuIcon from '@mui/icons-material/Menu';
 import { densityMetrics, type DensityMode } from '../../../models/density';
 import type { NavigationItem } from '../../../models/navigation';
 import type { LayoutBrandConfig } from '../../../models/navigation';
@@ -47,7 +46,11 @@ const SidebarMenuButton = ({
     size="small"
     aria-label={mobileMode ? 'Fechar menu lateral' : 'Alternar menu lateral'}
   >
-    {mobileMode ? <CloseIcon /> : isCollapsed ? <MenuIcon /> : <ChevronLeftIcon />}
+    {mobileMode ? (
+      <CloseIcon />
+    ) : (
+      <ChevronLeftIcon sx={{ transform: isCollapsed ? 'rotate(180deg)' : 'none' }} />
+    )}
   </IconButton>
 );
 
@@ -102,6 +105,21 @@ const getExpandIndicatorIcon = (showExpandIcon: boolean, isOpen: boolean) => {
   return isOpen ? <ExpandLessIcon /> : <ExpandMoreIcon />;
 };
 
+const getSidebarMenuItemSx = (isCollapsed: boolean, sidebarItemHeight: number) => ({
+  borderRadius: 2,
+  minHeight: sidebarItemHeight - 8,
+  color: 'text.primary',
+  justifyContent: isCollapsed ? 'center' : 'flex-start',
+  px: isCollapsed ? 0 : 1.5,
+  '&.Mui-selected': {
+    bgcolor: 'action.selected',
+    color: 'primary.main',
+  },
+  '&.Mui-selected .MuiListItemIcon-root': {
+    color: 'primary.main',
+  },
+});
+
 const SidebarMenuItem = ({
   item,
   isCollapsed,
@@ -119,6 +137,7 @@ const SidebarMenuItem = ({
 }) => {
   const showExpandIcon = !isCollapsed && item.hasChildren;
   const showChildren = !isCollapsed && item.hasChildren && item.isOpen;
+  const itemSx = getSidebarMenuItemSx(isCollapsed, sidebarItemHeight);
 
   return (
     <Box key={item.id}>
@@ -127,20 +146,9 @@ const SidebarMenuItem = ({
         onClick={() =>
           onSidebarItemClick(item.hasChildren, item.id, item.href, onItemClick, toggleGroup)
         }
-        sx={{
-          borderRadius: 2,
-          minHeight: sidebarItemHeight - 8,
-          color: 'text.primary',
-          '&.Mui-selected': {
-            bgcolor: 'action.selected',
-            color: 'primary.main',
-          },
-          '&.Mui-selected .MuiListItemIcon-root': {
-            color: 'primary.main',
-          },
-        }}
+        sx={itemSx}
       >
-        <ListItemIcon sx={{ minWidth: 36 }}>
+        <ListItemIcon sx={{ minWidth: isCollapsed ? 0 : 36, justifyContent: 'center' }}>
           {item.icon !== undefined ? <item.icon /> : <HomeOutlinedIcon />}
         </ListItemIcon>
         {!isCollapsed ? <ListItemText primary={item.label} /> : null}

@@ -17,6 +17,22 @@ const ClientCreatePage = lazy(() => import('./pages/platform/clients/ClientCreat
 const ClientEditPage = lazy(() => import('./pages/platform/clients/ClientEditPage'));
 const ClientDetailsPage = lazy(() => import('./pages/platform/clients/ClientDetailsPage'));
 const ClientOnboardingPage = lazy(() => import('./pages/platform/clients/ClientOnboardingPage'));
+const PlansListPage = lazy(() => import('./pages/platform/plans/PlansListPage'));
+const PlanCreatePage = lazy(() => import('./pages/platform/plans/PlanCreatePage'));
+const PlanEditPage = lazy(() => import('./pages/platform/plans/PlanEditPage'));
+const PlanDetailsPage = lazy(() => import('./pages/platform/plans/PlanDetailsPage'));
+const SubscriptionsListPage = lazy(
+  () => import('./pages/platform/subscriptions/SubscriptionsListPage'),
+);
+const SubscriptionCreatePage = lazy(
+  () => import('./pages/platform/subscriptions/SubscriptionCreatePage'),
+);
+const SubscriptionEditPage = lazy(
+  () => import('./pages/platform/subscriptions/SubscriptionEditPage'),
+);
+const SubscriptionDetailsPage = lazy(
+  () => import('./pages/platform/subscriptions/SubscriptionDetailsPage'),
+);
 const ClientLoginPage = lazy(() => import('./pages/client/auth/LoginPage'));
 const ClientForgotPasswordPage = lazy(() => import('./pages/client/auth/ForgotPasswordPage'));
 const ClientResetPasswordPage = lazy(() => import('./pages/client/auth/ResetPasswordPage'));
@@ -115,6 +131,70 @@ const App = () => {
               element={
                 <DomainProtectedRoute domain={AUTH_DOMAIN.PLATFORM} loginPath="/platform/login">
                   <ClientEditPage />
+                </DomainProtectedRoute>
+              }
+            />
+            <Route
+              path="/platform/plans"
+              element={
+                <DomainProtectedRoute domain={AUTH_DOMAIN.PLATFORM} loginPath="/platform/login">
+                  <PlansListPage />
+                </DomainProtectedRoute>
+              }
+            />
+            <Route
+              path="/platform/plans/new"
+              element={
+                <DomainProtectedRoute domain={AUTH_DOMAIN.PLATFORM} loginPath="/platform/login">
+                  <PlanCreatePage />
+                </DomainProtectedRoute>
+              }
+            />
+            <Route
+              path="/platform/plans/:id"
+              element={
+                <DomainProtectedRoute domain={AUTH_DOMAIN.PLATFORM} loginPath="/platform/login">
+                  <PlanDetailsPage />
+                </DomainProtectedRoute>
+              }
+            />
+            <Route
+              path="/platform/plans/:id/edit"
+              element={
+                <DomainProtectedRoute domain={AUTH_DOMAIN.PLATFORM} loginPath="/platform/login">
+                  <PlanEditPage />
+                </DomainProtectedRoute>
+              }
+            />
+            <Route
+              path="/platform/subscriptions"
+              element={
+                <DomainProtectedRoute domain={AUTH_DOMAIN.PLATFORM} loginPath="/platform/login">
+                  <SubscriptionsListPage />
+                </DomainProtectedRoute>
+              }
+            />
+            <Route
+              path="/platform/subscriptions/new"
+              element={
+                <DomainProtectedRoute domain={AUTH_DOMAIN.PLATFORM} loginPath="/platform/login">
+                  <SubscriptionCreatePage />
+                </DomainProtectedRoute>
+              }
+            />
+            <Route
+              path="/platform/subscriptions/:id"
+              element={
+                <DomainProtectedRoute domain={AUTH_DOMAIN.PLATFORM} loginPath="/platform/login">
+                  <SubscriptionDetailsPage />
+                </DomainProtectedRoute>
+              }
+            />
+            <Route
+              path="/platform/subscriptions/:id/edit"
+              element={
+                <DomainProtectedRoute domain={AUTH_DOMAIN.PLATFORM} loginPath="/platform/login">
+                  <SubscriptionEditPage />
                 </DomainProtectedRoute>
               }
             />

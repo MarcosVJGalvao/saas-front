@@ -1,4 +1,4 @@
-import { useCallback, useMemo, type ReactNode } from 'react';
+﻿import { useCallback, useMemo, type ReactNode } from 'react';
 import Paper from '@mui/material/Paper';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -32,6 +32,16 @@ interface DataTableProps<TData> {
 
 const ROWS_PER_PAGE_OPTIONS = [10, 20, 50];
 const EMPTY_MOBILE_VALUE = '-';
+const TABLE_ROWS_PER_PAGE_LABEL = 'Itens por página:';
+const TABLE_DISPLAYED_ROWS_LABEL = ({
+  from,
+  to,
+  count,
+}: {
+  from: number;
+  to: number;
+  count: number;
+}) => `${from}-${to} de ${count !== -1 ? count : `mais de ${to}`}`;
 
 export const DataTable = <TData,>({
   rows,
@@ -68,6 +78,8 @@ export const DataTable = <TData,>({
           count={meta.total}
           page={currentPage}
           rowsPerPage={meta.limit}
+          labelRowsPerPage={TABLE_ROWS_PER_PAGE_LABEL}
+          labelDisplayedRows={TABLE_DISPLAYED_ROWS_LABEL}
           onPageChange={(_, page) => onPageChange(page + 1)}
           onRowsPerPageChange={(event) => onRowsPerPageChange(Number(event.target.value))}
           rowsPerPageOptions={ROWS_PER_PAGE_OPTIONS}
@@ -77,12 +89,24 @@ export const DataTable = <TData,>({
   }
 
   return (
-    <TableContainer component={Paper}>
+    <TableContainer
+      component={Paper}
+      sx={{ border: `1px solid ${theme.palette.divider}`, borderRadius: theme.spacing(1.5) }}
+    >
       <Table>
         <TableHead>
           <TableRow>
             {columns.map((column) => (
-              <TableCell key={column.key} align={column.align ?? 'left'}>
+              <TableCell
+                key={column.key}
+                align={column.align ?? 'left'}
+                sx={{
+                  fontSize: theme.typography.body2.fontSize,
+                  color: theme.palette.text.secondary,
+                  fontWeight: 600,
+                  py: theme.spacing(2.25),
+                }}
+              >
                 {column.header}
               </TableCell>
             ))}
@@ -90,9 +114,20 @@ export const DataTable = <TData,>({
         </TableHead>
         <TableBody>
           {rows.map((row, rowIndex) => (
-            <TableRow key={resolveRowId(row, rowIndex)} hover>
+            <TableRow
+              key={resolveRowId(row, rowIndex)}
+              hover
+              sx={{
+                '& td': { height: 48 },
+                '&:hover': { bgcolor: theme.palette.background.default },
+              }}
+            >
               {columns.map((column) => (
-                <TableCell key={column.key} align={column.align ?? 'left'}>
+                <TableCell
+                  key={column.key}
+                  align={column.align ?? 'left'}
+                  sx={{ fontSize: theme.typography.body2.fontSize, py: theme.spacing(1.5) }}
+                >
                   {column.render(row)}
                 </TableCell>
               ))}
@@ -105,9 +140,12 @@ export const DataTable = <TData,>({
         count={meta.total}
         page={currentPage}
         rowsPerPage={meta.limit}
+        labelRowsPerPage={TABLE_ROWS_PER_PAGE_LABEL}
+        labelDisplayedRows={TABLE_DISPLAYED_ROWS_LABEL}
         onPageChange={(_, page) => onPageChange(page + 1)}
         onRowsPerPageChange={(event) => onRowsPerPageChange(Number(event.target.value))}
         rowsPerPageOptions={ROWS_PER_PAGE_OPTIONS}
+        sx={{ '.MuiTablePagination-toolbar': { justifyContent: 'flex-end' } }}
       />
     </TableContainer>
   );

@@ -19,6 +19,8 @@ const platformDefaultPermissions = [
   'platform:settings:read',
   'platform:audit:read',
   'platform:clients:*',
+  'platform:plans:*',
+  'platform:subscriptions:*',
 ];
 
 const clientDefaultPermissions = [

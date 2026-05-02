@@ -1,7 +1,9 @@
-﻿import { useMemo, useState } from 'react';
+﻿import { useEffect, useMemo, useState } from 'react';
 import type { Dispatch, SetStateAction } from 'react';
 import { isClientOnboardingClientDataStepValid } from '../../forms/clientsSchemas';
 import type { CreateClientOnboardingRequest } from '../../models/clients';
+import type { Plan } from '../../models/plans';
+import { plansService } from '../../services/platform/plans/service';
 import { toOnboardingPayload } from '../../utils/clientOnboarding';
 import { maskCnpj, maskCpf, maskPhone } from '../../utils/mask';
 
@@ -31,6 +33,8 @@ type UseClientOnboardingFormResult = {
   };
   onboardingPayload: CreateClientOnboardingRequest;
   isClientDataStepComplete: boolean;
+  planOptions: Plan[];
+  plansLoading: boolean;
 };
 
 const initialValue: CreateClientOnboardingRequest = {
@@ -82,6 +86,23 @@ export const useClientOnboardingForm = (): UseClientOnboardingFormResult => {
   const [activeStep, setActiveStep] = useState(0);
   const [value, setValue] = useState<CreateClientOnboardingRequest>(initialValue);
   const [uiExtras, setUiExtras] = useState<ClientOnboardingUiExtras>(initialUiExtras);
+  const [planOptions, setPlanOptions] = useState<Plan[]>([]);
+  const [plansLoading, setPlansLoading] = useState(true);
+
+  useEffect(() => {
+    const timeoutId = window.setTimeout(() => {
+      void plansService
+        .list({ page: 1, limit: 100 })
+        .then((response) => {
+          setPlanOptions(response.data);
+        })
+        .finally(() => {
+          setPlansLoading(false);
+        });
+    }, 0);
+
+    return () => window.clearTimeout(timeoutId);
+  }, []);
 
   const onboardingPayload = useMemo<CreateClientOnboardingRequest>(
     () => toOnboardingPayload(value, uiExtras),
@@ -137,5 +158,7 @@ export const useClientOnboardingForm = (): UseClientOnboardingFormResult => {
     summary,
     onboardingPayload,
     isClientDataStepComplete,
+    planOptions,
+    plansLoading,
   };
 };

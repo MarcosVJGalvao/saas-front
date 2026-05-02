@@ -35,9 +35,30 @@ export const toOnboardingPayload = (
     person: {
       ...value.employee.person,
       documentNumber: onlyDigits(value.employee.person.documentNumber),
+      dateOfBirth: normalizeDateOfBirth(value.employee.person.dateOfBirth),
     },
   },
 });
+
+const normalizeDateOfBirth = (value?: string): string | undefined => {
+  if (!value) return undefined;
+  const trimmedValue = value.trim();
+  if (trimmedValue.length === 0) return undefined;
+
+  const digits = onlyDigits(trimmedValue);
+  if (digits.length === 8) {
+    const day = digits.slice(0, 2);
+    const month = digits.slice(2, 4);
+    const year = digits.slice(4, 8);
+    return `${year}-${month}-${day}`;
+  }
+
+  if (/^\d{4}-\d{2}-\d{2}$/.test(trimmedValue)) {
+    return trimmedValue;
+  }
+
+  return trimmedValue;
+};
 
 export const parseOnboardingDocumentType = (
   value: string,

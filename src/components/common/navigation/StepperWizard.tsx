@@ -5,6 +5,7 @@ import PersonOutlineOutlinedIcon from '@mui/icons-material/PersonOutlineOutlined
 import RoomPreferencesOutlinedIcon from '@mui/icons-material/RoomPreferencesOutlined';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
+import CircularProgress from '@mui/material/CircularProgress';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import { alpha } from '@mui/material/styles';
@@ -21,6 +22,7 @@ interface StepperWizardProps {
   isLastStep: boolean;
   nextLabel?: string;
   nextDisabled?: boolean;
+  nextLoading?: boolean;
 }
 
 const stepIcons = [
@@ -41,6 +43,7 @@ export const StepperWizard = ({
   isLastStep,
   nextLabel,
   nextDisabled,
+  nextLoading = false,
 }: StepperWizardProps) => (
   <Box>
     <Stack
@@ -103,14 +106,21 @@ export const StepperWizard = ({
       <Button
         variant="contained"
         onClick={onNext}
-        disabled={nextDisabled}
+        disabled={nextDisabled || nextLoading}
         sx={(theme) => ({
           px: 3,
           py: 0.9,
           boxShadow: `0 2px 6px ${alpha(theme.palette.primary.main, theme.palette.mode === 'dark' ? 0.45 : 0.3)}`,
         })}
+        startIcon={
+          nextLoading ? (
+            <CircularProgress size={16} color="inherit" aria-label="Carregando" />
+          ) : null
+        }
       >
-        {nextLabel ?? (isLastStep ? 'Finalizar' : 'Salvar e continuar')}
+        {nextLoading
+          ? 'Finalizando...'
+          : (nextLabel ?? (isLastStep ? 'Finalizar' : 'Salvar e continuar'))}
       </Button>
     </Box>
   </Box>

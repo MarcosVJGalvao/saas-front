@@ -86,12 +86,20 @@ export const AppLayout = ({ children }: { children?: ReactNode }) => {
   const currentPageLabel = getCurrentPageLabel(location.pathname, navigationItems);
 
   return (
-    <Box sx={{ display: 'flex', minHeight: '100vh', bgcolor: 'background.default' }}>
+    <Box
+      sx={{
+        display: 'flex',
+        height: '100vh',
+        overflow: 'hidden',
+        bgcolor: 'background.default',
+      }}
+    >
       {!isMobile ? (
         <Box
           sx={{
             width: sidebarWidth,
             flexShrink: 0,
+            height: '100vh',
             borderRight: 1,
             borderColor: 'divider',
             transition: themeObj.transitions.create('width'),
@@ -142,7 +150,14 @@ export const AppLayout = ({ children }: { children?: ReactNode }) => {
 
       <Box
         component="main"
-        sx={{ flexGrow: 1, pt: `${appBarHeight + 24}px`, px: { xs: 2, lg: 3 }, pb: 3 }}
+        sx={{
+          flexGrow: 1,
+          height: '100vh',
+          overflowY: 'auto',
+          pt: `${appBarHeight + 24}px`,
+          px: { xs: 2, lg: 3 },
+          pb: 3,
+        }}
       >
         {children ?? <Outlet />}
       </Box>

@@ -1,19 +1,15 @@
 ﻿import MoreVertIcon from '@mui/icons-material/MoreVert';
-import Avatar from '@mui/material/Avatar';
+import Chip from '@mui/material/Chip';
 import IconButton from '@mui/material/IconButton';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
-import Stack from '@mui/material/Stack';
-import Typography from '@mui/material/Typography';
 import { useMemo, useState } from 'react';
-import type { Client } from '../../models/clients';
-import { maskCnpj, maskCpf } from '../../utils/mask';
+import type { Plan } from '../../models/plans';
 import type { DataTableColumn } from '../common/data/DataTable';
 import { QueryDataTable } from '../common/data/QueryDataTable';
-import { ClientStatusBadge } from './ClientStatusBadge';
 
-interface ClientsTableProps {
-  rows: Client[];
+interface PlansTableProps {
+  rows: Plan[];
   loading: boolean;
   errorMessage?: string;
   page: number;
@@ -28,7 +24,16 @@ interface ClientsTableProps {
   onDelete: (id: string) => void;
 }
 
-const ClientActions = ({
+const translateBillingCycle = (value: Plan['billingCycle']): string =>
+  value === 'monthly' ? 'Mensal' : 'Anual';
+
+const formatCurrency = (value: string, currency: string): string => {
+  const normalized = Number(value);
+  if (Number.isNaN(normalized)) return `${value} ${currency}`;
+  return new Intl.NumberFormat('pt-BR', { style: 'currency', currency }).format(normalized);
+};
+
+const PlanActions = ({
   id,
   onView,
   onEdit,
@@ -75,7 +80,7 @@ const ClientActions = ({
   );
 };
 
-export const ClientsTable = ({
+export const PlansTable = ({
   rows,
   loading,
   errorMessage,
@@ -89,45 +94,28 @@ export const ClientsTable = ({
   onView,
   onEdit,
   onDelete,
-}: ClientsTableProps) => {
-  const formatDocument = (row: Client): string => {
-    if (row.documentType === 'CPF') {
-      return maskCpf(row.documentNumber);
-    }
-    if (row.documentType === 'CNPJ') {
-      return maskCnpj(row.documentNumber);
-    }
-    return row.documentNumber;
-  };
-
-  const columns = useMemo<DataTableColumn<Client>[]>(
+}: PlansTableProps) => {
+  const columns = useMemo<DataTableColumn<Plan>[]>(
     () => [
+      { key: 'name', header: 'Nome', render: (row) => row.name },
+      { key: 'description', header: 'Descrição', render: (row) => row.description ?? '-' },
+      { key: 'price', header: 'Preço', render: (row) => formatCurrency(row.price, row.currency) },
       {
-        key: 'client',
-        header: 'Cliente',
-        render: (row) => (
-          <Stack direction="row" spacing={1.25} sx={{ alignItems: 'center' }}>
-            <Avatar sx={{ width: 32, height: 32, fontSize: 13 }}>
-              {row.tradeName?.charAt(0) ?? row.legalName.charAt(0)}
-            </Avatar>
-            <Stack>
-              <Typography variant="body2" sx={{ fontWeight: 500 }}>
-                {row.legalName}
-              </Typography>
-              <Typography variant="caption" color="text.secondary">
-                {row.email}
-              </Typography>
-            </Stack>
-          </Stack>
-        ),
+        key: 'billingCycle',
+        header: 'Ciclo',
+        render: (row) => translateBillingCycle(row.billingCycle),
       },
-      { key: 'document', header: 'Documento', render: (row) => formatDocument(row) },
-      { key: 'tenant', header: 'Tenant', render: (row) => row.tenantSlug ?? '-' },
-      { key: 'plan', header: 'Plano', render: (row) => row.planName ?? '-' },
+      { key: 'trialDays', header: 'Trial', render: (row) => `${row.trialDays} dias` },
       {
-        key: 'status',
+        key: 'isActive',
         header: 'Status',
-        render: (row) => <ClientStatusBadge status={row.status} />,
+        render: (row) => (
+          <Chip
+            size="small"
+            label={row.isActive ? 'Ativo' : 'Inativo'}
+            color={row.isActive ? 'success' : 'default'}
+          />
+        ),
       },
       {
         key: 'createdAt',
@@ -139,7 +127,7 @@ export const ClientsTable = ({
         header: 'Ações',
         align: 'right',
         render: (row) => (
-          <ClientActions id={row.id} onView={onView} onEdit={onEdit} onDelete={onDelete} />
+          <PlanActions id={row.id} onView={onView} onEdit={onEdit} onDelete={onDelete} />
         ),
       },
     ],
@@ -154,7 +142,7 @@ export const ClientsTable = ({
         page,
         limit,
         total,
-        totalPages: Math.max(1, Math.ceil(total / limit)),
+        totalPages: Math.max(1, Math.ceil(total / Math.max(limit, 1))),
         hasNextPage: page * limit < total,
         hasPreviousPage: page > 1,
       }}
@@ -165,6 +153,8 @@ export const ClientsTable = ({
       onPageChange={onPageChange}
       onRowsPerPageChange={onLimitChange}
       hideToolbar
+      emptyTitle="Nenhum plano encontrado"
+      emptyDescription="Ajuste os filtros ou cadastre um novo plano."
     />
   );
 };

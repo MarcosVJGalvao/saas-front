@@ -13,10 +13,13 @@ import type {
 } from './types';
 
 const PLATFORM_CLIENTS_BASE_PATH = '/api/platform/clients';
+const ONBOARDING_REQUEST_TIMEOUT_IN_MILLISECONDS = 120000;
 
 export const platformClientsEndpoints = {
   list: (params: ClientsListParams) =>
-    httpClient.get<ClientsListResponse>(PLATFORM_CLIENTS_BASE_PATH, { params }),
+    httpClient.get<ClientsListResponse>(PLATFORM_CLIENTS_BASE_PATH, {
+      params: { ...params, sortOrder: 'DESC' },
+    }),
 
   getById: (id: string) =>
     httpClient.get<ClientDetailsResponse>(`${PLATFORM_CLIENTS_BASE_PATH}/${id}`),
@@ -31,5 +34,7 @@ export const platformClientsEndpoints = {
     httpClient.delete<ClientDeleteResponse>(`${PLATFORM_CLIENTS_BASE_PATH}/${id}`),
 
   onboard: (payload: ClientOnboardPayload) =>
-    httpClient.post<ClientOnboardResponse>(`${PLATFORM_CLIENTS_BASE_PATH}/onboarding`, payload),
+    httpClient.post<ClientOnboardResponse>(`${PLATFORM_CLIENTS_BASE_PATH}/onboarding`, payload, {
+      timeout: ONBOARDING_REQUEST_TIMEOUT_IN_MILLISECONDS,
+    }),
 };

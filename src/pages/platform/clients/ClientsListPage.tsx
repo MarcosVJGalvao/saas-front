@@ -65,8 +65,8 @@ const buildKpiCards = (rows: Client[], total: number): KpiCard[] => {
 const ClientsHeader = ({ canCreate, onCreate }: { canCreate: boolean; onCreate: () => void }) => (
   <Stack direction="row" sx={{ justifyContent: 'space-between', alignItems: 'center' }}>
     <Stack>
-      <Typography variant="h4" sx={{ fontWeight: 700 }}>
-        Gestão de Clientes
+      <Typography variant="h5" sx={{ fontWeight: 700 }}>
+        Listagem de Clientes
       </Typography>
       <Typography color="text.secondary">
         Gerencie todos os clientes cadastrados na plataforma.

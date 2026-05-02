@@ -36,6 +36,7 @@ interface QueryDataTableProps<TData> {
   emptyTitle?: string;
   emptyDescription?: string;
   hideToolbar?: boolean;
+  toolbarContent?: ReactNode;
 }
 
 const QueryDataTableToolbar = ({
@@ -147,12 +148,14 @@ export const QueryDataTable = <TData,>({
   emptyTitle = commonDataMessages.emptyTitle,
   emptyDescription = commonDataMessages.emptyDescription,
   hideToolbar = false,
+  toolbarContent,
 }: QueryDataTableProps<TData>) => {
   const hasFilter = filterContent !== undefined;
   const hasError = errorMessage !== undefined && errorMessage.length > 0;
 
   return (
     <Stack spacing={spacingScale.sm}>
+      {toolbarContent}
       {!hideToolbar ? (
         <QueryDataTableToolbar
           query={query}
