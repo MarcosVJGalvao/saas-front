@@ -1,10 +1,11 @@
 import { z } from 'zod';
+import type { CreateClientOnboardingRequest } from '../models/clients';
+import { addressSchema } from './schemas/addressSchema';
+import { documentTypeSchema } from './schemas/enums';
+import { personSchema } from './schemas/personSchema';
 
 export const clientStatusSchema = z.enum(['active', 'inactive']);
-export const documentTypeSchema = z.enum(['CPF', 'CNPJ', 'RG', 'PASSPORT', 'OTHER']);
 export const contactTypeSchema = z.enum(['email', 'phone', 'whatsapp', 'linkedin', 'other']);
-export const genderSchema = z.enum(['male', 'female', 'other', 'prefer_not_to_say']);
-export const maritalStatusSchema = z.enum(['single', 'married', 'divorced', 'widowed', 'other']);
 
 export const createClientSchema = z.object({
   legalName: z.string(),
@@ -46,15 +47,6 @@ export const clientsQuerySchema = z
   });
 
 const onboardingContactSchema = z.object({ type: contactTypeSchema, value: z.string().min(1) });
-const onboardingPersonSchema = z.object({
-  fullName: z.string().min(1),
-  documentNumber: z.string().min(3).max(30),
-  documentType: documentTypeSchema,
-  dateOfBirth: z.string().optional(),
-  gender: genderSchema.optional(),
-  maritalStatus: maritalStatusSchema.optional(),
-  monthlyIncome: z.string().optional(),
-});
 
 export const createClientOnboardingSchema = z
   .object({
@@ -72,10 +64,11 @@ export const createClientOnboardingSchema = z
     planId: z.string(),
     adminPassword: z.string().min(8).max(255),
     employee: z.object({
-      person: onboardingPersonSchema,
+      person: personSchema,
       contacts: z.array(onboardingContactSchema).min(1),
       department: z.string().optional(),
     }),
+    clientAddress: addressSchema,
   })
   .superRefine((data, ctx) => {
     if (!data.employee.contacts.some((contact) => contact.type === 'email')) {
@@ -86,3 +79,17 @@ export const createClientOnboardingSchema = z
       });
     }
   });
+
+export const clientOnboardingClientDataStepSchema = z.object({
+  legalName: z.string().min(1),
+  tradeName: z.string().min(1),
+  documentNumber: z.string().min(8).max(30),
+  documentType: documentTypeSchema,
+  clientEmail: z.string().email(),
+  phone: z.string().min(1),
+  clientAddress: addressSchema,
+});
+
+export const isClientOnboardingClientDataStepValid = (
+  value: CreateClientOnboardingRequest,
+): boolean => clientOnboardingClientDataStepSchema.safeParse(value).success;

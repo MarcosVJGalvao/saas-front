@@ -3,6 +3,8 @@ import MenuItem from '@mui/material/MenuItem';
 import Stack from '@mui/material/Stack';
 import TextField from '@mui/material/TextField';
 import type { CreateClientRequest } from '../../models/clients';
+import { maskCnpj, maskCpf } from '../../utils/mask';
+import { onlyDigits } from '../../utils/parse';
 
 interface ClientFormProps {
   value: CreateClientRequest;
@@ -22,14 +24,18 @@ export const ClientForm = ({ value, loading, onChange, onSubmit }: ClientFormPro
         onChange={(event) => patch('tradeName', event.target.value)}
       />
       <TextField
-        label="Raz�o Social"
+        label="Razão Social"
         value={value.legalName}
         onChange={(event) => patch('legalName', event.target.value)}
       />
       <TextField
         label="Documento"
-        value={value.documentNumber}
-        onChange={(event) => patch('documentNumber', event.target.value)}
+        value={
+          value.documentType === 'CPF'
+            ? maskCpf(value.documentNumber)
+            : maskCnpj(value.documentNumber)
+        }
+        onChange={(event) => patch('documentNumber', onlyDigits(event.target.value))}
       />
       <TextField
         select

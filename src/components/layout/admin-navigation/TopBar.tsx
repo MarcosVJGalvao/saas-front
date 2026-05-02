@@ -32,9 +32,8 @@ interface TopBarProps {
 const getSearchContainerSx = (isMobile: boolean) => ({
   display: 'flex',
   justifyContent: 'flex-start',
-  ...(isMobile
-    ? { flex: 1 }
-    : { position: 'absolute', left: '50%', transform: 'translateX(-50%)' }),
+  flex: isMobile ? 1 : '1 1 auto',
+  minWidth: 0,
 });
 
 const TopBarSearchShortcut = ({ isMobile }: { isMobile: boolean }) =>
@@ -58,8 +57,9 @@ const TopBarSearchShortcut = ({ isMobile }: { isMobile: boolean }) =>
   ) : null;
 
 const sessionTimerContainerSx = {
-  display: { xs: 'none', md: 'none', lg: 'flex' },
+  display: { xs: 'none', xl: 'flex' },
   alignItems: 'center',
+  minWidth: 0,
 };
 
 const TopBarUserInfo = ({ isMobile, userName }: { isMobile: boolean; userName: string }) =>
@@ -100,8 +100,7 @@ export const TopBar = ({
       sx={{
         minHeight: `${appBarHeight}px !important`,
         px: { xs: 2, lg: 3 },
-        gap: 2,
-        position: 'relative',
+        gap: { xs: 1, md: 1.5, lg: 2 },
       }}
     >
       {isMobile ? (
@@ -114,11 +113,12 @@ export const TopBar = ({
         sx={{
           fontWeight: 600,
           fontSize: { xs: 20, lg: 24 },
-          minWidth: 140,
-          maxWidth: { xs: 160, lg: 220 },
+          minWidth: { xs: 0, sm: 120, md: 140 },
+          maxWidth: { xs: 120, sm: 160, lg: 220 },
           overflow: 'hidden',
           textOverflow: 'ellipsis',
           whiteSpace: 'nowrap',
+          flexShrink: 1,
         }}
       >
         {currentPageLabel}
@@ -128,8 +128,9 @@ export const TopBar = ({
           onClick={onOpenCommandPalette}
           startIcon={<SearchOutlinedIcon />}
           sx={{
-            width: { xs: '100%', sm: 220, md: 260, lg: 340 },
-            maxWidth: { xs: 200, sm: 'none' },
+            width: '100%',
+            maxWidth: { xs: '100%', sm: 220, md: 260, lg: 340 },
+            minWidth: { xs: 0, sm: 180 },
             justifyContent: isMobile ? 'flex-start' : 'space-between',
             textTransform: 'none',
             border: 1,
@@ -143,13 +144,24 @@ export const TopBar = ({
             '& .MuiButton-startIcon': {
               mr: 0.75,
             },
+            overflow: 'hidden',
+            whiteSpace: 'nowrap',
+            textOverflow: 'ellipsis',
           }}
         >
           {appLayoutMessages.searchPlaceholder}
           <TopBarSearchShortcut isMobile={isMobile} />
         </Button>
       </Box>
-      <Box sx={{ ml: 'auto', display: 'flex', alignItems: 'center', gap: 1.5 }}>
+      <Box
+        sx={{
+          ml: 'auto',
+          display: 'flex',
+          alignItems: 'center',
+          gap: { xs: 0.5, md: 1.5 },
+          flexShrink: 0,
+        }}
+      >
         <Box sx={sessionTimerContainerSx}>
           <SessionTimer
             expiresIn={sessionExpiresIn ?? '1h'}

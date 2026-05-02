@@ -1,4 +1,5 @@
-import { useState } from 'react';
+﻿import { useState } from 'react';
+import { ErrorHandler } from '../../errors/ErrorHandler';
 import type {
   Client,
   ClientOnboardingResponse,
@@ -7,10 +8,12 @@ import type {
   UpdateClientRequest,
 } from '../../models/clients';
 import { clientsService } from '../../services/platform/clients/service';
+import { useError } from '../useError/useError';
 
 export const useClientsMutations = () => {
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string>();
+  const { pushError } = useError();
 
   const run = async <T>(callback: () => Promise<T>): Promise<T | null> => {
     setLoading(true);
@@ -18,7 +21,9 @@ export const useClientsMutations = () => {
     try {
       return await callback();
     } catch (error) {
-      setErrorMessage(error instanceof Error ? error.message : 'Erro na opera��o.');
+      const normalizedError = ErrorHandler.normalize(error);
+      setErrorMessage(normalizedError.message);
+      pushError(normalizedError);
       return null;
     } finally {
       setLoading(false);

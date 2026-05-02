@@ -25,6 +25,7 @@ const AUTH_REQUEST_PATHS: ReadonlyArray<string> = [
 ];
 const UNAUTHORIZED_ERROR_CODE = 'UNAUTHORIZED';
 const TOKEN_EXPIRED_ERROR_CODE = 'TOKEN_EXPIRED';
+const REFRESH_TOKEN_INVALID_ERROR_CODE = 'REFRESH_TOKEN_INVALID';
 const TOKEN_EXPIRED_EVENT = 'app:token-expired';
 const isRecord = (value: unknown): value is Record<string, unknown> =>
   typeof value === 'object' && value !== null && !Array.isArray(value);
@@ -182,6 +183,12 @@ httpClient.interceptors.response.use(
     const errorCode = error.response?.data?.errorCode;
 
     if (errorCode === UNAUTHORIZED_ERROR_CODE) {
+      clearClientSessionStorage();
+      clearPlatformSessionStorage();
+      redirectToCurrentDomainLogin();
+    }
+
+    if (errorCode === REFRESH_TOKEN_INVALID_ERROR_CODE) {
       clearClientSessionStorage();
       clearPlatformSessionStorage();
       redirectToCurrentDomainLogin();

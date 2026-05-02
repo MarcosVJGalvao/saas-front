@@ -83,6 +83,17 @@ export type OnboardingEmployee = {
   department?: string;
 };
 
+export type ClientAddress = {
+  street: string;
+  number: string;
+  complement?: string;
+  neighborhood: string;
+  city: string;
+  state: string;
+  zipCode: string;
+  country: string;
+};
+
 export type CreateClientOnboardingRequest = {
   legalName: string;
   tradeName: string;
@@ -98,6 +109,7 @@ export type CreateClientOnboardingRequest = {
   planId: string;
   adminPassword: string;
   employee: OnboardingEmployee;
+  clientAddress: ClientAddress;
 };
 
 export type ClientOnboardingResponse = {

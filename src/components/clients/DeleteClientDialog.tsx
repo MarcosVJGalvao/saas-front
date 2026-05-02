@@ -21,7 +21,7 @@ export const DeleteClientDialog = ({
 }: DeleteClientDialogProps) => (
   <ConfirmDialog open={open} onClose={onCancel}>
     <DialogTitle>Excluir cliente</DialogTitle>
-    <DialogContent>Confirma a exclus�o de {clientName ?? 'este cliente'}?</DialogContent>
+    <DialogContent>Confirma a exclusão de {clientName ?? 'este cliente'}?</DialogContent>
     <DialogActions>
       <Button onClick={onCancel} disabled={loading}>
         Cancelar
