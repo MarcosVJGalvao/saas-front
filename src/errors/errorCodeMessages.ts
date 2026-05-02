@@ -5,4 +5,6 @@ export const errorCodeMessages: Record<string, string> = {
   MFA_CHALLENGE_EXPIRED:
     'Autenticação multifator está incorreta ou expirou. Por favor, tente novamente.',
   PLAN_NOT_FOUND: 'Plano selecionado não encontrado. Por favor, escolha outro plano.',
+  PLATFORM_MFA_INVALID_CODE:
+    'Código de autenticação multifator inválido. Por favor, tente novamente.',
 };
