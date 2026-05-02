@@ -1,12 +1,15 @@
-import { useEffect, useState, type ReactNode } from 'react';
+import type { ReactNode } from 'react';
 import Alert from '@mui/material/Alert';
 import Box from '@mui/material/Box';
 import CircularProgress from '@mui/material/CircularProgress';
 import Paper from '@mui/material/Paper';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
-import { clientAuthService } from '@/services/client/auth/service';
-import type { ClientMeResponse } from '@/services/client/auth/types';
+import {
+  CLIENT_HOME_MESSAGES,
+  useClientHomeData,
+  type ClientHomeProfile,
+} from '@/hooks/client-auth/useClientHomeData';
 
 const ClientHomePage = () => {
   const { loading, profile, errorMessage } = useClientHomeData();
@@ -16,64 +19,38 @@ const ClientHomePage = () => {
     <Box sx={{ p: 3 }}>
       <Paper sx={{ p: 4, borderRadius: 3 }}>
         <Typography sx={{ fontSize: 32, fontWeight: 700, color: 'text.primary', mb: 1 }}>
-          Home do Cliente
+          {CLIENT_HOME_MESSAGES.title}
         </Typography>
         <Typography sx={{ fontSize: 16, color: 'text.secondary', mb: 3 }}>
-          Autenticação concluída com sucesso.
+          {CLIENT_HOME_MESSAGES.success}
         </Typography>
-
         {content}
       </Paper>
     </Box>
   );
 };
 
-const useClientHomeData = () => {
-  const [loading, setLoading] = useState(true);
-  const [profile, setProfile] = useState<ClientMeResponse | null>(null);
-  const [errorMessage, setErrorMessage] = useState('');
-
-  useEffect(() => {
-    void clientAuthService
-      .me()
-      .then((me) => {
-        setProfile(me);
-      })
-      .catch(() => {
-        setErrorMessage('Nao foi possivel carregar os dados do usuario.');
-      })
-      .finally(() => {
-        setLoading(false);
-      });
-  }, []);
-
-  return { loading, profile, errorMessage };
-};
-
 const getHomeContent = (
   loading: boolean,
-  profile: ClientMeResponse | null,
+  profile: ClientHomeProfile | null,
   errorMessage: string,
 ): ReactNode => {
-  if (loading) {
-    return <CircularProgress size={24} />;
-  }
-  if (errorMessage.length > 0) {
-    return <ClientHomeError errorMessage={errorMessage} />;
-  }
-  return <ClientHomeProfile profile={profile} />;
+  if (loading) return <CircularProgress size={24} />;
+
+  const errorOrProfileContent =
+    errorMessage.length > 0 ? (
+      <Stack spacing={1.2}>
+        <Alert severity="warning">{errorMessage}</Alert>
+      </Stack>
+    ) : (
+      <ClientHomeProfileContent profile={profile} />
+    );
+
+  return errorOrProfileContent;
 };
 
-const ClientHomeError = ({ errorMessage }: { errorMessage: string }) => (
-  <Stack spacing={1.2}>
-    <Alert severity="warning">{errorMessage}</Alert>
-  </Stack>
-);
-
-const ClientHomeProfile = ({ profile }: { profile: ClientMeResponse | null }) => {
-  if (profile === null) {
-    return null;
-  }
+const ClientHomeProfileContent = ({ profile }: { profile: ClientHomeProfile | null }) => {
+  if (profile === null) return null;
 
   return (
     <Stack spacing={1.2}>

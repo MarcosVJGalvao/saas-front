@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import type { NavigationItem } from '../models/navigation';
 import { ADMIN_NAVIGATION_STORAGE_KEYS } from '../models/adminNavigationStorage';
 
@@ -46,7 +46,7 @@ export const useCommandPalette = (items: NavigationItem[]) => {
     });
   }, [allItems, query]);
 
-  const toggleFavorite = (itemId: string) => {
+  const toggleFavorite = useCallback((itemId: string) => {
     setFavorites((previousState) => {
       const nextState = previousState.includes(itemId)
         ? previousState.filter((favoriteId) => favoriteId !== itemId)
@@ -59,15 +59,18 @@ export const useCommandPalette = (items: NavigationItem[]) => {
       }
       return nextState;
     });
-  };
+  }, []);
+
+  const open = useCallback(() => setIsOpen(true), []);
+  const close = useCallback(() => setIsOpen(false), []);
 
   return {
     isOpen,
     query,
     favorites,
     filteredItems,
-    open: () => setIsOpen(true),
-    close: () => setIsOpen(false),
+    open,
+    close,
     setQuery,
     toggleFavorite,
   };

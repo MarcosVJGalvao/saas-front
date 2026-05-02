@@ -12,8 +12,8 @@ import Tab from '@mui/material/Tab';
 import Tabs from '@mui/material/Tabs';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
-import { useMemo, useState, type KeyboardEvent } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useCallback } from 'react';
+import { useCommandPaletteView } from '../../../hooks/useCommandPaletteView';
 import type { NavigationItem } from '../../../models/navigation';
 
 interface CommandPaletteProps {
@@ -26,9 +26,6 @@ interface CommandPaletteProps {
   onToggleFavorite: (itemId: string) => void;
 }
 
-const flattenItems = (items: NavigationItem[]): NavigationItem[] =>
-  items.flatMap((item) => [item, ...(item.children ?? [])]);
-
 export const CommandPalette = ({
   isOpen,
   query,
@@ -38,68 +35,24 @@ export const CommandPalette = ({
   onQueryChange,
   onToggleFavorite,
 }: CommandPaletteProps) => {
-  const navigate = useNavigate();
-  const [activeIndex, setActiveIndex] = useState(0);
-  const [activeTab, setActiveTab] = useState('all');
+  const {
+    activeTab,
+    setActiveTab,
+    tabItems,
+    filteredItems,
+    favoritesItems,
+    suggestionItems,
+    selectItem,
+    onKeyDown,
+  } = useCommandPaletteView(query, favorites, items, onClose);
 
-  const flatItems = useMemo(() => flattenItems(items), [items]);
-  const tabItems = useMemo(
-    () => [
-      { key: 'all', label: 'Tudo' },
-      ...items.map((item) => ({ key: item.id, label: item.label })),
-    ],
-    [items],
+  const handleToggleFavorite = useCallback(
+    (event: React.MouseEvent<HTMLElement>, itemId: string) => {
+      event.stopPropagation();
+      onToggleFavorite(itemId);
+    },
+    [onToggleFavorite],
   );
-
-  const filteredItems = useMemo(() => {
-    const normalizedQuery = query.toLowerCase();
-    return flatItems.filter((item) => {
-      const tabMatch = activeTab === 'all' || item.id.includes(activeTab);
-      const queryMatch = item.label.toLowerCase().includes(normalizedQuery);
-      return tabMatch && queryMatch;
-    });
-  }, [activeTab, flatItems, query]);
-
-  const favoritesItems = useMemo(
-    () => filteredItems.filter((item) => favorites.includes(item.id)).slice(0, 4),
-    [favorites, filteredItems],
-  );
-
-  const suggestionItems = useMemo(
-    () => filteredItems.filter((item) => !favorites.includes(item.id)).slice(0, 5),
-    [favorites, filteredItems],
-  );
-
-  const selectItem = (item: NavigationItem) => {
-    if (item.href !== undefined) {
-      void navigate(item.href);
-      onClose();
-    }
-  };
-
-  const onKeyDown = (event: KeyboardEvent) => {
-    if (event.key === 'Escape') {
-      onClose();
-      return;
-    }
-    if (event.key === 'ArrowDown') {
-      event.preventDefault();
-      setActiveIndex((currentIndex) =>
-        Math.min(currentIndex + 1, Math.max(filteredItems.length - 1, 0)),
-      );
-      return;
-    }
-    if (event.key === 'ArrowUp') {
-      event.preventDefault();
-      setActiveIndex((currentIndex) => Math.max(currentIndex - 1, 0));
-      return;
-    }
-    if (event.key === 'Enter') {
-      event.preventDefault();
-      const selectedItem = filteredItems[activeIndex];
-      if (selectedItem !== undefined) selectItem(selectedItem);
-    }
-  };
 
   return (
     <Dialog
@@ -109,64 +62,44 @@ export const CommandPalette = ({
       maxWidth={false}
       onKeyDown={onKeyDown}
       slotProps={{
-        backdrop: {
-          sx: {
-            backgroundColor: (theme) =>
-              theme.palette.mode === 'dark' ? 'rgba(0,0,0,0.52)' : 'rgba(15,23,42,0.26)',
-            backdropFilter: (theme) => (theme.palette.mode === 'dark' ? 'blur(12px)' : 'blur(9px)'),
-          },
-        },
         paper: {
           sx: {
-            width: { xs: 'calc(100% - 32px)', md: 760 },
-            maxWidth: 'calc(100% - 32px)',
-            borderRadius: 3.5,
-            backdropFilter: 'blur(24px)',
-            backgroundColor: (theme) =>
-              theme.palette.mode === 'dark' ? 'rgba(11,18,32,0.78)' : 'rgba(255,255,255,0.86)',
+            width: { xs: '88vw', md: '62vw', lg: '54vw' },
+            maxWidth: 760,
+            height: { xs: '74vh', md: '68vh', lg: '64vh' },
+            maxHeight: '72vh',
+            borderRadius: 2,
             border: 1,
-            borderColor: (theme) =>
-              theme.palette.mode === 'dark' ? 'rgba(255,255,255,0.12)' : 'rgba(15,23,42,0.10)',
-            boxShadow: (theme) =>
-              theme.palette.mode === 'dark'
-                ? '0 24px 90px rgba(0,0,0,0.55)'
-                : '0 24px 80px rgba(15,23,42,0.20)',
+            borderColor: 'divider',
+            bgcolor: 'background.paper',
+            overflow: 'hidden',
           },
         },
       }}
     >
-      <Box sx={{ p: 2.25 }}>
+      <Box sx={{ p: 2, height: '100%', display: 'flex', flexDirection: 'column' }}>
         <Box sx={{ position: 'relative' }}>
           <TextField
             autoFocus
-            fullWidth
+            size="small"
             placeholder="Buscar no sistema..."
             value={query}
             onChange={(event) => onQueryChange(event.target.value)}
+            sx={{
+              width: '100%',
+              '& .MuiOutlinedInput-root': {
+                height: 42,
+                bgcolor: 'transparent',
+              },
+            }}
             slotProps={{
               input: {
                 startAdornment: <SearchOutlinedIcon sx={{ mr: 1, opacity: 0.75 }} />,
               },
             }}
           />
-          <Box
-            sx={{
-              position: 'absolute',
-              right: 10,
-              top: '50%',
-              transform: 'translateY(-50%)',
-              px: 1,
-              py: 0.25,
-              borderRadius: 1,
-              border: 1,
-              borderColor: 'divider',
-              fontSize: 12,
-              color: 'text.secondary',
-            }}
-          >
-            Ctrl + K
-          </Box>
         </Box>
+
         <Tabs
           value={activeTab}
           onChange={(_, value: string) => setActiveTab(value)}
@@ -184,7 +117,14 @@ export const CommandPalette = ({
         </Tabs>
 
         <List
-          sx={{ mt: 1, maxHeight: '56vh', overflowY: 'auto', borderTop: 1, borderColor: 'divider' }}
+          sx={{
+            mt: 1,
+            flex: 1,
+            minHeight: 0,
+            overflowY: 'auto',
+            borderTop: 1,
+            borderColor: 'divider',
+          }}
         >
           <Box sx={{ px: 1.5, py: 1, display: 'flex', justifyContent: 'space-between' }}>
             <Typography variant="body2" sx={{ fontWeight: 600 }}>
@@ -197,12 +137,7 @@ export const CommandPalette = ({
           {favoritesItems.map((item) => (
             <ListItemButton key={`fav-${item.id}`} onClick={() => selectItem(item)}>
               <ListItemText primary={item.label} secondary={item.href} />
-              <IconButton
-                onClick={(event) => {
-                  event.stopPropagation();
-                  onToggleFavorite(item.id);
-                }}
-              >
+              <IconButton onClick={(event) => handleToggleFavorite(event, item.id)}>
                 <StarIcon color="warning" />
               </IconButton>
             </ListItemButton>
@@ -221,12 +156,7 @@ export const CommandPalette = ({
           {suggestionItems.map((item) => (
             <ListItemButton key={`sug-${item.id}`} onClick={() => selectItem(item)}>
               <ListItemText primary={item.label} secondary={item.href} />
-              <IconButton
-                onClick={(event) => {
-                  event.stopPropagation();
-                  onToggleFavorite(item.id);
-                }}
-              >
+              <IconButton onClick={(event) => handleToggleFavorite(event, item.id)}>
                 <StarBorderOutlinedIcon />
               </IconButton>
             </ListItemButton>
@@ -261,7 +191,7 @@ export const CommandPalette = ({
         <Typography
           variant="caption"
           color="text.secondary"
-          sx={{ display: 'block', mt: 1, textAlign: 'center' }}
+          sx={{ display: 'block', mt: 1, pt: 0.5, textAlign: 'center' }}
         >
           Use ? ? para navegar, Enter para selecionar, Esc para fechar
         </Typography>

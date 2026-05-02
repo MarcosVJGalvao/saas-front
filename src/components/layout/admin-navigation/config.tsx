@@ -65,6 +65,13 @@ const navigationBase: NavigationItem[] = [
     searchScopes: [{ id: 'usuarios', label: 'Usuários', route: '/usuarios' }],
   },
   {
+    id: 'clientes',
+    label: 'Clientes',
+    href: '/clients',
+    permission: 'clients:read',
+    icon: PeopleOutlineOutlinedIcon,
+  },
+  {
     id: 'cadastros',
     label: 'Cadastros',
     href: '/cadastros',

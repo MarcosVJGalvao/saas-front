@@ -1,37 +1,41 @@
-import { useMemo } from 'react';
-import { useNavigate, useSearchParams } from 'react-router-dom';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import { Controller } from 'react-hook-form';
+import { useSearchParams } from 'react-router-dom';
 import { z } from 'zod';
 import { AppForm } from '@/components/common/form/AppForm';
 import { useForm } from '@/forms/useForm';
-import { useAuth } from '@/hooks/useAuth/useAuth';
+import { useResetPasswordFlow } from '@/hooks/client-auth/useResetPasswordFlow';
 import { PlatformAuthPageLayout } from '@/pages/platform/auth/PlatformAuthPageLayout';
-import { clientAuthService } from '@/services/client/auth/service';
 
 const resetSchema = z.object({
   newPassword: z.string().min(8, 'A senha deve ter ao menos 8 caracteres.'),
 });
 
+const MESSAGES = {
+  title: 'Redefinir senha',
+  fieldLabel: 'Nova senha',
+  submit: 'Redefinir',
+} as const;
+
+const readTokenFromSearchParams = (searchParams: URLSearchParams): string =>
+  searchParams.get('token') ?? '';
+
 const ResetPasswordPage = () => {
-  const navigate = useNavigate();
   const [searchParams] = useSearchParams();
-  const { clearAuth } = useAuth();
-  const token = useMemo(() => searchParams.get('token') ?? '', [searchParams]);
+  const token = readTokenFromSearchParams(searchParams);
   const form = useForm(resetSchema, { newPassword: '' });
+  const { submitResetPassword } = useResetPasswordFlow(token);
 
   const handleSubmit = async (data: { newPassword: string }) => {
-    await clientAuthService.resetPassword({ token, newPassword: data.newPassword });
-    clearAuth();
-    void navigate('/client/login', { replace: true });
+    await submitResetPassword(data.newPassword);
   };
 
   return (
     <PlatformAuthPageLayout>
       <AppForm form={form} onSubmit={handleSubmit}>
-        <Typography variant="h4">Redefinir senha</Typography>
+        <Typography variant="h4">{MESSAGES.title}</Typography>
         <Controller
           name="newPassword"
           control={form.control}
@@ -39,14 +43,14 @@ const ResetPasswordPage = () => {
             <TextField
               {...field}
               type="password"
-              label="Nova senha"
+              label={MESSAGES.fieldLabel}
               error={fieldState.invalid}
               helperText={fieldState.error?.message}
             />
           )}
         />
         <Button type="submit" variant="contained" disabled={token.length === 0}>
-          Redefinir
+          {MESSAGES.submit}
         </Button>
       </AppForm>
     </PlatformAuthPageLayout>

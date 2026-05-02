@@ -17,21 +17,23 @@ const meta: PaginationMeta = {
   hasPreviousPage: false,
 };
 
+const columns = [
+  {
+    key: 'name',
+    header: 'Nome',
+    render: (row: TestRow) => row.name,
+    mobileRender: (row: TestRow) => row.name,
+  },
+];
+
 describe('QueryDataTable', () => {
   it('renders rows and search interaction', async () => {
     const handleQueryChange = vi.fn();
 
     const { getByText, getByPlaceholderText } = render(
-      <QueryDataTable<TestRow>
+      <QueryDataTable
         rows={[{ id: '1', name: 'Alice' }]}
-        columns={[
-          {
-            key: 'name',
-            header: 'Nome',
-            render: (row) => row.name,
-            mobileRender: (row) => row.name,
-          },
-        ]}
+        columns={columns}
         meta={meta}
         query=""
         queryDebounceInMilliseconds={0}
@@ -47,5 +49,45 @@ describe('QueryDataTable', () => {
     await waitFor(() => {
       expect(handleQueryChange).toHaveBeenCalledWith('Al');
     });
+  });
+
+  it('renders error state and triggers retry', () => {
+    const onRetry = vi.fn();
+    const { getByText } = render(
+      <QueryDataTable
+        rows={[]}
+        columns={columns}
+        meta={meta}
+        query=""
+        onQueryChange={() => undefined}
+        loading={false}
+        errorMessage="Falha ao carregar"
+        onRetry={onRetry}
+        onPageChange={() => undefined}
+        onRowsPerPageChange={() => undefined}
+      />,
+    );
+
+    expect(getByText('Falha ao carregar')).toBeInTheDocument();
+    fireEvent.click(getByText('Tentar novamente'));
+    expect(onRetry).toHaveBeenCalledTimes(1);
+  });
+
+  it('renders empty state when there are no rows', () => {
+    const { getByText } = render(
+      <QueryDataTable
+        rows={[]}
+        columns={columns}
+        meta={meta}
+        query=""
+        onQueryChange={() => undefined}
+        loading={false}
+        onPageChange={() => undefined}
+        onRowsPerPageChange={() => undefined}
+      />,
+    );
+
+    expect(getByText('Nenhum registro encontrado')).toBeInTheDocument();
+    expect(getByText('Ajuste os filtros e tente novamente.')).toBeInTheDocument();
   });
 });

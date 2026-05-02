@@ -2,7 +2,8 @@ import MoreVertIcon from '@mui/icons-material/MoreVert';
 import IconButton from '@mui/material/IconButton';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
-import { useState } from 'react';
+import { memo, useCallback, useState } from 'react';
+import { commonOverlayMessages } from '../messages';
 
 interface AppPopoverMenuItem {
   label: string;
@@ -13,20 +14,29 @@ interface AppPopoverMenuProps {
   items: AppPopoverMenuItem[];
 }
 
-export const AppPopoverMenu = ({ items }: AppPopoverMenuProps) => {
+export const AppPopoverMenu = memo(({ items }: AppPopoverMenuProps) => {
   const [anchor, setAnchor] = useState<null | HTMLElement>(null);
+  const openMenu = useCallback((event: React.MouseEvent<HTMLElement>) => {
+    setAnchor(event.currentTarget);
+  }, []);
+  const closeMenu = useCallback(() => setAnchor(null), []);
 
   return (
     <>
-      <IconButton onClick={(event) => setAnchor(event.currentTarget)} aria-label="Abrir menu">
+      <IconButton onClick={openMenu} aria-label={commonOverlayMessages.openMenuAriaLabel}>
         <MoreVertIcon />
       </IconButton>
-      <Menu anchorEl={anchor} open={anchor !== null} onClose={() => setAnchor(null)}>
+      <Menu
+        anchorEl={anchor}
+        open={anchor !== null}
+        onClose={closeMenu}
+        slotProps={{ transition: { timeout: 180 } }}
+      >
         {items.map((item) => (
           <MenuItem
             key={item.label}
             onClick={() => {
-              setAnchor(null);
+              closeMenu();
               item.onClick();
             }}
           >
@@ -36,4 +46,4 @@ export const AppPopoverMenu = ({ items }: AppPopoverMenuProps) => {
       </Menu>
     </>
   );
-};
+});

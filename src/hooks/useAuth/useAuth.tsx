@@ -1,4 +1,4 @@
-import { createContext, useContext, useMemo, useState, type ReactNode } from 'react';
+import { createContext, useContext, useEffect, useMemo, useState, type ReactNode } from 'react';
 import { AUTH_FLOW_STEP, type AuthDomain, type AuthFlowStep } from '../../models/auth/auth';
 import type { PlatformTotpSetupResponse } from '../../services/platform/auth/types';
 import {
@@ -31,6 +31,7 @@ interface AuthContextValue {
 }
 
 const AuthContext = createContext<AuthContextValue | undefined>(undefined);
+const SESSION_UPDATED_EVENT = 'app:session-updated';
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const initialClientSession = readClientSession();
@@ -46,6 +47,22 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [totpSetup, setTotpSetup] = useState<PlatformTotpSetupResponse | null>(null);
   const [session, setSession] = useState<AuthSession | null>(initialSession);
   const [rememberMePreference, setRememberMePreference] = useState(false);
+
+  useEffect(() => {
+    const handleSessionUpdated = () => {
+      const nextClientSession = readClientSession();
+      const nextPlatformSession = readPlatformSession();
+      const nextSession = nextClientSession ?? nextPlatformSession;
+      const nextDomain: AuthDomain | null =
+        nextClientSession !== null ? 'client' : nextPlatformSession !== null ? 'platform' : null;
+      setSession(nextSession);
+      setAuthDomain(nextDomain);
+      setFlowStep(nextSession === null ? AUTH_FLOW_STEP.IDLE : AUTH_FLOW_STEP.AUTHENTICATED);
+    };
+
+    window.addEventListener(SESSION_UPDATED_EVENT, handleSessionUpdated);
+    return () => window.removeEventListener(SESSION_UPDATED_EVENT, handleSessionUpdated);
+  }, []);
 
   const value = useMemo<AuthContextValue>(
     () => ({

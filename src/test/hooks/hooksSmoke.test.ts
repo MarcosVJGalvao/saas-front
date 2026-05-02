@@ -9,6 +9,8 @@ import { useColorMode } from '../../hooks/useColorMode/useColorMode';
 import { useDebounce } from '../../hooks/useDebounce/useDebounce';
 import { useDebouncedCallback } from '../../hooks/useDebounce/useDebouncedCallback';
 import { useError } from '../../hooks/useError/useError';
+import { useAppLayoutState } from '../../hooks/useAppLayoutState';
+import { CLIENT_HOME_MESSAGES } from '../../hooks/client-auth/useClientHomeData';
 
 describe('hooks smoke', () => {
   it('exports hooks not individually covered yet', () => {
@@ -22,5 +24,7 @@ describe('hooks smoke', () => {
     expect(useDebounce).toBeTypeOf('function');
     expect(useDebouncedCallback).toBeTypeOf('function');
     expect(useError).toBeTypeOf('function');
+    expect(useAppLayoutState).toBeTypeOf('function');
+    expect(() => CLIENT_HOME_MESSAGES).not.toThrow();
   });
 });

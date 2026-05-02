@@ -29,7 +29,11 @@ export const usePlatformMfaSetupFlow = () => {
       completeAuthentication(AUTH_DOMAIN.PLATFORM, session);
       void navigate('/platform/home', { replace: true });
     } catch (error) {
-      pushError(ErrorHandler.normalize(error));
+      const normalizedError = ErrorHandler.normalize(error);
+      pushError(normalizedError);
+      if (normalizedError.code === 'MFA_CHALLENGE_EXPIRED') {
+        void navigate('/platform/login', { replace: true });
+      }
     } finally {
       setLoading(false);
     }
