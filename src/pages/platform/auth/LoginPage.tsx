@@ -1,33 +1,21 @@
-import { useTheme } from '@mui/material/styles';
 import { Navigate } from 'react-router-dom';
 import { PlatformLoginFormCard } from '@/components/auth/platform/PlatformLoginFormCard';
-import { useAuth } from '@/hooks/useAuth/useAuth';
-import { usePlatformLoginFlow } from '@/hooks/platform-auth/usePlatformLoginFlow';
-import { AUTH_DOMAIN } from '@/models/auth/auth';
-import { isAuthenticatedForDomain } from '@/models/auth/guards';
+import { usePlatformLoginPageViewModel } from '@/hooks/platform-auth/usePlatformLoginPageViewModel';
 import { PlatformAuthPageLayout } from './PlatformAuthPageLayout';
 
 const PlatformLoginPage = () => {
-  const { form, loading, handleSubmit } = usePlatformLoginFlow();
-  const { authDomain, flowStep, session } = useAuth();
-  const theme = useTheme();
-  const isAuthenticated = isAuthenticatedForDomain(
-    authDomain,
-    flowStep,
-    session,
-    AUTH_DOMAIN.PLATFORM,
-  );
+  const model = usePlatformLoginPageViewModel();
 
-  if (isAuthenticated) {
+  if (model.isAuthenticated) {
     return <Navigate to="/platform/home" replace />;
   }
 
   return (
     <PlatformAuthPageLayout>
       <PlatformLoginFormCard
-        form={form}
-        loading={loading}
-        onSubmit={handleSubmit}
+        form={model.form}
+        loading={model.loading}
+        onSubmit={model.handleSubmit}
         header={{
           title: 'Acesse sua conta',
           subtitle: 'Entre com seu e-mail e senha para continuar.',
@@ -47,7 +35,7 @@ const PlatformLoginPage = () => {
           fieldLabelSx: {
             fontSize: 18,
             fontWeight: 600,
-            color: theme.palette.text.primary,
+            color: model.theme.palette.text.primary,
             mb: -1,
           },
         }}

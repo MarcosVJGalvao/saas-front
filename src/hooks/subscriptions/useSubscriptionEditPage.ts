@@ -20,7 +20,7 @@ export const useSubscriptionEditPage = () => {
   const navigate = useNavigate();
   const mutations = useSubscriptionsMutations();
   const [plans, setPlans] = useState<Plan[]>([]);
-  const [value, setValue] = useState<CreateSubscriptionRequest>(emptyValue);
+  const [defaultValues, setDefaultValues] = useState<CreateSubscriptionRequest>(emptyValue);
   useEffect(() => {
     void plansService
       .list({ page: 1, limit: 100 })
@@ -29,7 +29,7 @@ export const useSubscriptionEditPage = () => {
   useEffect(() => {
     if (!tenantId) return;
     void subscriptionsService.getById(id, tenantId).then((subscription) =>
-      setValue({
+      setDefaultValues({
         tenantId: subscription.tenantId,
         planId: subscription.planId,
         status: subscription.status,
@@ -42,15 +42,18 @@ export const useSubscriptionEditPage = () => {
       }),
     );
   }, [id, tenantId]);
-  const handleSubmit = useCallback(async () => {
-    if (!tenantId) return;
-    const updated = await mutations.update(id, tenantId, value);
-    if (updated) {
-      void navigate(`/platform/subscriptions/${updated.id}?tenantId=${updated.tenantId}`);
-    }
-  }, [id, tenantId, mutations, navigate, value]);
+  const handleSubmit = useCallback(
+    async (payload: CreateSubscriptionRequest) => {
+      if (!tenantId) return;
+      const updated = await mutations.update(id, tenantId, payload);
+      if (updated) {
+        void navigate(`/platform/subscriptions/${updated.id}?tenantId=${updated.tenantId}`);
+      }
+    },
+    [id, tenantId, mutations, navigate],
+  );
   return useMemo(
-    () => ({ value, setValue, plans, loading: mutations.loading, handleSubmit, tenantId }),
-    [value, plans, mutations.loading, handleSubmit, tenantId],
+    () => ({ defaultValues, plans, loading: mutations.loading, handleSubmit, tenantId }),
+    [defaultValues, plans, mutations.loading, handleSubmit, tenantId],
   );
 };

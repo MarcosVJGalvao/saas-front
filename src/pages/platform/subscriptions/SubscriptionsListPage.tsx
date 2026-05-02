@@ -1,133 +1,124 @@
-﻿import AddIcon from '@mui/icons-material/Add';
+import AddIcon from '@mui/icons-material/Add';
+import CalendarTodayOutlinedIcon from '@mui/icons-material/CalendarTodayOutlined';
+import FilterListOutlinedIcon from '@mui/icons-material/FilterListOutlined';
+import Button from '@mui/material/Button';
 import Container from '@mui/material/Container';
-import Stack from '@mui/material/Stack';
-import Typography from '@mui/material/Typography';
-import { useTheme } from '@mui/material/styles';
-import { ActionButtons } from '../../../components/common/actions/ActionButtons';
-import { CancelSubscriptionDialog } from '../../../components/subscriptions/CancelSubscriptionDialog';
-import { MetricsCards } from '../../../components/subscriptions/MetricsCards';
-import { SubscriptionHistoryDialog } from '../../../components/subscriptions/SubscriptionHistoryDialog';
-import { SubscriptionsFilters } from '../../../components/subscriptions/SubscriptionsFilters';
-import { SubscriptionsTable } from '../../../components/subscriptions/SubscriptionsTable';
-import { useSubscriptionsListPage } from '../../../hooks/subscriptions/useSubscriptionsListPage';
+import Grid from '@mui/material/Grid';
+import InputAdornment from '@mui/material/InputAdornment';
+import TextField from '@mui/material/TextField';
+import { EntitySearchFilter } from '../../../components/common/data/EntitySearchFilter';
+import { ListMetricsGrid } from '../../../components/common/data/ListMetricsGrid';
+import { QueryDataTable } from '../../../components/common/data/QueryDataTable';
+import { SelectFilterField } from '../../../components/common/data/SelectFilterField';
+import { ConfirmDialog } from '../../../components/common/feedback/ConfirmDialog';
+import { ListDialog } from '../../../components/common/feedback/ListDialog';
+import { PageHeader } from '../../../components/common/page/PageHeader';
+import { useSubscriptionsListViewModel } from '../../../hooks/subscriptions/useSubscriptionsListViewModel';
 
 const SubscriptionsListPage = () => {
-  const view = useSubscriptionsListPage();
-  const theme = useTheme();
-
-  const activeCount = view.list.rows.filter((row) => row.status === 'active').length;
-  const trialCount = view.list.rows.filter((row) => row.status === 'trialing').length;
-  const canceledCount = view.list.rows.filter((row) => row.status === 'canceled').length;
-  const mrr = view.list.rows.reduce((acc, row) => acc + (Number(row.priceAtSubscription) || 0), 0);
+  const model = useSubscriptionsListViewModel();
 
   return (
-    <Container
-      maxWidth={false}
-      sx={{
-        py: theme.spacing(0.5),
-        px: theme.spacing(1),
-        bgcolor: theme.palette.background.default,
-      }}
-    >
-      <Stack spacing={theme.spacing(2)}>
-        <Stack
-          direction={{ xs: 'column', sm: 'row' }}
-          spacing={2}
-          sx={{ justifyContent: 'space-between' }}
-        >
-          <Stack spacing={theme.spacing(1)}>
-            <Typography variant="h4">Gestão de Assinaturas</Typography>
-            <Typography variant="body1" color="text.secondary">
-              Gerencie planos ativos, renovações e cobranças
-            </Typography>
-          </Stack>
+    <Container maxWidth={false} sx={{ py: 0.5, px: 1 }}>
+      <PageHeader
+        title="Gestão de Assinaturas"
+        subtitle="Gerencie planos ativos, renovações e cobranças"
+        actions={
+          <Button
+            variant="contained"
+            startIcon={<AddIcon fontSize="small" />}
+            onClick={() => void model.view.navigate('/platform/subscriptions/new')}
+          >
+            Nova Assinatura
+          </Button>
+        }
+      />
 
-          <ActionButtons
-            actions={[
-              {
-                type: 'custom',
-                label: 'Nova Assinatura',
-                onClick: () => void view.navigate('/platform/subscriptions/new'),
-                startIcon: <AddIcon fontSize="small" />,
-              },
-            ]}
-            fullWidthOnMobile={false}
+      <ListMetricsGrid loading={model.view.list.loading} items={model.metrics} />
+
+      <Grid container spacing={2} sx={{ mb: 2, alignItems: 'center' }}>
+        <Grid size={{ xs: 12, md: 4 }}>
+          <EntitySearchFilter
+            value={model.searchValue}
+            onChange={model.updateSearch}
+            placeholder="Buscar por cliente..."
           />
-        </Stack>
+        </Grid>
+        <Grid size={{ xs: 12, sm: 6, md: 2 }}>
+          <SelectFilterField
+            label="Status"
+            value={model.statusValue}
+            options={model.statusOptions}
+            onChange={model.updateStatus}
+          />
+        </Grid>
+        <Grid size={{ xs: 12, sm: 6, md: 2 }}>
+          <SelectFilterField
+            label="Plano"
+            value={model.planValue}
+            options={model.view.plans.map((plan) => ({ value: plan.id, label: plan.name }))}
+            onChange={model.updatePlanId}
+          />
+        </Grid>
+        <Grid size={{ xs: 12, sm: 8, md: 2 }}>
+          <TextField
+            fullWidth
+            label="Período"
+            value={model.periodLabel}
+            slotProps={{
+              input: {
+                readOnly: true,
+                endAdornment: (
+                  <InputAdornment position="end">
+                    <CalendarTodayOutlinedIcon fontSize="small" />
+                  </InputAdornment>
+                ),
+              },
+            }}
+          />
+        </Grid>
+        <Grid size={{ xs: 12, sm: 4, md: 2 }}>
+          <Button
+            variant="outlined"
+            fullWidth
+            startIcon={<FilterListOutlinedIcon fontSize="small" />}
+            onClick={model.clearFilters}
+          >
+            Limpar filtros
+          </Button>
+        </Grid>
+      </Grid>
 
-        <MetricsCards
-          loading={view.list.loading}
-          active={activeCount}
-          trialing={trialCount}
-          canceled={canceledCount}
-          mrr={mrr}
-        />
+      <QueryDataTable
+        rows={model.view.list.rows}
+        columns={model.columns}
+        meta={model.view.list.meta}
+        query={model.searchValue}
+        onQueryChange={model.updateSearch}
+        loading={model.view.list.loading}
+        errorMessage={model.view.list.errorMessage}
+        onPageChange={(page) => model.view.list.updateQuery({ page })}
+        onRowsPerPageChange={(limit) => model.view.list.updateQuery({ limit, page: 1 })}
+        hideToolbar
+        emptyTitle="Nenhuma assinatura encontrada"
+        emptyDescription="Ajuste os filtros ou cadastre uma nova assinatura."
+      />
 
-        <SubscriptionsTable
-          rows={view.list.rows}
-          loading={view.list.loading}
-          errorMessage={view.list.errorMessage}
-          page={view.list.meta.page}
-          limit={view.list.meta.limit}
-          total={view.list.meta.total}
-          query={view.list.query.search ?? ''}
-          onQueryChange={(search) => view.list.updateQuery({ search, page: 1 })}
-          onPageChange={(page) => view.list.updateQuery({ page })}
-          onLimitChange={(limit) => view.list.updateQuery({ limit, page: 1 })}
-          onView={(id, tenantId) =>
-            void view.navigate(`/platform/subscriptions/${id}?tenantId=${tenantId}`)
-          }
-          onEdit={(id, tenantId) =>
-            void view.navigate(`/platform/subscriptions/${id}/edit?tenantId=${tenantId}`)
-          }
-          onHistory={(id, tenantId) => {
-            view.setSelected({ id, tenantId });
-            void view.mutations
-              .history(id, tenantId)
-              .then((rows) => view.setHistoryRows(rows ?? []));
-            view.setHistoryOpen(true);
-          }}
-          onCancel={(id, tenantId) => {
-            view.setSelected({ id, tenantId });
-            view.setCancelOpen(true);
-          }}
-          onDelete={(id, tenantId) => {
-            void view.mutations.remove(id, tenantId).then(() => view.list.refresh());
-          }}
-          toolbarContent={
-            <SubscriptionsFilters
-              value={view.list.query}
-              plans={view.plans}
-              onChange={view.list.updateQuery}
-            />
-          }
-        />
+      <ConfirmDialog
+        open={model.view.cancelOpen}
+        title="Cancelar assinatura"
+        description="Escolha como cancelar."
+        confirmLabel="Imediato"
+        onCancel={() => model.view.setCancelOpen(false)}
+        onConfirm={model.confirmCancel}
+      />
 
-        <CancelSubscriptionDialog
-          open={view.cancelOpen}
-          onCancel={() => view.setCancelOpen(false)}
-          onConfirmImmediate={() => {
-            if (!view.selected) return;
-            void view.mutations
-              .cancel(view.selected.id, view.selected.tenantId, { immediate: true })
-              .then(() => view.list.refresh());
-            view.setCancelOpen(false);
-          }}
-          onConfirmPeriodEnd={() => {
-            if (!view.selected) return;
-            void view.mutations
-              .cancel(view.selected.id, view.selected.tenantId, { immediate: false })
-              .then(() => view.list.refresh());
-            view.setCancelOpen(false);
-          }}
-        />
-
-        <SubscriptionHistoryDialog
-          open={view.historyOpen}
-          onClose={() => view.setHistoryOpen(false)}
-          rows={view.historyRows}
-        />
-      </Stack>
+      <ListDialog
+        open={model.view.historyOpen}
+        title="Histórico de plano"
+        onClose={() => model.view.setHistoryOpen(false)}
+        rows={model.historyDialogRows}
+      />
     </Container>
   );
 };

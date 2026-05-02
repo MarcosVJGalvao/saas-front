@@ -18,10 +18,10 @@ export const usePlanEditPage = () => {
   const { id = '' } = useParams();
   const navigate = useNavigate();
   const mutations = usePlansMutations();
-  const [value, setValue] = useState<CreatePlanRequest>(emptyValue);
+  const [defaultValues, setDefaultValues] = useState<CreatePlanRequest>(emptyValue);
   useEffect(() => {
     void plansService.getById(id).then((plan) =>
-      setValue({
+      setDefaultValues({
         name: plan.name,
         description: plan.description ?? '',
         price: plan.price,
@@ -32,14 +32,17 @@ export const usePlanEditPage = () => {
       }),
     );
   }, [id]);
-  const handleSubmit = useCallback(async () => {
-    const updated = await mutations.update(id, value);
-    if (updated) {
-      void navigate(`/platform/plans/${updated.id}`);
-    }
-  }, [id, mutations, navigate, value]);
+  const handleSubmit = useCallback(
+    async (payload: CreatePlanRequest) => {
+      const updated = await mutations.update(id, payload);
+      if (updated) {
+        void navigate(`/platform/plans/${updated.id}`);
+      }
+    },
+    [id, mutations, navigate],
+  );
   return useMemo(
-    () => ({ value, setValue, loading: mutations.loading, handleSubmit }),
-    [value, mutations.loading, handleSubmit],
+    () => ({ defaultValues, loading: mutations.loading, handleSubmit }),
+    [defaultValues, mutations.loading, handleSubmit],
   );
 };

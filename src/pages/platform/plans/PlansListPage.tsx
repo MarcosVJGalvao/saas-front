@@ -1,43 +1,65 @@
 import Button from '@mui/material/Button';
-import Stack from '@mui/material/Stack';
-import Typography from '@mui/material/Typography';
-import { DeletePlanDialog } from '../../../components/plans/DeletePlanDialog';
-import { PlanFilters } from '../../../components/plans/PlanFilters';
-import { PlansTable } from '../../../components/plans/PlansTable';
-import { usePlansListPage } from '../../../hooks/plans/usePlansListPage';
+import Grid from '@mui/material/Grid';
+import { EntitySearchFilter } from '../../../components/common/data/EntitySearchFilter';
+import { QueryDataTable } from '../../../components/common/data/QueryDataTable';
+import { ConfirmDialog } from '../../../components/common/feedback/ConfirmDialog';
+import { PageHeader } from '../../../components/common/page/PageHeader';
+import { usePlansListPageViewModel } from '../../../hooks/plans/usePlansListPageViewModel';
 
 const PlansListPage = () => {
-  const view = usePlansListPage();
+  const model = usePlansListPageViewModel();
+
   return (
-    <Stack spacing={2}>
-      <Typography variant="h5">Listagem de Planos</Typography>
-      <Button variant="contained" onClick={() => void view.navigate('/platform/plans/new')}>
-        Novo Plano
-      </Button>
-      <PlanFilters value={view.list.query} onChange={view.list.updateQuery} />
-      <PlansTable
-        rows={view.list.rows}
-        loading={view.list.loading}
-        errorMessage={view.list.errorMessage}
-        page={view.list.meta.page}
-        limit={view.list.meta.limit}
-        total={view.list.meta.total}
-        query={view.list.query.search ?? ''}
-        onQueryChange={(search) => view.list.updateQuery({ search, page: 1 })}
-        onPageChange={(page) => view.list.updateQuery({ page })}
-        onLimitChange={(limit) => view.list.updateQuery({ limit, page: 1 })}
-        onView={(id) => void view.navigate(`/platform/plans/${id}`)}
-        onEdit={(id) => void view.navigate(`/platform/plans/${id}/edit`)}
-        onDelete={view.setDeleteId}
+    <>
+      <PageHeader
+        title="Listagem de Planos"
+        subtitle="Gerencie planos, preços e ciclos de cobrança"
+        actions={
+          <Button
+            variant="contained"
+            onClick={() => void model.view.navigate('/platform/plans/new')}
+          >
+            Novo Plano
+          </Button>
+        }
       />
-      <DeletePlanDialog
-        open={Boolean(view.deleteId)}
-        onCancel={() => view.setDeleteId(undefined)}
+
+      <Grid container spacing={2} sx={{ mb: 2 }}>
+        <Grid size={{ xs: 12, md: 4 }}>
+          <EntitySearchFilter
+            value={model.query}
+            onChange={model.onQueryChange}
+            placeholder="Buscar plano..."
+          />
+        </Grid>
+      </Grid>
+
+      <QueryDataTable
+        rows={model.view.list.rows}
+        columns={model.columns}
+        meta={model.view.list.meta}
+        query={model.query}
+        onQueryChange={model.onQueryChange}
+        loading={model.view.list.loading}
+        errorMessage={model.view.list.errorMessage}
+        onPageChange={model.onPageChange}
+        onRowsPerPageChange={model.onRowsPerPageChange}
+        hideToolbar
+        emptyTitle="Nenhum plano encontrado"
+        emptyDescription="Ajuste os filtros ou cadastre um novo plano."
+      />
+
+      <ConfirmDialog
+        open={Boolean(model.view.deleteId)}
+        title="Remover plano"
+        description="Confirma a remoção?"
+        confirmLabel="Remover"
+        onCancel={() => model.view.setDeleteId(undefined)}
         onConfirm={() => {
-          void view.confirmDelete();
+          void model.view.confirmDelete();
         }}
       />
-    </Stack>
+    </>
   );
 };
 

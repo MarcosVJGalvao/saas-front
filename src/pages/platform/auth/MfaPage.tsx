@@ -1,21 +1,21 @@
 import { Navigate } from 'react-router-dom';
 import { PlatformMfaForm } from '@/components/auth/platform/PlatformMfaForm';
-import { usePlatformMfaFlow } from '@/hooks/platform-auth/usePlatformMfaFlow';
+import { usePlatformMfaPageViewModel } from '@/hooks/platform-auth/usePlatformMfaPageViewModel';
 import { PlatformAuthPageLayout } from './PlatformAuthPageLayout';
 
 const PlatformMfaPage = () => {
-  const { challengeToken, form, loading, handleSubmit } = usePlatformMfaFlow();
+  const model = usePlatformMfaPageViewModel();
 
-  if (challengeToken === null) {
+  if (model.shouldRedirectToLogin) {
     return <Navigate to="/platform/login" replace />;
   }
 
   return (
     <PlatformAuthPageLayout>
       <PlatformMfaForm
-        form={form}
-        loading={loading}
-        onSubmit={handleSubmit}
+        form={model.form}
+        loading={model.loading}
+        onSubmit={model.handleSubmit}
         header={{
           title: 'Verificação em duas etapas',
           subtitle: 'Digite o código de 6 dígitos do seu aplicativo autenticador.',

@@ -16,15 +16,18 @@ const initialValue: CreatePlanRequest = {
 export const usePlanCreatePage = () => {
   const navigate = useNavigate();
   const mutations = usePlansMutations();
-  const [value, setValue] = useState<CreatePlanRequest>(initialValue);
-  const handleSubmit = useCallback(async () => {
-    const created = await mutations.create(value);
-    if (created) {
-      void navigate(`/platform/plans/${created.id}`);
-    }
-  }, [mutations, navigate, value]);
+  const [defaultValues] = useState<CreatePlanRequest>(initialValue);
+  const handleSubmit = useCallback(
+    async (payload: CreatePlanRequest) => {
+      const created = await mutations.create(payload);
+      if (created) {
+        void navigate(`/platform/plans/${created.id}`);
+      }
+    },
+    [mutations, navigate],
+  );
   return useMemo(
-    () => ({ value, setValue, loading: mutations.loading, handleSubmit }),
-    [value, mutations.loading, handleSubmit],
+    () => ({ defaultValues, loading: mutations.loading, handleSubmit }),
+    [defaultValues, mutations.loading, handleSubmit],
   );
 };
