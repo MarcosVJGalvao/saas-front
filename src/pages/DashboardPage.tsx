@@ -6,10 +6,7 @@ import { layoutSpacing } from '../theme/spacing';
 
 const DashboardPage = () => (
   <Box sx={{ width: '100%' }}>
-    <Typography
-      variant="h2"
-      sx={{ mb: layoutSpacing.sectionGap, fontSize: { xs: '1.5rem', md: '1.75rem', xl: '2rem' } }}
-    >
+    <Typography variant="h2" sx={{ mb: layoutSpacing.sectionGap }}>
       Dashboard
     </Typography>
     <Grid container spacing={layoutSpacing.gridGap}>

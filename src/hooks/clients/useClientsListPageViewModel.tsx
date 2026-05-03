@@ -1,7 +1,8 @@
 import AddIcon from '@mui/icons-material/Add';
 import DownloadOutlinedIcon from '@mui/icons-material/DownloadOutlined';
-import NorthEastIcon from '@mui/icons-material/NorthEast';
-import SouthEastIcon from '@mui/icons-material/SouthEast';
+import GroupOutlinedIcon from '@mui/icons-material/GroupOutlined';
+import HighlightOffOutlinedIcon from '@mui/icons-material/HighlightOffOutlined';
+import ScheduleOutlinedIcon from '@mui/icons-material/ScheduleOutlined';
 import Avatar from '@mui/material/Avatar';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
@@ -125,7 +126,7 @@ export const useClientsListPageViewModel = () => {
         title: 'Total de Clientes',
         value: total,
         delta: '+12 este mês',
-        icon: <NorthEastIcon fontSize="inherit" color="success" />,
+        icon: <GroupOutlinedIcon color="primary" />,
         color: 'success.main',
       },
       {
@@ -133,7 +134,7 @@ export const useClientsListPageViewModel = () => {
         title: 'Clientes Ativos',
         value: activeCount,
         delta: '+9 este mês',
-        icon: <NorthEastIcon fontSize="inherit" color="success" />,
+        icon: <GroupOutlinedIcon color="success" />,
         color: 'success.main',
       },
       {
@@ -141,7 +142,7 @@ export const useClientsListPageViewModel = () => {
         title: 'Em Trial',
         value: trialCount,
         delta: '0 este mês',
-        icon: <NorthEastIcon fontSize="inherit" color="success" />,
+        icon: <ScheduleOutlinedIcon color="warning" />,
         color: 'success.main',
       },
       {
@@ -149,7 +150,7 @@ export const useClientsListPageViewModel = () => {
         title: 'Cancelados',
         value: inactiveCount,
         delta: '+3 este mês',
-        icon: <SouthEastIcon fontSize="inherit" color="error" />,
+        icon: <HighlightOffOutlinedIcon color="error" />,
         color: 'error.main',
       },
     ],

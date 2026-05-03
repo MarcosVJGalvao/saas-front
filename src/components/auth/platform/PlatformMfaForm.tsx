@@ -12,6 +12,7 @@ import { useTheme } from '@mui/material/styles';
 import { AppForm } from '@/components/common/form/AppForm';
 import { TotpCodeBoxes } from '@/components/common/form/TotpCodeBoxes';
 import type { TotpCodeSchema } from '@/forms/validators';
+import { fontSizes } from '@/theme/fontSizes';
 import type { UseFormReturn } from 'react-hook-form';
 
 interface PlatformMfaFormProps {
@@ -55,13 +56,13 @@ export const PlatformMfaForm = ({
             placeItems: 'center',
           }}
         >
-          <LockOutlinedIcon sx={{ color: theme.palette.primary.main, fontSize: 40 }} />
+          <LockOutlinedIcon sx={{ color: theme.palette.primary.main, fontSize: 34 }} />
         </Box>
         <Typography
           sx={{
             color: theme.palette.text.primary,
             fontWeight: 700,
-            fontSize: { xs: 30, md: 38, lg: 44 },
+            fontSize: { xs: '1.5rem', md: '1.75rem', lg: '2rem' },
           }}
         >
           {header.title}
@@ -69,7 +70,7 @@ export const PlatformMfaForm = ({
         <Typography
           sx={{
             color: theme.palette.text.secondary,
-            fontSize: 15,
+            fontSize: fontSizes.md,
             textAlign: 'center',
             maxWidth: 360,
           }}
@@ -87,7 +88,7 @@ export const PlatformMfaForm = ({
           sx={{
             py: 1.6,
             borderRadius: 2,
-            fontSize: 18,
+            fontSize: fontSizes.lg,
             bgcolor: theme.palette.primary.main,
             color: theme.palette.primary.contrastText,
           }}
@@ -99,7 +100,7 @@ export const PlatformMfaForm = ({
       <Stack spacing={1.6} sx={{ mt: 3, alignItems: 'center' }}>
         <Stack direction="row" spacing={2} sx={{ width: '100%', alignItems: 'center' }}>
           <Divider sx={{ flex: 1 }} />
-          <Typography sx={{ color: theme.palette.text.secondary, fontSize: 14 }}>
+          <Typography sx={{ color: theme.palette.text.secondary, fontSize: fontSizes.md }}>
             {labels.recoveryTitle}
           </Typography>
           <Divider sx={{ flex: 1 }} />
@@ -107,7 +108,7 @@ export const PlatformMfaForm = ({
         <Link
           href="/platform/mfa-setup"
           underline="none"
-          sx={{ fontSize: 16, color: theme.palette.primary.main }}
+          sx={{ fontSize: fontSizes.md, color: theme.palette.primary.main }}
         >
           {labels.resetMfa}
         </Link>
@@ -115,7 +116,7 @@ export const PlatformMfaForm = ({
           href="/platform/login"
           underline="none"
           sx={{
-            fontSize: 16,
+            fontSize: fontSizes.md,
             color: theme.palette.primary.main,
             display: 'inline-flex',
             alignItems: 'center',

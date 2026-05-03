@@ -12,6 +12,7 @@ import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import { useTheme } from '@mui/material/styles';
 import { useThemePreference } from '@/hooks/useThemePreference';
+import { fontSizes } from '@/theme/fontSizes';
 import { getUiColorTokens } from '@/theme/uiColors';
 
 const BUILDING_IMAGE_URL = '/assets/auth/buildings.webp';
@@ -72,13 +73,21 @@ const HighlightList = memo(({ heroCardBackground }: { heroCardBackground: string
               flexShrink: 0,
             }}
           >
-            <Icon sx={{ fontSize: { md: 24, lg: 26 } }} />
+            <Icon sx={{ fontSize: { md: 21, lg: 23 } }} />
           </Box>
           <Box>
-            <Typography sx={{ fontSize: { md: 14, lg: 16 }, fontWeight: 700, mb: 0.3 }}>
+            <Typography
+              sx={{ fontSize: { md: fontSizes.md, lg: fontSizes.lg }, fontWeight: 700, mb: 0.3 }}
+            >
               {item.title}
             </Typography>
-            <Typography sx={{ fontSize: { md: 10, lg: 12 }, lineHeight: 1.42, maxWidth: 320 }}>
+            <Typography
+              sx={{
+                fontSize: { md: fontSizes.xs, lg: fontSizes.sm },
+                lineHeight: 1.42,
+                maxWidth: 320,
+              }}
+            >
               {item.description}
             </Typography>
           </Box>
@@ -162,7 +171,9 @@ export const PlatformAuthPageLayout = ({ children }: PlatformAuthPageLayoutProps
             >
               <VerifiedUserOutlinedIcon fontSize="small" />
             </Box>
-            <Typography sx={{ fontSize: { md: 22, lg: 18 }, fontWeight: 700, lineHeight: 1 }}>
+            <Typography
+              sx={{ fontSize: { md: '1.125rem', lg: '1.0625rem' }, fontWeight: 700, lineHeight: 1 }}
+            >
               {PLATFORM_AUTH_MESSAGES.brandPrefix}{' '}
               <Box component="span" sx={{ color: authUi.heroAccent }}>
                 {PLATFORM_AUTH_MESSAGES.brandHighlight}
@@ -171,7 +182,7 @@ export const PlatformAuthPageLayout = ({ children }: PlatformAuthPageLayoutProps
           </Stack>
           <Typography
             sx={{
-              fontSize: { md: 32, lg: 44 },
+              fontSize: { md: '1.875rem', lg: '2.25rem' },
               fontWeight: 700,
               lineHeight: 1.18,
               mb: { md: 1.6, lg: 2.2 },
@@ -184,7 +195,7 @@ export const PlatformAuthPageLayout = ({ children }: PlatformAuthPageLayoutProps
           </Typography>
           <Typography
             sx={{
-              fontSize: { md: 14, lg: 16 },
+              fontSize: { md: fontSizes.md, lg: fontSizes.lg },
               lineHeight: 1.45,
               maxWidth: { md: 320, lg: 380 },
               position: 'relative',
@@ -239,13 +250,15 @@ export const PlatformAuthPageLayout = ({ children }: PlatformAuthPageLayoutProps
             sx={{ mt: 2, color: 'text.secondary', alignItems: 'center' }}
           >
             <SecurityOutlinedIcon fontSize="small" />
-            <Typography sx={{ fontSize: 14 }}>
+            <Typography sx={{ fontSize: fontSizes.md }}>
               {PLATFORM_AUTH_MESSAGES.secureEnvironment}
             </Typography>
           </Stack>
         </Box>
       </Box>
-      <Typography sx={{ textAlign: 'center', color: 'text.secondary', pt: 0.5, fontSize: 13 }}>
+      <Typography
+        sx={{ textAlign: 'center', color: 'text.secondary', pt: 0.5, fontSize: fontSizes.sm }}
+      >
         {PLATFORM_AUTH_MESSAGES.copyright}
       </Typography>
     </Box>

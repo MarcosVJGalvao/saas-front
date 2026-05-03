@@ -12,6 +12,7 @@ import MenuIcon from '@mui/icons-material/Menu';
 import NotificationsOutlinedIcon from '@mui/icons-material/NotificationsOutlined';
 import SearchOutlinedIcon from '@mui/icons-material/SearchOutlined';
 import { getUiColorTokens } from '../../../theme/uiColors';
+import { fontSizes } from '../../../theme/fontSizes';
 import { appLayoutMessages } from './messages';
 import { SessionTimer } from './SessionTimer';
 
@@ -46,7 +47,7 @@ const TopBarSearchShortcut = ({ isMobile }: { isMobile: boolean }) =>
         border: 1,
         borderColor: 'divider',
         borderRadius: 1,
-        fontSize: 13,
+        fontSize: fontSizes.sm,
         lineHeight: '20px',
         height: 22,
         display: 'inline-flex',
@@ -73,8 +74,8 @@ const TopBarUserInfo = ({ isMobile, userName }: { isMobile: boolean; userName: s
         lineHeight: 1.15,
       }}
     >
-      <Typography sx={{ fontWeight: 600, fontSize: 16 }}>{userName}</Typography>
-      <Typography sx={{ color: 'text.secondary', fontSize: 14 }}>
+      <Typography sx={{ fontWeight: 600, fontSize: fontSizes.lg }}>{userName}</Typography>
+      <Typography sx={{ color: 'text.secondary', fontSize: fontSizes.md }}>
         {appLayoutMessages.roleLabel}
       </Typography>
     </Box>
@@ -114,7 +115,7 @@ export const TopBar = ({
         variant="h6"
         sx={{
           fontWeight: 600,
-          fontSize: { xs: 20, lg: 24 },
+          fontSize: { xs: '1.125rem', lg: '1.25rem' },
           minWidth: { xs: 0, sm: 120, md: 140 },
           maxWidth: { xs: 120, sm: 160, lg: 220 },
           overflow: 'hidden',
@@ -193,7 +194,7 @@ export const TopBar = ({
               background: uiColors.topBarAvatarGradient,
               color: 'common.white',
               fontWeight: 700,
-              fontSize: isMobile ? 13 : 14,
+              fontSize: isMobile ? fontSizes.sm : fontSizes.md,
             }}
           >
             {userInitials}

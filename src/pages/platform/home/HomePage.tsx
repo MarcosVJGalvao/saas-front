@@ -3,6 +3,7 @@ import Chip from '@mui/material/Chip';
 import Paper from '@mui/material/Paper';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
+import { fontSizes } from '@/theme/fontSizes';
 
 const PlatformHomePage = () => (
   <Box sx={{ p: 3 }}>
@@ -17,7 +18,7 @@ const PlatformHomePage = () => (
         <Typography variant="h4" sx={{ fontWeight: 700 }}>
           Painel administrativo da plataforma
         </Typography>
-        <Typography sx={{ fontSize: 16, color: 'text.secondary' }}>
+        <Typography sx={{ fontSize: fontSizes.lg, color: 'text.secondary' }}>
           Voce esta autenticado no dominio de administracao. Aqui voce gerencia tenants, acessos e
           configuracoes globais.
         </Typography>

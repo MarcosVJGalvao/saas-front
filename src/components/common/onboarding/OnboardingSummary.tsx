@@ -9,6 +9,7 @@ import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import { alpha } from '@mui/material/styles';
 import { memo } from 'react';
+import { fontSizes } from '@/theme/fontSizes';
 import type { OnboardingSummaryData } from './types';
 
 interface Props {
@@ -59,7 +60,7 @@ export const OnboardingSummary = memo(
             bgcolor: 'background.paper',
           })}
         >
-          <Typography sx={{ fontSize: 16, fontWeight: 700, lineHeight: 1.2 }}>
+          <Typography sx={{ fontSize: fontSizes.lg, fontWeight: 700, lineHeight: 1.2 }}>
             Resumo do Onboarding
           </Typography>
 
@@ -74,17 +75,17 @@ export const OnboardingSummary = memo(
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                fontSize: 14,
+                fontSize: fontSizes.md,
                 fontWeight: 700,
               }}
             >
               {summary.client?.slice(0, 2).toUpperCase() || 'ON'}
             </Box>
             <Box sx={{ minWidth: 0 }}>
-              <Typography sx={{ fontSize: 14, fontWeight: 600, lineHeight: 1.3 }}>
+              <Typography sx={{ fontSize: fontSizes.md, fontWeight: 600, lineHeight: 1.3 }}>
                 Preenchimento Geral
               </Typography>
-              <Typography sx={{ fontSize: 12, color: 'text.secondary', lineHeight: 1.3 }}>
+              <Typography sx={{ fontSize: fontSizes.xs, color: 'text.secondary', lineHeight: 1.3 }}>
                 Acompanhe o progresso do onboarding
               </Typography>
             </Box>
@@ -103,7 +104,12 @@ export const OnboardingSummary = memo(
               }}
             />
             <Typography
-              sx={{ fontSize: 12, color: 'text.secondary', minWidth: 30, textAlign: 'right' }}
+              sx={{
+                fontSize: fontSizes.xs,
+                color: 'text.secondary',
+                minWidth: 30,
+                textAlign: 'right',
+              }}
             >
               {progress}%
             </Typography>
@@ -158,23 +164,27 @@ export const OnboardingSummary = memo(
                       })}
                     >
                       {isCompleted ? (
-                        <TaskAltRoundedIcon sx={{ fontSize: 13, color: 'success.main' }} />
+                        <TaskAltRoundedIcon
+                          sx={{ fontSize: fontSizes.sm, color: 'success.main' }}
+                        />
                       ) : isActive ? (
-                        <InfoOutlinedIcon sx={{ fontSize: 12, color: 'primary.main' }} />
+                        <InfoOutlinedIcon sx={{ fontSize: fontSizes.xs, color: 'primary.main' }} />
                       ) : (
                         <RadioButtonUncheckedRoundedIcon
-                          sx={{ fontSize: 12, color: 'text.disabled' }}
+                          sx={{ fontSize: fontSizes.xs, color: 'text.disabled' }}
                         />
                       )}
                     </Box>
 
                     <Box sx={{ flex: 1, minWidth: 0 }}>
-                      <Typography sx={{ fontSize: 13.5, fontWeight: 600, lineHeight: 1.25 }}>
+                      <Typography
+                        sx={{ fontSize: fontSizes.sm, fontWeight: 600, lineHeight: 1.25 }}
+                      >
                         {label}
                       </Typography>
                       <Typography
                         sx={{
-                          fontSize: 11.5,
+                          fontSize: fontSizes.xs,
                           color: 'text.secondary',
                           lineHeight: 1.3,
                           mt: 0.15,
@@ -187,7 +197,7 @@ export const OnboardingSummary = memo(
 
                     {isCompleted ? (
                       <CheckCircleOutlineRoundedIcon
-                        sx={{ fontSize: 16, color: 'success.light', mt: 0.2 }}
+                        sx={{ fontSize: fontSizes.lg, color: 'success.light', mt: 0.2 }}
                       />
                     ) : null}
                   </Stack>
@@ -208,10 +218,10 @@ export const OnboardingSummary = memo(
           })}
         >
           <Stack direction="row" spacing={0.75} sx={{ alignItems: 'center', mb: 0.5 }}>
-            <InfoOutlinedIcon sx={{ color: 'primary.main', fontSize: 16 }} />
-            <Typography sx={{ fontWeight: 600, fontSize: 14 }}>Importante</Typography>
+            <InfoOutlinedIcon sx={{ color: 'primary.main', fontSize: fontSizes.lg }} />
+            <Typography sx={{ fontWeight: 600, fontSize: fontSizes.md }}>Importante</Typography>
           </Stack>
-          <Typography sx={{ fontSize: 12.5, lineHeight: 1.45, color: 'text.secondary' }}>
+          <Typography sx={{ fontSize: fontSizes.sm, lineHeight: 1.45, color: 'text.secondary' }}>
             Ao finalizar o onboarding, cliente, tenant e usuário administrador serão criados
             conforme o contrato da API.
           </Typography>

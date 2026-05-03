@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { clientAuthService } from '@/services/client/auth/service';
 import type { ClientMeResponse } from '@/services/client/auth/types';
 
@@ -20,8 +20,13 @@ export const useClientHomeData = () => {
   const [loading, setLoading] = useState(true);
   const [profile, setProfile] = useState<ClientMeResponse | null>(null);
   const [errorMessage, setErrorMessage] = useState('');
+  const hasRequestedProfileRef = useRef(false);
 
   useEffect(() => {
+    if (hasRequestedProfileRef.current) {
+      return;
+    }
+    hasRequestedProfileRef.current = true;
     void clientAuthService
       .me()
       .then((me) => {

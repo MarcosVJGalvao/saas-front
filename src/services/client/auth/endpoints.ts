@@ -12,7 +12,7 @@ import type {
   ClientResetPasswordRequest,
 } from './types';
 
-const CLIENT_AUTH_BASE_PATH = '/api/client/auth';
+const CLIENT_AUTH_BASE_PATH = '/api/auth';
 
 export const clientAuthEndpoints = {
   login: (payload: ClientLoginRequest) =>

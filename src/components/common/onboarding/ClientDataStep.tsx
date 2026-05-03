@@ -4,6 +4,7 @@ import Stack from '@mui/material/Stack';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import { memo, useCallback } from 'react';
+import { fontSizes } from '@/theme/fontSizes';
 import { useAddressAutoFill } from '../../../hooks/useAddressAutoFill/useAddressAutoFill';
 import { spacingScale } from '../../../theme/spacing';
 import { maskCep, maskCnpj, maskCpf, maskPhone } from '../../../utils/mask';
@@ -131,9 +132,9 @@ export const ClientDataStep = memo(
               justifyContent: 'center',
             }}
           >
-            <DescriptionOutlinedIcon sx={{ fontSize: 16, color: 'text.secondary' }} />
+            <DescriptionOutlinedIcon sx={{ fontSize: fontSizes.lg, color: 'text.secondary' }} />
           </Stack>
-          <Typography variant="h6" sx={{ fontSize: 22, fontWeight: 700, lineHeight: 1.2 }}>
+          <Typography variant="h6" sx={{ fontSize: '1.125rem', fontWeight: 700, lineHeight: 1.2 }}>
             Dados do Cliente
           </Typography>
         </Stack>
@@ -141,7 +142,7 @@ export const ClientDataStep = memo(
         <Typography
           variant="body2"
           color="text.secondary"
-          sx={{ ml: 4, mt: -0.15, fontSize: 13, lineHeight: 1.35, fontWeight: 500 }}
+          sx={{ ml: 4, mt: -0.15, fontSize: fontSizes.sm, lineHeight: 1.35, fontWeight: 500 }}
         >
           Informações da empresa que será cadastrada na plataforma.
         </Typography>

@@ -15,14 +15,11 @@ import {
 import type { AuthSession } from './client/auth/types';
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
-const CLIENT_REFRESH_PATH = '/api/client/auth/refresh';
+const CLIENT_REFRESH_PATH = '/api/auth/refresh';
 const PLATFORM_REFRESH_PATH = '/api/platform/auth/refresh';
 const CLIENT_API_BASE_PATH = '/api/client';
 const PLATFORM_API_BASE_PATH = '/api/platform';
-const AUTH_REQUEST_PATHS: ReadonlyArray<string> = [
-  '/api/client/auth/login',
-  '/api/platform/auth/login',
-];
+const AUTH_REQUEST_PATHS: ReadonlyArray<string> = ['/api/auth/login', '/api/platform/auth/login'];
 const UNAUTHORIZED_ERROR_CODE = 'UNAUTHORIZED';
 const TOKEN_EXPIRED_ERROR_CODE = 'TOKEN_EXPIRED';
 const REFRESH_TOKEN_INVALID_ERROR_CODE = 'REFRESH_TOKEN_INVALID';

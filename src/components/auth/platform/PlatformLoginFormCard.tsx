@@ -18,6 +18,7 @@ import { useTheme } from '@mui/material/styles';
 import { Controller } from 'react-hook-form';
 import { AppForm } from '@/components/common/form/AppForm';
 import type { LoginSchema } from '@/forms/validators';
+import { fontSizes } from '@/theme/fontSizes';
 import type { UseFormReturn } from 'react-hook-form';
 
 interface PlatformLoginFormCardProps {
@@ -59,7 +60,7 @@ export const PlatformLoginFormCard = memo(
     const fieldLabelSx = useMemo(
       () =>
         styles?.fieldLabelSx ?? {
-          fontSize: 18,
+          fontSize: fontSizes.xxl,
           fontWeight: 600,
           color: theme.palette.text.primary,
           mb: -1,
@@ -91,19 +92,19 @@ export const PlatformLoginFormCard = memo(
               placeItems: 'center',
             }}
           >
-            <LockOutlinedIcon sx={{ color: theme.palette.primary.main, fontSize: 36 }} />
+            <LockOutlinedIcon sx={{ color: theme.palette.primary.main, fontSize: 32 }} />
           </Box>
           <Typography
             variant="h3"
             sx={{
               color: theme.palette.text.primary,
               fontWeight: 700,
-              fontSize: { xs: 34, md: 42, lg: 48 },
+              fontSize: { xs: '2rem', md: '2.25rem', lg: '2.5rem' },
             }}
           >
             {header.title}
           </Typography>
-          <Typography sx={{ color: theme.palette.text.secondary, fontSize: 15 }}>
+          <Typography sx={{ color: theme.palette.text.secondary, fontSize: fontSizes.lg }}>
             {header.subtitle}
           </Typography>
         </Box>
@@ -215,7 +216,7 @@ export const PlatformLoginFormCard = memo(
                 />
               )}
             />
-            <Link href="#" underline="none" sx={{ fontSize: 15 }}>
+            <Link href="#" underline="none" sx={{ fontSize: fontSizes.lg }}>
               {labels.forgotPassword}
             </Link>
           </Box>
@@ -227,7 +228,7 @@ export const PlatformLoginFormCard = memo(
             sx={{
               py: 1.6,
               borderRadius: 2,
-              fontSize: 18,
+              fontSize: fontSizes.xxl,
               bgcolor: theme.palette.primary.main,
               color: theme.palette.primary.contrastText,
             }}

@@ -14,7 +14,7 @@ describe('clientAuthService', () => {
 
     const response = await clientAuthService.login('user@empresa.com', 'senha123');
 
-    expect(postSpy).toHaveBeenCalledWith('/api/client/auth/login', {
+    expect(postSpy).toHaveBeenCalledWith('/api/auth/login', {
       email: 'user@empresa.com',
       password: 'senha123',
     });

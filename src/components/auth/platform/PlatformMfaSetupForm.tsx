@@ -14,6 +14,7 @@ import type { UseFormReturn } from 'react-hook-form';
 import { AppForm } from '@/components/common/form/AppForm';
 import { TotpCodeBoxes } from '@/components/common/form/TotpCodeBoxes';
 import type { TotpCodeSchema } from '@/forms/validators';
+import { fontSizes } from '@/theme/fontSizes';
 
 interface PlatformMfaSetupFormProps {
   form: UseFormReturn<TotpCodeSchema>;
@@ -62,13 +63,13 @@ export const PlatformMfaSetupForm = ({
             mb: 1,
           }}
         >
-          <LockOutlinedIcon sx={{ color: theme.palette.primary.main, fontSize: 40 }} />
+          <LockOutlinedIcon sx={{ color: theme.palette.primary.main, fontSize: 34 }} />
         </Box>
         <Typography
           sx={{
             color: theme.palette.text.primary,
             fontWeight: 700,
-            fontSize: { xs: 30, md: 38, lg: 44 },
+            fontSize: { xs: '1.5rem', md: '1.75rem', lg: '2rem' },
             mb: 1,
           }}
         >
@@ -77,7 +78,7 @@ export const PlatformMfaSetupForm = ({
         <Typography
           sx={{
             color: theme.palette.text.secondary,
-            fontSize: 15,
+            fontSize: fontSizes.md,
             textAlign: 'center',
             maxWidth: 540,
           }}
@@ -106,11 +107,13 @@ export const PlatformMfaSetupForm = ({
         <Stack spacing={0.8} sx={{ flex: 1 }}>
           <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
             <ShieldOutlinedIcon sx={{ color: theme.palette.text.secondary }} />
-            <Typography sx={{ fontSize: 18, fontWeight: 600, color: theme.palette.text.primary }}>
+            <Typography
+              sx={{ fontSize: fontSizes.lg, fontWeight: 600, color: theme.palette.text.primary }}
+            >
               {labels.cannotScan}
             </Typography>
           </Stack>
-          <Typography sx={{ color: theme.palette.text.secondary, fontSize: 14 }}>
+          <Typography sx={{ color: theme.palette.text.secondary, fontSize: fontSizes.md }}>
             {labels.useManualCode}
           </Typography>
           <Paper
@@ -124,7 +127,7 @@ export const PlatformMfaSetupForm = ({
           >
             <Typography
               sx={{
-                fontSize: 24,
+                fontSize: '1.0625rem',
                 fontWeight: 600,
                 letterSpacing: 0.8,
                 color: theme.palette.text.primary,
@@ -137,7 +140,7 @@ export const PlatformMfaSetupForm = ({
       </Stack>
 
       <Typography
-        sx={{ fontSize: 20, fontWeight: 600, color: theme.palette.text.primary, mb: 1.2 }}
+        sx={{ fontSize: '1rem', fontWeight: 600, color: theme.palette.text.primary, mb: 1.2 }}
       >
         {labels.appCode}
       </Typography>
@@ -154,7 +157,7 @@ export const PlatformMfaSetupForm = ({
           }}
         >
           <ShieldOutlinedIcon fontSize="small" />
-          <Typography sx={{ fontSize: 14 }}>{labels.rotatingCodeHint}</Typography>
+          <Typography sx={{ fontSize: fontSizes.md }}>{labels.rotatingCodeHint}</Typography>
         </Stack>
         <Button
           type="submit"
@@ -163,7 +166,7 @@ export const PlatformMfaSetupForm = ({
           sx={{
             py: 1.6,
             borderRadius: 2,
-            fontSize: 18,
+            fontSize: fontSizes.lg,
             bgcolor: theme.palette.primary.main,
             color: theme.palette.primary.contrastText,
           }}
@@ -177,7 +180,7 @@ export const PlatformMfaSetupForm = ({
           href="/platform/login"
           underline="none"
           sx={{
-            fontSize: 16,
+            fontSize: fontSizes.md,
             color: theme.palette.primary.main,
             display: 'inline-flex',
             alignItems: 'center',

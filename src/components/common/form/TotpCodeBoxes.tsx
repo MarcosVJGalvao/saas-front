@@ -48,10 +48,10 @@ export const TotpCodeBoxes = ({ name }: TotpCodeBoxesProps) => {
                   },
                   maxLength: 1,
                   inputMode: 'numeric',
-                  style: { textAlign: 'center', fontSize: 28, fontWeight: 600, width: 42 },
+                  style: { textAlign: 'center', fontSize: 22, fontWeight: 600, width: 36 },
                 },
               }}
-              sx={{ '& .MuiInputBase-root': { height: 64, width: 58, borderRadius: 2 } }}
+              sx={{ '& .MuiInputBase-root': { height: 54, width: 50, borderRadius: 2 } }}
             />
           ))}
           <input type="hidden" name={field.name} value={String(field.value ?? '')} readOnly />
