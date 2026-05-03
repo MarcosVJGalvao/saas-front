@@ -2,27 +2,27 @@ import HighlightOffOutlinedIcon from '@mui/icons-material/HighlightOffOutlined';
 import GroupOutlinedIcon from '@mui/icons-material/GroupOutlined';
 import MoneyOutlinedIcon from '@mui/icons-material/MoneyOutlined';
 import ScheduleOutlinedIcon from '@mui/icons-material/ScheduleOutlined';
-import Chip from '@mui/material/Chip';
 import type { DataTableColumn } from '../../components/common/data/DataTable';
 import type { ListMetricItem } from '../../components/common/data/ListMetricsGrid';
 import { RowActionsMenu } from '../../components/common/data/RowActionsMenu';
+import { LocalizedStatusBadge } from '../../components/common/display/LocalizedStatusBadge';
 import type { Subscription, SubscriptionsQueryParams } from '../../models/subscriptions';
 import { useSubscriptionsListPage } from './useSubscriptionsListPage';
 
-const statusColorByValue: Record<Subscription['status'], 'success' | 'error' | 'warning'> = {
-  active: 'success',
-  canceled: 'error',
-  past_due: 'warning',
-  trialing: 'warning',
-  blocked: 'error',
+const statusLabelByValue: Record<Subscription['status'], string> = {
+  active: 'Ativa',
+  canceled: 'Cancelada',
+  past_due: 'Em atraso',
+  trialing: 'Em trial',
+  blocked: 'Bloqueada',
 };
 
 const subscriptionStatusOptions: ReadonlyArray<{ value: Subscription['status']; label: string }> = [
-  { value: 'active', label: 'active' },
-  { value: 'trialing', label: 'trialing' },
-  { value: 'canceled', label: 'canceled' },
-  { value: 'past_due', label: 'past_due' },
-  { value: 'blocked', label: 'blocked' },
+  { value: 'active', label: 'Ativa' },
+  { value: 'trialing', label: 'Em trial' },
+  { value: 'canceled', label: 'Cancelada' },
+  { value: 'past_due', label: 'Em atraso' },
+  { value: 'blocked', label: 'Bloqueada' },
 ];
 
 const formatCurrency = (value: number | string): string => {
@@ -103,9 +103,15 @@ export const useSubscriptionsListViewModel = () => {
     {
       key: 'status',
       header: 'Status',
-      render: (row) => (
-        <Chip size="small" color={statusColorByValue[row.status]} label={`• ${row.status}`} />
-      ),
+      render: (row) => {
+        const isActive = row.status === 'active';
+        return (
+          <LocalizedStatusBadge
+            label={statusLabelByValue[row.status]}
+            tone={isActive ? 'active' : 'neutral'}
+          />
+        );
+      },
     },
     {
       key: 'start',

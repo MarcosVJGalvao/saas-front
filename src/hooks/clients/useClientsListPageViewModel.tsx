@@ -8,7 +8,7 @@ import Typography from '@mui/material/Typography';
 import { useMemo } from 'react';
 import type { DataTableColumn } from '../../components/common/data/DataTable';
 import { RowActionsMenu } from '../../components/common/data/RowActionsMenu';
-import { StatusChip } from '../../components/common/display/StatusChip';
+import { LocalizedStatusBadge } from '../../components/common/display/LocalizedStatusBadge';
 import type { Client } from '../../models/clients';
 import { maskCnpj, maskCpf } from '../../utils/mask';
 import { useClientsListPage } from './useClientsListPage';
@@ -72,24 +72,9 @@ export const useClientsListPageViewModel = () => {
         key: 'status',
         header: 'Status',
         render: (row) => (
-          <StatusChip
+          <LocalizedStatusBadge
             label={row.status === 'active' ? 'Ativa' : 'Inativa'}
-            status={row.status === 'active' ? 'success' : 'default'}
-            sx={
-              row.status === 'active'
-                ? {
-                    bgcolor: '#DFF3E5',
-                    color: '#1B7F3A',
-                    fontWeight: 600,
-                    border: 'none',
-                  }
-                : {
-                    bgcolor: '#EEF1F4',
-                    color: '#5B6570',
-                    fontWeight: 600,
-                    border: 'none',
-                  }
-            }
+            tone={row.status === 'active' ? 'active' : 'neutral'}
           />
         ),
       },

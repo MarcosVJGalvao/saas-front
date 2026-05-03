@@ -20,6 +20,10 @@ export interface UiColorTokens {
   notificationPrimaryColor: string;
   notificationSecondaryBg: string;
   notificationSecondaryColor: string;
+  statusActiveBg: string;
+  statusActiveColor: string;
+  statusNeutralBg: string;
+  statusNeutralColor: string;
 }
 
 const lightTokens: UiColorTokens = {
@@ -42,6 +46,10 @@ const lightTokens: UiColorTokens = {
   notificationPrimaryColor: '#2563EB',
   notificationSecondaryBg: 'rgba(139,92,246,0.14)',
   notificationSecondaryColor: '#7C3AED',
+  statusActiveBg: '#DFF3E5',
+  statusActiveColor: '#1B7F3A',
+  statusNeutralBg: '#EEF1F4',
+  statusNeutralColor: '#5B6570',
 };
 
 const darkTokens: UiColorTokens = {
@@ -64,6 +72,10 @@ const darkTokens: UiColorTokens = {
   notificationPrimaryColor: '#2563EB',
   notificationSecondaryBg: 'rgba(139,92,246,0.14)',
   notificationSecondaryColor: '#7C3AED',
+  statusActiveBg: '#284734',
+  statusActiveColor: '#8FE6A9',
+  statusNeutralBg: '#313D4F',
+  statusNeutralColor: '#C2CDD9',
 };
 
 export const getUiColorTokens = (mode: PaletteMode): UiColorTokens =>

@@ -1,6 +1,6 @@
-import Chip from '@mui/material/Chip';
 import type { DataTableColumn } from '../../components/common/data/DataTable';
 import { RowActionsMenu } from '../../components/common/data/RowActionsMenu';
+import { LocalizedStatusBadge } from '../../components/common/display/LocalizedStatusBadge';
 import type { Plan } from '../../models/plans';
 import { usePlansListPage } from './usePlansListPage';
 
@@ -30,10 +30,9 @@ export const usePlansListPageViewModel = () => {
       key: 'status',
       header: 'Status',
       render: (row) => (
-        <Chip
-          size="small"
-          label={row.isActive ? 'Ativo' : 'Inativo'}
-          color={row.isActive ? 'success' : 'default'}
+        <LocalizedStatusBadge
+          label={row.isActive ? 'Ativa' : 'Inativa'}
+          tone={row.isActive ? 'active' : 'neutral'}
         />
       ),
     },
