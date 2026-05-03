@@ -1,4 +1,4 @@
-﻿import Card from '@mui/material/Card';
+import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
@@ -34,8 +34,8 @@ const PlanDetailsContent = ({ data }: { data: Plan }) => {
         <InfoList
           items={[
             { label: 'Nome', value: data.name },
-            { label: 'Descrição', value: data.description ?? '-' },
-            { label: 'Preço', value: `${data.price} ${data.currency}` },
+            { label: 'Descri��o', value: data.description ?? '-' },
+            { label: 'Pre�o', value: `${data.price} ${data.currency}` },
             { label: 'Ciclo', value: billingCycleLabel[data.billingCycle] },
             { label: 'Trial', value: `${data.trialDays} dias` },
             { label: 'Status', value: statusLabel },
@@ -72,7 +72,9 @@ const PlanDetailsPage = () => {
     ),
     ready: (
       <Stack spacing={2}>
-        <Typography variant="h4">Detalhes do Plano</Typography>
+        <Typography variant="h5" sx={{ fontWeight: 700 }}>
+          Detalhes do Plano
+        </Typography>
         <PlanDetailsContent data={planData} />
       </Stack>
     ),

@@ -45,7 +45,9 @@ export const PageHeader = ({ title, subtitle, breadcrumbs = [], actions }: PageH
     ) : null}
     <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 2 }}>
       <Box>
-        <Typography variant="h2">{title}</Typography>
+        <Typography variant="h5" sx={{ fontWeight: 700 }}>
+          {title}
+        </Typography>
         {subtitle !== undefined ? (
           <Typography variant="body2" color="text.secondary">
             {subtitle}

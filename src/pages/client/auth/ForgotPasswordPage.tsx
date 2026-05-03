@@ -26,7 +26,9 @@ const ForgotPasswordPage = () => {
   return (
     <PlatformAuthPageLayout>
       <AppForm form={form} onSubmit={handleSubmit}>
-        <Typography variant="h4">{MESSAGES.title}</Typography>
+        <Typography variant="h5" sx={{ fontWeight: 700 }}>
+          {MESSAGES.title}
+        </Typography>
         <Controller
           name="email"
           control={form.control}

@@ -17,7 +17,9 @@ const SubscriptionEditPage = () => {
   if (!view.tenantId) {
     return (
       <Stack spacing={2}>
-        <Typography variant="h4">Editar Assinatura</Typography>
+        <Typography variant="h5" sx={{ fontWeight: 700 }}>
+          Editar Assinatura
+        </Typography>
         <Typography>tenantId � obrigat�rio.</Typography>
       </Stack>
     );
@@ -25,7 +27,9 @@ const SubscriptionEditPage = () => {
 
   return (
     <Stack spacing={2}>
-      <Typography variant="h4">Editar Assinatura</Typography>
+      <Typography variant="h5" sx={{ fontWeight: 700 }}>
+        Editar Assinatura
+      </Typography>
       <AppForm form={form} onSubmit={(data) => void view.handleSubmit(data)}>
         <Controller
           name="tenantId"

@@ -2,7 +2,6 @@ import AddIcon from '@mui/icons-material/Add';
 import CalendarTodayOutlinedIcon from '@mui/icons-material/CalendarTodayOutlined';
 import FilterListOutlinedIcon from '@mui/icons-material/FilterListOutlined';
 import Button from '@mui/material/Button';
-import Container from '@mui/material/Container';
 import Grid from '@mui/material/Grid';
 import InputAdornment from '@mui/material/InputAdornment';
 import TextField from '@mui/material/TextField';
@@ -19,7 +18,7 @@ const SubscriptionsListPage = () => {
   const model = useSubscriptionsListViewModel();
 
   return (
-    <Container maxWidth={false} sx={{ py: 0.5, px: 1 }}>
+    <>
       <PageHeader
         title="Gestão de Assinaturas"
         subtitle="Gerencie planos ativos, renovações e cobranças"
@@ -36,7 +35,7 @@ const SubscriptionsListPage = () => {
 
       <ListMetricsGrid loading={model.view.list.loading} items={model.metrics} />
 
-      <Grid container spacing={2} sx={{ mb: 2, alignItems: 'center' }}>
+      <Grid container spacing={2} sx={{ mb: 2.75, alignItems: 'center' }}>
         <Grid size={{ xs: 12, md: 4 }}>
           <EntitySearchFilter
             value={model.searchValue}
@@ -119,7 +118,7 @@ const SubscriptionsListPage = () => {
         onClose={() => model.view.setHistoryOpen(false)}
         rows={model.historyDialogRows}
       />
-    </Container>
+    </>
   );
 };
 

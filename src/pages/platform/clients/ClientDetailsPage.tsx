@@ -8,7 +8,9 @@ const ClientDetailsPage = () => {
   const { data } = useClientDetails(id);
   return (
     <Stack spacing={2}>
-      <Typography variant="h4">Detalhes do Cliente</Typography>
+      <Typography variant="h5" sx={{ fontWeight: 700 }}>
+        Detalhes do Cliente
+      </Typography>
       {data ? (
         <>
           <Typography>{data.legalName}</Typography>

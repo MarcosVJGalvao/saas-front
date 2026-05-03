@@ -18,7 +18,7 @@ interface ListMetricsGridProps {
 }
 
 export const ListMetricsGrid = ({ loading, items }: ListMetricsGridProps) => (
-  <Grid container spacing={2} sx={{ mb: 2 }}>
+  <Grid container spacing={2} sx={{ mb: 3 }}>
     {items.map((item) => (
       <Grid key={item.key} size={{ xs: 12, sm: 6, lg: 3 }}>
         <MetricCard

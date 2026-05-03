@@ -11,7 +11,9 @@ const ClientOnboardingPage = () => {
 
   return (
     <Stack spacing={2}>
-      <Typography variant="h4">Onboarding de Novo Cliente</Typography>
+      <Typography variant="h5" sx={{ fontWeight: 700 }}>
+        Onboarding de Novo Cliente
+      </Typography>
       <Typography color="text.secondary">
         Crie um novo cliente, configure o tenant e o usuário administrador.
       </Typography>

@@ -2,7 +2,7 @@ import { useCallback, useEffect, useMemo, useState, type MouseEvent } from 'reac
 import type { NavigationItem } from '../models/navigation';
 import { useCommandPalette } from './useCommandPalette';
 
-const SIDEBAR_EXPANDED_WIDTH = 288;
+const SIDEBAR_EXPANDED_WIDTH = 230;
 const SIDEBAR_COLLAPSED_WIDTH = 84;
 
 export const buildUserInitials = (userName: string): string =>

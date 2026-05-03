@@ -17,7 +17,9 @@ const ClientEditPage = () => {
 
   return (
     <Stack spacing={2}>
-      <Typography variant="h4">Editar Cliente</Typography>
+      <Typography variant="h5" sx={{ fontWeight: 700 }}>
+        Editar Cliente
+      </Typography>
       <AppForm form={form} onSubmit={(payload) => void view.handleSubmit(payload)}>
         <Controller
           name="tradeName"

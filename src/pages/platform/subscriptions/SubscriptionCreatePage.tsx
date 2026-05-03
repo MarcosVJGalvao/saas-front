@@ -16,7 +16,9 @@ const SubscriptionCreatePage = () => {
 
   return (
     <Stack spacing={2}>
-      <Typography variant="h4">Nova Assinatura</Typography>
+      <Typography variant="h5" sx={{ fontWeight: 700 }}>
+        Nova Assinatura
+      </Typography>
       <AppForm form={form} onSubmit={(data) => void view.handleSubmit(data)}>
         <Controller
           name="tenantId"

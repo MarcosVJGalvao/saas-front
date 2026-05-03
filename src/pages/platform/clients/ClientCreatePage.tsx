@@ -17,7 +17,9 @@ const ClientCreatePage = () => {
 
   return (
     <Stack spacing={2}>
-      <Typography variant="h4">Novo Cliente</Typography>
+      <Typography variant="h5" sx={{ fontWeight: 700 }}>
+        Novo Cliente
+      </Typography>
       <AppForm form={form} onSubmit={(payload) => void view.handleSubmit(payload)}>
         <Controller
           name="tradeName"
