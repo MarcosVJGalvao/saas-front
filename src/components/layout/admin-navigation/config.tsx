@@ -4,7 +4,11 @@ import ListAltOutlinedIcon from '@mui/icons-material/ListAltOutlined';
 import PaidOutlinedIcon from '@mui/icons-material/PaidOutlined';
 import PeopleOutlineOutlinedIcon from '@mui/icons-material/PeopleOutlineOutlined';
 import { AUTH_DOMAIN, type AuthDomain } from '../../../models/auth/auth';
-import type { LayoutBrandConfig, NavigationItem } from '../../../models/navigation';
+import type {
+  LayoutBrandConfig,
+  NavigationItem,
+  NavigationSectionItem,
+} from '../../../models/navigation';
 
 // ---------------------------------------------------------------------------
 // Estrutura de grupos com seções opcionais
@@ -62,14 +66,16 @@ const navigationGroups: NavigationGroup[] = [
 // Utilitários internos (não editar)
 // ---------------------------------------------------------------------------
 
+const makeSectionItem = (id: string, label: string): NavigationSectionItem => ({
+  id,
+  label,
+  permission: '',
+  type: 'section',
+});
+
 const flattenGroups = (groups: NavigationGroup[]): NavigationItem[] =>
   groups.flatMap(({ section, items }) =>
-    section
-      ? [
-          { id: section.id, label: section.label, permission: '', type: 'section' as const },
-          ...items,
-        ]
-      : items,
+    section ? [makeSectionItem(section.id, section.label), ...items] : items,
   );
 
 const buildPermission = (domain: AuthDomain, permission: string): string =>

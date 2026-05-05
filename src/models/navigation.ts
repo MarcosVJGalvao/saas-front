@@ -18,6 +18,8 @@ export interface NavigationItem {
   type?: 'item' | 'section';
 }
 
+export type NavigationSectionItem = NavigationItem & { type: 'section' };
+
 export interface LayoutBrandConfig {
   logo: SvgIconComponent;
   label?: string;
