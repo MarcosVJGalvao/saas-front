@@ -53,9 +53,14 @@ export const filterNavigationByPermissions = (
   permissions: string[],
 ): NavigationItem[] => {
   return items
-    .filter((item) => hasPermission(permissions, item.permission))
+    .filter((item) => item.type === 'section' || hasPermission(permissions, item.permission))
     .map((item) => ({
       ...item,
-      children: item.children?.filter((child) => hasPermission(permissions, child.permission)),
+      children: item.children
+        ?.filter((child) => hasPermission(permissions, child.permission))
+        .map((child) => ({
+          ...child,
+          children: child.children?.filter((gc) => hasPermission(permissions, gc.permission)),
+        })),
     }));
 };

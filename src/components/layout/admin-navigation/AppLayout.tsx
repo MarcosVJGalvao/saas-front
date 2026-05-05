@@ -1,6 +1,8 @@
-import type { ReactNode } from 'react';
+import { Suspense, useLayoutEffect, useRef, type ReactNode } from 'react';
 import Box from '@mui/material/Box';
+import CircularProgress from '@mui/material/CircularProgress';
 import Drawer from '@mui/material/Drawer';
+import GlobalStyles from '@mui/material/GlobalStyles';
 import { useTheme } from '@mui/material/styles';
 import AttachMoneyOutlinedIcon from '@mui/icons-material/AttachMoneyOutlined';
 import DescriptionOutlinedIcon from '@mui/icons-material/DescriptionOutlined';
@@ -27,6 +29,13 @@ import { SidebarContent } from './SidebarContent';
 import { TopBar } from './TopBar';
 
 const TOKEN_EXPIRED_EVENT = 'app:token-expired';
+
+const pageEnterStyles = {
+  '@keyframes page-enter': {
+    '0%': { opacity: 0, transform: 'translateY(5px)' },
+    '100%': { opacity: 1, transform: 'translateY(0)' },
+  },
+};
 
 const notificationIconsById: Record<string, ReactNode> = {
   matricula: <SchoolOutlinedIcon sx={{ fontSize: 18 }} />,
@@ -72,6 +81,16 @@ export const AppLayout = ({ children }: { children?: ReactNode }) => {
     sidebarWidth,
   } = useAppLayoutState(navigationItems, isMobile, isCollapsed);
 
+  const contentRef = useRef<HTMLElement>(null);
+
+  useLayoutEffect(() => {
+    const el = contentRef.current;
+    if (!el) return;
+    el.style.animation = 'none';
+    void el.offsetHeight;
+    el.style.animation = 'page-enter 220ms ease-out both';
+  }, [location.key]);
+
   const notifications = appLayoutNotifications.map((notification) => ({
     ...notification,
     icon: notificationIconsById[notification.id],
@@ -94,6 +113,8 @@ export const AppLayout = ({ children }: { children?: ReactNode }) => {
         bgcolor: 'background.default',
       }}
     >
+      <GlobalStyles styles={pageEnterStyles} />
+
       {!isMobile ? (
         <Box
           sx={{
@@ -150,6 +171,7 @@ export const AppLayout = ({ children }: { children?: ReactNode }) => {
 
       <Box
         component="main"
+        ref={contentRef}
         sx={{
           flexGrow: 1,
           height: '100vh',
@@ -157,9 +179,25 @@ export const AppLayout = ({ children }: { children?: ReactNode }) => {
           pt: `${appBarHeight + 24}px`,
           px: { xs: 2, lg: 3 },
           pb: 3,
+          animation: 'page-enter 220ms ease-out both',
         }}
       >
-        {children ?? <Outlet />}
+        <Suspense
+          fallback={
+            <Box
+              sx={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                height: '50vh',
+              }}
+            >
+              <CircularProgress aria-label="Carregando página" />
+            </Box>
+          }
+        >
+          {children ?? <Outlet />}
+        </Suspense>
       </Box>
 
       <Drawer anchor="left" open={mobileOpen} onClose={closeMobileMenu}>

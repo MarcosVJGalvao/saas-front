@@ -15,6 +15,7 @@ export interface NavigationItem {
   children?: NavigationItem[];
   searchScopes?: SearchScope[];
   keywords?: string[];
+  type?: 'item' | 'section';
 }
 
 export interface LayoutBrandConfig {

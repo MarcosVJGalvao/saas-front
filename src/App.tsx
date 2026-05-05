@@ -1,4 +1,4 @@
-﻿import { lazy, Suspense, useEffect, useState } from 'react';
+import { lazy, Suspense, useEffect, useState } from 'react';
 import Box from '@mui/material/Box';
 import CircularProgress from '@mui/material/CircularProgress';
 import { Navigate, Route, Routes } from 'react-router-dom';
@@ -38,10 +38,25 @@ const ClientForgotPasswordPage = lazy(() => import('./pages/client/auth/ForgotPa
 const ClientResetPasswordPage = lazy(() => import('./pages/client/auth/ResetPasswordPage'));
 const ClientDashboardPage = lazy(() => import('./pages/client/dashboard/DashboardPage'));
 const ClientHomePage = lazy(() => import('./pages/client/home/HomePage'));
+
 const TOKEN_EXPIRED_EVENT = 'app:token-expired';
 
 const resolveLoginPathByCurrentLocation = (): string =>
   window.location.pathname.startsWith('/client') ? '/client/login' : '/platform/login';
+
+const authFallback = (
+  <Box
+    sx={{
+      minHeight: '100dvh',
+      width: '100%',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+    }}
+  >
+    <CircularProgress aria-label="Carregando" />
+  </Box>
+);
 
 const App = () => {
   const [sessionExpiredModalOpen, setSessionExpiredModalOpen] = useState(false);
@@ -62,172 +77,198 @@ const App = () => {
 
   return (
     <>
-      <Suspense
-        fallback={
-          <Box
-            sx={{
-              minHeight: '100dvh',
-              width: '100%',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-            }}
-          >
-            <CircularProgress aria-label="Carregando" />
-          </Box>
-        }
-      >
-        <Routes>
-          <Route path="/platform/login" element={<PlatformLoginPage />} />
-          <Route path="/platform/mfa" element={<PlatformMfaPage />} />
-          <Route path="/platform/mfa-setup" element={<PlatformMfaSetupPage />} />
-          <Route path="/client/login" element={<ClientLoginPage />} />
-          <Route path="/client/forgot-password" element={<ClientForgotPasswordPage />} />
-          <Route path="/client/reset-password" element={<ClientResetPasswordPage />} />
+      <Routes>
+        <Route
+          path="/platform/login"
+          element={
+            <Suspense fallback={authFallback}>
+              <PlatformLoginPage />
+            </Suspense>
+          }
+        />
+        <Route
+          path="/platform/mfa"
+          element={
+            <Suspense fallback={authFallback}>
+              <PlatformMfaPage />
+            </Suspense>
+          }
+        />
+        <Route
+          path="/platform/mfa-setup"
+          element={
+            <Suspense fallback={authFallback}>
+              <PlatformMfaSetupPage />
+            </Suspense>
+          }
+        />
+        <Route
+          path="/client/login"
+          element={
+            <Suspense fallback={authFallback}>
+              <ClientLoginPage />
+            </Suspense>
+          }
+        />
+        <Route
+          path="/client/forgot-password"
+          element={
+            <Suspense fallback={authFallback}>
+              <ClientForgotPasswordPage />
+            </Suspense>
+          }
+        />
+        <Route
+          path="/client/reset-password"
+          element={
+            <Suspense fallback={authFallback}>
+              <ClientResetPasswordPage />
+            </Suspense>
+          }
+        />
 
-          <Route element={<AppLayout />}>
-            <Route
-              path="/platform/home"
-              element={
-                <DomainProtectedRoute domain={AUTH_DOMAIN.PLATFORM} loginPath="/platform/login">
-                  <PlatformHomePage />
-                </DomainProtectedRoute>
-              }
-            />
-            <Route
-              path="/platform/clients"
-              element={
-                <DomainProtectedRoute domain={AUTH_DOMAIN.PLATFORM} loginPath="/platform/login">
-                  <ClientsListPage />
-                </DomainProtectedRoute>
-              }
-            />
-            <Route
-              path="/platform/clients/new"
-              element={
-                <DomainProtectedRoute domain={AUTH_DOMAIN.PLATFORM} loginPath="/platform/login">
-                  <ClientCreatePage />
-                </DomainProtectedRoute>
-              }
-            />
-            <Route
-              path="/platform/clients/onboarding"
-              element={
-                <DomainProtectedRoute domain={AUTH_DOMAIN.PLATFORM} loginPath="/platform/login">
-                  <ClientOnboardingPage />
-                </DomainProtectedRoute>
-              }
-            />
-            <Route
-              path="/platform/clients/:id"
-              element={
-                <DomainProtectedRoute domain={AUTH_DOMAIN.PLATFORM} loginPath="/platform/login">
-                  <ClientDetailsPage />
-                </DomainProtectedRoute>
-              }
-            />
-            <Route
-              path="/platform/clients/:id/edit"
-              element={
-                <DomainProtectedRoute domain={AUTH_DOMAIN.PLATFORM} loginPath="/platform/login">
-                  <ClientEditPage />
-                </DomainProtectedRoute>
-              }
-            />
-            <Route
-              path="/platform/plans"
-              element={
-                <DomainProtectedRoute domain={AUTH_DOMAIN.PLATFORM} loginPath="/platform/login">
-                  <PlansListPage />
-                </DomainProtectedRoute>
-              }
-            />
-            <Route
-              path="/platform/plans/new"
-              element={
-                <DomainProtectedRoute domain={AUTH_DOMAIN.PLATFORM} loginPath="/platform/login">
-                  <PlanCreatePage />
-                </DomainProtectedRoute>
-              }
-            />
-            <Route
-              path="/platform/plans/:id"
-              element={
-                <DomainProtectedRoute domain={AUTH_DOMAIN.PLATFORM} loginPath="/platform/login">
-                  <PlanDetailsPage />
-                </DomainProtectedRoute>
-              }
-            />
-            <Route
-              path="/platform/plans/:id/edit"
-              element={
-                <DomainProtectedRoute domain={AUTH_DOMAIN.PLATFORM} loginPath="/platform/login">
-                  <PlanEditPage />
-                </DomainProtectedRoute>
-              }
-            />
-            <Route
-              path="/platform/subscriptions"
-              element={
-                <DomainProtectedRoute domain={AUTH_DOMAIN.PLATFORM} loginPath="/platform/login">
-                  <SubscriptionsListPage />
-                </DomainProtectedRoute>
-              }
-            />
-            <Route
-              path="/platform/subscriptions/new"
-              element={
-                <DomainProtectedRoute domain={AUTH_DOMAIN.PLATFORM} loginPath="/platform/login">
-                  <SubscriptionCreatePage />
-                </DomainProtectedRoute>
-              }
-            />
-            <Route
-              path="/platform/subscriptions/:id"
-              element={
-                <DomainProtectedRoute domain={AUTH_DOMAIN.PLATFORM} loginPath="/platform/login">
-                  <SubscriptionDetailsPage />
-                </DomainProtectedRoute>
-              }
-            />
-            <Route
-              path="/platform/subscriptions/:id/edit"
-              element={
-                <DomainProtectedRoute domain={AUTH_DOMAIN.PLATFORM} loginPath="/platform/login">
-                  <SubscriptionEditPage />
-                </DomainProtectedRoute>
-              }
-            />
-            <Route
-              path="/platform"
-              element={
-                <DomainProtectedRoute domain={AUTH_DOMAIN.PLATFORM} loginPath="/platform/login">
-                  <PlatformDashboardPage />
-                </DomainProtectedRoute>
-              }
-            />
-            <Route
-              path="/client/home"
-              element={
-                <DomainProtectedRoute domain={AUTH_DOMAIN.CLIENT} loginPath="/client/login">
-                  <ClientHomePage />
-                </DomainProtectedRoute>
-              }
-            />
-            <Route
-              path="/client"
-              element={
-                <DomainProtectedRoute domain={AUTH_DOMAIN.CLIENT} loginPath="/client/login">
-                  <ClientDashboardPage />
-                </DomainProtectedRoute>
-              }
-            />
-          </Route>
+        <Route element={<AppLayout />}>
+          <Route
+            path="/platform/home"
+            element={
+              <DomainProtectedRoute domain={AUTH_DOMAIN.PLATFORM} loginPath="/platform/login">
+                <PlatformHomePage />
+              </DomainProtectedRoute>
+            }
+          />
+          <Route
+            path="/platform/clients"
+            element={
+              <DomainProtectedRoute domain={AUTH_DOMAIN.PLATFORM} loginPath="/platform/login">
+                <ClientsListPage />
+              </DomainProtectedRoute>
+            }
+          />
+          <Route
+            path="/platform/clients/new"
+            element={
+              <DomainProtectedRoute domain={AUTH_DOMAIN.PLATFORM} loginPath="/platform/login">
+                <ClientCreatePage />
+              </DomainProtectedRoute>
+            }
+          />
+          <Route
+            path="/platform/clients/onboarding"
+            element={
+              <DomainProtectedRoute domain={AUTH_DOMAIN.PLATFORM} loginPath="/platform/login">
+                <ClientOnboardingPage />
+              </DomainProtectedRoute>
+            }
+          />
+          <Route
+            path="/platform/clients/:id"
+            element={
+              <DomainProtectedRoute domain={AUTH_DOMAIN.PLATFORM} loginPath="/platform/login">
+                <ClientDetailsPage />
+              </DomainProtectedRoute>
+            }
+          />
+          <Route
+            path="/platform/clients/:id/edit"
+            element={
+              <DomainProtectedRoute domain={AUTH_DOMAIN.PLATFORM} loginPath="/platform/login">
+                <ClientEditPage />
+              </DomainProtectedRoute>
+            }
+          />
+          <Route
+            path="/platform/plans"
+            element={
+              <DomainProtectedRoute domain={AUTH_DOMAIN.PLATFORM} loginPath="/platform/login">
+                <PlansListPage />
+              </DomainProtectedRoute>
+            }
+          />
+          <Route
+            path="/platform/plans/new"
+            element={
+              <DomainProtectedRoute domain={AUTH_DOMAIN.PLATFORM} loginPath="/platform/login">
+                <PlanCreatePage />
+              </DomainProtectedRoute>
+            }
+          />
+          <Route
+            path="/platform/plans/:id"
+            element={
+              <DomainProtectedRoute domain={AUTH_DOMAIN.PLATFORM} loginPath="/platform/login">
+                <PlanDetailsPage />
+              </DomainProtectedRoute>
+            }
+          />
+          <Route
+            path="/platform/plans/:id/edit"
+            element={
+              <DomainProtectedRoute domain={AUTH_DOMAIN.PLATFORM} loginPath="/platform/login">
+                <PlanEditPage />
+              </DomainProtectedRoute>
+            }
+          />
+          <Route
+            path="/platform/subscriptions"
+            element={
+              <DomainProtectedRoute domain={AUTH_DOMAIN.PLATFORM} loginPath="/platform/login">
+                <SubscriptionsListPage />
+              </DomainProtectedRoute>
+            }
+          />
+          <Route
+            path="/platform/subscriptions/new"
+            element={
+              <DomainProtectedRoute domain={AUTH_DOMAIN.PLATFORM} loginPath="/platform/login">
+                <SubscriptionCreatePage />
+              </DomainProtectedRoute>
+            }
+          />
+          <Route
+            path="/platform/subscriptions/:id"
+            element={
+              <DomainProtectedRoute domain={AUTH_DOMAIN.PLATFORM} loginPath="/platform/login">
+                <SubscriptionDetailsPage />
+              </DomainProtectedRoute>
+            }
+          />
+          <Route
+            path="/platform/subscriptions/:id/edit"
+            element={
+              <DomainProtectedRoute domain={AUTH_DOMAIN.PLATFORM} loginPath="/platform/login">
+                <SubscriptionEditPage />
+              </DomainProtectedRoute>
+            }
+          />
+          <Route
+            path="/platform"
+            element={
+              <DomainProtectedRoute domain={AUTH_DOMAIN.PLATFORM} loginPath="/platform/login">
+                <PlatformDashboardPage />
+              </DomainProtectedRoute>
+            }
+          />
+          <Route
+            path="/client/home"
+            element={
+              <DomainProtectedRoute domain={AUTH_DOMAIN.CLIENT} loginPath="/client/login">
+                <ClientHomePage />
+              </DomainProtectedRoute>
+            }
+          />
+          <Route
+            path="/client"
+            element={
+              <DomainProtectedRoute domain={AUTH_DOMAIN.CLIENT} loginPath="/client/login">
+                <ClientDashboardPage />
+              </DomainProtectedRoute>
+            }
+          />
+        </Route>
 
-          <Route path="/" element={<Navigate to="/platform/login" replace />} />
-          <Route path="*" element={<Navigate to="/platform/login" replace />} />
-        </Routes>
-      </Suspense>
+        <Route path="/" element={<Navigate to="/platform/login" replace />} />
+        <Route path="*" element={<Navigate to="/platform/login" replace />} />
+      </Routes>
 
       <SessionExpiredDialog
         open={sessionExpiredModalOpen}
