@@ -48,19 +48,68 @@ export const localPermissionResolver: PermissionResolver = {
     domain === 'platform' ? platformDefaultPermissions : clientDefaultPermissions,
 };
 
+const filterChildrenByPermissions = (
+  item: NavigationItem,
+  permissions: string[],
+): NavigationItem | null => {
+  if (item.type !== 'section' && !hasPermission(permissions, item.permission)) {
+    return null;
+  }
+
+  const filteredChildren = item.children
+    ?.filter((child) => hasPermission(permissions, child.permission))
+    .map((child) => ({
+      ...child,
+      children: child.children?.filter((grandchild) =>
+        hasPermission(permissions, grandchild.permission),
+      ),
+    }));
+
+  return {
+    ...item,
+    children: filteredChildren,
+  };
+};
+
+const pushSectionBlock = (
+  result: NavigationItem[],
+  currentSection: NavigationItem | null,
+  sectionItems: NavigationItem[],
+): void => {
+  if (currentSection === null) {
+    result.push(...sectionItems);
+    return;
+  }
+
+  if (sectionItems.length > 0) {
+    result.push(currentSection, ...sectionItems);
+  }
+};
+
 export const filterNavigationByPermissions = (
   items: NavigationItem[],
   permissions: string[],
 ): NavigationItem[] => {
-  return items
-    .filter((item) => item.type === 'section' || hasPermission(permissions, item.permission))
-    .map((item) => ({
-      ...item,
-      children: item.children
-        ?.filter((child) => hasPermission(permissions, child.permission))
-        .map((child) => ({
-          ...child,
-          children: child.children?.filter((gc) => hasPermission(permissions, gc.permission)),
-        })),
-    }));
+  const result: NavigationItem[] = [];
+  let currentSection: NavigationItem | null = null;
+  let sectionItems: NavigationItem[] = [];
+
+  for (const item of items) {
+    if (item.type === 'section') {
+      pushSectionBlock(result, currentSection, sectionItems);
+      currentSection = item;
+      sectionItems = [];
+      continue;
+    }
+
+    const filteredItem = filterChildrenByPermissions(item, permissions);
+
+    if (filteredItem !== null) {
+      sectionItems.push(filteredItem);
+    }
+  }
+
+  pushSectionBlock(result, currentSection, sectionItems);
+
+  return result;
 };

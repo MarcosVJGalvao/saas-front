@@ -123,7 +123,10 @@ export const AppLayout = ({ children }: { children?: ReactNode }) => {
             height: '100vh',
             borderRight: 1,
             borderColor: 'divider',
-            transition: themeObj.transitions.create('width'),
+            transition: themeObj.transitions.create('width', {
+              duration: themeObj.transitions.duration.shorter,
+              easing: themeObj.transitions.easing.easeInOut,
+            }),
           }}
         >
           <SidebarContent
@@ -200,17 +203,19 @@ export const AppLayout = ({ children }: { children?: ReactNode }) => {
         </Suspense>
       </Box>
 
-      <Drawer anchor="left" open={mobileOpen} onClose={closeMobileMenu}>
-        <SidebarContent
-          isCollapsed={false}
-          onToggle={() => setIsCollapsed(false)}
-          density={density}
-          brand={brand}
-          items={navigationItems}
-          mobileMode
-          closeMobile={closeMobileMenu}
-        />
-      </Drawer>
+      {isMobile ? (
+        <Drawer anchor="left" open={mobileOpen} onClose={closeMobileMenu}>
+          <SidebarContent
+            isCollapsed={false}
+            onToggle={() => setIsCollapsed(false)}
+            density={density}
+            brand={brand}
+            items={navigationItems}
+            mobileMode
+            closeMobile={closeMobileMenu}
+          />
+        </Drawer>
+      ) : null}
 
       <NotificationsMenu
         anchorEl={notificationsAnchor}

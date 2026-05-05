@@ -1,16 +1,12 @@
 # Guia da Sidebar — Como Configurar Menus e Submenus
 
-Todo o menu lateral é configurado em um único arquivo:
-
-**`src/components/layout/admin-navigation/config.tsx`**
-
-Você nunca precisa tocar nos componentes de renderização (`SidebarContent.tsx`) nem no hook de estado (`useSidebarContentState.ts`). Apenas edite o `config.tsx`.
+A navegação agora é separada por domínio:\n\n- `src/components/layout/admin-navigation/navigationGroups/platformNavigationGroups.ts`\n- `src/components/layout/admin-navigation/navigationGroups/clientNavigationGroups.ts`\n\nO arquivo `src/components/layout/admin-navigation/config.tsx` virou composição/export e não concentra mais toda a definição do menu.
 
 ---
 
 ## Estrutura geral
 
-A navegação é definida como um array de **grupos** (`navigationGroups`). Cada grupo pode ter:
+A navegação é definida como arrays de **grupos** (`NavigationGroup[]`), um por domínio. Cada grupo pode ter:
 
 - Uma **seção** opcional (`section`) — um label de categoria não-clicável.
 - Um ou mais **itens** (`items`) — os botões do menu.
@@ -293,12 +289,7 @@ Para adicionar uma nova permissão ao domínio `platform`, edite `platformDefaul
 
 ## Comportamento por domínio (platform vs client)
 
-Ambos os domínios compartilham o **mesmo `navigationGroups`**. A diferença está em:
-
-1. **Prefixo de rota** — platform usa `/platform/...`, client usa `/client/...`.
-2. **Permissões** — cada domínio tem sua lista de permissões em `permissions.ts`. Itens sem permissão são ocultos automaticamente.
-
-A sidebar em si tem o mesmo comportamento visual nos dois domínios: seções, hierarquia de 3 níveis, animação de entrada de página, e estado colapsado/expandido.
+Cada domínio possui sua própria fonte de grupos (`platformNavigationGroups` e `clientNavigationGroups`).\n\n- `platform` usa seus grupos + prefixo `/platform` + permissões `platform:*`.\n- `client` usa seus grupos + prefixo `/client` + permissões `client:*`.\n\nAlém disso, o filtro de permissões remove automaticamente seções sem itens visíveis, evitando seção "solta".
 
 Para adicionar um item **apenas no domínio client**, a abordagem mais simples é criar uma permissão exclusiva (ex: `client:meu-recurso:read`) e não incluí-la nas permissões do platform.
 

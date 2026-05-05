@@ -1,0 +1,62 @@
+import { describe, expect, it } from 'vitest';
+import { AUTH_DOMAIN } from '../../models/auth/auth';
+import { navigationByDomain } from '../../components/layout/admin-navigation/config';
+import {
+  buildDomainNavigation,
+  type NavigationGroup,
+} from '../../components/layout/admin-navigation/navigationBuilder';
+import { filterNavigationByPermissions } from '../../components/layout/admin-navigation/permissions';
+
+describe('admin navigation by domain', () => {
+  it('builds platform and client menus with distinct groups', () => {
+    const platformItems = navigationByDomain.platform;
+    const clientItems = navigationByDomain.client;
+
+    expect(platformItems.some((item) => item.type === 'section' && item.label === 'Gestão')).toBe(
+      true,
+    );
+    expect(clientItems.some((item) => item.type === 'section' && item.label === 'Gestão')).toBe(
+      false,
+    );
+  });
+
+  it('applies prefix and domain permission during build', () => {
+    const groups: NavigationGroup[] = [
+      {
+        items: [
+          {
+            id: 'dashboard',
+            label: 'Dashboard',
+            href: '/home',
+            permission: 'dashboard:read',
+          },
+        ],
+      },
+    ];
+
+    const built = buildDomainNavigation(groups, '/client', AUTH_DOMAIN.CLIENT);
+
+    expect(built).toHaveLength(1);
+    expect(built[0].href).toBe('/client/home');
+    expect(built[0].permission).toBe('client:dashboard:read');
+  });
+
+  it('hides a section when no subsequent item is permitted', () => {
+    const items = navigationByDomain.platform;
+    const filtered = filterNavigationByPermissions(items, ['platform:dashboard:read']);
+
+    expect(filtered.some((item) => item.type === 'section' && item.label === 'Gestão')).toBe(false);
+    expect(filtered.some((item) => item.id === 'dashboard')).toBe(true);
+  });
+
+  it('keeps a section when at least one subsequent item is permitted', () => {
+    const items = navigationByDomain.platform;
+    const filtered = filterNavigationByPermissions(items, [
+      'platform:dashboard:read',
+      'platform:clients:read',
+    ]);
+
+    expect(filtered.some((item) => item.type === 'section' && item.label === 'Gestão')).toBe(true);
+    expect(filtered.some((item) => item.id === 'clientes')).toBe(true);
+  });
+});
