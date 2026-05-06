@@ -25,7 +25,16 @@ export interface ClientMeResponse {
   id: string;
   tenantId: string;
   email: string;
-  status: 'ACTIVE' | 'INACTIVE';
+  name: string;
+  status: string;
+  permissions: string[];
+  client: {
+    role: string;
+  };
+  tenant: {
+    id: string;
+    name: string;
+  };
 }
 
 export interface ClientChangePasswordRequest {

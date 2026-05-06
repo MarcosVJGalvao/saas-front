@@ -12,6 +12,8 @@ import WarningAmberOutlinedIcon from '@mui/icons-material/WarningAmberOutlined';
 import { Outlet, useLocation } from 'react-router-dom';
 import { useAppLayoutState, buildUserInitials } from '../../../hooks/useAppLayoutState';
 import { useAuth } from '../../../hooks/useAuth/useAuth';
+import { useClientProfile } from '../../../hooks/client-auth/useClientProfile';
+import { usePlatformProfile } from '../../../hooks/platform-auth/usePlatformProfile';
 import { useDensityPreference } from '../../../hooks/useDensityPreference';
 import { useMediaQuery } from '../../../hooks/useMediaQuery';
 import { useSidebarNavigation } from '../../../hooks/useSidebarNavigation';
@@ -22,7 +24,7 @@ import type { NavigationItem } from '../../../models/navigation';
 import { getUiColorTokens } from '../../../theme/uiColors';
 import { CommandPalette } from './CommandPalette';
 import { brandByDomain } from './config';
-import { appLayoutMessages, appLayoutNotifications } from './messages';
+import { appLayoutNotifications } from './messages';
 import { NotificationsMenu } from './NotificationsMenu';
 import { ProfileMenu } from './ProfileMenu';
 import { SidebarContent } from './SidebarContent';
@@ -57,16 +59,85 @@ const getCurrentPageLabel = (pathname: string, navigationItems: NavigationItem[]
   return activeItem?.label ?? 'Dashboard';
 };
 
+const resolvePermissions = (
+  profile: { permissions: string[] } | null,
+  errorMessage: string,
+): string[] | undefined => {
+  if (profile !== null) {
+    return profile.permissions;
+  }
+  if (errorMessage.length > 0) {
+    return undefined;
+  }
+  return [];
+};
+
+const buildNotifications = (
+  uiColors: ReturnType<typeof getUiColorTokens>,
+): typeof appLayoutNotifications =>
+  appLayoutNotifications.map((notification) => ({
+    ...notification,
+    icon: notificationIconsById[notification.id],
+    iconBg: uiColors[notification.iconBgToken],
+    iconColor: uiColors[notification.iconColorToken],
+  }));
+
+const getProfileHookEnabled = (
+  authDomain: string | null,
+  session: unknown,
+  expectedDomain: 'platform' | 'client',
+): boolean => authDomain === expectedDomain && session !== null;
+
+interface UserDisplay {
+  userName: string;
+  userEmail: string;
+  userRole: string;
+}
+
+const resolvePlatformUserDisplay = (
+  platformProfile: { name: string; email: string; roles: string[] } | null,
+): UserDisplay => ({
+  userName: platformProfile?.name ?? 'Usuário',
+  userEmail: platformProfile?.email ?? '-',
+  userRole: platformProfile?.roles[0] ?? '-',
+});
+
+const resolveClientUserDisplay = (
+  clientProfile: { name: string; email: string; client: { role: string } } | null,
+): UserDisplay => ({
+  userName: clientProfile?.name ?? 'Usuário',
+  userEmail: clientProfile?.email ?? '-',
+  userRole: clientProfile?.client.role ?? '-',
+});
+
+const resolveUserDisplay = (
+  domain: 'platform' | 'client',
+  platformProfile: { name: string; email: string; roles: string[] } | null,
+  clientProfile: { name: string; email: string; client: { role: string } } | null,
+): UserDisplay =>
+  domain === 'client'
+    ? resolveClientUserDisplay(clientProfile)
+    : resolvePlatformUserDisplay(platformProfile);
+
 export const AppLayout = ({ children }: { children?: ReactNode }) => {
   const location = useLocation();
   const themeObj = useTheme();
   const uiColors = getUiColorTokens(themeObj.palette.mode);
   const { authDomain, session, clearAuth } = useAuth();
+  const { profile: platformProfile, errorMessage: platformProfileError } = usePlatformProfile({
+    enabled: getProfileHookEnabled(authDomain, session, 'platform'),
+  });
+  const { profile: clientProfile, errorMessage: clientProfileError } = useClientProfile({
+    enabled: getProfileHookEnabled(authDomain, session, 'client'),
+  });
   const { density, setDensity } = useDensityPreference();
   const { theme, setTheme } = useThemePreference();
   const { isCollapsed, toggleSidebar, setIsCollapsed } = useSidebarState();
   const isMobile = useMediaQuery('(max-width:1023px)');
-  const { domain, navigationItems } = useSidebarNavigation(authDomain);
+  const { domain, navigationItems } = useSidebarNavigation(authDomain, {
+    platformPermissions: resolvePermissions(platformProfile, platformProfileError),
+    clientPermissions: resolvePermissions(clientProfile, clientProfileError),
+  });
   const {
     palette,
     mobileOpen,
@@ -82,27 +153,35 @@ export const AppLayout = ({ children }: { children?: ReactNode }) => {
   } = useAppLayoutState(navigationItems, isMobile, isCollapsed);
 
   const contentRef = useRef<HTMLElement>(null);
-
   useLayoutEffect(() => {
-    const el = contentRef.current;
-    if (!el) return;
-    el.style.animation = 'none';
-    void el.offsetHeight;
-    el.style.animation = 'page-enter 220ms ease-out both';
+    const element = contentRef.current;
+    if (element === null) {
+      return;
+    }
+    element.style.animation = 'none';
+    void element.offsetHeight;
+    element.style.animation = 'page-enter 220ms ease-out both';
   }, [location.key]);
 
-  const notifications = appLayoutNotifications.map((notification) => ({
-    ...notification,
-    icon: notificationIconsById[notification.id],
-    iconBg: uiColors[notification.iconBgToken],
-    iconColor: uiColors[notification.iconColorToken],
-  }));
+  const notifications = buildNotifications(uiColors);
 
   const appBarHeight = densityMetrics[density].appBarHeight;
   const brand = brandByDomain[domain];
-  const userName = appLayoutMessages.defaultUserName;
+  const { userName, userEmail, userRole } = resolveUserDisplay(
+    domain,
+    platformProfile,
+    clientProfile,
+  );
   const userInitials = buildUserInitials(userName);
   const currentPageLabel = getCurrentPageLabel(location.pathname, navigationItems);
+  const handleSessionExpired = () => {
+    window.dispatchEvent(new CustomEvent(TOKEN_EXPIRED_EVENT));
+    clearAuth();
+  };
+  const sidebarLeft = isMobile ? 0 : `${sidebarWidth}px`;
+  const shouldRenderDesktopSidebar = !isMobile;
+  const shouldRenderMobileDrawer = isMobile;
+  const layoutContent = children ?? <Outlet />;
 
   return (
     <Box
@@ -115,7 +194,7 @@ export const AppLayout = ({ children }: { children?: ReactNode }) => {
     >
       <GlobalStyles styles={pageEnterStyles} />
 
-      {!isMobile ? (
+      {shouldRenderDesktopSidebar ? (
         <Box
           sx={{
             width: sidebarWidth,
@@ -145,7 +224,7 @@ export const AppLayout = ({ children }: { children?: ReactNode }) => {
           position: 'fixed',
           top: 0,
           right: 0,
-          left: isMobile ? 0 : `${sidebarWidth}px`,
+          left: sidebarLeft,
           transition: themeObj.transitions.create('left'),
           zIndex: 40,
           borderBottom: 1,
@@ -159,12 +238,10 @@ export const AppLayout = ({ children }: { children?: ReactNode }) => {
           currentPageLabel={currentPageLabel}
           userName={userName}
           userInitials={userInitials}
+          userRole={userRole}
           sessionExpiresIn={session?.expiresIn}
           sessionAccessToken={session?.accessToken}
-          onSessionExpired={() => {
-            window.dispatchEvent(new CustomEvent(TOKEN_EXPIRED_EVENT));
-            clearAuth();
-          }}
+          onSessionExpired={handleSessionExpired}
           onOpenMobileMenu={openMobileMenu}
           onOpenCommandPalette={palette.open}
           onOpenNotificationsMenu={openNotificationsMenu}
@@ -199,11 +276,11 @@ export const AppLayout = ({ children }: { children?: ReactNode }) => {
             </Box>
           }
         >
-          {children ?? <Outlet />}
+          {layoutContent}
         </Suspense>
       </Box>
 
-      {isMobile ? (
+      {shouldRenderMobileDrawer ? (
         <Drawer anchor="left" open={mobileOpen} onClose={closeMobileMenu}>
           <SidebarContent
             isCollapsed={false}
@@ -230,7 +307,7 @@ export const AppLayout = ({ children }: { children?: ReactNode }) => {
         onClose={closeProfileMenu}
         userName={userName}
         userInitials={userInitials}
-        userEmail={appLayoutMessages.defaultUserEmail}
+        userEmail={userEmail}
         theme={theme}
         density={density}
         onSetTheme={setTheme}

@@ -1,6 +1,9 @@
 import { renderHook, waitFor } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { useClientHomeData, CLIENT_HOME_MESSAGES } from '../../hooks/client-auth/useClientHomeData';
+import {
+  CLIENT_PROFILE_MESSAGES,
+  useClientProfile,
+} from '../../hooks/client-auth/useClientProfile';
 import { clientAuthService } from '../../services/client/auth/service';
 
 vi.mock('../../services/client/auth/service', () => ({
@@ -9,37 +12,38 @@ vi.mock('../../services/client/auth/service', () => ({
   },
 }));
 
-describe('useClientHomeData', () => {
+describe('useClientProfile', () => {
   beforeEach(() => {
     vi.clearAllMocks();
   });
 
-  it('carrega perfil com sucesso', async () => {
+  it('carrega perfil com sucesso e normaliza status', async () => {
     vi.mocked(clientAuthService.me).mockResolvedValue({
       id: '1',
-      email: 'user@test.com',
       tenantId: 'tenant-1',
-      name: 'User Test',
-      status: 'ACTIVE',
-      permissions: ['users:read'],
+      email: 'marcos@test.com',
+      name: 'Marcos',
+      status: 'active',
+      permissions: ['*:*'],
       client: { role: 'Administrador' },
       tenant: { id: 'tenant-1', name: 'School System' },
     });
 
-    const { result } = renderHook(() => useClientHomeData());
+    const { result } = renderHook(() => useClientProfile({ enabled: true }));
 
     await waitFor(() => expect(result.current.loading).toBe(false));
     expect(result.current.errorMessage).toBe('');
-    expect(result.current.profile?.email).toBe('user@test.com');
+    expect(result.current.profile?.status).toBe('Ativo');
+    expect(result.current.profile?.client.role).toBe('Administrador');
   });
 
-  it('retorna mensagem em português ao falhar', async () => {
+  it('retorna erro amigavel quando falhar', async () => {
     vi.mocked(clientAuthService.me).mockRejectedValue(new Error('failure'));
 
-    const { result } = renderHook(() => useClientHomeData());
+    const { result } = renderHook(() => useClientProfile({ enabled: true }));
 
     await waitFor(() => expect(result.current.loading).toBe(false));
     expect(result.current.profile).toBeNull();
-    expect(result.current.errorMessage).toBe(CLIENT_HOME_MESSAGES.loadError);
+    expect(result.current.errorMessage).toBe(CLIENT_PROFILE_MESSAGES.loadError);
   });
 });

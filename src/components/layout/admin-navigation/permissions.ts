@@ -32,6 +32,10 @@ const clientDefaultPermissions = [
 ];
 
 const hasPermission = (permissions: string[], requiredPermission: string): boolean => {
+  if (permissions.includes('*:*')) {
+    return true;
+  }
+
   if (permissions.includes(requiredPermission)) {
     return true;
   }

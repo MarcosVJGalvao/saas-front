@@ -34,8 +34,6 @@ export interface AppLayoutMessages {
   theme: string;
   density: string;
   logout: string;
-  defaultUserName: string;
-  defaultUserEmail: string;
 }
 
 export const appLayoutMessages: AppLayoutMessages = {
@@ -51,8 +49,6 @@ export const appLayoutMessages: AppLayoutMessages = {
   theme: 'Tema',
   density: 'Densidade',
   logout: 'Sair da conta',
-  defaultUserName: 'Dev Admin',
-  defaultUserEmail: 'dev.admin@sistema.com',
 };
 
 export const appLayoutNotifications: AppLayoutNotification[] = [

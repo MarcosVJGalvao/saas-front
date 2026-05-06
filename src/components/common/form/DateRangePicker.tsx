@@ -1,4 +1,5 @@
 import Stack from '@mui/material/Stack';
+import type { SxProps, Theme } from '@mui/material/styles';
 import { AppDatePicker } from '../date/AppDatePicker';
 import { spacingScale } from '../../../theme/spacing';
 
@@ -12,6 +13,11 @@ interface DateRangePickerProps {
   disabled?: boolean;
   minDate?: Date;
   maxDate?: Date;
+  compact?: boolean;
+  startPlaceholder?: string;
+  endPlaceholder?: string;
+  startTextFieldSx?: SxProps<Theme>;
+  endTextFieldSx?: SxProps<Theme>;
 }
 
 export const DateRangePicker = ({
@@ -24,6 +30,11 @@ export const DateRangePicker = ({
   disabled = false,
   minDate,
   maxDate,
+  compact = false,
+  startPlaceholder,
+  endPlaceholder,
+  startTextFieldSx,
+  endTextFieldSx,
 }: DateRangePickerProps) => (
   <Stack direction={{ xs: 'column', sm: 'row' }} spacing={spacingScale.sm}>
     <AppDatePicker
@@ -33,6 +44,10 @@ export const DateRangePicker = ({
       disabled={disabled}
       minDate={minDate}
       maxDate={maxDate}
+      slotProps={{
+        textField: { size: 'small', placeholder: startPlaceholder, sx: startTextFieldSx },
+      }}
+      {...(compact ? { label: '' } : {})}
     />
     <AppDatePicker
       label={endLabel}
@@ -41,6 +56,8 @@ export const DateRangePicker = ({
       disabled={disabled}
       minDate={minDate}
       maxDate={maxDate}
+      slotProps={{ textField: { size: 'small', placeholder: endPlaceholder, sx: endTextFieldSx } }}
+      {...(compact ? { label: '' } : {})}
     />
   </Stack>
 );

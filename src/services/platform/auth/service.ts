@@ -1,6 +1,7 @@
 import { platformAuthEndpoints } from './endpoints';
 import type {
   PlatformLoginResponse,
+  PlatformMeResponse,
   PlatformTotpSetupResponse,
   PlatformVerifySetupResponse,
   PlatformVerifyTotpResponse,
@@ -9,6 +10,11 @@ import type {
 export const platformAuthService = {
   async login(email: string, password: string): Promise<PlatformLoginResponse> {
     const { data } = await platformAuthEndpoints.login(email, password);
+    return data;
+  },
+
+  async me(): Promise<PlatformMeResponse> {
+    const { data } = await platformAuthEndpoints.me();
     return data;
   },
 

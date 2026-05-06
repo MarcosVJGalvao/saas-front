@@ -1,86 +1,63 @@
-/* eslint-disable complexity */
 import Button from '@mui/material/Button';
 import Drawer from '@mui/material/Drawer';
 import Stack from '@mui/material/Stack';
-import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
-import { EntitySearchFilter } from '../../../components/common/data/EntitySearchFilter';
+import { ListFilters } from '../../../components/common/data/ListFilters';
 import { QueryDataTable } from '../../../components/common/data/QueryDataTable';
-import { SelectFilterField } from '../../../components/common/data/SelectFilterField';
 import { EntitySummaryCards } from '../../../components/common/display/EntitySummaryCards';
 import { ConfirmDialog } from '../../../components/common/feedback/ConfirmDialog';
 import { PageIntroHeader } from '../../../components/common/page/PageIntroHeader';
+import { useClientsListFilters } from '../../../hooks/clients/useClientsListFilters';
 import { useClientsListPageViewModel } from '../../../hooks/clients/useClientsListPageViewModel';
-
-const resolveStatusFilterValue = (statusValue: string): 'active' | 'inactive' | undefined => {
-  if (statusValue === 'active') return 'active';
-  if (statusValue === 'inactive') return 'inactive';
-  return undefined;
-};
-
-const ClientsListFilters = ({
-  model,
-}: {
-  model: ReturnType<typeof useClientsListPageViewModel>;
-}) => (
-  <Stack
-    direction={{ xs: 'column', xl: 'row' }}
-    spacing={1.5}
-    sx={{ alignItems: { xl: 'center' } }}
-  >
-    <EntitySearchFilter
-      value={model.query}
-      onChange={model.onQueryChange}
-      placeholder="Buscar por cliente, documento ou e-mail..."
-    />
-    <SelectFilterField
-      label="Status"
-      value={model.view.list.query.status ?? ''}
-      onChange={(statusValue) =>
-        model.view.list.updateQuery({
-          status: resolveStatusFilterValue(statusValue),
-          page: 1,
-        })
-      }
-      options={[
-        { value: 'active', label: 'Ativo' },
-        { value: 'inactive', label: 'Inativo' },
-      ]}
-    />
-    <TextField
-      fullWidth
-      label="Plano"
-      value={model.view.list.query.plan ?? ''}
-      onChange={(event) =>
-        model.view.list.updateQuery({ plan: event.target.value || undefined, page: 1 })
-      }
-    />
-    <TextField
-      fullWidth
-      label="Segmento"
-      value={model.view.list.query.segment ?? ''}
-      onChange={(event) =>
-        model.view.list.updateQuery({ segment: event.target.value || undefined, page: 1 })
-      }
-    />
-    <Button
-      variant="outlined"
-      startIcon={model.exportActionIcon}
-      sx={{ minWidth: 132, alignSelf: { xs: 'stretch', xl: 'auto' } }}
-    >
-      Exportar
-    </Button>
-  </Stack>
-);
 
 const ClientsListPage = () => {
   const model = useClientsListPageViewModel();
+  const filters = useClientsListFilters({
+    query: model.query,
+    listQuery: model.view.list.query,
+    onQueryChange: model.onQueryChange,
+    updateQuery: model.view.list.updateQuery,
+  });
 
   return (
     <Stack spacing={2.5}>
       <PageIntroHeader {...model.pageHeader} />
       <EntitySummaryCards cards={model.cards} />
-      <ClientsListFilters model={model} />
+      <ListFilters
+        fields={[
+          {
+            type: 'text',
+            name: 'query',
+            label: 'Buscar',
+            placeholder: 'Digite para buscar...',
+            mobileOrder: 1,
+          },
+          {
+            type: 'select',
+            name: 'status',
+            label: 'Status',
+            placeholder: 'Todos os status',
+            options: [
+              { value: '', label: 'Todos os status' },
+              { value: 'active', label: 'Ativo' },
+              { value: 'inactive', label: 'Inativo' },
+            ],
+            mobileOrder: 3,
+          },
+          {
+            type: 'dateRange',
+            name: 'period',
+            label: 'Período',
+            startName: 'startDate',
+            endName: 'endDate',
+            mobileOrder: 5,
+          },
+        ]}
+        values={filters.filterValues}
+        onChange={filters.onFilterChange}
+        onApply={filters.applyFilters}
+        onClear={filters.clearFilters}
+      />
       <QueryDataTable
         rows={model.view.list.rows}
         columns={model.columns}
@@ -121,6 +98,13 @@ const ClientsListPage = () => {
           void model.view.confirmDelete();
         }}
       />
+      <Button
+        variant="outlined"
+        startIcon={model.exportActionIcon}
+        sx={{ minWidth: 132, alignSelf: { xs: 'stretch', xl: 'auto' } }}
+      >
+        Exportar
+      </Button>
     </Stack>
   );
 };

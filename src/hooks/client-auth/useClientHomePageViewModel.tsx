@@ -2,10 +2,15 @@ import Alert from '@mui/material/Alert';
 import CircularProgress from '@mui/material/CircularProgress';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
-import { CLIENT_HOME_MESSAGES, useClientHomeData } from './useClientHomeData';
+import { useAuth } from '../useAuth/useAuth';
+import { CLIENT_HOME_MESSAGES } from './useClientHomeData';
+import { useClientProfile } from './useClientProfile';
 
 export const useClientHomePageViewModel = () => {
-  const { loading, profile, errorMessage } = useClientHomeData();
+  const { authDomain, session } = useAuth();
+  const { loading, profile, errorMessage } = useClientProfile({
+    enabled: authDomain === 'client' && session !== null,
+  });
 
   const content = loading ? (
     <CircularProgress size={24} />

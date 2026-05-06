@@ -19,3 +19,14 @@ export interface PlatformVerifyTotpResponse {
 export interface PlatformVerifySetupResponse {
   verified: boolean;
 }
+
+export type PlatformUserStatus = 'ACTIVE' | 'INACTIVE';
+
+export interface PlatformMeResponse {
+  id: string;
+  email: string;
+  name: string;
+  status: string;
+  roles: string[];
+  permissions: string[];
+}

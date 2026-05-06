@@ -22,6 +22,7 @@ interface TopBarProps {
   currentPageLabel: string;
   userName: string;
   userInitials: string;
+  userRole: string;
   sessionExpiresIn?: string;
   sessionAccessToken?: string;
   onSessionExpired?: () => void;
@@ -64,7 +65,15 @@ const sessionTimerContainerSx = {
   minWidth: 0,
 };
 
-const TopBarUserInfo = ({ isMobile, userName }: { isMobile: boolean; userName: string }) =>
+const TopBarUserInfo = ({
+  isMobile,
+  userName,
+  userRole,
+}: {
+  isMobile: boolean;
+  userName: string;
+  userRole: string;
+}) =>
   !isMobile ? (
     <Box
       sx={{
@@ -75,9 +84,7 @@ const TopBarUserInfo = ({ isMobile, userName }: { isMobile: boolean; userName: s
       }}
     >
       <Typography sx={{ fontWeight: 600, fontSize: fontSizes.lg }}>{userName}</Typography>
-      <Typography sx={{ color: 'text.secondary', fontSize: fontSizes.md }}>
-        {appLayoutMessages.roleLabel}
-      </Typography>
+      <Typography sx={{ color: 'text.secondary', fontSize: fontSizes.md }}>{userRole}</Typography>
     </Box>
   ) : null;
 
@@ -87,6 +94,7 @@ export const TopBar = ({
   currentPageLabel,
   userName,
   userInitials,
+  userRole,
   sessionExpiresIn,
   sessionAccessToken,
   onSessionExpired,
@@ -199,7 +207,7 @@ export const TopBar = ({
           >
             {userInitials}
           </Avatar>
-          <TopBarUserInfo isMobile={isMobile} userName={userName} />
+          <TopBarUserInfo isMobile={isMobile} userName={userName} userRole={userRole} />
         </Button>
       </Box>
     </Toolbar>

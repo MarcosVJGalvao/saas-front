@@ -1,14 +1,8 @@
 import AddIcon from '@mui/icons-material/Add';
-import CalendarTodayOutlinedIcon from '@mui/icons-material/CalendarTodayOutlined';
-import FilterListOutlinedIcon from '@mui/icons-material/FilterListOutlined';
 import Button from '@mui/material/Button';
-import Grid from '@mui/material/Grid';
-import InputAdornment from '@mui/material/InputAdornment';
-import TextField from '@mui/material/TextField';
-import { EntitySearchFilter } from '../../../components/common/data/EntitySearchFilter';
+import { ListFilters } from '../../../components/common/data/ListFilters';
 import { ListMetricsGrid } from '../../../components/common/data/ListMetricsGrid';
 import { QueryDataTable } from '../../../components/common/data/QueryDataTable';
-import { SelectFilterField } from '../../../components/common/data/SelectFilterField';
 import { ConfirmDialog } from '../../../components/common/feedback/ConfirmDialog';
 import { ListDialog } from '../../../components/common/feedback/ListDialog';
 import { PageHeader } from '../../../components/common/page/PageHeader';
@@ -16,6 +10,31 @@ import { useSubscriptionsListViewModel } from '../../../hooks/subscriptions/useS
 
 const SubscriptionsListPage = () => {
   const model = useSubscriptionsListViewModel();
+  const dateQueryUpdater = (name: 'startDate' | 'endDate') => (value: unknown) =>
+    model.view.list.updateQuery({
+      [name]: typeof value === 'string' ? value : undefined,
+      page: 1,
+    });
+
+  const changeHandlers: Record<string, (value: unknown) => void> = {
+    search: (value) => model.updateSearch(String(value)),
+    status: (value) => model.updateStatus(String(value)),
+    planId: (value) => model.updatePlanId(String(value)),
+    startDate: dateQueryUpdater('startDate'),
+    endDate: dateQueryUpdater('endDate'),
+  };
+
+  const handleFilterChange = (name: string, value: unknown) =>
+    (changeHandlers[name] ?? (() => undefined))(value);
+
+  const values = {
+    search: model.searchValue,
+    status: model.statusValue,
+    planId: model.planValue,
+    date: null,
+    startDate: model.view.list.query.startDate ?? null,
+    endDate: model.view.list.query.endDate ?? null,
+  };
 
   return (
     <>
@@ -32,61 +51,55 @@ const SubscriptionsListPage = () => {
           </Button>
         }
       />
-
       <ListMetricsGrid loading={model.view.list.loading} items={model.metrics} />
 
-      <Grid container spacing={2} sx={{ mb: 2.75, alignItems: 'center' }}>
-        <Grid size={{ xs: 12, md: 4 }}>
-          <EntitySearchFilter
-            value={model.searchValue}
-            onChange={model.updateSearch}
-            placeholder="Buscar por cliente..."
-          />
-        </Grid>
-        <Grid size={{ xs: 12, sm: 6, md: 2 }}>
-          <SelectFilterField
-            label="Status"
-            value={model.statusValue}
-            options={model.statusOptions}
-            onChange={model.updateStatus}
-          />
-        </Grid>
-        <Grid size={{ xs: 12, sm: 6, md: 2 }}>
-          <SelectFilterField
-            label="Plano"
-            value={model.planValue}
-            options={model.view.plans.map((plan) => ({ value: plan.id, label: plan.name }))}
-            onChange={model.updatePlanId}
-          />
-        </Grid>
-        <Grid size={{ xs: 12, sm: 8, md: 2 }}>
-          <TextField
-            fullWidth
-            label="Período"
-            value={model.periodLabel}
-            slotProps={{
-              input: {
-                readOnly: true,
-                endAdornment: (
-                  <InputAdornment position="end">
-                    <CalendarTodayOutlinedIcon fontSize="small" />
-                  </InputAdornment>
-                ),
-              },
-            }}
-          />
-        </Grid>
-        <Grid size={{ xs: 12, sm: 4, md: 2 }}>
-          <Button
-            variant="outlined"
-            fullWidth
-            startIcon={<FilterListOutlinedIcon fontSize="small" />}
-            onClick={model.clearFilters}
-          >
-            Limpar filtros
-          </Button>
-        </Grid>
-      </Grid>
+      <ListFilters
+        fields={[
+          {
+            type: 'text',
+            name: 'search',
+            label: 'Buscar',
+            placeholder: 'Buscar por cliente...',
+            mobileOrder: 1,
+          },
+          {
+            type: 'select',
+            name: 'status',
+            label: 'Status',
+            placeholder: 'Todos os status',
+            options: model.statusOptions.map((item) => ({ label: item.label, value: item.value })),
+            mobileOrder: 3,
+          },
+          {
+            type: 'select',
+            name: 'planId',
+            label: 'Categoria',
+            placeholder: 'Selecione um plano',
+            options: model.view.plans.map((plan) => ({ label: plan.name, value: plan.id })),
+            mobileOrder: 2,
+          },
+          {
+            type: 'date',
+            name: 'date',
+            label: 'Data',
+            placeholder: 'Selecione uma data',
+            mobileOrder: 4,
+          },
+          {
+            type: 'dateRange',
+            name: 'period',
+            label: 'Período',
+            startName: 'startDate',
+            endName: 'endDate',
+            mobileOrder: 5,
+          },
+        ]}
+        values={values}
+        onChange={handleFilterChange}
+        onApply={() => undefined}
+        onClear={model.clearFilters}
+        loading={model.view.list.loading}
+      />
 
       <QueryDataTable
         rows={model.view.list.rows}
@@ -111,7 +124,6 @@ const SubscriptionsListPage = () => {
         onCancel={() => model.view.setCancelOpen(false)}
         onConfirm={model.confirmCancel}
       />
-
       <ListDialog
         open={model.view.historyOpen}
         title="Histórico de plano"

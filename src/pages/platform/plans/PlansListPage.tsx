@@ -1,6 +1,5 @@
 import Button from '@mui/material/Button';
-import Grid from '@mui/material/Grid';
-import { EntitySearchFilter } from '../../../components/common/data/EntitySearchFilter';
+import { ListFilters } from '../../../components/common/data/ListFilters';
 import { QueryDataTable } from '../../../components/common/data/QueryDataTable';
 import { ConfirmDialog } from '../../../components/common/feedback/ConfirmDialog';
 import { PageHeader } from '../../../components/common/page/PageHeader';
@@ -24,15 +23,24 @@ const PlansListPage = () => {
         }
       />
 
-      <Grid container spacing={2} sx={{ mb: 2 }}>
-        <Grid size={{ xs: 12, md: 4 }}>
-          <EntitySearchFilter
-            value={model.query}
-            onChange={model.onQueryChange}
-            placeholder="Buscar plano..."
-          />
-        </Grid>
-      </Grid>
+      <ListFilters
+        fields={[
+          {
+            type: 'text',
+            name: 'query',
+            label: 'Buscar',
+            placeholder: 'Buscar plano...',
+            mobileOrder: 1,
+          },
+        ]}
+        values={{ query: model.query }}
+        onChange={(name, value) => {
+          if (name === 'query') model.onQueryChange(String(value));
+        }}
+        onApply={() => undefined}
+        onClear={() => model.onQueryChange('')}
+        loading={model.view.list.loading}
+      />
 
       <QueryDataTable
         rows={model.view.list.rows}

@@ -1,6 +1,7 @@
 import { httpClient } from '../../httpClient';
 import type {
   PlatformLoginResponse,
+  PlatformMeResponse,
   PlatformTotpSetupResponse,
   PlatformVerifySetupResponse,
   PlatformVerifyTotpResponse,
@@ -11,6 +12,8 @@ const PLATFORM_AUTH_BASE_PATH = '/api/platform/auth';
 export const platformAuthEndpoints = {
   login: (email: string, password: string) =>
     httpClient.post<PlatformLoginResponse>(`${PLATFORM_AUTH_BASE_PATH}/login`, { email, password }),
+
+  me: () => httpClient.get<PlatformMeResponse>(`${PLATFORM_AUTH_BASE_PATH}/me`),
 
   setupFromChallenge: (challengeToken: string) =>
     httpClient.post<PlatformTotpSetupResponse>(

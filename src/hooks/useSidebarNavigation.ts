@@ -1,4 +1,3 @@
-import { useMemo } from 'react';
 import type { AuthDomain } from '../models/auth/auth';
 import { navigationByDomain } from '../components/layout/admin-navigation/config';
 import {
@@ -6,13 +5,23 @@ import {
   localPermissionResolver,
 } from '../components/layout/admin-navigation/permissions';
 
-export const useSidebarNavigation = (authDomain: AuthDomain | null) => {
-  const domain = authDomain ?? 'platform';
+export interface UseSidebarNavigationOptions {
+  platformPermissions?: string[];
+  clientPermissions?: string[];
+}
 
-  const navigationItems = useMemo(() => {
-    const permissions = localPermissionResolver.getPermissions(domain);
-    return filterNavigationByPermissions(navigationByDomain[domain], permissions);
-  }, [domain]);
+export const useSidebarNavigation = (
+  authDomain: AuthDomain | null,
+  options?: UseSidebarNavigationOptions,
+) => {
+  const domain = authDomain ?? 'platform';
+  const permissions =
+    domain === 'platform' && options?.platformPermissions !== undefined
+      ? options.platformPermissions
+      : domain === 'client' && options?.clientPermissions !== undefined
+        ? options.clientPermissions
+        : localPermissionResolver.getPermissions(domain);
+  const navigationItems = filterNavigationByPermissions(navigationByDomain[domain], permissions);
 
   return {
     domain,

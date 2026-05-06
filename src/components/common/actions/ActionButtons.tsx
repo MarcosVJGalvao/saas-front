@@ -1,4 +1,6 @@
 import Button from '@mui/material/Button';
+import type { ButtonProps } from '@mui/material/Button';
+import type { SxProps, Theme } from '@mui/material/styles';
 import Stack from '@mui/material/Stack';
 import type { ReactNode } from 'react';
 import { spacingScale } from '../../../theme/spacing';
@@ -12,6 +14,10 @@ export interface ActionButtonConfig {
   loading?: boolean;
   startIcon?: ReactNode;
   endIcon?: ReactNode;
+  variant?: ButtonProps['variant'];
+  color?: ButtonProps['color'];
+  size?: ButtonProps['size'];
+  sx?: SxProps<Theme>;
 }
 interface ActionButtonsProps {
   actions: ActionButtonConfig[];
@@ -54,10 +60,12 @@ export const ActionButtons = ({
           onClick={action.onClick}
           disabled={action.disabled ?? action.loading}
           color={preset.color}
-          variant={preset.variant}
+          variant={action.variant ?? preset.variant}
+          size={action.size}
+          color={action.color ?? preset.color}
           startIcon={action.startIcon}
           endIcon={action.endIcon}
-          sx={{ width: fullWidthOnMobile ? { xs: '100%', sm: 'auto' } : 'auto' }}
+          sx={[{ width: fullWidthOnMobile ? { xs: '100%', sm: 'auto' } : 'auto' }, action.sx]}
         >
           {buttonLabel}
         </Button>

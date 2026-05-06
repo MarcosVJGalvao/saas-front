@@ -3,6 +3,7 @@ import { useClientLoginFlow } from '../../hooks/client-auth/useClientLoginFlow';
 import { usePlatformLoginFlow } from '../../hooks/platform-auth/usePlatformLoginFlow';
 import { usePlatformMfaFlow } from '../../hooks/platform-auth/usePlatformMfaFlow';
 import { usePlatformMfaSetupFlow } from '../../hooks/platform-auth/usePlatformMfaSetupFlow';
+import { usePlatformProfile } from '../../hooks/platform-auth/usePlatformProfile';
 import { useAsync } from '../../hooks/useAsync/useAsync';
 import { useAuth } from '../../hooks/useAuth/useAuth';
 import { useColorMode } from '../../hooks/useColorMode/useColorMode';
@@ -18,6 +19,7 @@ describe('hooks smoke', () => {
     expect(usePlatformLoginFlow).toBeTypeOf('function');
     expect(usePlatformMfaFlow).toBeTypeOf('function');
     expect(usePlatformMfaSetupFlow).toBeTypeOf('function');
+    expect(usePlatformProfile).toBeTypeOf('function');
     expect(useAsync).toBeTypeOf('function');
     expect(useAuth).toBeTypeOf('function');
     expect(useColorMode).toBeTypeOf('function');
