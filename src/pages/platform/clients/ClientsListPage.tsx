@@ -61,6 +61,7 @@ const ClientsListPage = () => {
       <QueryDataTable
         rows={model.view.list.rows}
         columns={model.columns}
+        mobileConfig={model.mobileConfig}
         loading={model.view.list.loading}
         errorMessage={model.view.list.errorMessage}
         meta={model.view.list.meta}

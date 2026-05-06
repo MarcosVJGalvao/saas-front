@@ -1,7 +1,6 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import type { SubscriptionPlanHistory } from '../../models/subscriptions';
-import { plansService } from '../../services/platform/plans/service';
 import { useSubscriptionsList } from './useSubscriptionsList';
 import { useSubscriptionsMutations } from './useSubscriptionsMutations';
 
@@ -18,14 +17,6 @@ export const useSubscriptionsListPage = () => {
   const [historyOpen, setHistoryOpen] = useState(false);
   const [cancelOpen, setCancelOpen] = useState(false);
   const [historyRows, setHistoryRows] = useState<SubscriptionPlanHistory[]>([]);
-  const [plans, setPlans] = useState<Array<{ id: string; name: string }>>([]);
-
-  useEffect(() => {
-    void plansService
-      .list({ page: 1, limit: 100 })
-      .then((response) => setPlans(response.data.map((plan) => ({ id: plan.id, name: plan.name }))))
-      .catch(() => setPlans([]));
-  }, []);
 
   return useMemo(
     () => ({
@@ -40,8 +31,7 @@ export const useSubscriptionsListPage = () => {
       setCancelOpen,
       historyRows,
       setHistoryRows,
-      plans,
     }),
-    [navigate, list, mutations, selected, historyOpen, cancelOpen, historyRows, plans],
+    [navigate, list, mutations, selected, historyOpen, cancelOpen, historyRows],
   );
 };

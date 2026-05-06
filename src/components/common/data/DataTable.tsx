@@ -19,6 +19,8 @@ export interface DataTableColumn<TData> {
   render: (item: TData) => ReactNode;
   mobileRender?: (item: TData) => string;
   align?: 'left' | 'right' | 'center';
+  width?: string;
+  minWidth?: string;
 }
 
 interface DataTableProps<TData> {

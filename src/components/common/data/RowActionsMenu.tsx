@@ -12,14 +12,22 @@ export interface RowActionItem {
 
 interface RowActionsMenuProps {
   actions: RowActionItem[];
+  triggerAriaLabel?: string;
 }
 
-export const RowActionsMenu = ({ actions }: RowActionsMenuProps) => {
+export const RowActionsMenu = ({
+  actions,
+  triggerAriaLabel = 'Abrir ações da linha',
+}: RowActionsMenuProps) => {
   const [anchor, setAnchor] = useState<HTMLElement | null>(null);
 
   return (
     <>
-      <IconButton size="small" onClick={(event) => setAnchor(event.currentTarget)}>
+      <IconButton
+        size="small"
+        aria-label={triggerAriaLabel}
+        onClick={(event) => setAnchor(event.currentTarget)}
+      >
         <MoreVertIcon fontSize="small" />
       </IconButton>
       <Menu anchorEl={anchor} open={Boolean(anchor)} onClose={() => setAnchor(null)}>

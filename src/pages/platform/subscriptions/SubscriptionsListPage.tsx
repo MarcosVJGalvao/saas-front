@@ -1,40 +1,52 @@
 import AddIcon from '@mui/icons-material/Add';
 import Button from '@mui/material/Button';
+import { DataList } from '../../../components/common/data/DataList';
 import { ListFilters } from '../../../components/common/data/ListFilters';
 import { ListMetricsGrid } from '../../../components/common/data/ListMetricsGrid';
-import { QueryDataTable } from '../../../components/common/data/QueryDataTable';
 import { ConfirmDialog } from '../../../components/common/feedback/ConfirmDialog';
 import { ListDialog } from '../../../components/common/feedback/ListDialog';
 import { PageHeader } from '../../../components/common/page/PageHeader';
 import { useSubscriptionsListViewModel } from '../../../hooks/subscriptions/useSubscriptionsListViewModel';
 
+const toDateQueryValue = (value: unknown) => (typeof value === 'string' ? value : undefined);
+const rowsPerPageOptions = [10, 20, 50];
+
+interface FilterChangeDependencies {
+  updateSearch: (value: string) => void;
+  updateStatus: (value: string) => void;
+  updateStartDate: (value: string | undefined) => void;
+  updateEndDate: (value: string | undefined) => void;
+}
+
+const createFilterChangeHandler =
+  (dependencies: FilterChangeDependencies) => (name: string, value: unknown) => {
+    const actionByName: Record<string, () => void> = {
+      search: () => dependencies.updateSearch(String(value)),
+      status: () => dependencies.updateStatus(String(value)),
+      startDate: () => dependencies.updateStartDate(toDateQueryValue(value)),
+      endDate: () => dependencies.updateEndDate(toDateQueryValue(value)),
+    };
+    const action = actionByName[name];
+    if (action) action();
+  };
+
+const buildFilterValues = (model: ReturnType<typeof useSubscriptionsListViewModel>) => ({
+  search: model.searchValue,
+  status: model.statusValue,
+  startDate: model.view.list.query.startDate ?? null,
+  endDate: model.view.list.query.endDate ?? null,
+});
+
 const SubscriptionsListPage = () => {
   const model = useSubscriptionsListViewModel();
-  const dateQueryUpdater = (name: 'startDate' | 'endDate') => (value: unknown) =>
-    model.view.list.updateQuery({
-      [name]: typeof value === 'string' ? value : undefined,
-      page: 1,
-    });
+  const handleFilterChange = createFilterChangeHandler({
+    updateSearch: model.updateSearch,
+    updateStatus: model.updateStatus,
+    updateStartDate: (startDate) => model.view.list.updateQuery({ startDate, page: 1 }),
+    updateEndDate: (endDate) => model.view.list.updateQuery({ endDate, page: 1 }),
+  });
 
-  const changeHandlers: Record<string, (value: unknown) => void> = {
-    search: (value) => model.updateSearch(String(value)),
-    status: (value) => model.updateStatus(String(value)),
-    planId: (value) => model.updatePlanId(String(value)),
-    startDate: dateQueryUpdater('startDate'),
-    endDate: dateQueryUpdater('endDate'),
-  };
-
-  const handleFilterChange = (name: string, value: unknown) =>
-    (changeHandlers[name] ?? (() => undefined))(value);
-
-  const values = {
-    search: model.searchValue,
-    status: model.statusValue,
-    planId: model.planValue,
-    date: null,
-    startDate: model.view.list.query.startDate ?? null,
-    endDate: model.view.list.query.endDate ?? null,
-  };
+  const values = buildFilterValues(model);
 
   return (
     <>
@@ -68,22 +80,7 @@ const SubscriptionsListPage = () => {
             label: 'Status',
             placeholder: 'Todos os status',
             options: model.statusOptions.map((item) => ({ label: item.label, value: item.value })),
-            mobileOrder: 3,
-          },
-          {
-            type: 'select',
-            name: 'planId',
-            label: 'Categoria',
-            placeholder: 'Selecione um plano',
-            options: model.view.plans.map((plan) => ({ label: plan.name, value: plan.id })),
             mobileOrder: 2,
-          },
-          {
-            type: 'date',
-            name: 'date',
-            label: 'Data',
-            placeholder: 'Selecione uma data',
-            mobileOrder: 4,
           },
           {
             type: 'dateRange',
@@ -91,7 +88,7 @@ const SubscriptionsListPage = () => {
             label: 'Período',
             startName: 'startDate',
             endName: 'endDate',
-            mobileOrder: 5,
+            mobileOrder: 3,
           },
         ]}
         values={values}
@@ -101,19 +98,24 @@ const SubscriptionsListPage = () => {
         loading={model.view.list.loading}
       />
 
-      <QueryDataTable
+      <DataList
         rows={model.view.list.rows}
         columns={model.columns}
-        meta={model.view.list.meta}
-        query={model.searchValue}
-        onQueryChange={model.updateSearch}
+        mobileConfig={model.mobileConfig}
+        getRowKey={(row) => row.id}
         loading={model.view.list.loading}
         errorMessage={model.view.list.errorMessage}
-        onPageChange={(page) => model.view.list.updateQuery({ page })}
-        onRowsPerPageChange={(limit) => model.view.list.updateQuery({ limit, page: 1 })}
-        hideToolbar
         emptyTitle="Nenhuma assinatura encontrada"
         emptyDescription="Ajuste os filtros ou cadastre uma nova assinatura."
+        pagination={{
+          page: Math.max((model.view.list.meta.page ?? 1) - 1, 0),
+          rowsPerPage: model.view.list.meta.limit,
+          rowsPerPageOptions,
+          totalItems: model.view.list.meta.total,
+          onPageChange: (nextPage) => model.view.list.updateQuery({ page: nextPage + 1 }),
+          onRowsPerPageChange: (nextRowsPerPage) =>
+            model.view.list.updateQuery({ limit: nextRowsPerPage, page: 1 }),
+        }}
       />
 
       <ConfirmDialog

@@ -45,6 +45,7 @@ const PlansListPage = () => {
       <QueryDataTable
         rows={model.view.list.rows}
         columns={model.columns}
+        mobileConfig={model.mobileConfig}
         meta={model.view.list.meta}
         query={model.query}
         onQueryChange={model.onQueryChange}

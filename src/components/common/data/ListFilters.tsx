@@ -1,4 +1,3 @@
-import CalendarTodayOutlinedIcon from '@mui/icons-material/CalendarTodayOutlined';
 import FilterAltOutlinedIcon from '@mui/icons-material/FilterAltOutlined';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
@@ -133,19 +132,7 @@ const renderFilterField = ({
           disabled={isDisabled}
           error={field.error}
           helperText={field.helperText}
-          slotProps={{
-            textField: {
-              placeholder: field.placeholder ?? 'Selecione uma data',
-              size: 'small',
-              InputProps: {
-                startAdornment: (
-                  <InputAdornment position="start">
-                    <CalendarTodayOutlinedIcon fontSize="small" color="action" />
-                  </InputAdornment>
-                ),
-              },
-            },
-          }}
+          textFieldSlotProps={{ size: 'small' }}
         />
       </Stack>
     );
@@ -163,8 +150,6 @@ const renderFilterField = ({
         onStartChange={(nextValue) => onChange(field.startName, nextValue)}
         onEndChange={(nextValue) => onChange(field.endName, nextValue)}
         disabled={isDisabled}
-        startPlaceholder="Data inicial"
-        endPlaceholder="Data final"
         startTextFieldSx={{ minWidth: { xs: '100%', sm: 150 } }}
         endTextFieldSx={{ minWidth: { xs: '100%', sm: 150 } }}
       />
@@ -332,7 +317,7 @@ export const ListFilters = ({
   };
 
   const handleClear = () => {
-    setApplyRequested(false);
+    if (applyRequested) setApplyRequested(false);
     onClear();
   };
   const toggleExpanded = () => setExpanded((prev) => !prev);

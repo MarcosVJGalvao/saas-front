@@ -1,11 +1,11 @@
-import type { DatePickerProps } from '@mui/x-date-pickers/DatePicker';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { format, parse } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
+import type { SxProps, Theme } from '@mui/material/styles';
 
-export interface AppDatePickerProps extends Omit<DatePickerProps, 'value' | 'onChange'> {
+export interface AppDatePickerProps {
   label: string;
   value: string | null;
   onChange: (value: string | null) => void;
@@ -13,6 +13,13 @@ export interface AppDatePickerProps extends Omit<DatePickerProps, 'value' | 'onC
   error?: boolean;
   fullWidth?: boolean;
   required?: boolean;
+  disabled?: boolean;
+  minDate?: Date;
+  maxDate?: Date;
+  textFieldSlotProps?: {
+    size?: 'small' | 'medium';
+    sx?: SxProps<Theme>;
+  };
 }
 
 const DISPLAY_DATE_FORMAT = 'dd/MM/yyyy';
@@ -40,26 +47,34 @@ export const AppDatePicker = ({
   error = false,
   fullWidth = true,
   required = false,
-  format = DISPLAY_DATE_FORMAT,
-  ...rest
-}: AppDatePickerProps) => (
-  <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={ptBR}>
-    <DatePicker
-      label={label}
-      value={toDateObject(value)}
-      onChange={(nextValue) => {
-        onChange(toBackendDate(nextValue));
-      }}
-      format={format}
-      slotProps={{
-        textField: {
-          fullWidth,
-          required,
-          error,
-          helperText,
-        },
-      }}
-      {...rest}
-    />
-  </LocalizationProvider>
-);
+  disabled = false,
+  minDate,
+  maxDate,
+  textFieldSlotProps,
+}: AppDatePickerProps) => {
+  const parsedValue = toDateObject(value);
+  return (
+    <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={ptBR}>
+      <DatePicker
+        label={label}
+        value={parsedValue}
+        disabled={disabled}
+        minDate={minDate}
+        maxDate={maxDate}
+        onChange={(nextValue) => {
+          onChange(toBackendDate(nextValue));
+        }}
+        format={DISPLAY_DATE_FORMAT}
+        slotProps={{
+          textField: {
+            ...textFieldSlotProps,
+            fullWidth,
+            required,
+            error,
+            helperText,
+          },
+        }}
+      />
+    </LocalizationProvider>
+  );
+};

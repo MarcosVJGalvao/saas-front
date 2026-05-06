@@ -4,15 +4,12 @@ import Button from '@mui/material/Button';
 import Stack from '@mui/material/Stack';
 import type { PaginationMeta } from '../../../models/pagination';
 import { spacingScale } from '../../../theme/spacing';
-import { CircularLoader } from '../loading/CircularLoader';
 import { commonDataMessages } from '../messages';
-import { EmptyState } from '../state/EmptyState';
-import { ErrorState } from '../state/ErrorState';
-import { DataTable, type DataTableColumn } from './DataTable';
+import { DataList } from './DataList';
+import type { DataTableColumn } from './DataTable';
+import type { DataListMobileConfig } from './dataList.types';
 import { FilterDrawer } from './FilterDrawer';
 import { SearchBar } from './SearchBar';
-
-const defaultErrorMessage = 'Erro ao carregar dados.';
 
 interface QueryDataTableProps<TData> {
   rows: TData[];
@@ -37,6 +34,7 @@ interface QueryDataTableProps<TData> {
   emptyDescription?: string;
   hideToolbar?: boolean;
   toolbarContent?: ReactNode;
+  mobileConfig?: DataListMobileConfig<TData>;
 }
 
 const QueryDataTableToolbar = ({
@@ -77,7 +75,6 @@ const QueryDataTableToolbar = ({
 
 const QueryDataTableContent = <TData,>({
   loading,
-  hasError,
   errorMessage,
   onRetry,
   rows,
@@ -88,9 +85,9 @@ const QueryDataTableContent = <TData,>({
   onRowsPerPageChange,
   emptyTitle,
   emptyDescription,
+  mobileConfig,
 }: {
   loading: boolean;
-  hasError: boolean;
   errorMessage?: string;
   onRetry?: () => void;
   rows: TData[];
@@ -101,27 +98,49 @@ const QueryDataTableContent = <TData,>({
   onRowsPerPageChange: (nextLimit: number) => void;
   emptyTitle: string;
   emptyDescription: string;
+  mobileConfig?: DataListMobileConfig<TData>;
 }) => {
-  if (loading) {
-    return <CircularLoader ariaLabel={commonDataMessages.loadingData} />;
-  }
-
-  if (hasError) {
-    return <ErrorState message={errorMessage ?? defaultErrorMessage} onRetry={onRetry} />;
-  }
-
-  if (rows.length === 0) {
-    return <EmptyState title={emptyTitle} description={emptyDescription} />;
-  }
+  const listRows: Array<{ key: string; value: TData }> = rows.map((row, index) => ({
+    key: getRowId ? getRowId(row, index) : String(index),
+    value: row,
+  }));
+  const mapMobileConfig = (
+    config: DataListMobileConfig<TData>,
+  ): DataListMobileConfig<{ key: string; value: TData }> => ({
+    renderTitle: (row) => config.renderTitle(row.value),
+    renderSubtitle: config.renderSubtitle ? (row) => config.renderSubtitle(row.value) : undefined,
+    renderAvatar: config.renderAvatar ? (row) => config.renderAvatar(row.value) : undefined,
+    renderStatus: config.renderStatus ? (row) => config.renderStatus(row.value) : undefined,
+    renderActions: config.renderActions ? (row) => config.renderActions(row.value) : undefined,
+    renderDetails: (row) => config.renderDetails(row.value),
+  });
 
   return (
-    <DataTable
-      rows={rows}
-      columns={columns}
-      meta={meta}
-      getRowId={getRowId}
-      onPageChange={onPageChange}
-      onRowsPerPageChange={onRowsPerPageChange}
+    <DataList<{ key: string; value: TData }>
+      rows={listRows}
+      columns={columns.map((column) => ({
+        id: column.key,
+        label: column.header,
+        align: column.align,
+        width: column.width,
+        minWidth: column.minWidth,
+        render: (row) => column.render(row.value),
+      }))}
+      getRowKey={(row) => row.key}
+      mobileConfig={mobileConfig ? mapMobileConfig(mobileConfig) : undefined}
+      loading={loading}
+      errorMessage={errorMessage}
+      onRetry={onRetry}
+      emptyTitle={emptyTitle}
+      emptyDescription={emptyDescription}
+      pagination={{
+        page: Math.max(meta.page - 1, 0),
+        rowsPerPage: meta.limit,
+        rowsPerPageOptions: [10, 20, 50],
+        totalItems: meta.total,
+        onPageChange: (nextPage) => onPageChange(nextPage + 1),
+        onRowsPerPageChange,
+      }}
     />
   );
 };
@@ -149,10 +168,9 @@ export const QueryDataTable = <TData,>({
   emptyDescription = commonDataMessages.emptyDescription,
   hideToolbar = false,
   toolbarContent,
+  mobileConfig,
 }: QueryDataTableProps<TData>) => {
   const hasFilter = filterContent !== undefined;
-  const hasError = errorMessage !== undefined && errorMessage.length > 0;
-
   return (
     <Stack spacing={spacingScale.sm}>
       {toolbarContent}
@@ -168,7 +186,6 @@ export const QueryDataTable = <TData,>({
 
       <QueryDataTableContent
         loading={loading}
-        hasError={hasError}
         errorMessage={errorMessage}
         onRetry={onRetry}
         rows={rows}
@@ -179,6 +196,7 @@ export const QueryDataTable = <TData,>({
         onRowsPerPageChange={onRowsPerPageChange}
         emptyTitle={emptyTitle}
         emptyDescription={emptyDescription}
+        mobileConfig={mobileConfig}
       />
 
       {hasFilter && onCloseFilter && onApplyFilter && onClearFilter ? (

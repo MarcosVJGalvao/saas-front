@@ -14,8 +14,6 @@ interface DateRangePickerProps {
   minDate?: Date;
   maxDate?: Date;
   compact?: boolean;
-  startPlaceholder?: string;
-  endPlaceholder?: string;
   startTextFieldSx?: SxProps<Theme>;
   endTextFieldSx?: SxProps<Theme>;
 }
@@ -31,8 +29,6 @@ export const DateRangePicker = ({
   minDate,
   maxDate,
   compact = false,
-  startPlaceholder,
-  endPlaceholder,
   startTextFieldSx,
   endTextFieldSx,
 }: DateRangePickerProps) => (
@@ -44,9 +40,7 @@ export const DateRangePicker = ({
       disabled={disabled}
       minDate={minDate}
       maxDate={maxDate}
-      slotProps={{
-        textField: { size: 'small', placeholder: startPlaceholder, sx: startTextFieldSx },
-      }}
+      textFieldSlotProps={{ size: 'small', sx: startTextFieldSx }}
       {...(compact ? { label: '' } : {})}
     />
     <AppDatePicker
@@ -56,7 +50,7 @@ export const DateRangePicker = ({
       disabled={disabled}
       minDate={minDate}
       maxDate={maxDate}
-      slotProps={{ textField: { size: 'small', placeholder: endPlaceholder, sx: endTextFieldSx } }}
+      textFieldSlotProps={{ size: 'small', sx: endTextFieldSx }}
       {...(compact ? { label: '' } : {})}
     />
   </Stack>
