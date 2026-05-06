@@ -1,26 +1,23 @@
-import Stack from '@mui/material/Stack';
-import Typography from '@mui/material/Typography';
-import { useParams } from 'react-router-dom';
-import { useClientDetails } from '../../../hooks/clients/useClientDetails';
+import { useNavigate } from 'react-router-dom';
+import { EntityDetailsDrawer } from '../../../components/common/details/EntityDetailsDrawer';
+import { useClientDetailsPageViewModel } from '../../../hooks/clients/useClientDetailsPageViewModel';
 
 const ClientDetailsPage = () => {
-  const { id } = useParams();
-  const { data } = useClientDetails(id);
+  const navigate = useNavigate();
+  const model = useClientDetailsPageViewModel();
+
   return (
-    <Stack spacing={2}>
-      <Typography variant="h5" sx={{ fontWeight: 700 }}>
-        Detalhes do Cliente
-      </Typography>
-      {data ? (
-        <>
-          <Typography>{data.legalName}</Typography>
-          <Typography>{data.email}</Typography>
-          <Typography>{data.documentNumber}</Typography>
-        </>
-      ) : (
-        <Typography>Carregando...</Typography>
-      )}
-    </Stack>
+    <EntityDetailsDrawer
+      open
+      loading={model.loading}
+      error={model.errorMessage ?? null}
+      onClose={() => void navigate(-1)}
+      headerData={model.headerData}
+      tabs={model.tabs}
+      footerActions={model.footerActions}
+      emptyTitle="Cliente não encontrado."
+      emptyMessage="Não foi possível carregar os detalhes do cliente selecionado."
+    />
   );
 };
 

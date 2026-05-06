@@ -34,12 +34,50 @@ export type Client = AuditFields & {
   notes?: string | null;
   tenantSlug?: string | null;
   planName?: string | null;
+  planId?: string | null;
+  subscriptionId?: string | null;
+  plan?: {
+    id: string;
+    name: string;
+    description?: string | null;
+    price?: string | null;
+    currency?: string | null;
+    billingCycle?: string | null;
+    trialDays?: number | null;
+    isActive?: boolean;
+  } | null;
+  subscription?: {
+    id: string;
+    status?: string | null;
+    startDate?: string | null;
+    endDate?: string | null;
+    trialEndsAt?: string | null;
+    renewalDate?: string | null;
+    priceAtSubscription?: string | null;
+  } | null;
+  addresses?: Array<{
+    id: string;
+    street: string;
+    number: string;
+    complement?: string | null;
+    neighborhood: string;
+    city: string;
+    state: string;
+    zipCode: string;
+    country: string;
+  }>;
   tenant?: {
     id: string;
     name: string;
+    slug?: string | null;
+    timezone?: string | null;
+    locale?: string | null;
     subscriptions?: Array<{
       id: string;
       status: string;
+      startDate?: string | null;
+      trialEndsAt?: string | null;
+      renewalDate?: string | null;
       plan?: { id: string; name: string } | null;
     }>;
   } | null;

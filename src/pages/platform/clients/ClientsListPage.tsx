@@ -1,12 +1,12 @@
 import Button from '@mui/material/Button';
-import Drawer from '@mui/material/Drawer';
 import Stack from '@mui/material/Stack';
-import Typography from '@mui/material/Typography';
 import { ListFilters } from '../../../components/common/data/ListFilters';
 import { QueryDataTable } from '../../../components/common/data/QueryDataTable';
+import { EntityDetailsDrawer } from '../../../components/common/details/EntityDetailsDrawer';
 import { EntitySummaryCards } from '../../../components/common/display/EntitySummaryCards';
 import { ConfirmDialog } from '../../../components/common/feedback/ConfirmDialog';
 import { PageIntroHeader } from '../../../components/common/page/PageIntroHeader';
+import { useClientDetailsDrawerSchema } from '../../../hooks/clients/useClientDetailsDrawerSchema';
 import { useClientsListFilters } from '../../../hooks/clients/useClientsListFilters';
 import { useClientsListPageViewModel } from '../../../hooks/clients/useClientsListPageViewModel';
 
@@ -17,6 +17,13 @@ const ClientsListPage = () => {
     listQuery: model.view.list.query,
     onQueryChange: model.onQueryChange,
     updateQuery: model.view.list.updateQuery,
+  });
+  const drawerSchema = useClientDetailsDrawerSchema(model.view.details.data, {
+    summary: 'Dados gerais',
+    academic: 'Organização',
+    financial: 'Plano e assinatura',
+    subscriptionHistory: 'Histórico da assinatura',
+    history: 'Auditoria',
   });
 
   return (
@@ -71,24 +78,17 @@ const ClientsListPage = () => {
         onRowsPerPageChange={model.onLimitChange}
         hideToolbar
       />
-      <Drawer
-        anchor="right"
+      <EntityDetailsDrawer
         open={model.view.selectedClientId !== undefined}
+        loading={model.view.details.loading}
+        error={model.view.details.errorMessage ?? null}
         onClose={() => model.view.setSelectedClientId(undefined)}
-      >
-        <Stack sx={{ width: 420, p: 2.5 }} spacing={2}>
-          <Typography variant="h6">Detalhes do Cliente</Typography>
-          {model.view.details.data ? (
-            <>
-              <Typography variant="h5">{model.view.details.data.legalName}</Typography>
-              <Typography color="text.secondary">{model.view.details.data.email}</Typography>
-              <Typography>Documento: {model.view.details.data.documentNumber}</Typography>
-            </>
-          ) : (
-            <Typography>Carregando...</Typography>
-          )}
-        </Stack>
-      </Drawer>
+        headerData={drawerSchema.headerData}
+        tabs={drawerSchema.tabs}
+        footerActions={drawerSchema.footerActions}
+        emptyTitle="Nenhum cliente selecionado."
+        emptyMessage="Selecione um cliente na listagem para visualizar os detalhes."
+      />
       <ConfirmDialog
         open={model.view.deleteClientId !== undefined}
         title="Excluir cliente"

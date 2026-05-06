@@ -46,6 +46,16 @@ const notificationIconsById: Record<string, ReactNode> = {
   boleto: <DescriptionOutlinedIcon sx={{ fontSize: 18 }} />,
   usuario: <PersonOutlineOutlinedIcon sx={{ fontSize: 18 }} />,
 };
+type ResolvedNotification = {
+  id: string;
+  title: string;
+  description: string;
+  time: string;
+  unread: boolean;
+  icon: ReactNode;
+  iconBg: string;
+  iconColor: string;
+};
 
 const getCurrentPageLabel = (pathname: string, navigationItems: NavigationItem[]): string => {
   const entries = navigationItems.reduce<NavigationItem[]>(
@@ -74,7 +84,7 @@ const resolvePermissions = (
 
 const buildNotifications = (
   uiColors: ReturnType<typeof getUiColorTokens>,
-): typeof appLayoutNotifications =>
+): ResolvedNotification[] =>
   appLayoutNotifications.map((notification) => ({
     ...notification,
     icon: notificationIconsById[notification.id],

@@ -23,6 +23,10 @@ export const LocalizedStatusBadge = ({ label, tone }: LocalizedStatusBadgeProps)
         color: tone === 'active' ? theme.palette.success.dark : theme.palette.text.secondary,
         fontWeight: 600,
         border: 'none',
+        borderRadius: 1,
+        '& .MuiChip-label': {
+          px: 1,
+        },
       }}
     />
   );
