@@ -10,6 +10,8 @@ import Stack from '@mui/material/Stack';
 import Tab from '@mui/material/Tab';
 import Tabs from '@mui/material/Tabs';
 import Typography from '@mui/material/Typography';
+import { useTheme } from '@mui/material/styles';
+import { useMediaQuery } from '@mui/material';
 import { useMemo, useState } from 'react';
 import type {
   DetailSection,
@@ -60,11 +62,18 @@ const HeaderIdentity = ({ headerData }: { headerData?: DetailsHeaderData | null 
 );
 
 const DrawerHeader = ({ loading, headerData, onClose }: HeaderProps) => (
-  <Box sx={{ p: layoutSpacing.cardPadding, borderBottom: 1, borderColor: 'divider' }}>
+  <Box
+    sx={{
+      p: layoutSpacing.cardPadding,
+      borderBottom: 1,
+      borderColor: 'divider',
+      bgcolor: 'background.paper',
+    }}
+  >
     <Stack
       direction="row"
       spacing={1.5}
-      sx={{ alignItems: 'center', justifyContent: 'space-between' }}
+      sx={{ alignItems: 'flex-start', justifyContent: 'space-between' }}
     >
       <Stack direction="row" spacing={1.5} sx={{ alignItems: 'center', minWidth: 0 }}>
         {loading ? (
@@ -88,7 +97,7 @@ const DrawerHeader = ({ loading, headerData, onClose }: HeaderProps) => (
           )}
         </Box>
       </Stack>
-      <IconButton aria-label="Fechar detalhes" onClick={onClose}>
+      <IconButton aria-label="Fechar detalhes" onClick={onClose} sx={{ mt: 0.25, mr: -0.5 }}>
         <CloseRounded />
       </IconButton>
     </Stack>
@@ -176,6 +185,7 @@ const DrawerFooter = ({ footerActions }: { footerActions: ReadonlyArray<DetailsF
       p: layoutSpacing.cardPadding,
       borderTop: 1,
       borderColor: 'divider',
+      bgcolor: 'background.paper',
       display: 'flex',
       gap: spacingScale.sm,
       flexDirection: { xs: 'column', sm: 'row' },
@@ -209,6 +219,8 @@ export const EntityDetailsDrawer = ({
   emptyMessage = 'Selecione um item na listagem para visualizar os detalhes.',
   footerActions = [],
 }: EntityDetailsDrawerProps) => {
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
   const [tabId, setTabId] = useState('');
   const effectiveTabId = tabId || tabs[0]?.id || '';
   const selectedTab = useMemo(
@@ -224,50 +236,89 @@ export const EntityDetailsDrawer = ({
       aria-labelledby="entity-details-title"
       slotProps={{
         paper: {
-          sx: {
+          sx: (theme) => ({
+            top: theme.spacing(8),
+            height: `calc(100% - ${theme.spacing(8)})`,
             width: { xs: '100vw', sm: 420, md: 440, lg: 460 },
             maxWidth: '100vw',
             bgcolor: 'background.paper',
             borderTopLeftRadius: { xs: 0, sm: 2 },
             borderBottomLeftRadius: { xs: 0, sm: 2 },
+            borderLeft: 1,
+            borderColor: 'divider',
+            boxShadow: theme.shadows[3],
             overflow: 'hidden',
-          },
+          }),
         },
       }}
     >
       <Box sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
         <DrawerHeader loading={loading} headerData={headerData} onClose={onClose} />
 
-        <Tabs
-          value={effectiveTabId}
-          onChange={(_event, value: string) => setTabId(value)}
-          variant="scrollable"
-          scrollButtons="auto"
-          sx={{
-            px: { xs: 1.5, sm: 2 },
-            borderBottom: 1,
-            borderColor: 'divider',
-            '& .MuiTabs-flexContainer': {
-              justifyContent: 'flex-start',
-              gap: { xs: 0.25, sm: 0.5 },
-            },
-          }}
-        >
-          {tabs.map((tab) => (
-            <Tab
-              key={tab.id}
-              value={tab.id}
-              label={tab.label}
-              icon={tab.icon ?? undefined}
-              iconPosition="top"
-              sx={{
-                minWidth: 0,
-                px: { xs: 0.5, sm: 0.75 },
-                alignItems: 'center',
-              }}
-            />
-          ))}
-        </Tabs>
+        {loading ? (
+          <Box
+            sx={{
+              px: { xs: 1.5, sm: 2 },
+              py: 1,
+              borderBottom: 1,
+              borderColor: 'divider',
+              bgcolor: 'background.paper',
+            }}
+          >
+            <Stack direction="row" spacing={1}>
+              <Skeleton variant="rounded" height={40} sx={{ flex: 1 }} />
+              <Skeleton variant="rounded" height={40} sx={{ flex: 1 }} />
+              <Skeleton variant="rounded" height={40} sx={{ flex: 1 }} />
+              <Skeleton variant="rounded" height={40} sx={{ flex: 1 }} />
+            </Stack>
+          </Box>
+        ) : (
+          <Tabs
+            value={effectiveTabId}
+            onChange={(_event, value: string) => setTabId(value)}
+            variant={isMobile ? 'fullWidth' : 'scrollable'}
+            scrollButtons={isMobile ? false : 'auto'}
+            sx={{
+              px: { xs: 1.5, sm: 2 },
+              borderBottom: 1,
+              borderColor: 'divider',
+              bgcolor: 'background.paper',
+              '& .MuiTabs-flexContainer': {
+                justifyContent: 'space-between',
+                gap: { xs: 0, sm: 0 },
+              },
+            }}
+          >
+            {tabs.map((tab) => (
+              <Tab
+                key={tab.id}
+                value={tab.id}
+                label={tab.label}
+                icon={tab.icon ?? undefined}
+                iconPosition="top"
+                sx={{
+                  minWidth: {
+                    xs: 0,
+                    sm: 0,
+                  },
+                  px: { xs: 0.5, sm: 0.75 },
+                  flex: 1,
+                  maxWidth: 'none',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  minHeight: 58,
+                  '& .MuiTab-iconWrapper': {
+                    mb: 0.5,
+                  },
+                  '& .MuiTab-wrapper': {
+                    lineHeight: 1.2,
+                    whiteSpace: 'nowrap',
+                  },
+                }}
+              />
+            ))}
+          </Tabs>
+        )}
 
         <Box sx={{ flex: 1, overflowY: 'auto', px: { xs: 1.5, sm: 2 }, py: 1.5 }}>
           <DrawerContent

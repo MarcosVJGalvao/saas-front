@@ -21,7 +21,7 @@ const ClientsListPage = () => {
   const drawerSchema = useClientDetailsDrawerSchema(model.view.details.data, {
     summary: 'Dados gerais',
     academic: 'Organização',
-    financial: 'Plano e assinatura',
+    financial: 'Plano',
     subscriptionHistory: 'Histórico da assinatura',
     history: 'Auditoria',
   });

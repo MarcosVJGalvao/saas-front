@@ -18,13 +18,13 @@ export const DetailsSection = ({ title, icon, action, children }: DetailsSection
   <Card
     variant="outlined"
     sx={(theme) => ({
-      borderColor: 'divider',
+      borderColor: alpha(theme.palette.divider, 0.55),
       borderRadius: 2,
-      boxShadow: 1,
+      boxShadow: 0,
       p: { xs: spacingScale.sm, sm: 2.5 },
       '&:hover': {
-        borderColor: alpha(theme.palette.primary.main, 0.24),
-        boxShadow: theme.shadows[2],
+        borderColor: alpha(theme.palette.divider, 0.75),
+        boxShadow: theme.shadows[1],
       },
     })}
   >

@@ -12,7 +12,7 @@ export const InfoItem = ({ label, value }: InfoItemProps) => (
     <Typography variant="caption" color="text.secondary" sx={{ fontWeight: 500 }}>
       {label}
     </Typography>
-    <Typography variant="body2" color="text.primary" sx={{ fontWeight: 700 }}>
+    <Typography component="div" variant="body2" color="text.primary" sx={{ fontWeight: 700 }}>
       {value ?? '-'}
     </Typography>
   </Box>

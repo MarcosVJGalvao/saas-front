@@ -229,10 +229,10 @@ export const useClientDetailsDrawerSchema = (
         },
         {
           id: 'tenant-subscription-history',
-          title: 'Subscription history',
+          title: 'Histórico de assinaturas',
           icon: <HistoryOutlined fontSize="small" />,
           items: [
-            { label: 'Subscription ID', value: latestTenantSubscription?.id ?? '-' },
+            { label: 'ID da assinatura', value: latestTenantSubscription?.id ?? '-' },
             {
               label: 'Plano',
               value: latestTenantSubscription?.plan?.name ?? client.plan?.name ?? '-',
