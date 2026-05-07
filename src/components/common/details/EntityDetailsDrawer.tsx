@@ -34,7 +34,6 @@ type EntityDetailsDrawerProps = {
   emptyTitle?: string;
   emptyMessage?: string;
   footerActions?: ReadonlyArray<DetailsFooterAction>;
-  containerId?: string;
 };
 
 type HeaderProps = {
@@ -224,14 +223,6 @@ const DrawerFooter = ({ footerActions }: { footerActions: ReadonlyArray<DetailsF
   </Box>
 );
 
-const resolveDrawerContainer = (containerId?: string): HTMLElement | undefined => {
-  if (typeof document === 'undefined' || containerId === undefined) {
-    return undefined;
-  }
-
-  return document.getElementById(containerId) ?? undefined;
-};
-
 export const EntityDetailsDrawer = ({
   open,
   loading = false,
@@ -242,7 +233,6 @@ export const EntityDetailsDrawer = ({
   emptyTitle = 'Nenhum item selecionado.',
   emptyMessage = 'Selecione um item na listagem para visualizar os detalhes.',
   footerActions = [],
-  containerId,
 }: EntityDetailsDrawerProps) => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
@@ -253,16 +243,14 @@ export const EntityDetailsDrawer = ({
     [tabs, effectiveTabId],
   );
 
-  const containerElement = resolveDrawerContainer(containerId);
-
   return (
     <Drawer
       anchor="right"
       open={open}
       onClose={onClose}
       aria-labelledby="entity-details-title"
-      container={containerElement}
-      ModalProps={containerElement ? { disablePortal: true } : undefined}
+      hideBackdrop
+      ModalProps={{ disableScrollLock: true }}
       slotProps={{
         paper: {
           sx: (theme) => ({
@@ -277,12 +265,6 @@ export const EntityDetailsDrawer = ({
             borderColor: 'divider',
             boxShadow: theme.shadows[3],
             overflow: 'hidden',
-          }),
-        },
-        backdrop: {
-          sx: (theme) => ({
-            backgroundColor:
-              theme.palette.mode === 'dark' ? 'rgba(0, 0, 0, 0.56)' : 'rgba(15, 23, 42, 0.42)',
           }),
         },
       }}

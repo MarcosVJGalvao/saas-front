@@ -1,9 +1,8 @@
 import Button from '@mui/material/Button';
 import Box from '@mui/material/Box';
-import Stack from '@mui/material/Stack';
 import { ListFilters } from '../../../components/common/data/ListFilters';
 import { QueryDataTable } from '../../../components/common/data/QueryDataTable';
-import { EntityDetailsDrawer } from '../../../components/common/details/EntityDetailsDrawer';
+import { ContextualDetailsDrawer } from '../../../components/common/details/ContextualDetailsDrawer';
 import { EntitySummaryCards } from '../../../components/common/display/EntitySummaryCards';
 import { ConfirmDialog } from '../../../components/common/feedback/ConfirmDialog';
 import { PageIntroHeader } from '../../../components/common/page/PageIntroHeader';
@@ -13,6 +12,8 @@ import { useClientsListPageViewModel } from '../../../hooks/clients/useClientsLi
 
 const ClientsListPage = () => {
   const model = useClientsListPageViewModel();
+  const isDetailsOpen = model.view.selectedClientId !== undefined;
+  const closeDetails = () => model.view.setSelectedClientId(undefined);
   const filters = useClientsListFilters({
     query: model.query,
     listQuery: model.view.list.query,
@@ -28,7 +29,17 @@ const ClientsListPage = () => {
   });
 
   return (
-    <Stack spacing={2.5}>
+    <ContextualDetailsDrawer
+      open={isDetailsOpen}
+      loading={model.view.details.loading}
+      error={model.view.details.errorMessage ?? null}
+      onClose={closeDetails}
+      headerData={drawerSchema.headerData}
+      tabs={drawerSchema.tabs}
+      footerActions={drawerSchema.footerActions}
+      emptyTitle="Nenhum cliente selecionado."
+      emptyMessage="Selecione um cliente na listagem para visualizar os detalhes."
+    >
       <PageIntroHeader {...model.pageHeader} />
       <EntitySummaryCards cards={model.cards} />
       <ListFilters
@@ -80,18 +91,6 @@ const ClientsListPage = () => {
           onRowsPerPageChange={model.onLimitChange}
           hideToolbar
         />
-        <EntityDetailsDrawer
-          open={model.view.selectedClientId !== undefined}
-          loading={model.view.details.loading}
-          error={model.view.details.errorMessage ?? null}
-          onClose={() => model.view.setSelectedClientId(undefined)}
-          headerData={drawerSchema.headerData}
-          tabs={drawerSchema.tabs}
-          footerActions={drawerSchema.footerActions}
-          emptyTitle="Nenhum cliente selecionado."
-          emptyMessage="Selecione um cliente na listagem para visualizar os detalhes."
-          containerId="clients-details-container"
-        />
       </Box>
       <ConfirmDialog
         open={model.view.deleteClientId !== undefined}
@@ -110,7 +109,7 @@ const ClientsListPage = () => {
       >
         Exportar
       </Button>
-    </Stack>
+    </ContextualDetailsDrawer>
   );
 };
 
