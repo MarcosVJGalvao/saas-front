@@ -1,4 +1,3 @@
-import ChevronRightRounded from '@mui/icons-material/ChevronRightRounded';
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
 import Stack from '@mui/material/Stack';
@@ -22,8 +21,11 @@ export const DetailsSection = ({ title, icon, action, children }: DetailsSection
       borderRadius: 2,
       boxShadow: 0,
       p: { xs: spacingScale.sm, sm: 2.5 },
+      transition: theme.transitions.create(['border-color', 'box-shadow'], {
+        duration: theme.transitions.duration.shortest,
+      }),
       '&:hover': {
-        borderColor: alpha(theme.palette.divider, 0.75),
+        borderColor: alpha(theme.palette.primary.main, 0.24),
         boxShadow: theme.shadows[1],
       },
     })}
@@ -32,11 +34,11 @@ export const DetailsSection = ({ title, icon, action, children }: DetailsSection
       <Stack direction="row" sx={{ alignItems: 'center', justifyContent: 'space-between' }}>
         <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
           {icon ? <Box sx={{ color: 'primary.main', display: 'inline-flex' }}>{icon}</Box> : null}
-          <Typography variant="subtitle1" sx={{ fontWeight: 700 }}>
+          <Typography variant="subtitle2" sx={{ fontWeight: 700 }}>
             {title}
           </Typography>
         </Stack>
-        {action ?? <ChevronRightRounded color="action" fontSize="small" sx={{ opacity: 0 }} />}
+        {action ? <Box>{action}</Box> : null}
       </Stack>
       {children}
     </Stack>

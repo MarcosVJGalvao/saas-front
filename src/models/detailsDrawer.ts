@@ -4,6 +4,7 @@ import type { ReactElement, ReactNode } from 'react';
 export type DetailItem = {
   label: string;
   value?: ReactNode;
+  noWrap?: boolean;
 };
 
 export type DetailSection = {

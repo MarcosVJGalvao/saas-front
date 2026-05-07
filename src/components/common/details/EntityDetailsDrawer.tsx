@@ -10,8 +10,8 @@ import Stack from '@mui/material/Stack';
 import Tab from '@mui/material/Tab';
 import Tabs from '@mui/material/Tabs';
 import Typography from '@mui/material/Typography';
-import { useTheme } from '@mui/material/styles';
 import { useMediaQuery } from '@mui/material';
+import { useTheme } from '@mui/material/styles';
 import { useMemo, useState } from 'react';
 import type {
   DetailSection,
@@ -19,7 +19,7 @@ import type {
   DetailsFooterAction,
   DetailsHeaderData,
 } from '../../../models/detailsDrawer';
-import { layoutSpacing, spacingScale } from '../../../theme/spacing';
+import { layoutSpacing } from '../../../theme/spacing';
 import { LocalizedStatusBadge } from '../display/LocalizedStatusBadge';
 import { DetailsSection as SectionCard } from './DetailsSection';
 import { InfoItem } from './InfoItem';
@@ -44,7 +44,7 @@ type HeaderProps = {
 
 const HeaderIdentity = ({ headerData }: { headerData?: DetailsHeaderData | null }) => (
   <>
-    <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
+    <Stack direction="row" spacing={1} sx={{ alignItems: 'center', minWidth: 0 }}>
       <Typography id="entity-details-title" variant="h6" noWrap sx={{ fontWeight: 700 }}>
         {headerData?.title ?? '-'}
       </Typography>
@@ -55,7 +55,7 @@ const HeaderIdentity = ({ headerData }: { headerData?: DetailsHeaderData | null 
         />
       ) : null}
     </Stack>
-    <Typography variant="body2" color="text.secondary">
+    <Typography variant="body2" color="text.secondary" noWrap title={headerData?.subtitle ?? '-'}>
       {headerData?.subtitle ?? '-'}
     </Typography>
   </>
@@ -77,11 +77,11 @@ const DrawerHeader = ({ loading, headerData, onClose }: HeaderProps) => (
     >
       <Stack direction="row" spacing={1.5} sx={{ alignItems: 'center', minWidth: 0 }}>
         {loading ? (
-          <Skeleton variant="circular" width={56} height={56} />
+          <Skeleton variant="circular" width={48} height={48} />
         ) : (
           <Avatar
             src={headerData?.avatarUrl ?? undefined}
-            sx={{ width: { xs: 44, md: 56 }, height: { xs: 44, md: 56 } }}
+            sx={{ width: { xs: 40, sm: 48 }, height: { xs: 40, sm: 48 } }}
           >
             {headerData?.avatarFallback ?? '?'}
           </Avatar>
@@ -119,11 +119,17 @@ const renderSectionContent = (section: DetailSection) =>
       sx={{
         display: 'grid',
         gridTemplateColumns: { xs: '1fr', sm: '1fr 1fr' },
-        gap: spacingScale.sm,
+        columnGap: 3,
+        rowGap: 2.25,
       }}
     >
       {(section.items ?? []).map((item) => (
-        <InfoItem key={`${section.id}-${item.label}`} label={item.label} value={item.value} />
+        <InfoItem
+          key={`${section.id}-${item.label}`}
+          label={item.label}
+          value={item.value}
+          noWrap={item.noWrap}
+        />
       ))}
     </Box>
   );
@@ -182,12 +188,14 @@ const DrawerContent = ({
 const DrawerFooter = ({ footerActions }: { footerActions: ReadonlyArray<DetailsFooterAction> }) => (
   <Box
     sx={{
-      p: layoutSpacing.cardPadding,
+      px: { xs: 1.5, sm: 2 },
+      py: { xs: 1, sm: 1.25 },
       borderTop: 1,
       borderColor: 'divider',
       bgcolor: 'background.paper',
       display: 'flex',
-      gap: spacingScale.sm,
+      columnGap: { xs: 1.5, sm: 1.75 },
+      rowGap: 1,
       flexDirection: { xs: 'column', sm: 'row' },
     }}
   >
@@ -201,6 +209,13 @@ const DrawerFooter = ({ footerActions }: { footerActions: ReadonlyArray<DetailsF
         onClick={action.onClick}
         disabled={action.disabled}
         aria-label={action.label}
+        sx={{
+          height: { xs: 36, sm: 38 },
+          borderRadius: 1.25,
+          fontWeight: 600,
+          textTransform: 'none',
+          fontSize: 14,
+        }}
       >
         {action.label}
       </Button>
@@ -237,8 +252,8 @@ export const EntityDetailsDrawer = ({
       slotProps={{
         paper: {
           sx: (theme) => ({
-            top: theme.spacing(8),
-            height: `calc(100% - ${theme.spacing(8)})`,
+            top: { xs: 0, sm: theme.spacing(8) },
+            height: { xs: '100%', sm: `calc(100% - ${theme.spacing(8)})` },
             width: { xs: '100vw', sm: 420, md: 440, lg: 460 },
             maxWidth: '100vw',
             bgcolor: 'background.paper',
@@ -250,6 +265,12 @@ export const EntityDetailsDrawer = ({
             overflow: 'hidden',
           }),
         },
+        backdrop: {
+          sx: (theme) => ({
+            backgroundColor:
+              theme.palette.mode === 'dark' ? 'rgba(0, 0, 0, 0.56)' : 'rgba(15, 23, 42, 0.42)',
+          }),
+        },
       }}
     >
       <Box sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
@@ -258,34 +279,34 @@ export const EntityDetailsDrawer = ({
         {loading ? (
           <Box
             sx={{
-              px: { xs: 1.5, sm: 2 },
+              px: { xs: 2, sm: 2.5 },
               py: 1,
               borderBottom: 1,
               borderColor: 'divider',
               bgcolor: 'background.paper',
             }}
           >
-            <Stack direction="row" spacing={1}>
-              <Skeleton variant="rounded" height={40} sx={{ flex: 1 }} />
-              <Skeleton variant="rounded" height={40} sx={{ flex: 1 }} />
-              <Skeleton variant="rounded" height={40} sx={{ flex: 1 }} />
-              <Skeleton variant="rounded" height={40} sx={{ flex: 1 }} />
-            </Stack>
+            <Box sx={{ display: 'flex', gap: 1, overflow: 'hidden' }}>
+              {[0, 1, 2, 3].map((item) => (
+                <Skeleton key={item} variant="rounded" height={40} width={88} />
+              ))}
+            </Box>
           </Box>
         ) : (
           <Tabs
             value={effectiveTabId}
             onChange={(_event, value: string) => setTabId(value)}
-            variant={isMobile ? 'fullWidth' : 'scrollable'}
-            scrollButtons={isMobile ? false : 'auto'}
+            variant="fullWidth"
+            scrollButtons={false}
+            allowScrollButtonsMobile={false}
             sx={{
-              px: { xs: 1.5, sm: 2 },
+              px: { xs: 2, sm: 2.5 },
               borderBottom: 1,
               borderColor: 'divider',
               bgcolor: 'background.paper',
               '& .MuiTabs-flexContainer': {
-                justifyContent: 'space-between',
-                gap: { xs: 0, sm: 0 },
+                display: 'grid',
+                gridTemplateColumns: `repeat(${Math.max(tabs.length, 1)}, minmax(0, 1fr))`,
               },
             }}
           >
@@ -296,23 +317,30 @@ export const EntityDetailsDrawer = ({
                 label={tab.label}
                 icon={tab.icon ?? undefined}
                 iconPosition="top"
+                wrapped={isMobile}
                 sx={{
-                  minWidth: {
-                    xs: 0,
-                    sm: 0,
-                  },
-                  px: { xs: 0.5, sm: 0.75 },
-                  flex: 1,
-                  maxWidth: 'none',
+                  minWidth: { xs: 0, sm: 96 },
+                  px: { xs: 1, sm: 1.5 },
+                  flex: { xs: 1, sm: '0 0 auto' },
+                  maxWidth: { xs: 'none', sm: 140 },
                   alignItems: 'center',
                   justifyContent: 'center',
                   minHeight: 58,
+                  textTransform: 'none',
+                  fontSize: 12,
+                  fontWeight: 600,
+                  lineHeight: 1.2,
+                  '& .MuiSvgIcon-root': {
+                    fontSize: 18,
+                  },
                   '& .MuiTab-iconWrapper': {
                     mb: 0.5,
                   },
                   '& .MuiTab-wrapper': {
-                    lineHeight: 1.2,
-                    whiteSpace: 'nowrap',
+                    width: '100%',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    textAlign: 'center',
                   },
                 }}
               />
@@ -320,7 +348,24 @@ export const EntityDetailsDrawer = ({
           </Tabs>
         )}
 
-        <Box sx={{ flex: 1, overflowY: 'auto', px: { xs: 1.5, sm: 2 }, py: 1.5 }}>
+        <Box
+          sx={{
+            flex: 1,
+            overflowY: 'auto',
+            px: { xs: 2, sm: 2.5 },
+            py: 2,
+            '&::-webkit-scrollbar': {
+              width: 8,
+            },
+            '&::-webkit-scrollbar-track': {
+              backgroundColor: 'transparent',
+            },
+            '&::-webkit-scrollbar-thumb': {
+              backgroundColor: 'divider',
+              borderRadius: 8,
+            },
+          }}
+        >
           <DrawerContent
             loading={loading}
             error={error}
