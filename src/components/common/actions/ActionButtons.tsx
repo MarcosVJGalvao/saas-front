@@ -1,5 +1,6 @@
 import Button from '@mui/material/Button';
 import type { ButtonProps } from '@mui/material/Button';
+import Box from '@mui/material/Box';
 import type { SxProps, Theme } from '@mui/material/styles';
 import Stack from '@mui/material/Stack';
 import type { ReactNode } from 'react';
@@ -57,21 +58,21 @@ export const ActionButtons = ({
       const widthSx: SxProps<Theme> = {
         width: fullWidthOnMobile ? { xs: '100%', sm: 'auto' } : 'auto',
       };
-      const buttonSx: SxProps<Theme> = action.sx !== undefined ? [widthSx, action.sx] : widthSx;
       return (
-        <Button
-          key={`${action.type}-${index}`}
-          onClick={action.onClick}
-          disabled={action.disabled ?? action.loading}
-          variant={action.variant ?? preset.variant}
-          size={action.size}
-          color={action.color ?? preset.color}
-          startIcon={action.startIcon}
-          endIcon={action.endIcon}
-          sx={buttonSx}
-        >
-          {buttonLabel}
-        </Button>
+        <Box key={`${action.type}-${index}`} sx={action.sx}>
+          <Button
+            onClick={action.onClick}
+            disabled={action.disabled ?? action.loading}
+            variant={action.variant ?? preset.variant}
+            size={action.size}
+            color={action.color ?? preset.color}
+            startIcon={action.startIcon}
+            endIcon={action.endIcon}
+            sx={widthSx}
+          >
+            {buttonLabel}
+          </Button>
+        </Box>
       );
     })}
   </Stack>
