@@ -1,4 +1,4 @@
-import { Suspense, useLayoutEffect, useRef, type ReactNode } from 'react';
+﻿import { Suspense, useLayoutEffect, useRef, type ReactNode } from 'react';
 import Box from '@mui/material/Box';
 import CircularProgress from '@mui/material/CircularProgress';
 import Drawer from '@mui/material/Drawer';
@@ -12,6 +12,7 @@ import WarningAmberOutlinedIcon from '@mui/icons-material/WarningAmberOutlined';
 import { Outlet, useLocation } from 'react-router-dom';
 import { useAppLayoutState, buildUserInitials } from '../../../hooks/useAppLayoutState';
 import { useAuth } from '../../../hooks/useAuth/useAuth';
+import { useAppLayoutSessionGate } from '../../../hooks/useAppLayoutSessionGate';
 import { useClientProfile } from '../../../hooks/client-auth/useClientProfile';
 import { usePlatformProfile } from '../../../hooks/platform-auth/usePlatformProfile';
 import { useDensityPreference } from '../../../hooks/useDensityPreference';
@@ -162,6 +163,15 @@ export const AppLayout = ({ children }: { children?: ReactNode }) => {
     sidebarWidth,
   } = useAppLayoutState(navigationItems, isMobile, isCollapsed);
 
+  const sessionGate = useAppLayoutSessionGate({
+    pathname: location.pathname,
+    platformProfile,
+    platformProfileError,
+    clientProfile,
+    clientProfileError,
+    closeProfileMenu,
+  });
+
   const contentRef = useRef<HTMLElement>(null);
   useLayoutEffect(() => {
     const element = contentRef.current;
@@ -192,6 +202,22 @@ export const AppLayout = ({ children }: { children?: ReactNode }) => {
   const shouldRenderDesktopSidebar = !isMobile;
   const shouldRenderMobileDrawer = isMobile;
   const layoutContent = children ?? <Outlet />;
+
+  if (sessionGate.blockingLabel !== null) {
+    return (
+      <Box
+        sx={{
+          minHeight: '100dvh',
+          width: '100%',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}
+      >
+        <CircularProgress aria-label={sessionGate.blockingLabel} />
+      </Box>
+    );
+  }
 
   return (
     <Box
@@ -322,7 +348,7 @@ export const AppLayout = ({ children }: { children?: ReactNode }) => {
         density={density}
         onSetTheme={setTheme}
         onSetDensity={setDensity}
-        onLogout={clearAuth}
+        onLogout={sessionGate.handleLogout}
       />
 
       <CommandPalette

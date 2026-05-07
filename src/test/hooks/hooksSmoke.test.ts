@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { useClientLoginFlow } from '../../hooks/client-auth/useClientLoginFlow';
+import { useClientLogout } from '../../hooks/client-auth/useClientLogout';
 import { usePlatformLoginFlow } from '../../hooks/platform-auth/usePlatformLoginFlow';
 import { usePlatformMfaFlow } from '../../hooks/platform-auth/usePlatformMfaFlow';
 import { usePlatformMfaSetupFlow } from '../../hooks/platform-auth/usePlatformMfaSetupFlow';
@@ -16,6 +17,7 @@ import { CLIENT_HOME_MESSAGES } from '../../hooks/client-auth/useClientHomeData'
 describe('hooks smoke', () => {
   it('exports hooks not individually covered yet', () => {
     expect(useClientLoginFlow).toBeTypeOf('function');
+    expect(useClientLogout).toBeTypeOf('function');
     expect(usePlatformLoginFlow).toBeTypeOf('function');
     expect(usePlatformMfaFlow).toBeTypeOf('function');
     expect(usePlatformMfaSetupFlow).toBeTypeOf('function');
