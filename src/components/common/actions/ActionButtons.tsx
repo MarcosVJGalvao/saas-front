@@ -54,6 +54,10 @@ export const ActionButtons = ({
     {actions.map((action, index) => {
       const preset = getPreset(action.type);
       const buttonLabel = action.label ?? preset.label;
+      const widthSx: SxProps<Theme> = {
+        width: fullWidthOnMobile ? { xs: '100%', sm: 'auto' } : 'auto',
+      };
+      const buttonSx: SxProps<Theme> = action.sx !== undefined ? [widthSx, action.sx] : widthSx;
       return (
         <Button
           key={`${action.type}-${index}`}
@@ -64,11 +68,7 @@ export const ActionButtons = ({
           color={action.color ?? preset.color}
           startIcon={action.startIcon}
           endIcon={action.endIcon}
-          sx={
-            action.sx !== undefined
-              ? [{ width: fullWidthOnMobile ? { xs: '100%', sm: 'auto' } : 'auto' }, action.sx]
-              : { width: fullWidthOnMobile ? { xs: '100%', sm: 'auto' } : 'auto' }
-          }
+          sx={buttonSx}
         >
           {buttonLabel}
         </Button>
