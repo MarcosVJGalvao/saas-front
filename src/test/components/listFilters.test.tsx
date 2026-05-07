@@ -41,7 +41,7 @@ describe('ListFilters', () => {
       />,
     );
     fireEvent.change(screen.getByPlaceholderText('Buscar...'), { target: { value: 'abc' } });
-    fireEvent.mouseDown(screen.getByLabelText('Status'));
+    fireEvent.mouseDown(screen.getAllByRole('combobox')[0]);
     fireEvent.click(screen.getByText('Ativo'));
     fireEvent.click(screen.getByText('Aplicar filtros'));
     fireEvent.click(screen.getByText('Limpar filtros'));
