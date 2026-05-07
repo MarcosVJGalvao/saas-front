@@ -1,4 +1,5 @@
 import Button from '@mui/material/Button';
+import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import { ListFilters } from '../../../components/common/data/ListFilters';
 import { QueryDataTable } from '../../../components/common/data/QueryDataTable';
@@ -65,30 +66,33 @@ const ClientsListPage = () => {
         onApply={filters.applyFilters}
         onClear={filters.clearFilters}
       />
-      <QueryDataTable
-        rows={model.view.list.rows}
-        columns={model.columns}
-        mobileConfig={model.mobileConfig}
-        loading={model.view.list.loading}
-        errorMessage={model.view.list.errorMessage}
-        meta={model.view.list.meta}
-        query={model.query}
-        onQueryChange={model.onQueryChange}
-        onPageChange={model.onPageChange}
-        onRowsPerPageChange={model.onLimitChange}
-        hideToolbar
-      />
-      <EntityDetailsDrawer
-        open={model.view.selectedClientId !== undefined}
-        loading={model.view.details.loading}
-        error={model.view.details.errorMessage ?? null}
-        onClose={() => model.view.setSelectedClientId(undefined)}
-        headerData={drawerSchema.headerData}
-        tabs={drawerSchema.tabs}
-        footerActions={drawerSchema.footerActions}
-        emptyTitle="Nenhum cliente selecionado."
-        emptyMessage="Selecione um cliente na listagem para visualizar os detalhes."
-      />
+      <Box id="clients-details-container" sx={{ position: 'relative' }}>
+        <QueryDataTable
+          rows={model.view.list.rows}
+          columns={model.columns}
+          mobileConfig={model.mobileConfig}
+          loading={model.view.list.loading}
+          errorMessage={model.view.list.errorMessage}
+          meta={model.view.list.meta}
+          query={model.query}
+          onQueryChange={model.onQueryChange}
+          onPageChange={model.onPageChange}
+          onRowsPerPageChange={model.onLimitChange}
+          hideToolbar
+        />
+        <EntityDetailsDrawer
+          open={model.view.selectedClientId !== undefined}
+          loading={model.view.details.loading}
+          error={model.view.details.errorMessage ?? null}
+          onClose={() => model.view.setSelectedClientId(undefined)}
+          headerData={drawerSchema.headerData}
+          tabs={drawerSchema.tabs}
+          footerActions={drawerSchema.footerActions}
+          emptyTitle="Nenhum cliente selecionado."
+          emptyMessage="Selecione um cliente na listagem para visualizar os detalhes."
+          containerId="clients-details-container"
+        />
+      </Box>
       <ConfirmDialog
         open={model.view.deleteClientId !== undefined}
         title="Excluir cliente"
