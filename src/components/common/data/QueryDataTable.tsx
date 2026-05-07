@@ -106,14 +106,17 @@ const QueryDataTableContent = <TData,>({
   }));
   const mapMobileConfig = (
     config: DataListMobileConfig<TData>,
-  ): DataListMobileConfig<{ key: string; value: TData }> => ({
-    renderTitle: (row) => config.renderTitle(row.value),
-    renderSubtitle: config.renderSubtitle ? (row) => config.renderSubtitle(row.value) : undefined,
-    renderAvatar: config.renderAvatar ? (row) => config.renderAvatar(row.value) : undefined,
-    renderStatus: config.renderStatus ? (row) => config.renderStatus(row.value) : undefined,
-    renderActions: config.renderActions ? (row) => config.renderActions(row.value) : undefined,
-    renderDetails: (row) => config.renderDetails(row.value),
-  });
+  ): DataListMobileConfig<{ key: string; value: TData }> => {
+    const { renderSubtitle, renderAvatar, renderStatus, renderActions } = config;
+    return {
+      renderTitle: (row) => config.renderTitle(row.value),
+      renderSubtitle: renderSubtitle ? (row) => renderSubtitle(row.value) : undefined,
+      renderAvatar: renderAvatar ? (row) => renderAvatar(row.value) : undefined,
+      renderStatus: renderStatus ? (row) => renderStatus(row.value) : undefined,
+      renderActions: renderActions ? (row) => renderActions(row.value) : undefined,
+      renderDetails: (row) => config.renderDetails(row.value),
+    };
+  };
 
   return (
     <DataList<{ key: string; value: TData }>

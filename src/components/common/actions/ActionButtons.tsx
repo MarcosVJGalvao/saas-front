@@ -59,13 +59,16 @@ export const ActionButtons = ({
           key={`${action.type}-${index}`}
           onClick={action.onClick}
           disabled={action.disabled ?? action.loading}
-          color={preset.color}
           variant={action.variant ?? preset.variant}
           size={action.size}
           color={action.color ?? preset.color}
           startIcon={action.startIcon}
           endIcon={action.endIcon}
-          sx={[{ width: fullWidthOnMobile ? { xs: '100%', sm: 'auto' } : 'auto' }, action.sx]}
+          sx={
+            action.sx !== undefined
+              ? [{ width: fullWidthOnMobile ? { xs: '100%', sm: 'auto' } : 'auto' }, action.sx]
+              : { width: fullWidthOnMobile ? { xs: '100%', sm: 'auto' } : 'auto' }
+          }
         >
           {buttonLabel}
         </Button>
