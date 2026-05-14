@@ -1,9 +1,9 @@
 import { act, renderHook, waitFor } from '@testing-library/react';
 import { describe, expect, it, vi, beforeEach } from 'vitest';
-import { useSubscriptionsList } from '@features/subscriptions/hooks/useSubscriptionsList';
-import { subscriptionsService } from '@features/subscriptions/services/service';
+import { useSubscriptionsList } from '@features/platform/subscriptions/hooks/useSubscriptionsList';
+import { subscriptionsService } from '@features/platform/subscriptions/services/service';
 
-vi.mock('@features/subscriptions/services/service', () => ({
+vi.mock('@features/platform/subscriptions/services/service', () => ({
   subscriptionsService: {
     list: vi.fn(),
   },

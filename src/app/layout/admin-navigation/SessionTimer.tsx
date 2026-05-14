@@ -2,7 +2,7 @@ import AccessTimeOutlinedIcon from '@mui/icons-material/AccessTimeOutlined';
 import type { SxProps, Theme } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
-import { useSessionTimer } from '@hooks/useSessionTimer';
+import { useSessionTimer } from '@shared/hooks/useSessionTimer';
 
 interface SessionTimerProps {
   expiresIn: string;

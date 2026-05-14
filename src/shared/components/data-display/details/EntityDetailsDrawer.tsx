@@ -18,7 +18,7 @@ import type {
   DetailTab,
   DetailsFooterAction,
   DetailsHeaderData,
-} from '@models/detailsDrawer';
+} from '@shared/types/detailsDrawer';
 import { layoutSpacing } from '@theme/spacing';
 import { LocalizedStatusBadge } from '@shared/components/data-display/LocalizedStatusBadge';
 import { DetailsSection } from '@shared/components/data-display/details/DetailsSection';

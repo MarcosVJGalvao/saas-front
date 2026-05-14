@@ -3,10 +3,10 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import {
   PLATFORM_PROFILE_MESSAGES,
   usePlatformProfile,
-} from '@features/platform-auth/hooks/usePlatformProfile';
-import { platformAuthService } from '@features/platform-auth/services/service';
+} from '@features/platform/auth/hooks/usePlatformProfile';
+import { platformAuthService } from '@features/platform/auth/services/service';
 
-vi.mock('@features/platform-auth/services/service', () => ({
+vi.mock('@features/platform/auth/services/service', () => ({
   platformAuthService: {
     me: vi.fn(),
   },

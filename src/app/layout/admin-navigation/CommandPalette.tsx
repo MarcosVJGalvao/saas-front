@@ -13,8 +13,8 @@ import Tabs from '@mui/material/Tabs';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import { useCallback } from 'react';
-import { useCommandPaletteView } from '@hooks/useCommandPaletteView';
-import type { NavigationItem } from '@models/navigation';
+import { useCommandPaletteView } from '@shared/hooks/useCommandPaletteView';
+import type { NavigationItem } from '@shared/types/navigation';
 
 interface CommandPaletteProps {
   isOpen: boolean;

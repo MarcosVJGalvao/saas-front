@@ -1,5 +1,5 @@
-import type { AuthDomain } from '@models/auth/auth';
-import type { NavigationItem, NavigationSectionItem } from '@models/navigation';
+import type { AuthDomain } from '@shared/types/auth/auth';
+import type { NavigationItem, NavigationSectionItem } from '@shared/types/navigation';
 
 export interface NavigationGroup {
   section?: { id: string; label: string };

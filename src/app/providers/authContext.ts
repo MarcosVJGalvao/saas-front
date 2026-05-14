@@ -1,6 +1,6 @@
 import { createContext } from 'react';
-import type { PlatformTotpSetupResponse } from '@features/platform-auth/services/types';
-import type { AuthDomain, AuthFlowStep } from '@models/auth/auth';
+import type { PlatformTotpSetupResponse } from '@features/platform/auth/services/types';
+import type { AuthDomain, AuthFlowStep } from '@shared/types/auth/auth';
 import type { AuthSession } from '@shared/types/authSession';
 
 export interface AuthContextValue {

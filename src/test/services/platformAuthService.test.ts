@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from 'vitest';
-import { platformAuthService } from '@features/platform-auth/services/service';
+import { platformAuthService } from '@features/platform/auth/services/service';
 import { httpClient } from '@shared/services/httpClient';
 
 describe('platformAuthService', () => {

@@ -30,6 +30,11 @@ export const maskPhone = (value: string): string => {
   return digits.replace(/(\d{2})(\d)/, '($1) $2').replace(/(\d{5})(\d{1,4})$/, '$1-$2');
 };
 
+export const maskDateInput = (value: string): string => {
+  const digits = onlyDigits(value).slice(0, 8);
+  return digits.replace(/(\d{2})(\d)/, '$1/$2').replace(/(\d{2})(\d{1,4})$/, '$1/$2');
+};
+
 export const maskCurrency = (value: string | number): string => {
   const numericValue = typeof value === 'number' ? value : Number(onlyDigits(value)) / 100;
 

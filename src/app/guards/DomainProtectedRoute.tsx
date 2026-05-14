@@ -1,8 +1,8 @@
 import type { ReactNode } from 'react';
 import { Navigate } from 'react-router-dom';
-import { useAuth } from '@hooks/useAuth/useAuth';
-import type { AuthDomain } from '@models/auth/auth';
-import { isAuthenticatedForDomain } from '@models/auth/guards';
+import { useAuth } from '@shared/hooks/useAuth/useAuth';
+import type { AuthDomain } from '@shared/types/auth/auth';
+import { isAuthenticatedForDomain } from '@shared/types/auth/guards';
 
 interface DomainProtectedRouteProps {
   domain: AuthDomain;

@@ -3,7 +3,7 @@ import { describe, expect, it } from 'vitest';
 import {
   normalizePlanPayload,
   normalizePlanUpdatePayload,
-} from '@features/plans/normalizers/planPayloadNormalizer';
+} from '@features/platform/plans/normalizers/planPayloadNormalizer';
 
 describe('planPayloadNormalizer', () => {
   it('normaliza payload de criação de plano', () => {

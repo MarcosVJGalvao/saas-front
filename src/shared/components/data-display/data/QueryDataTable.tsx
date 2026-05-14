@@ -2,7 +2,7 @@ import type { ReactNode } from 'react';
 import TuneIcon from '@mui/icons-material/Tune';
 import Button from '@mui/material/Button';
 import Stack from '@mui/material/Stack';
-import type { PaginationMeta } from '@models/pagination';
+import type { PaginationMeta } from '@shared/types/pagination';
 import { spacingScale } from '@theme/spacing';
 import { commonDataMessages } from '@shared/components/messages';
 import { DataList } from '@shared/components/data-display/data/DataList';

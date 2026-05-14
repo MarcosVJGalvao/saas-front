@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState, type ReactNode } from 'react';
-import { AUTH_FLOW_STEP, type AuthDomain, type AuthFlowStep } from '@models/auth/auth';
+import { AUTH_FLOW_STEP, type AuthDomain, type AuthFlowStep } from '@shared/types/auth/auth';
 import {
   clearClientSessionStorage,
   clearPlatformSessionStorage,

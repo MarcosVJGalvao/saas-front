@@ -3,10 +3,10 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import {
   CLIENT_PROFILE_MESSAGES,
   useClientProfile,
-} from '@features/client-auth/hooks/useClientProfile';
-import { clientAuthService } from '@features/client-auth/services/service';
+} from '@features/client/auth/hooks/useClientProfile';
+import { clientAuthService } from '@features/client/auth/services/service';
 
-vi.mock('@features/client-auth/services/service', () => ({
+vi.mock('@features/client/auth/services/service', () => ({
   clientAuthService: {
     me: vi.fn(),
   },

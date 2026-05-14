@@ -1,6 +1,6 @@
 import HexagonOutlinedIcon from '@mui/icons-material/HexagonOutlined';
-import { AUTH_DOMAIN, type AuthDomain } from '@models/auth/auth';
-import type { LayoutBrandConfig, NavigationItem } from '@models/navigation';
+import { AUTH_DOMAIN, type AuthDomain } from '@shared/types/auth/auth';
+import type { LayoutBrandConfig, NavigationItem } from '@shared/types/navigation';
 import { buildDomainNavigation } from '@app/layout/admin-navigation/navigationBuilder';
 import { clientNavigationGroups } from '@app/layout/admin-navigation/navigationGroups/clientNavigationGroups';
 import { platformNavigationGroups } from '@app/layout/admin-navigation/navigationGroups/platformNavigationGroups';

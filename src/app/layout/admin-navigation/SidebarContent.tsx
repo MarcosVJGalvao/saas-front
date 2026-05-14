@@ -12,14 +12,14 @@ import CloseIcon from '@mui/icons-material/Close';
 import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import HomeOutlinedIcon from '@mui/icons-material/HomeOutlined';
-import { densityMetrics, type DensityMode } from '@models/density';
-import type { NavigationItem } from '@models/navigation';
-import type { LayoutBrandConfig } from '@models/navigation';
+import { densityMetrics, type DensityMode } from '@shared/types/density';
+import type { NavigationItem } from '@shared/types/navigation';
+import type { LayoutBrandConfig } from '@shared/types/navigation';
 import {
   useSidebarContentState,
   type SidebarChildItem,
   type SidebarMappedItem,
-} from '@hooks/useSidebarContentState';
+} from '@shared/hooks/useSidebarContentState';
 
 interface SidebarContentProps {
   isCollapsed: boolean;

@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from 'vitest';
-import { clientAuthService } from '@features/client-auth/services/service';
+import { clientAuthService } from '@features/client/auth/services/service';
 import { httpClient } from '@shared/services/httpClient';
 
 describe('clientAuthService', () => {

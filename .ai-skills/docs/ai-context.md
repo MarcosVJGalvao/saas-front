@@ -33,17 +33,28 @@ src/
     assets/
 
   features/
-    feature-name/
-      components/
-      pages/
-      hooks/
-      services/
-      schemas/
-      types/
-      normalizers/
-      specs/
+    client/
+      feature-name/
+        components/
+        pages/
+        hooks/
+        services/
+        schemas/
+        types/
+        normalizers/
+        specs/
 
-  pages/
+    platform/
+      feature-name/
+        components/
+        pages/
+        hooks/
+        services/
+        schemas/
+        types/
+        normalizers/
+        specs/
+
   main.tsx
 ```
 
@@ -60,6 +71,15 @@ Page -> Hook -> Service -> HttpClient -> API
 - Normalizer monta payload.
 - Component renderiza.
 - Theme define visual.
+
+## Organização de features por contexto
+
+As features devem ficar separadas por domínio de acesso:
+
+- `src/features/client/*`: fluxos e telas do contexto client.
+- `src/features/platform/*`: fluxos e telas do contexto platform.
+
+Não criar features diretamente em `src/features/*` fora desses dois contextos sem decisão arquitetural explícita.
 
 ## Regras proibidas
 

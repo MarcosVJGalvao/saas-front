@@ -1,6 +1,6 @@
 import { act, renderHook, waitFor } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
-import { useAddressAutoFill } from '@hooks/useAddressAutoFill/useAddressAutoFill';
+import { useAddressAutoFill } from '@shared/hooks/useAddressAutoFill/useAddressAutoFill';
 
 vi.mock('@shared/services/addressService', () => ({
   fetchAddressByCep: vi.fn(() =>
@@ -21,7 +21,7 @@ vi.mock('@shared/services/addressService', () => ({
 
 const pushErrorMock = vi.fn();
 
-vi.mock('@hooks/useError/useError', () => ({
+vi.mock('@shared/hooks/useError/useError', () => ({
   useError: () => ({ pushError: pushErrorMock }),
 }));
 

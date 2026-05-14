@@ -1,7 +1,7 @@
 import { fireEvent, render, waitFor } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 import { QueryDataTable } from '@shared/components/data-display/data/QueryDataTable';
-import type { PaginationMeta } from '@models/pagination';
+import type { PaginationMeta } from '@shared/types/pagination';
 
 interface TestRow {
   id: string;

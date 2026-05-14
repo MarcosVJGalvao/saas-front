@@ -13,8 +13,8 @@ import ViewAgendaOutlinedIcon from '@mui/icons-material/ViewAgendaOutlined';
 import ViewDayOutlinedIcon from '@mui/icons-material/ViewDayOutlined';
 import ViewStreamOutlinedIcon from '@mui/icons-material/ViewStreamOutlined';
 import WbSunnyOutlinedIcon from '@mui/icons-material/WbSunnyOutlined';
-import { DENSITY_MODE, type DensityMode } from '@models/density';
-import type { ThemeMode } from '@models/themeMode';
+import { DENSITY_MODE, type DensityMode } from '@shared/types/density';
+import type { ThemeMode } from '@shared/types/themeMode';
 import { getUiColorTokens } from '@theme/uiColors';
 import { appLayoutMessages } from '@app/layout/admin-navigation/messages';
 

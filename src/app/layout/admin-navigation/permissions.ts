@@ -1,5 +1,5 @@
-import type { AuthDomain } from '@models/auth/auth';
-import type { NavigationItem } from '@models/navigation';
+import type { AuthDomain } from '@shared/types/auth/auth';
+import type { NavigationItem } from '@shared/types/navigation';
 
 export interface PermissionResolver {
   getPermissions: (domain: AuthDomain) => string[];

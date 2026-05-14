@@ -1,8 +1,8 @@
 import { act, fireEvent, render, renderHook, screen } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 import { describe, expect, it, vi } from 'vitest';
-import type { NavigationItem } from '@models/navigation';
-import { useCommandPaletteView } from '@hooks/useCommandPaletteView';
+import type { NavigationItem } from '@shared/types/navigation';
+import { useCommandPaletteView } from '@shared/hooks/useCommandPaletteView';
 
 const navigateMock = vi.fn();
 

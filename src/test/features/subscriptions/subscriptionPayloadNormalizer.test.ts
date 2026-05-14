@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { normalizeSubscriptionPayload } from '@features/subscriptions/normalizers/subscriptionPayloadNormalizer';
+import { normalizeSubscriptionPayload } from '@features/platform/subscriptions/normalizers/subscriptionPayloadNormalizer';
 
 describe('subscriptionPayloadNormalizer', () => {
   it('normaliza payload de assinatura', () => {

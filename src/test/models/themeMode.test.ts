@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { getNextThemeMode, THEME_MODE } from '@models/themeMode';
+import { getNextThemeMode, THEME_MODE } from '@shared/types/themeMode';
 
 describe('theme mode model', () => {
   it('should toggle theme mode', () => {

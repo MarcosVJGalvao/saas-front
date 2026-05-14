@@ -3,7 +3,7 @@ import { describe, expect, it } from 'vitest';
 import {
   normalizeClientPayload,
   normalizeClientUpdatePayload,
-} from '@features/clients/normalizers/clientPayloadNormalizer';
+} from '@features/platform/clients/normalizers/clientPayloadNormalizer';
 
 describe('clientPayloadNormalizer', () => {
   it('normaliza payload de criação de cliente', () => {

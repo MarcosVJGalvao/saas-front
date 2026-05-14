@@ -10,7 +10,7 @@ import TableRow from '@mui/material/TableRow';
 import Typography from '@mui/material/Typography';
 import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
-import type { PaginationMeta } from '@models/pagination';
+import type { PaginationMeta } from '@shared/types/pagination';
 import { spacingScale } from '@theme/spacing';
 import type { DataListColumnVisibility } from '@shared/components/data-display/data/dataList.types';
 

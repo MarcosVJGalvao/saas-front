@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { AUTH_DOMAIN } from '@models/auth/auth';
+import { AUTH_DOMAIN } from '@shared/types/auth/auth';
 import { navigationByDomain } from '@app/layout/admin-navigation/config';
 import {
   buildDomainNavigation,

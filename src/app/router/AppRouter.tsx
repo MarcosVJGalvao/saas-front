@@ -5,41 +5,45 @@ import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
 import { DomainProtectedRoute } from '@app/guards/DomainProtectedRoute';
 import { SessionExpiredDialog } from '@shared/components/feedback/SessionExpiredDialog';
 import { AppLayout } from '@app/layout/admin-navigation/AppLayout';
-import { AUTH_DOMAIN } from '@models/auth/auth';
+import { AUTH_DOMAIN } from '@shared/types/auth/auth';
 
-const PlatformLoginPage = lazy(() => import('@features/platform-auth/pages/LoginPage'));
-const PlatformMfaPage = lazy(() => import('@features/platform-auth/pages/MfaPage'));
-const PlatformMfaSetupPage = lazy(() => import('@features/platform-auth/pages/MfaSetupPage'));
-const PlatformDashboardPage = lazy(() => import('@pages/platform/dashboard/DashboardPage'));
-const PlatformHomePage = lazy(() => import('@pages/platform/home/HomePage'));
-const ClientsListPage = lazy(() => import('@features/clients/pages/ClientsListPage'));
-const ClientCreatePage = lazy(() => import('@features/clients/pages/ClientCreatePage'));
-const ClientEditPage = lazy(() => import('@features/clients/pages/ClientEditPage'));
-const ClientDetailsPage = lazy(() => import('@features/clients/pages/ClientDetailsPage'));
-const ClientOnboardingPage = lazy(() => import('@features/clients/pages/ClientOnboardingPage'));
-const PlansListPage = lazy(() => import('@features/plans/pages/PlansListPage'));
-const PlanCreatePage = lazy(() => import('@features/plans/pages/PlanCreatePage'));
-const PlanEditPage = lazy(() => import('@features/plans/pages/PlanEditPage'));
-const PlanDetailsPage = lazy(() => import('@features/plans/pages/PlanDetailsPage'));
+const PlatformLoginPage = lazy(() => import('@features/platform/auth/pages/LoginPage'));
+const PlatformMfaPage = lazy(() => import('@features/platform/auth/pages/MfaPage'));
+const PlatformMfaSetupPage = lazy(() => import('@features/platform/auth/pages/MfaSetupPage'));
+const PlatformDashboardPage = lazy(
+  () => import('@features/platform/dashboard/pages/DashboardPage'),
+);
+const PlatformHomePage = lazy(() => import('@features/platform/home/pages/HomePage'));
+const ClientsListPage = lazy(() => import('@features/platform/clients/pages/ClientsListPage'));
+const ClientCreatePage = lazy(() => import('@features/platform/clients/pages/ClientCreatePage'));
+const ClientEditPage = lazy(() => import('@features/platform/clients/pages/ClientEditPage'));
+const ClientDetailsPage = lazy(() => import('@features/platform/clients/pages/ClientDetailsPage'));
+const ClientOnboardingPage = lazy(
+  () => import('@features/platform/clients/pages/ClientOnboardingPage'),
+);
+const PlansListPage = lazy(() => import('@features/platform/plans/pages/PlansListPage'));
+const PlanCreatePage = lazy(() => import('@features/platform/plans/pages/PlanCreatePage'));
+const PlanEditPage = lazy(() => import('@features/platform/plans/pages/PlanEditPage'));
+const PlanDetailsPage = lazy(() => import('@features/platform/plans/pages/PlanDetailsPage'));
 const SubscriptionsListPage = lazy(
-  () => import('@features/subscriptions/pages/SubscriptionsListPage'),
+  () => import('@features/platform/subscriptions/pages/SubscriptionsListPage'),
 );
 const SubscriptionCreatePage = lazy(
-  () => import('@features/subscriptions/pages/SubscriptionCreatePage'),
+  () => import('@features/platform/subscriptions/pages/SubscriptionCreatePage'),
 );
 const SubscriptionEditPage = lazy(
-  () => import('@features/subscriptions/pages/SubscriptionEditPage'),
+  () => import('@features/platform/subscriptions/pages/SubscriptionEditPage'),
 );
 const SubscriptionDetailsPage = lazy(
-  () => import('@features/subscriptions/pages/SubscriptionDetailsPage'),
+  () => import('@features/platform/subscriptions/pages/SubscriptionDetailsPage'),
 );
-const ClientLoginPage = lazy(() => import('@features/client-auth/pages/LoginPage'));
+const ClientLoginPage = lazy(() => import('@features/client/auth/pages/LoginPage'));
 const ClientForgotPasswordPage = lazy(
-  () => import('@features/client-auth/pages/ForgotPasswordPage'),
+  () => import('@features/client/auth/pages/ForgotPasswordPage'),
 );
-const ClientResetPasswordPage = lazy(() => import('@features/client-auth/pages/ResetPasswordPage'));
-const ClientDashboardPage = lazy(() => import('@pages/client/dashboard/DashboardPage'));
-const ClientHomePage = lazy(() => import('@pages/client/home/HomePage'));
+const ClientResetPasswordPage = lazy(() => import('@features/client/auth/pages/ResetPasswordPage'));
+const ClientDashboardPage = lazy(() => import('@features/client/dashboard/pages/DashboardPage'));
+const ClientHomePage = lazy(() => import('@features/client/home/pages/HomePage'));
 
 const TOKEN_EXPIRED_EVENT = 'app:token-expired';
 

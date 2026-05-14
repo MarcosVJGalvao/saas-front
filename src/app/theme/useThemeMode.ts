@@ -1,6 +1,6 @@
 import { createContext, useCallback, useContext, useMemo, useState } from 'react';
-import { ADMIN_NAVIGATION_STORAGE_KEYS } from '@models/adminNavigationStorage';
-import { getNextThemeMode, THEME_MODE, type ThemeMode } from '@models/themeMode';
+import { ADMIN_NAVIGATION_STORAGE_KEYS } from '@shared/types/adminNavigationStorage';
+import { getNextThemeMode, THEME_MODE, type ThemeMode } from '@shared/types/themeMode';
 
 interface ThemeModeContextValue {
   mode: ThemeMode;

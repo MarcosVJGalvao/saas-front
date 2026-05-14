@@ -16,10 +16,6 @@
       "@app/*": ["src/app/*"],
       "@shared/*": ["src/shared/*"],
       "@features/*": ["src/features/*"],
-      "@pages/*": ["src/pages/*"],
-      "@hooks/*": ["src/hooks/*"],
-      "@models/*": ["src/models/*"],
-      "@services/*": ["src/services/*"],
       "@theme/*": ["src/app/theme/*"]
     },
     "allowImportingTsExtensions": true,

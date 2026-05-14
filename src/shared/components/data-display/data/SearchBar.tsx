@@ -2,7 +2,7 @@ import type { SxProps, Theme } from '@mui/material/styles';
 import TextField from '@mui/material/TextField';
 import SearchIcon from '@mui/icons-material/Search';
 import InputAdornment from '@mui/material/InputAdornment';
-import { useDebouncedCallback } from '@hooks/useDebounce/useDebouncedCallback';
+import { useDebouncedCallback } from '@shared/hooks/useDebounce/useDebouncedCallback';
 import { commonDataMessages } from '@shared/components/messages';
 
 interface SearchBarProps {
