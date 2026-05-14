@@ -127,6 +127,7 @@ const QueryDataTableContent = <TData,>({
         align: column.align,
         width: column.width,
         minWidth: column.minWidth,
+        visibility: column.visibility,
         render: (row) => column.render(row.value),
       }))}
       getRowKey={(row) => row.key}

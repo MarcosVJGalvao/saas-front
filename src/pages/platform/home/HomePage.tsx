@@ -1,28 +1,29 @@
-import Box from '@mui/material/Box';
-import Chip from '@mui/material/Chip';
-import Paper from '@mui/material/Paper';
-import Stack from '@mui/material/Stack';
-import Typography from '@mui/material/Typography';
+import { AppCard } from '@shared/components/data-display/AppCard';
+import { AppChip } from '@shared/components/data-display/AppChip';
+import { AppText } from '@shared/components/data-display/AppText';
+import { AppBox } from '@shared/components/layout/AppBox';
+import { AppStack } from '@shared/components/layout/AppStack';
+import { PageHeader } from '@shared/components/layout/PageHeader';
 import { fontSizes } from '@theme/fontSizes';
 
 const PlatformHomePage = () => (
-  <Box sx={{ p: 3 }}>
-    <Paper sx={{ p: 4, borderRadius: 3 }}>
-      <Stack spacing={2}>
-        <Chip
+  <AppBox>
+    <PageHeader
+      title="Painel Administrativo da Plataforma"
+      subtitle="Gerencie tenants, acessos e configurações globais."
+    />
+    <AppCard sx={{ p: 4, borderRadius: 3 }}>
+      <AppStack spacing={2}>
+        <AppChip
           label="Ambiente Platform"
           color="primary"
           variant="outlined"
           sx={{ width: 'fit-content' }}
         />
-        <Typography variant="h4" sx={{ fontWeight: 700 }}>
-          Painel administrativo da plataforma
-        </Typography>
-        <Typography sx={{ fontSize: fontSizes.lg, color: 'text.secondary' }}>
-          Voce esta autenticado no dominio de administracao. Aqui voce gerencia tenants, acessos e
-          configuracoes globais.
-        </Typography>
-        <Box
+        <AppText sx={{ fontSize: fontSizes.lg, color: 'text.secondary' }}>
+          Você está autenticado no domínio de administração.
+        </AppText>
+        <AppBox
           sx={{
             p: 2,
             borderRadius: 2,
@@ -30,14 +31,14 @@ const PlatformHomePage = () => (
             border: (theme) => `1px solid ${theme.palette.divider}`,
           }}
         >
-          <Typography sx={{ fontWeight: 600, mb: 0.5 }}>Proximos passos recomendados</Typography>
-          <Typography variant="body2">1. Revisar usuarios e permissoes de tenants.</Typography>
-          <Typography variant="body2">2. Validar politicas de seguranca e MFA.</Typography>
-          <Typography variant="body2">3. Acompanhar indicadores de operacao.</Typography>
-        </Box>
-      </Stack>
-    </Paper>
-  </Box>
+          <AppText sx={{ fontWeight: 600, mb: 0.5 }}>Próximos passos recomendados</AppText>
+          <AppText variant="body2">1. Revisar usuários e permissões de tenants.</AppText>
+          <AppText variant="body2">2. Validar políticas de segurança e MFA.</AppText>
+          <AppText variant="body2">3. Acompanhar indicadores de operação.</AppText>
+        </AppBox>
+      </AppStack>
+    </AppCard>
+  </AppBox>
 );
 
 export default PlatformHomePage;

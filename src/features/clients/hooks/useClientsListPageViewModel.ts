@@ -24,7 +24,7 @@ export const useClientsListPageViewModel = () => {
         label: 'Editar',
         onClick: () => void view.navigate(`/platform/clients/${row.id}/edit`),
       },
-      { key: 'delete', label: 'Excluir', onClick: () => view.setDeleteClientId(row.id) },
+      { key: 'delete', label: 'Desativar', onClick: () => view.setDeleteClientId(row.id) },
     ],
     [view],
   );

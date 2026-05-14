@@ -1,12 +1,10 @@
-import Box from '@mui/material/Box';
-import Typography from '@mui/material/Typography';
+import { AppBox } from '@shared/components/layout/AppBox';
+import { PageHeader } from '@shared/components/layout/PageHeader';
 
 const ClientDashboardPage = () => (
-  <Box>
-    <Typography variant="h5" sx={{ fontWeight: 700 }}>
-      Dashboard Client
-    </Typography>
-  </Box>
+  <AppBox>
+    <PageHeader title="Dashboard do Cliente" />
+  </AppBox>
 );
 
 export default ClientDashboardPage;

@@ -4,6 +4,7 @@ import CardContent from '@mui/material/CardContent';
 import Grid from '@mui/material/Grid';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
+import { layoutSpacing } from '@theme/spacing';
 
 export interface EntitySummaryCardItem {
   key: string;
@@ -19,7 +20,7 @@ interface EntitySummaryCardsProps {
 }
 
 export const EntitySummaryCards = ({ cards }: EntitySummaryCardsProps) => (
-  <Grid container spacing={1.5}>
+  <Grid container spacing={1.5} sx={{ mb: layoutSpacing.sectionGap }}>
     {cards.map((card) => (
       <Grid key={card.key} size={{ xs: 12, sm: 6, lg: 3 }}>
         <Card sx={{ borderRadius: 2 }}>

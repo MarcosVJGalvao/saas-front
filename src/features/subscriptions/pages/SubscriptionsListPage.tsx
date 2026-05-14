@@ -1,15 +1,13 @@
 import AddIcon from '@mui/icons-material/Add';
-import { DataList } from '@shared/components/data-display/data/DataList';
 import { ListFilters } from '@shared/components/data-display/data/ListFilters';
 import { ListMetricsGrid } from '@shared/components/data-display/data/ListMetricsGrid';
+import { QueryDataTable } from '@shared/components/data-display/data/QueryDataTable';
 import { ConfirmDialog } from '@shared/components/feedback/ConfirmDialog';
 import { ListDialog } from '@shared/components/feedback/ListDialog';
 import { PageHeader } from '@shared/components/layout/PageHeader';
-import { AppButton } from '@shared/components/inputs/AppButton';
 import { useSubscriptionsListViewModel } from '@features/subscriptions/hooks/useSubscriptionsListViewModel';
 
 const toDateQueryValue = (value: unknown) => (typeof value === 'string' ? value : undefined);
-const rowsPerPageOptions = [10, 20, 50];
 
 interface FilterChangeDependencies {
   updateSearch: (value: string) => void;
@@ -53,14 +51,9 @@ const SubscriptionsListPage = () => {
       <PageHeader
         title="Gestão de Assinaturas"
         subtitle="Gerencie planos ativos, renovações e cobranças"
-        actions={
-          <AppButton
-            startIcon={<AddIcon fontSize="small" />}
-            onClick={() => void model.view.navigate('/platform/subscriptions/new')}
-          >
-            Nova Assinatura
-          </AppButton>
-        }
+        actionLabel="Nova Assinatura"
+        actionIcon={<AddIcon fontSize="small" />}
+        onAction={() => void model.view.navigate('/platform/subscriptions/new')}
       />
       <ListMetricsGrid loading={model.view.list.loading} items={model.metrics} />
 
@@ -97,24 +90,23 @@ const SubscriptionsListPage = () => {
         loading={model.view.list.loading}
       />
 
-      <DataList
+      <QueryDataTable
         rows={model.view.list.rows}
         columns={model.columns}
         mobileConfig={model.mobileConfig}
-        getRowKey={(row) => row.id}
+        getRowId={(row) => row.id}
+        meta={model.view.list.meta}
+        query={model.searchValue}
+        onQueryChange={model.updateSearch}
         loading={model.view.list.loading}
         errorMessage={model.view.list.errorMessage}
+        onPageChange={(nextPage) => model.view.list.updateQuery({ page: nextPage })}
+        onRowsPerPageChange={(nextRowsPerPage) =>
+          model.view.list.updateQuery({ limit: nextRowsPerPage, page: 1 })
+        }
+        hideToolbar
         emptyTitle="Nenhuma assinatura encontrada"
         emptyDescription="Ajuste os filtros ou cadastre uma nova assinatura."
-        pagination={{
-          page: Math.max((model.view.list.meta.page ?? 1) - 1, 0),
-          rowsPerPage: model.view.list.meta.limit,
-          rowsPerPageOptions,
-          totalItems: model.view.list.meta.total,
-          onPageChange: (nextPage) => model.view.list.updateQuery({ page: nextPage + 1 }),
-          onRowsPerPageChange: (nextRowsPerPage) =>
-            model.view.list.updateQuery({ limit: nextRowsPerPage, page: 1 }),
-        }}
       />
 
       <ConfirmDialog

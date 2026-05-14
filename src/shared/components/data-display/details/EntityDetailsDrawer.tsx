@@ -188,14 +188,14 @@ const DrawerContent = ({
 const DrawerFooter = ({ footerActions }: { footerActions: ReadonlyArray<DetailsFooterAction> }) => (
   <Box
     sx={{
-      px: { xs: 1.5, sm: 2 },
-      py: { xs: 1, sm: 1.25 },
+      px: { xs: 1.25, sm: 1.5 },
+      py: { xs: 0.75, sm: 1 },
       borderTop: 1,
       borderColor: 'divider',
       bgcolor: 'background.paper',
       display: 'flex',
-      columnGap: { xs: 1.5, sm: 1.75 },
-      rowGap: 1,
+      columnGap: { xs: 1, sm: 1.25 },
+      rowGap: 0.75,
       flexDirection: { xs: 'column', sm: 'row' },
     }}
   >
@@ -210,11 +210,11 @@ const DrawerFooter = ({ footerActions }: { footerActions: ReadonlyArray<DetailsF
         disabled={action.disabled}
         aria-label={action.label}
         sx={{
-          height: { xs: 36, sm: 38 },
+          height: { xs: 32, sm: 34 },
           borderRadius: 1.25,
           fontWeight: 600,
           textTransform: 'none',
-          fontSize: 14,
+          fontSize: 13,
         }}
       >
         {action.label}
@@ -247,22 +247,23 @@ export const EntityDetailsDrawer = ({
     <Drawer
       anchor="right"
       open={open}
+      variant={isMobile ? 'temporary' : 'persistent'}
       onClose={onClose}
       aria-labelledby="entity-details-title"
-      hideBackdrop
+      hideBackdrop={!isMobile}
       ModalProps={{ disableScrollLock: true }}
       slotProps={{
         paper: {
           sx: (theme) => ({
-            top: { xs: 0, sm: theme.spacing(8) },
-            height: { xs: '100%', sm: `calc(100% - ${theme.spacing(8)})` },
+            top: { xs: 0, sm: theme.spacing(11) },
+            right: { xs: 0, sm: theme.spacing(2) },
+            bottom: { xs: 0, sm: theme.spacing(3) },
+            height: { xs: '100%', sm: 'auto' },
             width: { xs: '100vw', sm: 420, md: 440, lg: 460 },
             maxWidth: '100vw',
             bgcolor: 'background.paper',
-            borderTopLeftRadius: { xs: 0, sm: 2 },
-            borderBottomLeftRadius: { xs: 0, sm: 2 },
-            borderLeft: 1,
-            borderColor: 'divider',
+            borderRadius: { xs: 0, sm: 2 },
+            border: 0,
             boxShadow: theme.shadows[3],
             overflow: 'hidden',
           }),

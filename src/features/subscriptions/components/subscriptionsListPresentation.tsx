@@ -3,10 +3,8 @@ import GroupOutlinedIcon from '@mui/icons-material/GroupOutlined';
 import MoneyOutlinedIcon from '@mui/icons-material/MoneyOutlined';
 import ScheduleOutlinedIcon from '@mui/icons-material/ScheduleOutlined';
 import type { ListMetricItem } from '@shared/components/data-display/data/ListMetricsGrid';
-import type {
-  DataListColumn,
-  DataListMobileConfig,
-} from '@shared/components/data-display/data/dataList.types';
+import type { DataTableColumn } from '@shared/components/data-display/data/DataTable';
+import type { DataListMobileConfig } from '@shared/components/data-display/data/dataList.types';
 import {
   RowActionsMenu,
   type RowActionItem,
@@ -128,37 +126,37 @@ export const buildSubscriptionMetrics = (
 
 export const buildSubscriptionsListColumns = ({
   buildRowActions,
-}: SubscriptionsListPresentationParams): DataListColumn<Subscription>[] => [
+}: SubscriptionsListPresentationParams): DataTableColumn<Subscription>[] => [
   {
-    id: 'tenant',
-    label: 'Cliente',
+    key: 'tenant',
+    header: 'Cliente',
     render: (row) => row.tenant?.name ?? row.tenantId,
   },
   {
-    id: 'plan',
-    label: 'Plano Atual',
+    key: 'plan',
+    header: 'Plano Atual',
     visibility: { desktop: true, tablet: false, mobile: true },
     render: (row) => row.plan?.name ?? row.planId,
   },
   {
-    id: 'status',
-    label: 'Status',
+    key: 'status',
+    header: 'Status',
     render: renderSubscriptionStatus,
   },
   {
-    id: 'start',
-    label: 'Início',
+    key: 'start',
+    header: 'Início',
     render: (row) => formatDate(row.startDate),
   },
   {
-    id: 'renewal',
-    label: 'Renovação',
+    key: 'renewal',
+    header: 'Renovação',
     visibility: { desktop: true, tablet: false, mobile: true },
     render: (row) => formatDate(row.renewalDate),
   },
   {
-    id: 'actions',
-    label: 'Ações',
+    key: 'actions',
+    header: 'Ações',
     align: 'right',
     width: '72px',
     render: (row) => renderRowActions(row, buildRowActions),

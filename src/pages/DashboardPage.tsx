@@ -1,22 +1,20 @@
-import Box from '@mui/material/Box';
-import Grid from '@mui/material/Grid';
-import Paper from '@mui/material/Paper';
-import Typography from '@mui/material/Typography';
+import { AppCard } from '@shared/components/data-display/AppCard';
+import { AppBox } from '@shared/components/layout/AppBox';
+import { AppGrid } from '@shared/components/layout/AppGrid';
+import { PageHeader } from '@shared/components/layout/PageHeader';
 import { layoutSpacing } from '@theme/spacing';
 
 const DashboardPage = () => (
-  <Box sx={{ width: '100%' }}>
-    <Typography variant="h2" sx={{ mb: layoutSpacing.sectionGap }}>
-      Dashboard
-    </Typography>
-    <Grid container spacing={layoutSpacing.gridGap}>
+  <AppBox sx={{ width: '100%' }}>
+    <PageHeader title="Dashboard" />
+    <AppGrid container spacing={layoutSpacing.gridGap}>
       {[1, 2, 3, 4].map((item) => (
-        <Grid key={item} size={{ xs: 12, sm: 6, lg: 3 }}>
-          <Paper sx={{ p: layoutSpacing.cardPadding }}>Card {item}</Paper>
-        </Grid>
+        <AppGrid key={item} size={{ xs: 12, sm: 6, lg: 3 }}>
+          <AppCard sx={{ p: layoutSpacing.cardPadding }}>Card {item}</AppCard>
+        </AppGrid>
       ))}
-    </Grid>
-  </Box>
+    </AppGrid>
+  </AppBox>
 );
 
 export default DashboardPage;

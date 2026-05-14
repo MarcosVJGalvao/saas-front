@@ -1,8 +1,8 @@
+import AddIcon from '@mui/icons-material/Add';
 import { ListFilters } from '@shared/components/data-display/data/ListFilters';
 import { QueryDataTable } from '@shared/components/data-display/data/QueryDataTable';
 import { ConfirmDialog } from '@shared/components/feedback/ConfirmDialog';
 import { PageHeader } from '@shared/components/layout/PageHeader';
-import { AppButton } from '@shared/components/inputs/AppButton';
 import { usePlansListPageViewModel } from '@features/plans/hooks/usePlansListPageViewModel';
 
 const PlansListPage = () => {
@@ -13,11 +13,9 @@ const PlansListPage = () => {
       <PageHeader
         title="Listagem de Planos"
         subtitle="Gerencie planos, preços e ciclos de cobrança"
-        actions={
-          <AppButton onClick={() => void model.view.navigate('/platform/plans/new')}>
-            Novo Plano
-          </AppButton>
-        }
+        actionLabel="Novo Plano"
+        actionIcon={<AddIcon fontSize="small" />}
+        onAction={() => void model.view.navigate('/platform/plans/new')}
       />
 
       <ListFilters

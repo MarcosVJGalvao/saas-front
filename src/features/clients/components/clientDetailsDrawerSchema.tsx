@@ -21,6 +21,10 @@ type DrawerLabels = {
   subscriptionHistory: string;
   history: string;
 };
+type DrawerActionHandlers = {
+  onEditClient: (client: Client) => void;
+  onDeactivateClient: (client: Client) => void;
+};
 
 const asCurrency = (value?: string | number | null) => {
   if (value === null || value === undefined || value === '') return '-';
@@ -63,6 +67,7 @@ const defaultLabels: DrawerLabels = {
 export const buildClientDetailsDrawerSchema = (
   client: Client | null | undefined,
   labels: DrawerLabels = defaultLabels,
+  actions?: DrawerActionHandlers,
 ): DrawerSchema => {
   if (!client) return { headerData: null, tabs: [], footerActions: [] };
 
@@ -283,14 +288,14 @@ export const buildClientDetailsDrawerSchema = (
       id: 'edit-client',
       label: 'Editar cliente',
       icon: <EditOutlined fontSize="small" />,
-      onClick: () => undefined,
+      onClick: () => actions?.onEditClient(client),
       color: 'primary',
     },
     {
       id: 'deactivate-client',
       label: 'Desativar cliente',
       icon: <BlockOutlined fontSize="small" />,
-      onClick: () => undefined,
+      onClick: () => actions?.onDeactivateClient(client),
       color: 'error',
       disabled: client.status === 'inactive',
     },

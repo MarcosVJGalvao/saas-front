@@ -6,6 +6,7 @@ import { AppText } from '@shared/components/data-display/AppText';
 import { AppAlert } from '@shared/components/feedback/AppAlert';
 import { AppBox } from '@shared/components/layout/AppBox';
 import { AppStack } from '@shared/components/layout/AppStack';
+import { PageHeader } from '@shared/components/layout/PageHeader';
 import type { ClientMeResponse } from '@features/client-auth/services/types';
 import { radiusTokens } from '@theme/tokens/radius';
 import { spacingScale } from '@theme/tokens/spacing';
@@ -57,22 +58,9 @@ const ClientHomePage = () => {
   const model = useClientHomePageViewModel();
 
   return (
-    <AppBox sx={{ p: spacingScale.md }}>
+    <AppBox>
+      <PageHeader title={model.messages.title} subtitle={model.messages.success} />
       <AppPaper sx={{ p: spacingScale.lg, borderRadius: radiusTokens.lg }}>
-        <AppText
-          sx={{
-            fontSize: { xs: '1.5rem', md: '1.75rem' },
-            fontWeight: 700,
-            color: 'text.primary',
-            mb: 1,
-          }}
-        >
-          {model.messages.title}
-        </AppText>
-        <AppText variant="body1" sx={{ color: 'text.secondary', mb: spacingScale.md }}>
-          {model.messages.success}
-        </AppText>
-
         <ClientHomeContent
           loading={model.loading}
           errorMessage={model.errorMessage}

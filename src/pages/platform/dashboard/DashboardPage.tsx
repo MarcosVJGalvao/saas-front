@@ -1,10 +1,10 @@
-import Box from '@mui/material/Box';
-import Typography from '@mui/material/Typography';
+import { AppBox } from '@shared/components/layout/AppBox';
+import { PageHeader } from '@shared/components/layout/PageHeader';
 
 const PlatformDashboardPage = () => (
-  <Box>
-    <Typography variant="h4">Dashboard Platform</Typography>
-  </Box>
+  <AppBox>
+    <PageHeader title="Dashboard da Plataforma" />
+  </AppBox>
 );
 
 export default PlatformDashboardPage;

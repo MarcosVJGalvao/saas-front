@@ -79,20 +79,28 @@ export const buildClientDetailsTabs = (client: Client): ReadonlyArray<DetailTab>
 
 export const buildClientDetailsFooterActions = (
   client: Client,
+  actions?: {
+    onEditClient: (client: Client) => void;
+    onDeactivateClient?: (client: Client) => void;
+  },
 ): ReadonlyArray<DetailsFooterAction> => [
   {
     id: 'edit-client',
     label: 'Editar cliente',
     icon: <EditOutlined fontSize="small" />,
-    onClick: () => undefined,
+    onClick: () => actions?.onEditClient(client),
     color: 'primary',
   },
-  {
-    id: 'deactivate-client',
-    label: 'Desativar cliente',
-    icon: <BlockOutlined fontSize="small" />,
-    onClick: () => undefined,
-    color: 'error',
-    disabled: client.status === 'inactive',
-  },
+  ...(actions?.onDeactivateClient
+    ? [
+        {
+          id: 'deactivate-client',
+          label: 'Desativar cliente',
+          icon: <BlockOutlined fontSize="small" />,
+          onClick: () => actions.onDeactivateClient?.(client),
+          color: 'error',
+          disabled: client.status === 'inactive',
+        },
+      ]
+    : []),
 ];

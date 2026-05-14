@@ -25,8 +25,12 @@ export const useClientDetailsPageViewModel = () => {
 
   const footerActions = useMemo<ReadonlyArray<DetailsFooterAction>>(() => {
     if (!data) return [];
-    return buildClientDetailsFooterActions(data);
-  }, [data]);
+    return buildClientDetailsFooterActions(data, {
+      onEditClient: (client) => {
+        void navigate(`/platform/clients/${client.id}/edit`);
+      },
+    });
+  }, [data, navigate]);
 
   return {
     loading,

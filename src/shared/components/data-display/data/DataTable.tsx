@@ -12,6 +12,7 @@ import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import type { PaginationMeta } from '@models/pagination';
 import { spacingScale } from '@theme/spacing';
+import type { DataListColumnVisibility } from '@shared/components/data-display/data/dataList.types';
 
 export interface DataTableColumn<TData> {
   key: string;
@@ -21,6 +22,7 @@ export interface DataTableColumn<TData> {
   align?: 'left' | 'right' | 'center';
   width?: string;
   minWidth?: string;
+  visibility?: DataListColumnVisibility;
 }
 
 interface DataTableProps<TData> {
