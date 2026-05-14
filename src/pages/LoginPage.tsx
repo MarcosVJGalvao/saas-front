@@ -1,4 +1,4 @@
-import { LoginContainer } from '../components/auth/LoginContainer';
+import { LoginContainer } from '@features/platform-auth/components/LoginContainer';
 
 const LoginPage = () => <LoginContainer />;
 

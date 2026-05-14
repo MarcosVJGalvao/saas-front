@@ -1,4 +1,4 @@
-import type { AuthDomain } from '../../models/auth/auth';
+import type { AuthDomain } from '@models/auth/auth';
 
 interface LoginPreferences {
   email: string;

@@ -1,6 +1,6 @@
 import { useCallback, useState } from 'react';
-import { DENSITY_MODE, type DensityMode } from '../models/density';
-import { ADMIN_NAVIGATION_STORAGE_KEYS } from '../models/adminNavigationStorage';
+import { DENSITY_MODE, type DensityMode } from '@models/density';
+import { ADMIN_NAVIGATION_STORAGE_KEYS } from '@models/adminNavigationStorage';
 
 const isDensityMode = (value: string): value is DensityMode =>
   value === DENSITY_MODE.COMPACT || value === DENSITY_MODE.NORMAL || value === DENSITY_MODE.WIDE;

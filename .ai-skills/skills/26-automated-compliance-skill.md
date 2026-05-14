@@ -11,7 +11,7 @@ rg -n "\bas\b|as const|\bany\b|@ts-ignore|eslint-disable" src tests
 rg -n "\.\./\.\./|\.\./\.\./\.\./" src tests
 rg -n "@features/" src/shared
 rg -n "from '@mui/material'" src/features
-rg -n "�|Ã|\uFFFD" src tests .ai-skills AGENTS.md
+rg -n "caractere_substituicao|mojibake" src tests .ai-skills AGENTS.md
 npm run lint
 npm run typecheck
 npm test

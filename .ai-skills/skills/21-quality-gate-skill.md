@@ -20,7 +20,7 @@ rg -n "\bas\b|as const|\bany\b|@ts-ignore|eslint-disable" src tests
 rg -n "\.\./\.\./|\.\./\.\./\.\./" src tests
 rg -n "@features/" src/shared
 rg -n "from '@mui/material'" src/features/**/pages
-rg -n "�|Ã|\uFFFD" src tests .ai-skills AGENTS.md
+rg -n "caractere_substituicao|mojibake" src tests .ai-skills AGENTS.md
 ```
 
 ## Regra de conclusão

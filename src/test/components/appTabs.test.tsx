@@ -1,6 +1,6 @@
 import { render } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
-import { AppTabs } from '../../components/common/navigation/AppTabs';
+import { AppTabs } from '@shared/components/navigation/AppTabs';
 
 describe('AppTabs', () => {
   it('renders tab labels', () => {

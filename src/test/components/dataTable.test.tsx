@@ -1,6 +1,6 @@
 import { render } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
-import { DataTable } from '../../components/common/data/DataTable';
+import { DataTable } from '@shared/components/data-display/data/DataTable';
 
 describe('DataTable', () => {
   it('renders headers and row data', () => {

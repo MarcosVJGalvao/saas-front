@@ -1,6 +1,6 @@
 import { useCallback, useMemo, useState, type KeyboardEvent } from 'react';
 import { useNavigate } from 'react-router-dom';
-import type { NavigationItem } from '../models/navigation';
+import type { NavigationItem } from '@models/navigation';
 
 const flattenItems = (items: NavigationItem[]): NavigationItem[] =>
   items.flatMap((item) => [item, ...(item.children ?? [])]);

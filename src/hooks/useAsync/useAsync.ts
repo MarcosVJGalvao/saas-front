@@ -1,6 +1,6 @@
 import { useCallback, useState } from 'react';
-import { ErrorHandler } from '../../errors/ErrorHandler';
-import { useError } from '../useError/useError';
+import { ErrorHandler } from '@shared/errors/ErrorHandler';
+import { useError } from '@hooks/useError/useError';
 
 export const useAsync = <T>(asyncFn: () => Promise<T>) => {
   const [loading, setLoading] = useState(false);

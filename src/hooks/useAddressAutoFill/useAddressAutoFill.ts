@@ -1,9 +1,9 @@
 import { useCallback, useState } from 'react';
-import { ErrorHandler } from '../../errors/ErrorHandler';
-import type { AddressFormFields, ViaCepAddress } from '../../models/address';
-import { fetchAddressByCep } from '../../services/addressService';
-import { onlyDigits } from '../../utils/parse';
-import { useError } from '../useError/useError';
+import { ErrorHandler } from '@shared/errors/ErrorHandler';
+import type { AddressFormFields, ViaCepAddress } from '@shared/types/address';
+import { fetchAddressByCep } from '@shared/services/addressService';
+import { onlyDigits } from '@shared/parsers/stringParsers';
+import { useError } from '@hooks/useError/useError';
 
 interface UseAddressAutoFillOptions {
   onResolved: (fields: Partial<AddressFormFields>) => void;

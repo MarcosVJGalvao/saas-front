@@ -1,6 +1,6 @@
 import { useState } from 'react';
-import { useAuth } from './useAuth/useAuth';
-import { useClientLogout } from './client-auth/useClientLogout';
+import { useAuth } from '@hooks/useAuth/useAuth';
+import { useClientLogout } from '@features/client-auth/hooks/useClientLogout';
 
 const resolveLoginPathByCurrentLocation = (pathname: string): string =>
   pathname.startsWith('/client') ? '/client/login' : '/platform/login';

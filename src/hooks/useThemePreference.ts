@@ -1,5 +1,5 @@
-import { useColorMode } from './useColorMode/useColorMode';
-import { THEME_MODE } from '../models/themeMode';
+import { useColorMode } from '@hooks/useColorMode/useColorMode';
+import { THEME_MODE } from '@models/themeMode';
 
 export const useThemePreference = () => {
   const { mode, setMode } = useColorMode();

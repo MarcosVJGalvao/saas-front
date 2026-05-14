@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from 'vitest';
-import { platformAuthService } from '../../services/platform/auth/service';
-import { httpClient } from '../../services/httpClient';
+import { platformAuthService } from '@features/platform-auth/services/service';
+import { httpClient } from '@shared/services/httpClient';
 
 describe('platformAuthService', () => {
   it('calls login endpoint with credentials', async () => {

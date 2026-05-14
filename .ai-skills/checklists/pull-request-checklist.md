@@ -50,7 +50,7 @@
 ## i18n e erros
 
 - [ ] Todo texto exibido ao usuário está em português.
-- [ ] Não há caracteres corrompidos de encoding (ex.: `�`) em UI, testes, i18n, enums e mensagens.
+- [ ] Não há caracteres corrompidos de encoding (ex.: `U+FFFD`) em UI, testes, i18n, enums e mensagens.
 - [ ] Enums vindos do backend foram traduzidos.
 - [ ] Erros técnicos não são exibidos diretamente.
 - [ ] Mensagens de erro usam `errorCode`, `message` traduzida ou fallback.
@@ -88,7 +88,7 @@ rg -n "@features/" src/shared
 rg -n "from '@mui/material'" src/features
 
 # Sem caracteres corrompidos
-rg -n "�|Ã|\uFFFD" src tests .ai-skills AGENTS.md
+rg -n "caractere_substituicao|mojibake" src tests .ai-skills AGENTS.md
 ```
 
 Checklist final:

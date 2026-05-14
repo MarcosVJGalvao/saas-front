@@ -1,5 +1,5 @@
 import { afterAll, describe, expect, it, vi } from 'vitest';
-import { fetchAddressByCep } from '../../services/addressService';
+import { fetchAddressByCep } from '@shared/services/addressService';
 
 const originalFetch = global.fetch;
 

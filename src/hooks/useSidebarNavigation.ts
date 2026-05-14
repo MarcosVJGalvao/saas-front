@@ -1,9 +1,9 @@
-import type { AuthDomain } from '../models/auth/auth';
-import { navigationByDomain } from '../components/layout/admin-navigation/config';
+import type { AuthDomain } from '@models/auth/auth';
+import { navigationByDomain } from '@app/layout/admin-navigation/config';
 import {
   filterNavigationByPermissions,
   localPermissionResolver,
-} from '../components/layout/admin-navigation/permissions';
+} from '@app/layout/admin-navigation/permissions';
 
 export interface UseSidebarNavigationOptions {
   platformPermissions?: string[];

@@ -1,6 +1,6 @@
 import { fireEvent, render, screen } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
-import { ListFilters } from '../../components/common/data/ListFilters';
+import { ListFilters } from '@shared/components/data-display/data/ListFilters';
 
 describe('ListFilters', () => {
   it('renders title and fields', () => {

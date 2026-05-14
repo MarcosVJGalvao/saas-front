@@ -1140,8 +1140,8 @@ Antes de declarar qualquer tarefa como concluída, o agente deve obrigatoriament
 - Se qualquer passo falhar, o agente deve corrigir e rodar novamente.
 - Não é permitido encerrar com validação parcial.
 - Auditoria de compliance é obrigatória (nunca pular).
-- Também é obrigatório validar textos/UI sem caracteres corrompidos (ex.: `�`) antes de concluir.
-- Se houver `�` em código, testes, labels, mensagens, enums ou i18n, a tarefa não pode ser encerrada até corrigir.
+- Também é obrigatório validar textos/UI sem caracteres corrompidos (ex.: `U+FFFD`) antes de concluir.
+- Se houver caractere de substituição em código, testes, labels, mensagens, enums ou i18n, a tarefa não pode ser encerrada até corrigir.
 
 ## Regra de aliases
 

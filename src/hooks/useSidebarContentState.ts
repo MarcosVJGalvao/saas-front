@@ -1,6 +1,6 @@
 import { useCallback, useMemo, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import type { NavigationItem } from '../models/navigation';
+import type { NavigationItem } from '@models/navigation';
 
 export interface SidebarLeafItem extends NavigationItem {
   isActive: boolean;

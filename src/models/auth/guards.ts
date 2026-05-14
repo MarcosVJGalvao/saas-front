@@ -1,5 +1,5 @@
-import { AUTH_FLOW_STEP, type AuthDomain, type AuthFlowStep } from './auth';
-import type { AuthSession } from '../../services/client/auth/types';
+import { AUTH_FLOW_STEP, type AuthDomain, type AuthFlowStep } from '@models/auth/auth';
+import type { AuthSession } from '@shared/types/authSession';
 
 export const isAuthenticatedForDomain = (
   authDomain: AuthDomain | null,

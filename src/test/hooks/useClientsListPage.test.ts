@@ -1,6 +1,6 @@
 import { act, renderHook } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { useClientsListPage } from '../../hooks/clients/useClientsListPage';
+import { useClientsListPage } from '@features/clients/hooks/useClientsListPage';
 
 const mockNavigate = vi.fn();
 const mockRefresh = vi.fn();
@@ -10,21 +10,21 @@ vi.mock('react-router-dom', () => ({
   useNavigate: () => mockNavigate,
 }));
 
-vi.mock('../../hooks/clients/useClientsList', () => ({
+vi.mock('@features/clients/hooks/useClientsList', () => ({
   useClientsList: () => ({
     rows: [],
     refresh: mockRefresh,
   }),
 }));
 
-vi.mock('../../hooks/clients/useClientDetails', () => ({
+vi.mock('@features/clients/hooks/useClientDetails', () => ({
   useClientDetails: () => ({
     loading: false,
     errorMessage: null,
   }),
 }));
 
-vi.mock('../../hooks/clients/useClientsMutations', () => ({
+vi.mock('@features/clients/hooks/useClientsMutations', () => ({
   useClientsMutations: () => ({
     remove: mockRemove,
   }),

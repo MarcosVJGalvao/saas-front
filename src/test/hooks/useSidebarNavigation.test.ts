@@ -1,11 +1,11 @@
 import { describe, expect, it } from 'vitest';
-import { AUTH_DOMAIN } from '../../models/auth/auth';
-import { navigationByDomain } from '../../components/layout/admin-navigation/config';
+import { AUTH_DOMAIN } from '@models/auth/auth';
+import { navigationByDomain } from '@app/layout/admin-navigation/config';
 import {
   buildDomainNavigation,
   type NavigationGroup,
-} from '../../components/layout/admin-navigation/navigationBuilder';
-import { filterNavigationByPermissions } from '../../components/layout/admin-navigation/permissions';
+} from '@app/layout/admin-navigation/navigationBuilder';
+import { filterNavigationByPermissions } from '@app/layout/admin-navigation/permissions';
 
 describe('admin navigation by domain', () => {
   it('builds platform and client menus with distinct groups', () => {

@@ -1,5 +1,5 @@
 import { useCallback, useState } from 'react';
-import { ADMIN_NAVIGATION_STORAGE_KEYS } from '../models/adminNavigationStorage';
+import { ADMIN_NAVIGATION_STORAGE_KEYS } from '@models/adminNavigationStorage';
 
 const readSidebarCollapsed = (): boolean => {
   if (typeof window === 'undefined') {

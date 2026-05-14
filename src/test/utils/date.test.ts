@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { formatDate, formatDateTime } from '../../utils/date';
+import { formatDate, formatDateTime } from '@shared/formatters/dateFormatter';
 
 describe('utils date', () => {
   it('should format date and datetime', () => {

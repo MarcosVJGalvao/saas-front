@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useState, type MouseEvent } from 'react';
-import type { NavigationItem } from '../models/navigation';
-import { useCommandPalette } from './useCommandPalette';
+import type { NavigationItem } from '@models/navigation';
+import { useCommandPalette } from '@hooks/useCommandPalette';
 
 const SIDEBAR_EXPANDED_WIDTH = 230;
 const SIDEBAR_COLLAPSED_WIDTH = 84;

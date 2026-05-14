@@ -1,6 +1,6 @@
 import { useCallback, useMemo, useState } from 'react';
-import type { NavigationItem } from '../models/navigation';
-import { ADMIN_NAVIGATION_STORAGE_KEYS } from '../models/adminNavigationStorage';
+import type { NavigationItem } from '@models/navigation';
+import { ADMIN_NAVIGATION_STORAGE_KEYS } from '@models/adminNavigationStorage';
 
 const readFavorites = (): string[] => {
   if (typeof window === 'undefined') {

@@ -1,8 +1,8 @@
 import { fireEvent, render } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
-import { ModalError } from '../../errors/ModalError';
-import { SnackbarError } from '../../errors/SnackbarError';
-import { ErrorDisplayMode, ErrorSeverity, type AppError } from '../../models/types';
+import { ModalError } from '@shared/errors/ModalError';
+import { SnackbarError } from '@shared/errors/SnackbarError';
+import { ErrorDisplayMode, ErrorSeverity, type AppError } from '@shared/types/appError';
 
 const errorMock: AppError = {
   message: 'Existem campos inválidos. Revise os dados informados.',
@@ -27,7 +27,7 @@ describe('Error components', () => {
     expect(getByText('o campo não pode estar vazio')).toBeInTheDocument();
     expect(getByText('o e-mail é inválido')).toBeInTheDocument();
 
-    fireEvent.click(getByLabelText('Copiar codigo do erro'));
+    fireEvent.click(getByLabelText('Copiar código do erro'));
     expect(writeText).toHaveBeenCalledWith('c113416d-2180-4141-9965-c14f93046977');
   });
 
@@ -37,6 +37,6 @@ describe('Error components', () => {
     expect(getByText('Erro crítico')).toBeInTheDocument();
     expect(getByText('o campo não pode estar vazio')).toBeInTheDocument();
     expect(getByText('o e-mail é inválido')).toBeInTheDocument();
-    expect(getByText('Codigo: c113416d-2180-4141-9965-c14f93046977')).toBeInTheDocument();
+    expect(getByText('Código: c113416d-2180-4141-9965-c14f93046977')).toBeInTheDocument();
   });
 });
