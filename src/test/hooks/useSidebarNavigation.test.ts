@@ -37,8 +37,12 @@ describe('admin navigation by domain', () => {
     const built = buildDomainNavigation(groups, '/client', AUTH_DOMAIN.CLIENT);
 
     expect(built).toHaveLength(1);
-    expect(built[0].href).toBe('/client/home');
-    expect(built[0].permission).toBe('client:dashboard:read');
+    const firstItem = built[0];
+    if (firstItem === undefined) {
+      throw new Error('Item de navegação não encontrado.');
+    }
+    expect(firstItem.href).toBe('/client/home');
+    expect(firstItem.permission).toBe('client:dashboard:read');
   });
 
   it('hides a section when no subsequent item is permitted', () => {

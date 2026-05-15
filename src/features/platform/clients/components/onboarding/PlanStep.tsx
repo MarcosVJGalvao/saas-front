@@ -2,7 +2,7 @@ import { AppMenuItem } from '@shared/components/inputs/AppMenuItem';
 import { AppStack } from '@shared/components/layout/AppStack';
 import { AppText } from '@shared/components/data-display/AppText';
 import type { Plan } from '@features/platform/plans/types/plans';
-import type { OnboardingStepProps } from '@features/platform/clients/components/onboarding/types';
+import type { OnboardingStepProps } from '@features/platform/clients/types/clientOnboardingPresentation';
 import { OnboardingField } from '@features/platform/clients/components/onboarding/OnboardingField';
 import { formatCurrency } from '@shared/formatters/currencyFormatter';
 import { translateBillingCycle } from '@shared/i18n/pt-BR/enums';

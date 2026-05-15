@@ -15,26 +15,26 @@ interface QueryDataTableProps<TData> {
   rows: TData[];
   columns: DataTableColumn<TData>[];
   meta: PaginationMeta;
-  getRowId?: (row: TData, index: number) => string;
+  getRowId?: ((row: TData, index: number) => string) | undefined;
   query: string;
   onQueryChange: (nextValue: string) => void;
-  queryDebounceInMilliseconds?: number;
+  queryDebounceInMilliseconds?: number | undefined;
   loading: boolean;
-  errorMessage?: string;
-  onRetry?: () => void;
+  errorMessage?: string | undefined;
+  onRetry?: (() => void) | undefined;
   onPageChange: (nextPage: number) => void;
   onRowsPerPageChange: (nextLimit: number) => void;
-  filterContent?: ReactNode;
-  filterOpen?: boolean;
-  onOpenFilter?: () => void;
-  onCloseFilter?: () => void;
-  onApplyFilter?: () => void;
-  onClearFilter?: () => void;
-  emptyTitle?: string;
-  emptyDescription?: string;
-  hideToolbar?: boolean;
-  toolbarContent?: ReactNode;
-  mobileConfig?: DataListMobileConfig<TData>;
+  filterContent?: ReactNode | undefined;
+  filterOpen?: boolean | undefined;
+  onOpenFilter?: (() => void) | undefined;
+  onCloseFilter?: (() => void) | undefined;
+  onApplyFilter?: (() => void) | undefined;
+  onClearFilter?: (() => void) | undefined;
+  emptyTitle?: string | undefined;
+  emptyDescription?: string | undefined;
+  hideToolbar?: boolean | undefined;
+  toolbarContent?: ReactNode | undefined;
+  mobileConfig?: DataListMobileConfig<TData> | undefined;
 }
 
 const QueryDataTableToolbar = ({
@@ -48,7 +48,7 @@ const QueryDataTableToolbar = ({
   onQueryChange: (nextValue: string) => void;
   queryDebounceInMilliseconds: number;
   showFilter: boolean;
-  onOpenFilter?: () => void;
+  onOpenFilter?: (() => void) | undefined;
 }) => (
   <Stack
     direction={{ xs: 'column', sm: 'row' }}
@@ -88,17 +88,17 @@ const QueryDataTableContent = <TData,>({
   mobileConfig,
 }: {
   loading: boolean;
-  errorMessage?: string;
-  onRetry?: () => void;
+  errorMessage?: string | undefined;
+  onRetry?: (() => void) | undefined;
   rows: TData[];
   columns: DataTableColumn<TData>[];
   meta: PaginationMeta;
-  getRowId?: (row: TData, index: number) => string;
+  getRowId?: ((row: TData, index: number) => string) | undefined;
   onPageChange: (nextPage: number) => void;
   onRowsPerPageChange: (nextLimit: number) => void;
   emptyTitle: string;
   emptyDescription: string;
-  mobileConfig?: DataListMobileConfig<TData>;
+  mobileConfig?: DataListMobileConfig<TData> | undefined;
 }) => {
   const listRows: Array<{ key: string; value: TData }> = rows.map((row, index) => ({
     key: getRowId ? getRowId(row, index) : String(index),

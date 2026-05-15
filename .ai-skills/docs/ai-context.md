@@ -53,7 +53,10 @@ src/
         schemas/
         types/
         normalizers/
-        specs/
+      specs/
+
+  pages/
+    HomePage.tsx
 
   main.tsx
 ```
@@ -80,6 +83,12 @@ As features devem ficar separadas por domínio de acesso:
 - `src/features/platform/*`: fluxos e telas do contexto platform.
 
 Não criar features diretamente em `src/features/*` fora desses dois contextos sem decisão arquitetural explícita.
+
+## Pages públicas neutras
+
+Páginas públicas que não pertencem ao contexto `client` nem ao contexto `platform` podem ficar em `src/pages`.
+
+A rota raiz `/` usa `src/pages/HomePage.tsx` como entrada temporária para direcionar o usuário ao login da plataforma ou ao login do cliente.
 
 ## Regras proibidas
 

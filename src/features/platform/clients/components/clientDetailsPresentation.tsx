@@ -100,13 +100,15 @@ export const buildClientDetailsFooterActions = (
     },
   ];
 
-  if (actions?.onDeactivateClient) {
+  const onDeactivateClient = actions?.onDeactivateClient;
+
+  if (onDeactivateClient) {
     footerActions.push({
       id: 'deactivate-client',
       label: 'Desativar cliente',
       icon: <BlockOutlined fontSize="small" />,
       onClick: () => {
-        actions.onDeactivateClient(client);
+        onDeactivateClient(client);
       },
       color: 'error',
       disabled: client.status === 'inactive',

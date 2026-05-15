@@ -23,9 +23,9 @@ interface TopBarProps {
   userName: string;
   userInitials: string;
   userRole: string;
-  sessionExpiresIn?: string;
-  sessionAccessToken?: string;
-  onSessionExpired?: () => void;
+  sessionExpiresIn?: string | undefined;
+  sessionAccessToken?: string | undefined;
+  onSessionExpired?: (() => void) | undefined;
   onOpenMobileMenu: () => void;
   onOpenCommandPalette: () => void;
   onOpenNotificationsMenu: MouseEventHandler<HTMLElement>;

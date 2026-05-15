@@ -3,7 +3,7 @@ export type BillingCycle = 'monthly' | 'yearly';
 export interface Plan {
   id: string;
   name: string;
-  description?: string | null;
+  description?: string | null | undefined;
   price: string;
   currency: string;
   billingCycle: BillingCycle;
@@ -11,27 +11,29 @@ export interface Plan {
   isActive: boolean;
   createdAt: string;
   updatedAt: string;
-  deletedAt?: string | null;
+  deletedAt?: string | null | undefined;
 }
 
 export interface CreatePlanRequest {
   name: string;
-  description?: string;
+  description?: string | undefined;
   price: string;
   currency: string;
   billingCycle: BillingCycle;
-  trialDays?: number;
-  isActive?: boolean;
+  trialDays?: number | undefined;
+  isActive?: boolean | undefined;
 }
 
-export type UpdatePlanRequest = Partial<CreatePlanRequest>;
+export type UpdatePlanRequest = {
+  [Key in keyof CreatePlanRequest]?: CreatePlanRequest[Key] | undefined;
+};
 
 export interface PlansQueryParams {
-  page?: number;
-  limit?: number;
-  search?: string;
-  startDate?: string;
-  endDate?: string;
-  sortBy?: string;
-  sortOrder?: 'ASC' | 'DESC';
+  page?: number | undefined;
+  limit?: number | undefined;
+  search?: string | undefined;
+  startDate?: string | undefined;
+  endDate?: string | undefined;
+  sortBy?: string | undefined;
+  sortOrder?: 'ASC' | 'DESC' | undefined;
 }

@@ -1,24 +1,18 @@
-import { DetailsInfoCards } from '@shared/components/data-display/DetailsInfoCards';
-import { AppCircularProgress } from '@shared/components/data-display/AppCircularProgress';
-import { AppText } from '@shared/components/data-display/AppText';
-import { AppErrorState } from '@shared/components/feedback/AppErrorState';
+import { SubscriptionDetailsContent } from '@features/platform/subscriptions/components/SubscriptionDetailsContent';
 import { useSubscriptionDetailsPageViewModel } from '@features/platform/subscriptions/hooks/useSubscriptionDetailsPageViewModel';
 
 const SubscriptionDetailsPage = () => {
   const model = useSubscriptionDetailsPageViewModel();
-  const viewByState = {
-    loading: <AppCircularProgress ariaLabel="Carregando detalhes da assinatura" />,
-    error: (
-      <AppErrorState
-        message={model.errorMessage ?? 'Erro ao carregar assinatura.'}
-        onRetry={() => void model.refresh()}
-      />
-    ),
-    empty: <AppText>{model.emptyMessage}</AppText>,
-    ready: <DetailsInfoCards pageTitle="Detalhes da Assinatura" sections={model.sections} />,
-  };
 
-  return viewByState[model.viewState];
+  return (
+    <SubscriptionDetailsContent
+      viewState={model.viewState}
+      errorMessage={model.errorMessage}
+      emptyMessage={model.emptyMessage}
+      sections={model.sections}
+      onRetry={() => void model.refresh()}
+    />
+  );
 };
 
 export default SubscriptionDetailsPage;

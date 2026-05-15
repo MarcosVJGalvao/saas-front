@@ -34,6 +34,13 @@ interface ClientsSummaryCardsParams {
   inactiveCount: number;
 }
 
+export const detailsDrawerContentOffset = {
+  xs: 0,
+  sm: 54,
+  md: 57,
+  lg: 60,
+};
+
 const detectDocumentType = (documentNumber: string): 'CPF' | 'CNPJ' | 'OTHER' => {
   const digitsOnly = onlyDigits(documentNumber);
   if (digitsOnly.length === 11) return 'CPF';

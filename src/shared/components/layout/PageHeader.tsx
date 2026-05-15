@@ -9,18 +9,18 @@ import { AppStack } from '@shared/components/layout/AppStack';
 
 export interface PageHeaderBreadcrumb {
   label: string;
-  href?: string;
+  href?: string | undefined;
 }
 
 interface PageHeaderProps {
   title: string;
-  subtitle?: string;
-  breadcrumbs?: PageHeaderBreadcrumb[];
-  actions?: ReactNode;
-  actionLabel?: string;
-  actionIcon?: ReactNode;
-  canShowAction?: boolean;
-  onAction?: () => void;
+  subtitle?: string | undefined;
+  breadcrumbs?: PageHeaderBreadcrumb[] | undefined;
+  actions?: ReactNode | undefined;
+  actionLabel?: string | undefined;
+  actionIcon?: ReactNode | undefined;
+  canShowAction?: boolean | undefined;
+  onAction?: (() => void) | undefined;
 }
 
 const renderPrimaryAction = ({

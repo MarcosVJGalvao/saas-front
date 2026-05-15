@@ -9,7 +9,7 @@ import {
 } from '@features/platform/clients/normalizers/clientOnboardingFieldNormalizers';
 import { maskCnpj, maskCpf, maskCurrency, maskDateInput } from '@shared/masks/inputMasks';
 import { OnboardingField } from '@features/platform/clients/components/onboarding/OnboardingField';
-import type { OnboardingStepProps } from '@features/platform/clients/components/onboarding/types';
+import type { OnboardingStepProps } from '@features/platform/clients/types/clientOnboardingPresentation';
 
 export const AdminStep = ({ value, actions }: OnboardingStepProps) => (
   <AppStack spacing={1.5}>

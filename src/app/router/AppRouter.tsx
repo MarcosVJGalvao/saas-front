@@ -7,6 +7,7 @@ import { SessionExpiredDialog } from '@shared/components/feedback/SessionExpired
 import { AppLayout } from '@app/layout/admin-navigation/AppLayout';
 import { AUTH_DOMAIN } from '@shared/types/auth/auth';
 
+const PublicHomePage = lazy(() => import('@/pages/HomePage'));
 const PlatformLoginPage = lazy(() => import('@features/platform/auth/pages/LoginPage'));
 const PlatformMfaPage = lazy(() => import('@features/platform/auth/pages/MfaPage'));
 const PlatformMfaSetupPage = lazy(() => import('@features/platform/auth/pages/MfaSetupPage'));
@@ -288,8 +289,15 @@ export const AppRouter = () => {
           />
         </Route>
 
-        <Route path="/" element={<Navigate to="/platform/login" replace />} />
-        <Route path="*" element={<Navigate to="/platform/login" replace />} />
+        <Route
+          path="/"
+          element={
+            <SuspendedPage>
+              <PublicHomePage />
+            </SuspendedPage>
+          }
+        />
+        <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
 
       <SessionExpiredDialog

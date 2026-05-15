@@ -14,10 +14,10 @@ export const ErrorDisplayMode: Record<ErrorDisplayMode, ErrorDisplayMode> = {
 
 export interface AppError {
   message: string;
-  messages?: string[];
-  code?: string;
-  correlationId?: string;
-  status?: number;
+  messages?: string[] | undefined;
+  code?: string | undefined;
+  correlationId?: string | undefined;
+  status?: number | undefined;
   severity: ErrorSeverity;
   displayMode: ErrorDisplayMode;
 }

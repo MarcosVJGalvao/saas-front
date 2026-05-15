@@ -81,3 +81,4 @@
 - [x] `npm run lint`.
 - [x] `npm run typecheck`.
 - [x] `npm test`.
+- [x] Bloquear regressão de TypeScript sem `strict` no compliance automatizado.

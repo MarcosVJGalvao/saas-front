@@ -1,5 +1,5 @@
 import { spawnSync } from 'node:child_process';
-import { existsSync } from 'node:fs';
+import { existsSync, readFileSync } from 'node:fs';
 
 const checks = [
   {
@@ -48,7 +48,25 @@ const runCheck = ({ label, args }) => {
   return false;
 };
 
-const passed = checks.map(runCheck).every(Boolean);
+const runTsConfigStrictCheck = () => {
+  const files = ['tsconfig.app.json', 'tsconfig.node.json'];
+  const failedFiles = files.filter((file) => {
+    if (!existsSync(file)) return true;
+    const content = readFileSync(file, 'utf8');
+    return !content.includes('"strict": true');
+  });
+
+  if (failedFiles.length > 0) {
+    process.stderr.write('\n[compliance] TypeScript strict: falhou\n');
+    process.stderr.write(`${failedFiles.join('\n')}\n`);
+    return false;
+  }
+
+  process.stdout.write('[compliance] TypeScript strict: ok\n');
+  return true;
+};
+
+const passed = [...checks.map(runCheck), runTsConfigStrictCheck()].every(Boolean);
 
 if (!passed) {
   process.exitCode = 1;

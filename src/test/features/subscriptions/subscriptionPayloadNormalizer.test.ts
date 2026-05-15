@@ -11,7 +11,6 @@ describe('subscriptionPayloadNormalizer', () => {
         status: 'active',
         startDate: '25/09/2026',
         endDate: '',
-        trialEndsAt: undefined,
         renewalDate: '2026-10-25',
         priceAtSubscription: 'R$ 1.250,90',
         blockedReason: ' ',

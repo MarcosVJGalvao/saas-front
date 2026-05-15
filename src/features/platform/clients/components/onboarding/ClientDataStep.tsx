@@ -7,7 +7,7 @@ import { fontSizes } from '@theme/fontSizes';
 import { spacingScale } from '@theme/spacing';
 import { maskCep, maskCnpj, maskCpf, maskPhone } from '@shared/masks/inputMasks';
 import { OnboardingField } from '@features/platform/clients/components/onboarding/OnboardingField';
-import type { OnboardingStepProps } from '@features/platform/clients/components/onboarding/types';
+import type { OnboardingStepProps } from '@features/platform/clients/types/clientOnboardingPresentation';
 
 export const ClientDataStep = memo(
   ({ value, uiExtras, actions, addressLoading }: OnboardingStepProps) => (

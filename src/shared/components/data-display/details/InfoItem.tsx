@@ -4,8 +4,8 @@ import type { ReactNode } from 'react';
 
 type InfoItemProps = {
   label: string;
-  value?: ReactNode;
-  noWrap?: boolean;
+  value?: ReactNode | undefined;
+  noWrap?: boolean | undefined;
 };
 
 export const InfoItem = ({ label, value, noWrap = false }: InfoItemProps) => (

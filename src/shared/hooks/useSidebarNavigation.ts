@@ -6,8 +6,8 @@ import {
 } from '@app/layout/admin-navigation/permissions';
 
 export interface UseSidebarNavigationOptions {
-  platformPermissions?: string[];
-  clientPermissions?: string[];
+  platformPermissions?: string[] | undefined;
+  clientPermissions?: string[] | undefined;
 }
 
 export const useSidebarNavigation = (

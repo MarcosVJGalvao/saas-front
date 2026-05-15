@@ -27,8 +27,8 @@ interface SidebarContentProps {
   density: DensityMode;
   brand: LayoutBrandConfig;
   items: NavigationItem[];
-  mobileMode?: boolean;
-  closeMobile?: () => void;
+  mobileMode?: boolean | undefined;
+  closeMobile?: (() => void) | undefined;
 }
 
 const SidebarMenuButton = ({
@@ -40,7 +40,7 @@ const SidebarMenuButton = ({
   isCollapsed: boolean;
   mobileMode: boolean;
   onToggle: () => void;
-  closeMobile?: () => void;
+  closeMobile?: (() => void) | undefined;
 }) => (
   <IconButton
     onClick={mobileMode ? () => closeMobile?.() : onToggle}

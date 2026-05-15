@@ -1,8 +1,5 @@
-import { AdminStep } from '@features/platform/clients/components/onboarding/AdminStep';
-import { ClientDataStep } from '@features/platform/clients/components/onboarding/ClientDataStep';
 import { OnboardingSummary } from '@features/platform/clients/components/onboarding/OnboardingSummary';
-import { PlanStep } from '@features/platform/clients/components/onboarding/PlanStep';
-import { TenantStep } from '@features/platform/clients/components/onboarding/TenantStep';
+import { OnboardingSteps } from '@features/platform/clients/components/onboarding/OnboardingSteps';
 import { StepperWizard } from '@shared/components/navigation/StepperWizard';
 import { AppPaper } from '@shared/components/data-display/AppPaper';
 import { AppStack } from '@shared/components/layout/AppStack';
@@ -13,24 +10,6 @@ import { shadowTokens } from '@theme/tokens/shadows';
 
 const ClientOnboardingPage = () => {
   const model = useClientOnboardingPageViewModel();
-  const sharedStepProps = {
-    value: model.form.value,
-    uiExtras: model.form.uiExtras,
-    actions: model.form.actions,
-    addressLoading: model.form.addressLoading,
-  };
-  const stepContentByIndex = [
-    <ClientDataStep key="client-data" {...sharedStepProps} />,
-    <TenantStep key="tenant" {...sharedStepProps} />,
-    <PlanStep
-      key="plan"
-      {...sharedStepProps}
-      planOptions={model.form.planOptions}
-      plansLoading={model.form.plansLoading}
-    />,
-    <AdminStep key="admin" {...sharedStepProps} />,
-  ];
-  const stepContent = stepContentByIndex[model.activeStep] ?? stepContentByIndex[0];
 
   return (
     <AppStack spacing={2}>
@@ -64,7 +43,7 @@ const ClientOnboardingPage = () => {
             nextLabel={model.isLastStep ? 'Finalizar onboarding' : 'Próximo'}
             nextDisabled={model.nextDisabled}
           >
-            {stepContent}
+            <OnboardingSteps activeStep={model.activeStep} {...model.form} />
           </StepperWizard>
         </AppPaper>
         <OnboardingSummary

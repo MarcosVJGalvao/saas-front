@@ -3,7 +3,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import {
   useClientHomeData,
   CLIENT_HOME_MESSAGES,
-} from '@features/client/auth/hooks/useClientHomeData';
+} from '@features/client/home/hooks/useClientHomeData';
 import { clientAuthService } from '@features/client/auth/services/service';
 
 vi.mock('@features/client/auth/services/service', () => ({

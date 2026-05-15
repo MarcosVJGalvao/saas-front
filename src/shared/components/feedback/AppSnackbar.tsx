@@ -8,16 +8,18 @@ export type SnackbarSeverity = 'success' | 'info' | 'warning' | 'error';
 
 interface AppSnackbarProps {
   open: boolean;
-  message?: string;
-  children?: ReactNode;
-  severity?: SnackbarSeverity;
-  autoHideDuration?: number;
+  message?: string | undefined;
+  children?: ReactNode | undefined;
+  severity?: SnackbarSeverity | undefined;
+  autoHideDuration?: number | undefined;
   onClose: () => void;
-  onExited?: () => void;
-  anchorOrigin?: { vertical: 'top' | 'bottom'; horizontal: 'left' | 'center' | 'right' };
-  snackbarSx?: SxProps<Theme>;
-  alertSx?: SxProps<Theme>;
-  transitionDuration?: { enter: number; exit: number };
+  onExited?: (() => void) | undefined;
+  anchorOrigin?:
+    | { vertical: 'top' | 'bottom'; horizontal: 'left' | 'center' | 'right' }
+    | undefined;
+  snackbarSx?: SxProps<Theme> | undefined;
+  alertSx?: SxProps<Theme> | undefined;
+  transitionDuration?: { enter: number; exit: number } | undefined;
 }
 
 const snackbarPresets: Record<
@@ -26,7 +28,7 @@ const snackbarPresets: Record<
     autoHideDuration: number;
     anchorOrigin: { vertical: 'top' | 'bottom'; horizontal: 'left' | 'center' | 'right' };
     transitionDuration: { enter: number; exit: number };
-    snackbarSx?: SxProps<Theme>;
+    snackbarSx?: SxProps<Theme> | undefined;
     alertSx: SxProps<Theme>;
   }
 > = {

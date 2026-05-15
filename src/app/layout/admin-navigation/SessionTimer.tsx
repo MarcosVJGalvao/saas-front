@@ -6,9 +6,9 @@ import { useSessionTimer } from '@shared/hooks/useSessionTimer';
 
 interface SessionTimerProps {
   expiresIn: string;
-  accessToken?: string;
-  compact?: boolean;
-  onExpired?: () => void;
+  accessToken?: string | undefined;
+  compact?: boolean | undefined;
+  onExpired?: (() => void) | undefined;
 }
 
 const toneColor: Record<'success' | 'warning' | 'error', string> = {

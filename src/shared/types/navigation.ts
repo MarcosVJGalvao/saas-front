@@ -9,21 +9,21 @@ export interface SearchScope {
 export interface NavigationItem {
   id: string;
   label: string;
-  href?: string;
+  href?: string | undefined;
   permission: string;
-  icon?: SvgIconComponent;
-  children?: NavigationItem[];
-  searchScopes?: SearchScope[];
-  keywords?: string[];
-  type?: 'item' | 'section';
+  icon?: SvgIconComponent | undefined;
+  children?: NavigationItem[] | undefined;
+  searchScopes?: SearchScope[] | undefined;
+  keywords?: string[] | undefined;
+  type?: 'item' | 'section' | undefined;
 }
 
 export type NavigationSectionItem = NavigationItem & { type: 'section' };
 
 export interface LayoutBrandConfig {
   logo: SvgIconComponent;
-  label?: string;
-  compactLabel?: string;
+  label?: string | undefined;
+  compactLabel?: string | undefined;
 }
 
 export interface UserProfileSummary {

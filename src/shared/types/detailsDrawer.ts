@@ -3,40 +3,40 @@ import type { ReactElement, ReactNode } from 'react';
 
 export type DetailItem = {
   label: string;
-  value?: ReactNode;
-  noWrap?: boolean;
+  value?: ReactNode | undefined;
+  noWrap?: boolean | undefined;
 };
 
 export type DetailSection = {
   id: string;
   title: string;
-  icon?: ReactNode;
-  action?: ReactNode;
-  items?: ReadonlyArray<DetailItem>;
-  content?: ReactNode;
+  icon?: ReactNode | undefined;
+  action?: ReactNode | undefined;
+  items?: ReadonlyArray<DetailItem> | undefined;
+  content?: ReactNode | undefined;
 };
 
 export type DetailTab = {
   id: string;
   label: string;
-  icon?: ReactElement;
+  icon?: ReactElement | undefined;
   sections: ReadonlyArray<DetailSection>;
 };
 
 export type DetailsHeaderData = {
   title: string;
-  subtitle?: string;
-  avatarUrl?: string | null;
-  avatarFallback?: string;
-  statusLabel?: string;
-  statusColor?: ChipProps['color'];
+  subtitle?: string | undefined;
+  avatarUrl?: string | null | undefined;
+  avatarFallback?: string | undefined;
+  statusLabel?: string | undefined;
+  statusColor?: ChipProps['color'] | undefined;
 };
 
 export type DetailsFooterAction = {
   id: string;
   label: string;
   onClick: () => void;
-  icon?: ReactNode;
-  color?: 'primary' | 'error' | 'inherit';
-  disabled?: boolean;
+  icon?: ReactNode | undefined;
+  color?: 'primary' | 'error' | 'inherit' | undefined;
+  disabled?: boolean | undefined;
 };

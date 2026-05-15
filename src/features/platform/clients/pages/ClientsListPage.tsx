@@ -7,14 +7,8 @@ import { PageHeader } from '@shared/components/layout/PageHeader';
 import { AppButton } from '@shared/components/inputs/AppButton';
 import { AppBox } from '@shared/components/layout/AppBox';
 import { buildClientDetailsDrawerSchema } from '@features/platform/clients/components/clientDetailsDrawerSchema';
+import { detailsDrawerContentOffset } from '@features/platform/clients/components/clientsListPresentation';
 import { useClientsListPageViewModel } from '@features/platform/clients/hooks/useClientsListPageViewModel';
-
-const detailsDrawerContentOffset = {
-  xs: 0,
-  sm: 54,
-  md: 57,
-  lg: 60,
-};
 
 const ClientsListPage = () => {
   const model = useClientsListPageViewModel();

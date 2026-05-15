@@ -26,23 +26,23 @@ import { InfoItem } from '@shared/components/data-display/details/InfoItem';
 
 type EntityDetailsDrawerProps = {
   open: boolean;
-  loading?: boolean;
-  error?: string | null;
+  loading?: boolean | undefined;
+  error?: string | null | undefined;
   onClose: () => void;
-  headerData?: DetailsHeaderData | null;
-  tabs?: ReadonlyArray<DetailTab>;
-  emptyTitle?: string;
-  emptyMessage?: string;
-  footerActions?: ReadonlyArray<DetailsFooterAction>;
+  headerData?: DetailsHeaderData | null | undefined;
+  tabs?: ReadonlyArray<DetailTab> | undefined;
+  emptyTitle?: string | undefined;
+  emptyMessage?: string | undefined;
+  footerActions?: ReadonlyArray<DetailsFooterAction> | undefined;
 };
 
 type HeaderProps = {
   loading: boolean;
-  headerData?: DetailsHeaderData | null;
+  headerData?: DetailsHeaderData | null | undefined;
   onClose: () => void;
 };
 
-const HeaderIdentity = ({ headerData }: { headerData?: DetailsHeaderData | null }) => (
+const HeaderIdentity = ({ headerData }: { headerData?: DetailsHeaderData | null | undefined }) => (
   <>
     <Stack direction="row" spacing={1} sx={{ alignItems: 'center', minWidth: 0 }}>
       <Typography id="entity-details-title" variant="h6" noWrap sx={{ fontWeight: 700 }}>
@@ -106,9 +106,9 @@ const DrawerHeader = ({ loading, headerData, onClose }: HeaderProps) => (
 
 type ContentProps = {
   loading: boolean;
-  error?: string | null;
-  headerData?: DetailsHeaderData | null;
-  selectedTab?: DetailTab;
+  error?: string | null | undefined;
+  headerData?: DetailsHeaderData | null | undefined;
+  selectedTab?: DetailTab | undefined;
   emptyTitle: string;
   emptyMessage: string;
 };

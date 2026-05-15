@@ -1,5 +1,5 @@
 import { useAuth } from '@shared/hooks/useAuth/useAuth';
-import { CLIENT_HOME_MESSAGES } from '@features/client/auth/hooks/useClientHomeData';
+import { CLIENT_HOME_MESSAGES } from '@features/client/home/hooks/useClientHomeData';
 import { useClientProfile } from '@features/client/auth/hooks/useClientProfile';
 
 export const useClientHomePageViewModel = () => {

@@ -93,9 +93,6 @@ export const PlatformMfaSetupForm = ({
 
       <AppStack direction={{ xs: 'column', md: 'row' }} spacing={3} sx={{ mb: 2.5 }}>
         <AppBox
-          component="img"
-          src={qrCodeUrl}
-          alt="QR Code MFA"
           sx={{
             width: 150,
             height: 150,
@@ -105,7 +102,13 @@ export const PlatformMfaSetupForm = ({
             p: 1,
             bgcolor: theme.palette.background.paper,
           }}
-        />
+        >
+          <img
+            src={qrCodeUrl}
+            alt="QR Code MFA"
+            style={{ width: '100%', height: '100%', display: 'block' }}
+          />
+        </AppBox>
         <AppStack spacing={0.8} sx={{ flex: 1 }}>
           <AppStack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
             <ShieldOutlinedIcon sx={{ color: theme.palette.text.secondary }} />

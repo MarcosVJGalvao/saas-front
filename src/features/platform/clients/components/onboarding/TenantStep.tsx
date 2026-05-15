@@ -3,7 +3,7 @@ import { AppMenuItem } from '@shared/components/inputs/AppMenuItem';
 import { AppStack } from '@shared/components/layout/AppStack';
 import { AppText } from '@shared/components/data-display/AppText';
 import { OnboardingField } from '@features/platform/clients/components/onboarding/OnboardingField';
-import type { OnboardingStepProps } from '@features/platform/clients/components/onboarding/types';
+import type { OnboardingStepProps } from '@features/platform/clients/types/clientOnboardingPresentation';
 
 const timezoneOptions: string[] = [
   'America/Sao_Paulo',

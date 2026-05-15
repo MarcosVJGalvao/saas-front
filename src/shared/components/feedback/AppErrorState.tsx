@@ -4,11 +4,11 @@ import type { SxProps, Theme } from '@mui/material/styles';
 import { AppButton } from '@shared/components/inputs/AppButton';
 
 interface AppErrorStateProps {
-  title?: string;
+  title?: string | undefined;
   message: string;
-  retryLabel?: string;
-  onRetry?: () => void;
-  sx?: SxProps<Theme>;
+  retryLabel?: string | undefined;
+  onRetry?: (() => void) | undefined;
+  sx?: SxProps<Theme> | undefined;
 }
 
 export const AppErrorState = ({

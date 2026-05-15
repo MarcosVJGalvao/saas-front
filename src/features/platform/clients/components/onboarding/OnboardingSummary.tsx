@@ -25,18 +25,18 @@ const stepLabels = [
   'Plano e Assinatura',
   'Usuário Administrador',
 ];
-const stepHints = [
-  'Informações principais do cliente.',
-  'Configuração do identificador do tenant.',
-  'Seleção do plano e ciclo de cobrança.',
-  'Dados do usuário administrador.',
-];
+const stepHints: OnboardingSummaryData = {
+  client: 'Informações principais do cliente.',
+  tenant: 'Configuração do identificador do tenant.',
+  plan: 'Seleção do plano e ciclo de cobrança.',
+  admin: 'Dados do usuário administrador.',
+};
 
 const getSummaryTexts = (summary: OnboardingSummaryData): string[] => [
-  summary.client || stepHints[0],
-  summary.tenant || stepHints[1],
-  summary.plan || stepHints[2],
-  summary.admin || stepHints[3],
+  summary.client || stepHints.client,
+  summary.tenant || stepHints.tenant,
+  summary.plan || stepHints.plan,
+  summary.admin || stepHints.admin,
 ];
 
 export const OnboardingSummary = memo(

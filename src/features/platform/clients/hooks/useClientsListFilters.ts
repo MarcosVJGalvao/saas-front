@@ -11,16 +11,16 @@ const resolveStatusFilterValue = (statusValue: string): 'active' | 'inactive' | 
 interface ClientsListFiltersParams {
   query: string;
   listQuery: {
-    status?: 'active' | 'inactive';
-    startDate?: string;
-    endDate?: string;
+    status?: 'active' | 'inactive' | undefined;
+    startDate?: string | undefined;
+    endDate?: string | undefined;
   };
   onQueryChange: (value: string) => void;
   updateQuery: (patch: {
-    search?: string;
-    status?: 'active' | 'inactive';
-    startDate?: string;
-    endDate?: string;
+    search?: string | undefined;
+    status?: 'active' | 'inactive' | undefined;
+    startDate?: string | undefined;
+    endDate?: string | undefined;
     page: number;
   }) => void;
 }

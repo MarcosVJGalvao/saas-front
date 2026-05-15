@@ -9,17 +9,19 @@ export interface AppDatePickerProps {
   label: string;
   value: string | null;
   onChange: (value: string | null) => void;
-  helperText?: string;
-  error?: boolean;
-  fullWidth?: boolean;
-  required?: boolean;
-  disabled?: boolean;
-  minDate?: Date;
-  maxDate?: Date;
-  textFieldSlotProps?: {
-    size?: 'small' | 'medium';
-    sx?: SxProps<Theme>;
-  };
+  helperText?: string | undefined;
+  error?: boolean | undefined;
+  fullWidth?: boolean | undefined;
+  required?: boolean | undefined;
+  disabled?: boolean | undefined;
+  minDate?: Date | undefined;
+  maxDate?: Date | undefined;
+  textFieldSlotProps?:
+    | {
+        size?: 'small' | 'medium' | undefined;
+        sx?: SxProps<Theme> | undefined;
+      }
+    | undefined;
 }
 
 const DISPLAY_DATE_FORMAT = 'dd/MM/yyyy';
@@ -59,8 +61,8 @@ export const AppDatePicker = ({
         label={label}
         value={parsedValue}
         disabled={disabled}
-        minDate={minDate}
-        maxDate={maxDate}
+        {...(minDate !== undefined ? { minDate } : {})}
+        {...(maxDate !== undefined ? { maxDate } : {})}
         onChange={(nextValue) => {
           onChange(toBackendDate(nextValue));
         }}

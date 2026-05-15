@@ -17,12 +17,12 @@ interface StepperWizardProps {
   steps: string[];
   children: ReactNode;
   onBack: () => void;
-  onCancel?: () => void;
+  onCancel?: (() => void) | undefined;
   onNext: () => void;
   isLastStep: boolean;
-  nextLabel?: string;
-  nextDisabled?: boolean;
-  nextLoading?: boolean;
+  nextLabel?: string | undefined;
+  nextDisabled?: boolean | undefined;
+  nextLoading?: boolean | undefined;
 }
 
 const stepIcons = [
@@ -57,7 +57,7 @@ export const StepperWizard = ({
     >
       {steps.map((label, index) => {
         const isActive = activeStep === index;
-        const Icon = stepIcons[index % stepIcons.length];
+        const Icon = stepIcons[index % stepIcons.length] ?? PersonOutlineOutlinedIcon;
 
         return (
           <Stack

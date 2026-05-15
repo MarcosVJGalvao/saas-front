@@ -10,14 +10,14 @@ export interface SidebarChildItem extends NavigationItem {
   isActive: boolean;
   isOpen: boolean;
   hasChildren: boolean;
-  children?: SidebarLeafItem[];
+  children?: SidebarLeafItem[] | undefined;
 }
 
 export interface SidebarMappedItem extends NavigationItem {
   hasChildren: boolean;
   isActive: boolean;
   isOpen: boolean;
-  children?: SidebarChildItem[];
+  children?: SidebarChildItem[] | undefined;
 }
 
 interface SidebarContentStateResult {

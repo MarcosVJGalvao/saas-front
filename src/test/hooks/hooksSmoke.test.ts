@@ -12,7 +12,7 @@ import { useDebounce } from '@shared/hooks/useDebounce/useDebounce';
 import { useDebouncedCallback } from '@shared/hooks/useDebounce/useDebouncedCallback';
 import { useError } from '@shared/hooks/useError/useError';
 import { useAppLayoutState } from '@shared/hooks/useAppLayoutState';
-import { CLIENT_HOME_MESSAGES } from '@features/client/auth/hooks/useClientHomeData';
+import { CLIENT_HOME_MESSAGES } from '@features/client/home/hooks/useClientHomeData';
 
 describe('hooks smoke', () => {
   it('exports hooks not individually covered yet', () => {
