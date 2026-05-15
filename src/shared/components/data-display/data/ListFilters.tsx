@@ -28,6 +28,7 @@ import {
   toStringValue,
 } from '@shared/components/data-display/data/listFilters.utils';
 import { layoutSpacing, spacingScale } from '@theme/spacing';
+import { responsive } from '@theme/utils/responsive';
 
 interface RenderFieldParams {
   field: FilterField;
@@ -40,7 +41,7 @@ type SelectFilterField = Extract<FilterField, { type: 'select' }>;
 type TextFilterField = Extract<FilterField, { type: 'text' }>;
 
 const createBaseFieldSx = (mobileOrder: number): SxProps<Theme> => ({
-  order: { xs: mobileOrder, sm: 'unset' },
+  order: responsive<number | string>({ mobile: mobileOrder, tablet: 'unset' }),
 });
 
 const renderTextField = ({
@@ -55,7 +56,7 @@ const renderTextField = ({
     spacing={spacingScale.xxs}
     sx={{
       ...createBaseFieldSx(mobileOrder),
-      gridColumn: { xs: 'auto', md: 'span 2', lg: 'span 2' },
+      gridColumn: responsive({ mobile: 'auto', tablet: 'span 2' }),
     }}
   >
     <Typography variant="body2">{field.label}</Typography>
@@ -146,7 +147,15 @@ const renderFilterField = ({
   }
 
   return (
-    <Stack key={field.name} spacing={spacingScale.xxs} sx={createBaseFieldSx(mobileOrder)}>
+    <Stack
+      key={field.name}
+      spacing={spacingScale.xxs}
+      sx={{
+        ...createBaseFieldSx(mobileOrder),
+        gridColumn: responsive({ mobile: 'auto', tablet: 'span 2' }),
+        minWidth: 0,
+      }}
+    >
       <Typography variant="body2">{field.label}</Typography>
       <DateRangePicker
         compact
@@ -157,8 +166,8 @@ const renderFilterField = ({
         onStartChange={(nextValue) => onChange(field.startName, nextValue)}
         onEndChange={(nextValue) => onChange(field.endName, nextValue)}
         disabled={isDisabled}
-        startTextFieldSx={{ minWidth: { xs: '100%', sm: 150 } }}
-        endTextFieldSx={{ minWidth: { xs: '100%', sm: 150 } }}
+        startTextFieldSx={{ minWidth: 0, width: '100%' }}
+        endTextFieldSx={{ minWidth: 0, width: '100%' }}
       />
     </Stack>
   );
@@ -174,13 +183,9 @@ const renderFieldsGrid = (
   <Box
     sx={{
       display: 'grid',
-      gridTemplateColumns: {
-        xs: '1fr',
-        sm: 'repeat(2, minmax(0, 1fr))',
-        md: 'repeat(3, minmax(0, 1fr))',
-        lg: 'repeat(5, minmax(0, 1fr))',
-      },
+      gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 180px), 1fr))',
       gap: layoutSpacing.gridGap,
+      alignItems: 'end',
     }}
   >
     {fields.map((field) =>

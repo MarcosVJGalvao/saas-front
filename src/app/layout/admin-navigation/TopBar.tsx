@@ -37,7 +37,27 @@ const getSearchContainerSx = (isMobile: boolean) => ({
   justifyContent: 'flex-start',
   flex: isMobile ? 1 : '1 1 auto',
   minWidth: 0,
+  '@media (max-width:450px)': {
+    flex: '0 0 42px',
+  },
 });
+
+const TopBarSearchLabel = () => (
+  <Box
+    component="span"
+    sx={{
+      minWidth: 0,
+      overflow: 'hidden',
+      textOverflow: 'ellipsis',
+      whiteSpace: 'nowrap',
+      '@media (max-width:450px)': {
+        display: 'none',
+      },
+    }}
+  >
+    {appLayoutMessages.searchPlaceholder}
+  </Box>
+);
 
 const TopBarSearchShortcut = ({ isMobile }: { isMobile: boolean }) =>
   !isMobile ? (
@@ -63,6 +83,9 @@ const sessionTimerContainerSx = {
   display: { xs: 'none', md: 'flex' },
   alignItems: 'center',
   minWidth: 0,
+  '@media (max-width:450px)': {
+    display: 'flex',
+  },
 };
 
 const TopBarUserInfo = ({
@@ -126,6 +149,9 @@ export const TopBar = ({
           fontSize: { xs: '1.125rem', lg: '1.25rem' },
           minWidth: { xs: 0, sm: 120, md: 140 },
           maxWidth: { xs: 120, sm: 160, lg: 220 },
+          '@media (max-width:450px)': {
+            maxWidth: 76,
+          },
           overflow: 'hidden',
           textOverflow: 'ellipsis',
           whiteSpace: 'nowrap',
@@ -143,6 +169,13 @@ export const TopBar = ({
             maxWidth: { xs: '100%', sm: 220, md: 260, lg: 340 },
             minWidth: { xs: 0, sm: 180 },
             justifyContent: isMobile ? 'flex-start' : 'space-between',
+            '@media (max-width:450px)': {
+              width: 42,
+              minWidth: 42,
+              maxWidth: 42,
+              justifyContent: 'center',
+              px: 0,
+            },
             textTransform: 'none',
             border: 1,
             borderColor: 'divider',
@@ -154,14 +187,33 @@ export const TopBar = ({
             color: 'text.secondary',
             '& .MuiButton-startIcon': {
               mr: 0.75,
+              '@media (max-width:450px)': {
+                mr: 0,
+                ml: 0,
+              },
             },
             overflow: 'hidden',
             whiteSpace: 'nowrap',
             textOverflow: 'ellipsis',
           }}
         >
-          {appLayoutMessages.searchPlaceholder}
-          <TopBarSearchShortcut isMobile={isMobile} />
+          <Box
+            component="span"
+            sx={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              flex: 1,
+              minWidth: 0,
+              gap: 1,
+              '@media (max-width:450px)': {
+                display: 'none',
+              },
+            }}
+          >
+            <TopBarSearchLabel />
+            <TopBarSearchShortcut isMobile={isMobile} />
+          </Box>
         </Button>
       </Box>
       <Box
