@@ -1,0 +1,96 @@
+import AddIcon from '@mui/icons-material/Add';
+import { ListFilters } from '@shared/components/data-display/data/ListFilters';
+import { ListMetricsGrid } from '@shared/components/data-display/data/ListMetricsGrid';
+import { QueryDataTable } from '@shared/components/data-display/data/QueryDataTable';
+import { ConfirmDialog } from '@shared/components/feedback/ConfirmDialog';
+import { ListDialog } from '@shared/components/feedback/ListDialog';
+import { PageHeader } from '@shared/components/layout/PageHeader';
+import { useSubscriptionsListFilterControls } from '@features/platform/subscriptions/hooks/useSubscriptionsListFilterControls';
+import { useSubscriptionsListViewModel } from '@features/platform/subscriptions/hooks/useSubscriptionsListViewModel';
+
+const SubscriptionsListPage = () => {
+  const model = useSubscriptionsListViewModel();
+  const filters = useSubscriptionsListFilterControls(model);
+
+  return (
+    <>
+      <PageHeader
+        title="Gestão de Assinaturas"
+        subtitle="Gerencie planos ativos, renovações e cobranças"
+        actionLabel="Nova Assinatura"
+        actionIcon={<AddIcon fontSize="small" />}
+        onAction={() => void model.view.navigate('/platform/subscriptions/new')}
+      />
+      <ListMetricsGrid loading={model.view.list.loading} items={model.metrics} />
+
+      <ListFilters
+        fields={[
+          {
+            type: 'text',
+            name: 'search',
+            label: 'Buscar',
+            placeholder: 'Buscar por cliente...',
+            mobileOrder: 1,
+          },
+          {
+            type: 'select',
+            name: 'status',
+            label: 'Status',
+            placeholder: 'Todos os status',
+            options: model.statusOptions.map((item) => ({ label: item.label, value: item.value })),
+            mobileOrder: 2,
+          },
+          {
+            type: 'dateRange',
+            name: 'period',
+            label: 'Período',
+            startName: 'startDate',
+            endName: 'endDate',
+            mobileOrder: 3,
+          },
+        ]}
+        values={filters.values}
+        onChange={filters.handleFilterChange}
+        onApply={() => undefined}
+        onClear={model.clearFilters}
+        loading={model.view.list.loading}
+      />
+
+      <QueryDataTable
+        rows={model.view.list.rows}
+        columns={model.columns}
+        mobileConfig={model.mobileConfig}
+        getRowId={(row) => row.id}
+        meta={model.view.list.meta}
+        query={model.searchValue}
+        onQueryChange={model.updateSearch}
+        loading={model.view.list.loading}
+        errorMessage={model.view.list.errorMessage}
+        onPageChange={(nextPage) => model.view.list.updateQuery({ page: nextPage })}
+        onRowsPerPageChange={(nextRowsPerPage) =>
+          model.view.list.updateQuery({ limit: nextRowsPerPage, page: 1 })
+        }
+        hideToolbar
+        emptyTitle="Nenhuma assinatura encontrada"
+        emptyDescription="Ajuste os filtros ou cadastre uma nova assinatura."
+      />
+
+      <ConfirmDialog
+        open={model.view.cancelOpen}
+        title="Cancelar assinatura"
+        description="Escolha como cancelar."
+        confirmLabel="Imediato"
+        onCancel={() => model.view.setCancelOpen(false)}
+        onConfirm={model.confirmCancel}
+      />
+      <ListDialog
+        open={model.view.historyOpen}
+        title="Histórico de plano"
+        onClose={() => model.view.setHistoryOpen(false)}
+        rows={model.historyDialogRows}
+      />
+    </>
+  );
+};
+
+export default SubscriptionsListPage;

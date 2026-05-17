@@ -1,8 +1,8 @@
 import { act, renderHook } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 import { describe, expect, it, vi } from 'vitest';
-import type { NavigationItem } from '../../models/navigation';
-import { useSidebarContentState } from '../../hooks/useSidebarContentState';
+import type { NavigationItem } from '@shared/types/navigation';
+import { useSidebarContentState } from '@shared/hooks/useSidebarContentState';
 
 const navigateMock = vi.fn();
 

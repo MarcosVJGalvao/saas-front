@@ -1,7 +1,12 @@
 import { describe, expect, it } from 'vitest';
-import { onlyDigits } from '../../utils/parse';
-import { isValidCep, isValidCnpj, isValidCpf, isValidPhoneBr } from '../../utils/validation';
-import { maskCep, maskCnpj, maskCpf, maskCurrency, maskPhone } from '../../utils/mask';
+import { onlyDigits } from '@shared/parsers/stringParsers';
+import {
+  isValidCep,
+  isValidCnpj,
+  isValidCpf,
+  isValidPhoneBr,
+} from '@shared/validators/brazilianDocumentValidators';
+import { maskCep, maskCnpj, maskCpf, maskCurrency, maskPhone } from '@shared/masks/inputMasks';
 
 describe('utils mask/parse/validation', () => {
   it('should normalize digits', () => {

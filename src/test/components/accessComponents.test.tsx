@@ -1,8 +1,8 @@
 import { render } from '@testing-library/react';
 import { BrowserRouter } from 'react-router-dom';
 import { describe, expect, it } from 'vitest';
-import { PermissionGate } from '../../components/common/access/PermissionGate';
-import { ProtectedRoute } from '../../components/common/access/ProtectedRoute';
+import { PermissionGate } from '@app/guards/PermissionGate';
+import { ProtectedRoute } from '@app/guards/ProtectedRoute';
 
 describe('Access components', () => {
   it('renders permission content when allowed', () => {

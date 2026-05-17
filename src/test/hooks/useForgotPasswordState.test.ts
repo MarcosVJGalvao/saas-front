@@ -1,9 +1,9 @@
 import { act, renderHook } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { useForgotPasswordState } from '../../hooks/client-auth/useForgotPasswordState';
-import { clientAuthService } from '../../services/client/auth/service';
+import { useForgotPasswordState } from '@features/client/auth/hooks/useForgotPasswordState';
+import { clientAuthService } from '@features/client/auth/services/service';
 
-vi.mock('../../services/client/auth/service', () => ({
+vi.mock('@features/client/auth/services/service', () => ({
   clientAuthService: {
     forgotPassword: vi.fn(),
   },

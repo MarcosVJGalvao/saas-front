@@ -1,6 +1,6 @@
 import { render } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
-import { ActionButtons } from '../../components/common/actions/ActionButtons';
+import { ActionButtons } from '@shared/components/actions/ActionButtons';
 
 describe('ActionButtons', () => {
   it('should render action labels and trigger callback', () => {

@@ -1,8 +1,8 @@
-import { act, renderHook } from '@testing-library/react';
+import { act, fireEvent, render, renderHook, screen } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 import { describe, expect, it, vi } from 'vitest';
-import type { NavigationItem } from '../../models/navigation';
-import { useCommandPaletteView } from '../../hooks/useCommandPaletteView';
+import type { NavigationItem } from '@shared/types/navigation';
+import { useCommandPaletteView } from '@shared/hooks/useCommandPaletteView';
 
 const navigateMock = vi.fn();
 
@@ -17,6 +17,12 @@ vi.mock('react-router-dom', async () => {
 const wrapper = ({ children }: { children: React.ReactNode }) => (
   <MemoryRouter>{children}</MemoryRouter>
 );
+
+const CommandPaletteKeydownHarness = ({ onClose }: { onClose: () => void }) => {
+  const view = useCommandPaletteView('dash', [], items, onClose);
+
+  return <input aria-label="Busca" onKeyDown={view.onKeyDown} />;
+};
 
 const items: NavigationItem[] = [
   { id: 'dashboard', label: 'Dashboard', href: '/dashboard', permission: 'dashboard:read' },
@@ -46,16 +52,14 @@ describe('useCommandPaletteView', () => {
 
   it('navega no enter e fecha palette', () => {
     const onClose = vi.fn();
-    const { result } = renderHook(() => useCommandPaletteView('dash', [], items, onClose), {
-      wrapper,
-    });
 
-    act(() => {
-      result.current.onKeyDown({
-        key: 'Enter',
-        preventDefault: vi.fn(),
-      } as unknown as React.KeyboardEvent);
-    });
+    render(
+      <MemoryRouter>
+        <CommandPaletteKeydownHarness onClose={onClose} />
+      </MemoryRouter>,
+    );
+
+    fireEvent.keyDown(screen.getByLabelText('Busca'), { key: 'Enter' });
 
     expect(navigateMock).toHaveBeenCalledWith('/dashboard');
     expect(onClose).toHaveBeenCalled();

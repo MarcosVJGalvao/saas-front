@@ -1,9 +1,9 @@
 import { render } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 import { describe, expect, it } from 'vitest';
-import { DomainProtectedRoute } from '../../components/common/access/DomainProtectedRoute';
-import { AuthProvider } from '../../hooks/useAuth/useAuth';
-import { AUTH_DOMAIN } from '../../models/auth/auth';
+import { DomainProtectedRoute } from '@app/guards/DomainProtectedRoute';
+import { AuthProvider } from '@shared/hooks/useAuth/useAuth';
+import { AUTH_DOMAIN } from '@shared/types/auth/auth';
 
 describe('DomainProtectedRoute', () => {
   it('redirects to login when no valid domain session exists', () => {

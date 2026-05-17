@@ -1,18 +1,18 @@
 import { describe, expect, it } from 'vitest';
-import { useClientLoginFlow } from '../../hooks/client-auth/useClientLoginFlow';
-import { useClientLogout } from '../../hooks/client-auth/useClientLogout';
-import { usePlatformLoginFlow } from '../../hooks/platform-auth/usePlatformLoginFlow';
-import { usePlatformMfaFlow } from '../../hooks/platform-auth/usePlatformMfaFlow';
-import { usePlatformMfaSetupFlow } from '../../hooks/platform-auth/usePlatformMfaSetupFlow';
-import { usePlatformProfile } from '../../hooks/platform-auth/usePlatformProfile';
-import { useAsync } from '../../hooks/useAsync/useAsync';
-import { useAuth } from '../../hooks/useAuth/useAuth';
-import { useColorMode } from '../../hooks/useColorMode/useColorMode';
-import { useDebounce } from '../../hooks/useDebounce/useDebounce';
-import { useDebouncedCallback } from '../../hooks/useDebounce/useDebouncedCallback';
-import { useError } from '../../hooks/useError/useError';
-import { useAppLayoutState } from '../../hooks/useAppLayoutState';
-import { CLIENT_HOME_MESSAGES } from '../../hooks/client-auth/useClientHomeData';
+import { useClientLoginFlow } from '@features/client/auth/hooks/useClientLoginFlow';
+import { useClientLogout } from '@features/client/auth/hooks/useClientLogout';
+import { usePlatformLoginFlow } from '@features/platform/auth/hooks/usePlatformLoginFlow';
+import { usePlatformMfaFlow } from '@features/platform/auth/hooks/usePlatformMfaFlow';
+import { usePlatformMfaSetupFlow } from '@features/platform/auth/hooks/usePlatformMfaSetupFlow';
+import { usePlatformProfile } from '@features/platform/auth/hooks/usePlatformProfile';
+import { useAsync } from '@shared/hooks/useAsync/useAsync';
+import { useAuth } from '@shared/hooks/useAuth/useAuth';
+import { useColorMode } from '@shared/hooks/useColorMode/useColorMode';
+import { useDebounce } from '@shared/hooks/useDebounce/useDebounce';
+import { useDebouncedCallback } from '@shared/hooks/useDebounce/useDebouncedCallback';
+import { useError } from '@shared/hooks/useError/useError';
+import { useAppLayoutState } from '@shared/hooks/useAppLayoutState';
+import { CLIENT_HOME_MESSAGES } from '@features/client/home/hooks/useClientHomeData';
 
 describe('hooks smoke', () => {
   it('exports hooks not individually covered yet', () => {

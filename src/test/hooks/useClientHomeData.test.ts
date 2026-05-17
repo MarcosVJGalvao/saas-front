@@ -1,9 +1,12 @@
 import { renderHook, waitFor } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { useClientHomeData, CLIENT_HOME_MESSAGES } from '../../hooks/client-auth/useClientHomeData';
-import { clientAuthService } from '../../services/client/auth/service';
+import {
+  useClientHomeData,
+  CLIENT_HOME_MESSAGES,
+} from '@features/client/home/hooks/useClientHomeData';
+import { clientAuthService } from '@features/client/auth/services/service';
 
-vi.mock('../../services/client/auth/service', () => ({
+vi.mock('@features/client/auth/services/service', () => ({
   clientAuthService: {
     me: vi.fn(),
   },

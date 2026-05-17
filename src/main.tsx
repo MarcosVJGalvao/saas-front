@@ -1,11 +1,7 @@
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
-import { BrowserRouter } from 'react-router-dom';
-import App from './App';
-import { ErrorBoundary } from './errors/ErrorBoundary';
-import { AuthProvider } from './hooks/useAuth/useAuth';
-import { AppThemeProvider } from './hooks/useColorMode/useColorMode';
-import { ErrorProvider } from './hooks/useError/useError';
+import { AppProviders } from '@app/providers/AppProviders';
+import { AppRouter } from '@app/router/AppRouter';
 
 const rootElement = document.getElementById('root');
 
@@ -15,16 +11,8 @@ if (rootElement === null) {
 
 createRoot(rootElement).render(
   <StrictMode>
-    <AppThemeProvider>
-      <ErrorBoundary>
-        <AuthProvider>
-          <ErrorProvider>
-            <BrowserRouter>
-              <App />
-            </BrowserRouter>
-          </ErrorProvider>
-        </AuthProvider>
-      </ErrorBoundary>
-    </AppThemeProvider>
+    <AppProviders>
+      <AppRouter />
+    </AppProviders>
   </StrictMode>,
 );

@@ -1,6 +1,6 @@
 import { fireEvent, render, screen } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
-import { ListFilters } from '../../components/common/data/ListFilters';
+import { ListFilters } from '@shared/components/data-display/data/ListFilters';
 
 describe('ListFilters', () => {
   it('renders title and fields', () => {
@@ -41,7 +41,11 @@ describe('ListFilters', () => {
       />,
     );
     fireEvent.change(screen.getByPlaceholderText('Buscar...'), { target: { value: 'abc' } });
-    fireEvent.mouseDown(screen.getAllByRole('combobox')[0]);
+    const combobox = screen.getAllByRole('combobox')[0];
+    if (combobox === undefined) {
+      throw new Error('Combobox de status não encontrado.');
+    }
+    fireEvent.mouseDown(combobox);
     fireEvent.click(screen.getByText('Ativo'));
     fireEvent.click(screen.getByText('Aplicar filtros'));
     fireEvent.click(screen.getByText('Limpar filtros'));

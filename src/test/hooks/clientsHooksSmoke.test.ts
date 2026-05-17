@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
-import { useClientDetails } from '../../hooks/clients/useClientDetails';
-import { useClientsList } from '../../hooks/clients/useClientsList';
-import { useClientsMutations } from '../../hooks/clients/useClientsMutations';
+import { useClientDetails } from '@features/platform/clients/hooks/useClientDetails';
+import { useClientsList } from '@features/platform/clients/hooks/useClientsList';
+import { useClientsMutations } from '@features/platform/clients/hooks/useClientsMutations';
 
 describe('clients hooks smoke', () => {
   it('exports clients hooks', () => {

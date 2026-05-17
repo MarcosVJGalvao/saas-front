@@ -1,6 +1,6 @@
 import { fireEvent, render } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
-import { ConfirmDialog } from '../../components/common/feedback/ConfirmDialog';
+import { ConfirmDialog } from '@shared/components/feedback/ConfirmDialog';
 
 describe('ConfirmDialog', () => {
   it('triggers confirm callback', () => {

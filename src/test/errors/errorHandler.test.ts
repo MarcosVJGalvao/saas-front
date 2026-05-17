@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { ErrorHandler } from '../../errors/ErrorHandler';
-import { ErrorDisplayMode, ErrorSeverity } from '../../models/types';
+import { ErrorHandler } from '@shared/errors/ErrorHandler';
+import { ErrorDisplayMode, ErrorSeverity } from '@shared/types/appError';
 
 describe('ErrorHandler', () => {
   it('translates INVALID_INPUT messages and keeps all entries', () => {
@@ -11,7 +11,7 @@ describe('ErrorHandler', () => {
     });
 
     expect(result.message).toBe('Existem campos inválidos. Revise os dados informados.');
-    expect(result.messages).toEqual(['o campo não pode estar vazio', 'o e-mail é inválido']);
+    expect(result.messages).toEqual(['O campo não pode estar vazio.', 'O e-mail é inválido.']);
     expect(result.correlationId).toBe('c113416d-2180-4141-9965-c14f93046977');
     expect(result.displayMode).toBe(ErrorDisplayMode.SNACKBAR);
     expect(result.severity).toBe(ErrorSeverity.MEDIUM);
