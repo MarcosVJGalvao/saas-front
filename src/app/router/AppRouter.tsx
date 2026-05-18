@@ -45,6 +45,102 @@ const ClientForgotPasswordPage = lazy(
 const ClientResetPasswordPage = lazy(() => import('@features/client/auth/pages/ResetPasswordPage'));
 const ClientDashboardPage = lazy(() => import('@features/client/dashboard/pages/DashboardPage'));
 const ClientHomePage = lazy(() => import('@features/client/home/pages/HomePage'));
+const StudentEnrollmentsListPage = lazy(
+  () => import('@features/client/student-enrollments/pages/StudentEnrollmentsListPage'),
+);
+const StudentEnrollmentOnboardingPage = lazy(
+  () => import('@features/client/student-enrollments/pages/StudentEnrollmentOnboardingPage'),
+);
+const StudentEnrollmentDetailsPage = lazy(
+  () => import('@features/client/student-enrollments/pages/StudentEnrollmentDetailsPage'),
+);
+const StudentEnrollmentEditPage = lazy(
+  () => import('@features/client/student-enrollments/pages/StudentEnrollmentEditPage'),
+);
+const AcademicYearsPage = lazy(() => import('@features/client/academic/pages/AcademicYearsPage'));
+const AcademicYearDetailsPage = lazy(
+  () => import('@features/client/academic/pages/AcademicYearDetailsPage'),
+);
+const EducationLevelsPage = lazy(
+  () => import('@features/client/academic/pages/EducationLevelsPage'),
+);
+const EducationLevelDetailsPage = lazy(
+  () => import('@features/client/academic/pages/EducationLevelDetailsPage'),
+);
+const GradesPage = lazy(() => import('@features/client/academic/pages/GradesPage'));
+const GradeDetailsPage = lazy(() => import('@features/client/academic/pages/GradeDetailsPage'));
+const SchoolClassesPage = lazy(() => import('@features/client/academic/pages/SchoolClassesPage'));
+const SchoolClassDetailsPage = lazy(
+  () => import('@features/client/academic/pages/SchoolClassDetailsPage'),
+);
+const SubjectsPage = lazy(() => import('@features/client/academic/pages/SubjectsPage'));
+const SubjectDetailsPage = lazy(() => import('@features/client/academic/pages/SubjectDetailsPage'));
+const TeacherSubjectsPage = lazy(
+  () => import('@features/client/academic/pages/TeacherSubjectsPage'),
+);
+const StudentsPage = lazy(() => import('@features/client/students/pages/StudentsPage'));
+const StudentDetailsPage = lazy(() => import('@features/client/students/pages/StudentDetailsPage'));
+const LegalGuardiansPage = lazy(() => import('@features/client/students/pages/LegalGuardiansPage'));
+const LegalGuardianDetailsPage = lazy(
+  () => import('@features/client/students/pages/LegalGuardianDetailsPage'),
+);
+const AttendanceSchedulesPage = lazy(
+  () => import('@features/client/attendance/pages/AttendanceSchedulesPage'),
+);
+const AttendanceRecordsPage = lazy(
+  () => import('@features/client/attendance/pages/AttendanceRecordsPage'),
+);
+const AttendanceSummariesPage = lazy(
+  () => import('@features/client/attendance/pages/AttendanceSummariesPage'),
+);
+const DocumentsPage = lazy(() => import('@features/client/documents/pages/DocumentsPage'));
+const DocumentDetailsPage = lazy(
+  () => import('@features/client/documents/pages/DocumentDetailsPage'),
+);
+const FinancialDashboardPage = lazy(
+  () => import('@features/client/financial/pages/FinancialDashboardPage'),
+);
+const AccountsPayablePage = lazy(
+  () => import('@features/client/financial/pages/AccountsPayablePage'),
+);
+const AccountsReceivablePage = lazy(
+  () => import('@features/client/financial/pages/AccountsReceivablePage'),
+);
+const FinancialCategoriesPage = lazy(
+  () => import('@features/client/financial/pages/FinancialCategoriesPage'),
+);
+const FinancialCategoryDetailsPage = lazy(
+  () => import('@features/client/financial/pages/FinancialCategoryDetailsPage'),
+);
+const FinancialCostCentersPage = lazy(
+  () => import('@features/client/financial/pages/FinancialCostCentersPage'),
+);
+const FinancialCostCenterDetailsPage = lazy(
+  () => import('@features/client/financial/pages/FinancialCostCenterDetailsPage'),
+);
+const FinancialTransactionsPage = lazy(
+  () => import('@features/client/financial/pages/FinancialTransactionsPage'),
+);
+const FinancialReportsPage = lazy(
+  () => import('@features/client/financial/pages/FinancialReportsPage'),
+);
+const ReportCardAcademicPeriodsPage = lazy(
+  () => import('@features/client/report-cards/pages/ReportCardAcademicPeriodsPage'),
+);
+const ReportCardGradeSubjectsPage = lazy(
+  () => import('@features/client/report-cards/pages/ReportCardGradeSubjectsPage'),
+);
+const ReportCardEntriesPage = lazy(
+  () => import('@features/client/report-cards/pages/ReportCardEntriesPage'),
+);
+const ReportCardQueriesPage = lazy(
+  () => import('@features/client/report-cards/pages/ReportCardQueriesPage'),
+);
+const ReportCardProcessingsPage = lazy(
+  () => import('@features/client/report-cards/pages/ReportCardProcessingsPage'),
+);
+const ClientUsersPage = lazy(() => import('@features/client/admin/pages/ClientUsersPage'));
+const ClientRolesPage = lazy(() => import('@features/client/admin/pages/ClientRolesPage'));
 
 const TOKEN_EXPIRED_EVENT = 'app:token-expired';
 
@@ -276,6 +372,326 @@ export const AppRouter = () => {
             element={
               <ProtectedClientRoute>
                 <ClientHomePage />
+              </ProtectedClientRoute>
+            }
+          />
+          <Route
+            path="/client/student-enrollments"
+            element={
+              <ProtectedClientRoute>
+                <StudentEnrollmentsListPage />
+              </ProtectedClientRoute>
+            }
+          />
+          <Route
+            path="/client/student-enrollments/new"
+            element={
+              <ProtectedClientRoute>
+                <StudentEnrollmentOnboardingPage />
+              </ProtectedClientRoute>
+            }
+          />
+          <Route
+            path="/client/student-enrollments/:id"
+            element={
+              <ProtectedClientRoute>
+                <StudentEnrollmentDetailsPage />
+              </ProtectedClientRoute>
+            }
+          />
+          <Route
+            path="/client/student-enrollments/:id/edit"
+            element={
+              <ProtectedClientRoute>
+                <StudentEnrollmentEditPage />
+              </ProtectedClientRoute>
+            }
+          />
+          <Route
+            path="/client/academic-years"
+            element={
+              <ProtectedClientRoute>
+                <AcademicYearsPage />
+              </ProtectedClientRoute>
+            }
+          />
+          <Route
+            path="/client/academic-years/:id"
+            element={
+              <ProtectedClientRoute>
+                <AcademicYearDetailsPage />
+              </ProtectedClientRoute>
+            }
+          />
+          <Route
+            path="/client/education-levels"
+            element={
+              <ProtectedClientRoute>
+                <EducationLevelsPage />
+              </ProtectedClientRoute>
+            }
+          />
+          <Route
+            path="/client/education-levels/:id"
+            element={
+              <ProtectedClientRoute>
+                <EducationLevelDetailsPage />
+              </ProtectedClientRoute>
+            }
+          />
+          <Route
+            path="/client/grades"
+            element={
+              <ProtectedClientRoute>
+                <GradesPage />
+              </ProtectedClientRoute>
+            }
+          />
+          <Route
+            path="/client/grades/:id"
+            element={
+              <ProtectedClientRoute>
+                <GradeDetailsPage />
+              </ProtectedClientRoute>
+            }
+          />
+          <Route
+            path="/client/school-classes"
+            element={
+              <ProtectedClientRoute>
+                <SchoolClassesPage />
+              </ProtectedClientRoute>
+            }
+          />
+          <Route
+            path="/client/school-classes/:id"
+            element={
+              <ProtectedClientRoute>
+                <SchoolClassDetailsPage />
+              </ProtectedClientRoute>
+            }
+          />
+          <Route
+            path="/client/subjects"
+            element={
+              <ProtectedClientRoute>
+                <SubjectsPage />
+              </ProtectedClientRoute>
+            }
+          />
+          <Route
+            path="/client/subjects/:id"
+            element={
+              <ProtectedClientRoute>
+                <SubjectDetailsPage />
+              </ProtectedClientRoute>
+            }
+          />
+          <Route
+            path="/client/teacher-subjects"
+            element={
+              <ProtectedClientRoute>
+                <TeacherSubjectsPage />
+              </ProtectedClientRoute>
+            }
+          />
+          <Route
+            path="/client/students"
+            element={
+              <ProtectedClientRoute>
+                <StudentsPage />
+              </ProtectedClientRoute>
+            }
+          />
+          <Route
+            path="/client/students/:id"
+            element={
+              <ProtectedClientRoute>
+                <StudentDetailsPage />
+              </ProtectedClientRoute>
+            }
+          />
+          <Route
+            path="/client/legal-guardians"
+            element={
+              <ProtectedClientRoute>
+                <LegalGuardiansPage />
+              </ProtectedClientRoute>
+            }
+          />
+          <Route
+            path="/client/legal-guardians/:id"
+            element={
+              <ProtectedClientRoute>
+                <LegalGuardianDetailsPage />
+              </ProtectedClientRoute>
+            }
+          />
+          <Route
+            path="/client/attendance/schedules"
+            element={
+              <ProtectedClientRoute>
+                <AttendanceSchedulesPage />
+              </ProtectedClientRoute>
+            }
+          />
+          <Route
+            path="/client/attendance/records"
+            element={
+              <ProtectedClientRoute>
+                <AttendanceRecordsPage />
+              </ProtectedClientRoute>
+            }
+          />
+          <Route
+            path="/client/attendance/summaries"
+            element={
+              <ProtectedClientRoute>
+                <AttendanceSummariesPage />
+              </ProtectedClientRoute>
+            }
+          />
+          <Route
+            path="/client/documents"
+            element={
+              <ProtectedClientRoute>
+                <DocumentsPage />
+              </ProtectedClientRoute>
+            }
+          />
+          <Route
+            path="/client/documents/:id"
+            element={
+              <ProtectedClientRoute>
+                <DocumentDetailsPage />
+              </ProtectedClientRoute>
+            }
+          />
+          <Route
+            path="/client/financial/dashboard"
+            element={
+              <ProtectedClientRoute>
+                <FinancialDashboardPage />
+              </ProtectedClientRoute>
+            }
+          />
+          <Route
+            path="/client/financial/accounts-payable"
+            element={
+              <ProtectedClientRoute>
+                <AccountsPayablePage />
+              </ProtectedClientRoute>
+            }
+          />
+          <Route
+            path="/client/financial/accounts-receivable"
+            element={
+              <ProtectedClientRoute>
+                <AccountsReceivablePage />
+              </ProtectedClientRoute>
+            }
+          />
+          <Route
+            path="/client/financial/categories"
+            element={
+              <ProtectedClientRoute>
+                <FinancialCategoriesPage />
+              </ProtectedClientRoute>
+            }
+          />
+          <Route
+            path="/client/financial/categories/:id"
+            element={
+              <ProtectedClientRoute>
+                <FinancialCategoryDetailsPage />
+              </ProtectedClientRoute>
+            }
+          />
+          <Route
+            path="/client/financial/cost-centers"
+            element={
+              <ProtectedClientRoute>
+                <FinancialCostCentersPage />
+              </ProtectedClientRoute>
+            }
+          />
+          <Route
+            path="/client/financial/cost-centers/:id"
+            element={
+              <ProtectedClientRoute>
+                <FinancialCostCenterDetailsPage />
+              </ProtectedClientRoute>
+            }
+          />
+          <Route
+            path="/client/financial/transactions"
+            element={
+              <ProtectedClientRoute>
+                <FinancialTransactionsPage />
+              </ProtectedClientRoute>
+            }
+          />
+          <Route
+            path="/client/financial/reports"
+            element={
+              <ProtectedClientRoute>
+                <FinancialReportsPage />
+              </ProtectedClientRoute>
+            }
+          />
+          <Route
+            path="/client/report-cards/academic-periods"
+            element={
+              <ProtectedClientRoute>
+                <ReportCardAcademicPeriodsPage />
+              </ProtectedClientRoute>
+            }
+          />
+          <Route
+            path="/client/report-cards/grade-subjects"
+            element={
+              <ProtectedClientRoute>
+                <ReportCardGradeSubjectsPage />
+              </ProtectedClientRoute>
+            }
+          />
+          <Route
+            path="/client/report-cards/entries"
+            element={
+              <ProtectedClientRoute>
+                <ReportCardEntriesPage />
+              </ProtectedClientRoute>
+            }
+          />
+          <Route
+            path="/client/report-cards/queries"
+            element={
+              <ProtectedClientRoute>
+                <ReportCardQueriesPage />
+              </ProtectedClientRoute>
+            }
+          />
+          <Route
+            path="/client/report-cards/processings"
+            element={
+              <ProtectedClientRoute>
+                <ReportCardProcessingsPage />
+              </ProtectedClientRoute>
+            }
+          />
+          <Route
+            path="/client/users"
+            element={
+              <ProtectedClientRoute>
+                <ClientUsersPage />
+              </ProtectedClientRoute>
+            }
+          />
+          <Route
+            path="/client/roles"
+            element={
+              <ProtectedClientRoute>
+                <ClientRolesPage />
               </ProtectedClientRoute>
             }
           />

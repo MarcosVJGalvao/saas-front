@@ -27,8 +27,21 @@ const clientDefaultPermissions = [
   'client:dashboard:read',
   'client:panel:read',
   'client:users:read',
+  'client:roles:read',
   'client:finance:read',
   'client:reports:read',
+  'client:academic-year:read',
+  'client:education-level:read',
+  'client:grade:read',
+  'client:school-class:read',
+  'client:subject:read',
+  'client:teacher-subject:read',
+  'client:student:read',
+  'client:student-enroll:*',
+  'client:legal-guardian:read',
+  'client:attendance:read',
+  'client:documents:read',
+  'client:report-card:read',
 ];
 
 const hasPermission = (permissions: string[], requiredPermission: string): boolean => {
