@@ -20,15 +20,8 @@ const LegalGuardiansPage = () => {
             type: 'text',
             name: 'query',
             label: 'Buscar',
-            placeholder: 'Nome do responsável',
+            placeholder: 'Nome ou documento',
             mobileOrder: 1,
-          },
-          {
-            type: 'text',
-            name: 'documentNumber',
-            label: 'Documento',
-            placeholder: 'CPF, RG ou passaporte',
-            mobileOrder: 2,
           },
           {
             type: 'select',
@@ -43,7 +36,7 @@ const LegalGuardiansPage = () => {
               { value: 'grandparent', label: 'Avô/avó' },
               { value: 'other', label: 'Outro' },
             ],
-            mobileOrder: 3,
+            mobileOrder: 2,
           },
         ]}
         values={model.filterValues}
@@ -70,7 +63,7 @@ const LegalGuardiansPage = () => {
         emptyDescription="Responsáveis vinculados aos alunos aparecerão aqui."
         toolbarContent={
           <AppText color="text.secondary">
-            Use filtros para localizar responsáveis por nome, documento ou vínculo.
+            Use filtros para localizar responsáveis por busca geral ou vínculo.
           </AppText>
         }
         hideToolbar

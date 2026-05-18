@@ -1,20 +1,16 @@
-import AdminPanelSettingsOutlinedIcon from '@mui/icons-material/AdminPanelSettingsOutlined';
-import { ClientTenantModulePage } from '@features/client/shared/components/ClientTenantModulePage';
+import { AdminEntitiesListPage } from '@features/client/admin/components/AdminEntitiesListPage';
+import { clientRolesService } from '@features/client/admin/services/adminServices';
 
 const ClientRolesPage = () => (
-  <ClientTenantModulePage
+  <AdminEntitiesListPage
     title="Perfis"
     subtitle="Gerencie perfis de acesso do tenant."
-    moduleName="Perfis de acesso"
-    icon={<AdminPanelSettingsOutlinedIcon color="primary" />}
-    endpoints={[
-      'GET /api/roles',
-      'POST /api/roles',
-      'PATCH /api/roles/:id',
-      'DELETE /api/roles/:id',
-    ]}
-    states={['loading', 'empty', 'error', 'forbidden', 'submitting']}
-    nextStep="Conectar CRUD de perfis e matriz de permissões quando disponível."
+    routeBase="/client/roles"
+    service={clientRolesService}
+    errorMessageFallback="Não foi possível carregar perfis."
+    emptyTitle="Nenhum perfil encontrado"
+    emptyDescription="Perfis de acesso cadastrados aparecerão nesta consulta."
+    showPermissions
   />
 );
 

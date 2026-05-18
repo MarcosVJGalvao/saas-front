@@ -5,6 +5,7 @@ import {
   financialDashboardService,
   financialCategoryService,
   financialCostCenterService,
+  financialReportService,
   financialTransactionService,
 } from '@features/client/financial/services/financialServices';
 import { httpClient } from '@shared/services/httpClient';
@@ -79,6 +80,39 @@ describe('financial entity services', () => {
     expect(response.data[0]?.description).toBe('Mensalidade');
   });
 
+  it('busca transação financeira pelo endpoint correto', async () => {
+    const getSpy = vi.spyOn(httpClient, 'get').mockResolvedValueOnce({
+      data: { id: 'transaction-1', description: 'Mensalidade', type: 'income' },
+    });
+
+    const response = await financialTransactionService.getById('transaction-1');
+
+    expect(getSpy).toHaveBeenCalledWith('/api/financial/transactions/transaction-1');
+    expect(response.description).toBe('Mensalidade');
+  });
+
+  it('busca conta a pagar pelo endpoint correto', async () => {
+    const getSpy = vi.spyOn(httpClient, 'get').mockResolvedValueOnce({
+      data: { id: 'payable-1', description: 'Fornecedor', status: 'open' },
+    });
+
+    const response = await accountsPayableService.getById('payable-1');
+
+    expect(getSpy).toHaveBeenCalledWith('/api/financial/accounts-payable/payable-1');
+    expect(response.description).toBe('Fornecedor');
+  });
+
+  it('busca conta a receber pelo endpoint correto', async () => {
+    const getSpy = vi.spyOn(httpClient, 'get').mockResolvedValueOnce({
+      data: { id: 'receivable-1', description: 'Mensalidade', status: 'open' },
+    });
+
+    const response = await accountsReceivableService.getById('receivable-1');
+
+    expect(getSpy).toHaveBeenCalledWith('/api/financial/accounts-receivable/receivable-1');
+    expect(response.description).toBe('Mensalidade');
+  });
+
   it('confirma pagamento pelo endpoint correto', async () => {
     const postSpy = vi.spyOn(httpClient, 'post').mockResolvedValueOnce({
       data: { id: 'payable-1', description: 'Fornecedor', status: 'paid' },
@@ -115,5 +149,18 @@ describe('financial entity services', () => {
       params: { page: 1, limit: 1 },
     });
     expect(response.totalReceivable).toBe(1000);
+  });
+
+  it('busca relatório de fluxo de caixa pelo endpoint correto', async () => {
+    const getSpy = vi.spyOn(httpClient, 'get').mockResolvedValueOnce({
+      data: { total: 1 },
+    });
+
+    const response = await financialReportService.getCashFlow({ page: 1, limit: 10 });
+
+    expect(getSpy).toHaveBeenCalledWith('/api/financial/reports/cash-flow', {
+      params: { page: 1, limit: 10 },
+    });
+    expect(response.total).toBe(1);
   });
 });

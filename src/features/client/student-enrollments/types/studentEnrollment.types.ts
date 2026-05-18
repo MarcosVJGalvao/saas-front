@@ -118,9 +118,6 @@ export type StudentEnrollmentQueryParams = {
   sortBy?: string | undefined;
   sortOrder?: 'ASC' | 'DESC' | undefined;
   status?: EnrollmentStatus | undefined;
-  enrollmentCode?: string | undefined;
-  name?: string | undefined;
-  documentNumber?: string | undefined;
   academicYearId?: string | undefined;
   schoolClassId?: string | undefined;
 };

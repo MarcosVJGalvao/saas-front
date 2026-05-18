@@ -16,7 +16,6 @@ type LegalGuardianFilterValues = Record<string, unknown>;
 
 const initialFilterValues: LegalGuardianFilterValues = {
   query: '',
-  documentNumber: '',
   relationshipType: '',
 };
 
@@ -43,8 +42,6 @@ const buildQueryFromFilters = (
   filterValues: LegalGuardianFilterValues,
 ): Partial<LegalGuardianQueryParams> => ({
   search: getOptionalString(filterValues.query),
-  name: getOptionalString(filterValues.query),
-  documentNumber: getOptionalString(filterValues.documentNumber),
   relationshipType: getOptionalRelationshipType(filterValues.relationshipType),
   page: 1,
 });
@@ -67,8 +64,6 @@ export const useLegalGuardiansListPageViewModel = () => {
     list.updateQuery({
       page: 1,
       search: undefined,
-      name: undefined,
-      documentNumber: undefined,
       relationshipType: undefined,
     });
   };
@@ -91,7 +86,7 @@ export const useLegalGuardiansListPageViewModel = () => {
     onFilterChange,
     applyFilters,
     clearFilters,
-    onQueryChange: (search: string) => list.updateQuery({ search, name: search, page: 1 }),
+    onQueryChange: (search: string) => list.updateQuery({ search, page: 1 }),
     onPageChange: (page: number) => list.updateQuery({ page }),
     onLimitChange: (limit: number) => list.updateQuery({ limit, page: 1 }),
     columns: buildLegalGuardiansTableColumns({ buildRowActions }),

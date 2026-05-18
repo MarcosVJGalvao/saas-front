@@ -1,7 +1,7 @@
-import { AppAlert } from '@shared/components/feedback/AppAlert';
 import { AppCard } from '@shared/components/data-display/AppCard';
-import { AppStack } from '@shared/components/layout/AppStack';
 import { AppText } from '@shared/components/data-display/AppText';
+import { AppAlert } from '@shared/components/feedback/AppAlert';
+import { AppStack } from '@shared/components/layout/AppStack';
 import { PageHeader } from '@shared/components/layout/PageHeader';
 
 const AttendanceRecordsPage = () => (

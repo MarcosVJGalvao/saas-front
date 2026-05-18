@@ -75,6 +75,12 @@ Page -> Hook -> Service -> HttpClient -> API
 - Component renderiza.
 - Theme define visual.
 
+## Convenção de busca em listas
+
+- Busca textual geral deve ser enviada apenas por `search`.
+- Não duplicar busca textual em query params paralelos como `name`, `fullName`, `documentNumber`, `registrationCode`, `registerNumber` ou `enrollmentCode`.
+- Filtros estruturados continuam separados quando representam dimensões específicas, como `status`, `type`, `code`, `startDate`, `endDate`, `academicYearId` e `schoolClassId`.
+
 ## Organização de features por contexto
 
 As features devem ficar separadas por domínio de acesso:

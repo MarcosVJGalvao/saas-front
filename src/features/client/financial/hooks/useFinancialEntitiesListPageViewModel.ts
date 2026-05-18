@@ -70,7 +70,6 @@ const buildQueryFromFilters = (
   includeType: boolean,
 ): Partial<FinancialEntityQueryParams> => ({
   search: getOptionalString(filterValues.query),
-  name: getOptionalString(filterValues.query),
   code: getOptionalString(filterValues.code),
   status: getOptionalStatus(filterValues.status),
   type: includeType ? getOptionalType(filterValues.type) : undefined,
@@ -101,7 +100,6 @@ export const useFinancialEntitiesListPageViewModel = ({
     list.updateQuery({
       page: 1,
       search: undefined,
-      name: undefined,
       code: undefined,
       status: undefined,
       type: undefined,
@@ -126,7 +124,7 @@ export const useFinancialEntitiesListPageViewModel = ({
     onFilterChange,
     applyFilters,
     clearFilters,
-    onQueryChange: (search: string) => list.updateQuery({ search, name: search, page: 1 }),
+    onQueryChange: (search: string) => list.updateQuery({ search, page: 1 }),
     onPageChange: (page: number) => list.updateQuery({ page }),
     onLimitChange: (limit: number) => list.updateQuery({ limit, page: 1 }),
     columns: buildFinancialEntitiesTableColumns({ buildRowActions, showType }),

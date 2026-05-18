@@ -1,18 +1,16 @@
-import MenuBookOutlinedIcon from '@mui/icons-material/MenuBookOutlined';
-import { ClientTenantModulePage } from '@features/client/shared/components/ClientTenantModulePage';
+import { ReportCardCatalogListPage } from '@features/client/report-cards/components/ReportCardCatalogListPage';
+import { reportCardService } from '@features/client/report-cards/services/reportCardServices';
 
 const ReportCardAcademicPeriodsPage = () => (
-  <ClientTenantModulePage
-    title="Períodos do Boletim"
+  <ReportCardCatalogListPage
+    mode="periods"
+    title="Períodos do boletim"
     subtitle="Configure períodos acadêmicos usados no fechamento de boletins."
-    moduleName="Períodos acadêmicos"
-    icon={<MenuBookOutlinedIcon color="primary" />}
-    endpoints={[
-      'GET /api/report-cards/academic-periods',
-      'POST /api/report-cards/academic-periods',
-    ]}
-    states={['loading', 'empty', 'error', 'forbidden', 'submitting']}
-    nextStep="Conectar CRUD com validação de datas e conflitos de sequência."
+    routeBase="/client/report-cards/academic-periods"
+    service={(params) => reportCardService.listAcademicPeriods(params)}
+    errorMessageFallback="Não foi possível carregar períodos do boletim."
+    emptyTitle="Nenhum período encontrado"
+    emptyDescription="Períodos acadêmicos aparecerão nesta consulta."
   />
 );
 

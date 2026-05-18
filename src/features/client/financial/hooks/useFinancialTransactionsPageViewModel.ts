@@ -1,12 +1,15 @@
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import type { RowActionItem } from '@shared/components/data-display/data/RowActionsMenu';
 import {
-  financialTransactionsColumns,
-  financialTransactionsMobileConfig,
+  buildFinancialTransactionsMobileConfig,
+  buildFinancialTransactionsTableColumns,
 } from '@features/client/financial/components/financialTransactionsPresentation';
 import { useFinancialTransactionsList } from '@features/client/financial/hooks/useFinancialTransactionsList';
 import type {
   FinancialOriginType,
   FinancialRecordStatus,
+  FinancialTransaction,
   FinancialTransactionQueryParams,
   FinancialTransactionType,
 } from '@features/client/financial/types/financial.types';
@@ -78,6 +81,7 @@ const buildQueryFromFilters = (
 });
 
 export const useFinancialTransactionsPageViewModel = () => {
+  const navigate = useNavigate();
   const list = useFinancialTransactionsList();
   const [filterValues, setFilterValues] =
     useState<FinancialTransactionFilterValues>(initialFilterValues);
@@ -103,6 +107,17 @@ export const useFinancialTransactionsPageViewModel = () => {
     });
   };
 
+  const buildRowActions = useCallback(
+    (row: FinancialTransaction): RowActionItem[] => [
+      {
+        key: 'details',
+        label: 'Ver detalhes',
+        onClick: () => void navigate(`/client/financial/transactions/${row.id}`),
+      },
+    ],
+    [navigate],
+  );
+
   return {
     list,
     query: list.query.search ?? '',
@@ -113,7 +128,7 @@ export const useFinancialTransactionsPageViewModel = () => {
     onQueryChange: (search: string) => list.updateQuery({ search, page: 1 }),
     onPageChange: (page: number) => list.updateQuery({ page }),
     onLimitChange: (limit: number) => list.updateQuery({ limit, page: 1 }),
-    columns: financialTransactionsColumns,
-    mobileConfig: financialTransactionsMobileConfig,
+    columns: buildFinancialTransactionsTableColumns({ buildRowActions }),
+    mobileConfig: buildFinancialTransactionsMobileConfig({ buildRowActions }),
   };
 };

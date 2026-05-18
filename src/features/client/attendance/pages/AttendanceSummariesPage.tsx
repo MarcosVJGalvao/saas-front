@@ -1,17 +1,17 @@
-import { AppStack } from '@shared/components/layout/AppStack';
 import { AppText } from '@shared/components/data-display/AppText';
 import { ListFilters } from '@shared/components/data-display/data/ListFilters';
-import { PageHeader } from '@shared/components/layout/PageHeader';
 import { QueryDataTable } from '@shared/components/data-display/data/QueryDataTable';
+import { AppStack } from '@shared/components/layout/AppStack';
+import { PageHeader } from '@shared/components/layout/PageHeader';
 import {
   attendanceSummariesColumns,
   attendanceSummariesMobileConfig,
 } from '@features/client/attendance/components/attendanceSummariesPresentation';
-import { useAttendanceSummariesList } from '@features/client/attendance/hooks/useAttendanceSummariesList';
 import {
   buildAttendanceQueryFromFilters,
   useAttendanceFilters,
 } from '@features/client/attendance/hooks/useAttendanceFilters';
+import { useAttendanceSummariesList } from '@features/client/attendance/hooks/useAttendanceSummariesList';
 
 const AttendanceSummariesPage = () => {
   const list = useAttendanceSummariesList();

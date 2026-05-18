@@ -6,6 +6,7 @@ const AccountsPayablePage = () => (
     mode="payable"
     title="Contas a pagar"
     subtitle="Gerencie títulos, pagamentos, cancelamentos e recorrências."
+    routeBase="/client/financial/accounts-payable"
     service={accountsPayableService}
     errorMessageFallback="Não foi possível carregar contas a pagar."
     emptyTitle="Nenhuma conta a pagar encontrada"

@@ -1,15 +1,16 @@
-import ViewModuleOutlinedIcon from '@mui/icons-material/ViewModuleOutlined';
-import { ClientTenantModulePage } from '@features/client/shared/components/ClientTenantModulePage';
+import { ReportCardCatalogListPage } from '@features/client/report-cards/components/ReportCardCatalogListPage';
+import { reportCardService } from '@features/client/report-cards/services/reportCardServices';
 
 const ReportCardGradeSubjectsPage = () => (
-  <ClientTenantModulePage
-    title="Matriz Curricular"
+  <ReportCardCatalogListPage
+    mode="gradeSubjects"
+    title="Matriz curricular"
     subtitle="Configure disciplinas por série e ano letivo."
-    moduleName="Matriz curricular"
-    icon={<ViewModuleOutlinedIcon color="primary" />}
-    endpoints={['GET /api/report-cards/grade-subjects', 'POST /api/report-cards/grade-subjects']}
-    states={['loading', 'empty', 'error', 'forbidden', 'submitting']}
-    nextStep="Conectar matriz com carga horária, ordem de exibição e obrigatoriedade."
+    routeBase="/client/report-cards/grade-subjects"
+    service={(params) => reportCardService.listGradeSubjects(params)}
+    errorMessageFallback="Não foi possível carregar matriz curricular."
+    emptyTitle="Nenhum vínculo encontrado"
+    emptyDescription="Disciplinas vinculadas por série aparecerão nesta consulta."
   />
 );
 

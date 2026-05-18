@@ -103,8 +103,14 @@ const FinancialDashboardPage = lazy(
 const AccountsPayablePage = lazy(
   () => import('@features/client/financial/pages/AccountsPayablePage'),
 );
+const AccountsPayableDetailsPage = lazy(
+  () => import('@features/client/financial/pages/AccountsPayableDetailsPage'),
+);
 const AccountsReceivablePage = lazy(
   () => import('@features/client/financial/pages/AccountsReceivablePage'),
+);
+const AccountsReceivableDetailsPage = lazy(
+  () => import('@features/client/financial/pages/AccountsReceivableDetailsPage'),
 );
 const FinancialCategoriesPage = lazy(
   () => import('@features/client/financial/pages/FinancialCategoriesPage'),
@@ -121,14 +127,23 @@ const FinancialCostCenterDetailsPage = lazy(
 const FinancialTransactionsPage = lazy(
   () => import('@features/client/financial/pages/FinancialTransactionsPage'),
 );
+const FinancialTransactionDetailsPage = lazy(
+  () => import('@features/client/financial/pages/FinancialTransactionDetailsPage'),
+);
 const FinancialReportsPage = lazy(
   () => import('@features/client/financial/pages/FinancialReportsPage'),
 );
 const ReportCardAcademicPeriodsPage = lazy(
   () => import('@features/client/report-cards/pages/ReportCardAcademicPeriodsPage'),
 );
+const ReportCardAcademicPeriodDetailsPage = lazy(
+  () => import('@features/client/report-cards/pages/ReportCardAcademicPeriodDetailsPage'),
+);
 const ReportCardGradeSubjectsPage = lazy(
   () => import('@features/client/report-cards/pages/ReportCardGradeSubjectsPage'),
+);
+const ReportCardGradeSubjectDetailsPage = lazy(
+  () => import('@features/client/report-cards/pages/ReportCardGradeSubjectDetailsPage'),
 );
 const ReportCardEntriesPage = lazy(
   () => import('@features/client/report-cards/pages/ReportCardEntriesPage'),
@@ -140,7 +155,13 @@ const ReportCardProcessingsPage = lazy(
   () => import('@features/client/report-cards/pages/ReportCardProcessingsPage'),
 );
 const ClientUsersPage = lazy(() => import('@features/client/admin/pages/ClientUsersPage'));
+const ClientUserDetailsPage = lazy(
+  () => import('@features/client/admin/pages/ClientUserDetailsPage'),
+);
 const ClientRolesPage = lazy(() => import('@features/client/admin/pages/ClientRolesPage'));
+const ClientRoleDetailsPage = lazy(
+  () => import('@features/client/admin/pages/ClientRoleDetailsPage'),
+);
 
 const TOKEN_EXPIRED_EVENT = 'app:token-expired';
 
@@ -584,10 +605,26 @@ export const AppRouter = () => {
             }
           />
           <Route
+            path="/client/financial/accounts-payable/:id"
+            element={
+              <ProtectedClientRoute>
+                <AccountsPayableDetailsPage />
+              </ProtectedClientRoute>
+            }
+          />
+          <Route
             path="/client/financial/accounts-receivable"
             element={
               <ProtectedClientRoute>
                 <AccountsReceivablePage />
+              </ProtectedClientRoute>
+            }
+          />
+          <Route
+            path="/client/financial/accounts-receivable/:id"
+            element={
+              <ProtectedClientRoute>
+                <AccountsReceivableDetailsPage />
               </ProtectedClientRoute>
             }
           />
@@ -632,6 +669,14 @@ export const AppRouter = () => {
             }
           />
           <Route
+            path="/client/financial/transactions/:id"
+            element={
+              <ProtectedClientRoute>
+                <FinancialTransactionDetailsPage />
+              </ProtectedClientRoute>
+            }
+          />
+          <Route
             path="/client/financial/reports"
             element={
               <ProtectedClientRoute>
@@ -648,10 +693,26 @@ export const AppRouter = () => {
             }
           />
           <Route
+            path="/client/report-cards/academic-periods/:id"
+            element={
+              <ProtectedClientRoute>
+                <ReportCardAcademicPeriodDetailsPage />
+              </ProtectedClientRoute>
+            }
+          />
+          <Route
             path="/client/report-cards/grade-subjects"
             element={
               <ProtectedClientRoute>
                 <ReportCardGradeSubjectsPage />
+              </ProtectedClientRoute>
+            }
+          />
+          <Route
+            path="/client/report-cards/grade-subjects/:id"
+            element={
+              <ProtectedClientRoute>
+                <ReportCardGradeSubjectDetailsPage />
               </ProtectedClientRoute>
             }
           />
@@ -688,10 +749,26 @@ export const AppRouter = () => {
             }
           />
           <Route
+            path="/client/users/:id"
+            element={
+              <ProtectedClientRoute>
+                <ClientUserDetailsPage />
+              </ProtectedClientRoute>
+            }
+          />
+          <Route
             path="/client/roles"
             element={
               <ProtectedClientRoute>
                 <ClientRolesPage />
+              </ProtectedClientRoute>
+            }
+          />
+          <Route
+            path="/client/roles/:id"
+            element={
+              <ProtectedClientRoute>
+                <ClientRoleDetailsPage />
               </ProtectedClientRoute>
             }
           />

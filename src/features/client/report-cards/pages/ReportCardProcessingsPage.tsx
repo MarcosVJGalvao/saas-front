@@ -1,20 +1,65 @@
-import SyncOutlinedIcon from '@mui/icons-material/SyncOutlined';
-import { ClientTenantModulePage } from '@features/client/shared/components/ClientTenantModulePage';
+import { ActionButtons } from '@shared/components/actions/ActionButtons';
+import { AppPaper } from '@shared/components/data-display/AppPaper';
+import { AppText } from '@shared/components/data-display/AppText';
+import { AppAlert } from '@shared/components/feedback/AppAlert';
+import { ListFilters } from '@shared/components/data-display/data/ListFilters';
+import { AppStack } from '@shared/components/layout/AppStack';
+import { PageHeader } from '@shared/components/layout/PageHeader';
+import { layoutSpacing } from '@theme/spacing';
+import { useReportCardProcessingsPageViewModel } from '@features/client/report-cards/hooks/useReportCardProcessingsPageViewModel';
 
-const ReportCardProcessingsPage = () => (
-  <ClientTenantModulePage
-    title="Processamentos"
-    subtitle="Acompanhe processamentos de boletim e reenvie falhas."
-    moduleName="Processamentos de boletim"
-    icon={<SyncOutlinedIcon color="primary" />}
-    endpoints={[
-      'GET /api/report-cards/processings/:id',
-      'POST /api/report-cards/processings/:id/resend-failed',
-      'POST /api/report-cards/processings/:id/resend/students/:studentEnrollmentId',
-    ]}
-    states={['loading', 'empty', 'error', 'forbidden', 'submitting']}
-    nextStep="Conectar status de processamento, itens com falha e ações de reenvio."
-  />
-);
+const ReportCardProcessingsPage = () => {
+  const model = useReportCardProcessingsPageViewModel();
+
+  return (
+    <AppStack spacing={2}>
+      <PageHeader
+        title="Processamentos"
+        subtitle="Acompanhe processamentos de boletim e reenvie falhas."
+      />
+      {model.errorMessage ? <AppAlert severity="error">{model.errorMessage}</AppAlert> : null}
+      {model.successMessage ? <AppAlert severity="success">{model.successMessage}</AppAlert> : null}
+      <AppPaper sx={{ p: layoutSpacing.cardPadding, borderRadius: 2 }}>
+        <AppStack spacing={2}>
+          <AppText variant="h6">Consulta de processamento</AppText>
+          <ListFilters
+            fields={[
+              {
+                type: 'text',
+                name: 'processingId',
+                label: 'Processamento',
+                placeholder: 'ID do processamento',
+                mobileOrder: 1,
+              },
+            ]}
+            values={model.values}
+            onChange={model.onChange}
+            onApply={() => {
+              void model.loadProcessing();
+            }}
+            onClear={model.clear}
+            loading={model.loadingAction !== undefined}
+            applyLabel="Consultar"
+          />
+          <ActionButtons
+            fullWidthOnMobile={false}
+            align="flex-start"
+            actions={[
+              {
+                type: 'custom',
+                label: model.loadingAction === 'resend' ? 'Reenviando...' : 'Reenviar falhas',
+                onClick: () => {
+                  void model.resendFailed();
+                },
+                disabled: model.loadingAction !== undefined,
+                variant: 'outlined',
+              },
+            ]}
+          />
+        </AppStack>
+      </AppPaper>
+    </AppStack>
+  );
+};
 
 export default ReportCardProcessingsPage;

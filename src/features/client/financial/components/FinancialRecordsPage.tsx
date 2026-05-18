@@ -1,10 +1,10 @@
-import { AppStack } from '@shared/components/layout/AppStack';
 import { AppText } from '@shared/components/data-display/AppText';
 import { ListFilters } from '@shared/components/data-display/data/ListFilters';
 import type { FilterField } from '@shared/components/data-display/data/listFilters.types';
-import { PageHeader } from '@shared/components/layout/PageHeader';
 import { QueryDataTable } from '@shared/components/data-display/data/QueryDataTable';
 import { ConfirmDialog } from '@shared/components/feedback/ConfirmDialog';
+import { AppStack } from '@shared/components/layout/AppStack';
+import { PageHeader } from '@shared/components/layout/PageHeader';
 import { useFinancialRecordsPageViewModel } from '@features/client/financial/hooks/useFinancialRecordsPageViewModel';
 import type {
   FinancialRecord,
@@ -35,6 +35,7 @@ type FinancialRecordsPageProps = {
   mode: FinancialRecordsPageMode;
   title: string;
   subtitle: string;
+  routeBase: string;
   service: FinancialRecordsService;
   errorMessageFallback: string;
   emptyTitle: string;
@@ -101,6 +102,7 @@ export const FinancialRecordsPage = ({
   mode,
   title,
   subtitle,
+  routeBase,
   service,
   errorMessageFallback,
   emptyTitle,
@@ -108,6 +110,7 @@ export const FinancialRecordsPage = ({
 }: FinancialRecordsPageProps) => {
   const model = useFinancialRecordsPageViewModel({
     mode,
+    routeBase,
     service,
     errorMessageFallback,
   });

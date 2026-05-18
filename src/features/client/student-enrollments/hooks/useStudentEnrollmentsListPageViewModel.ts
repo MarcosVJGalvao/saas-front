@@ -19,7 +19,6 @@ type StudentEnrollmentFilterValues = Record<string, unknown>;
 const initialFilterValues: StudentEnrollmentFilterValues = {
   query: '',
   status: '',
-  enrollmentCode: '',
   startDate: '',
   endDate: '',
 };
@@ -44,7 +43,6 @@ const buildQueryFromFilters = (
 ): Partial<StudentEnrollmentQueryParams> => ({
   search: getOptionalString(filterValues.query),
   status: getOptionalStatus(filterValues.status),
-  enrollmentCode: getOptionalString(filterValues.enrollmentCode),
   startDate: getOptionalString(filterValues.startDate),
   endDate: getOptionalString(filterValues.endDate),
   page: 1,
@@ -74,7 +72,7 @@ export const useStudentEnrollmentsListPageViewModel = () => {
 
   const clearFilters = (): void => {
     setFilterValues(initialFilterValues);
-    list.updateQuery({ page: 1, search: undefined, status: undefined, enrollmentCode: undefined });
+    list.updateQuery({ page: 1, search: undefined, status: undefined });
   };
 
   const downloadContract = useCallback(async (row: StudentEnrollment): Promise<void> => {

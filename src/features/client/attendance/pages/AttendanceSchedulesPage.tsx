@@ -1,17 +1,17 @@
-import { AppStack } from '@shared/components/layout/AppStack';
 import { AppText } from '@shared/components/data-display/AppText';
 import { ListFilters } from '@shared/components/data-display/data/ListFilters';
-import { PageHeader } from '@shared/components/layout/PageHeader';
 import { QueryDataTable } from '@shared/components/data-display/data/QueryDataTable';
+import { AppStack } from '@shared/components/layout/AppStack';
+import { PageHeader } from '@shared/components/layout/PageHeader';
 import {
   attendanceSchedulesColumns,
   attendanceSchedulesMobileConfig,
 } from '@features/client/attendance/components/attendanceSchedulesPresentation';
-import { useAttendanceSchedulesList } from '@features/client/attendance/hooks/useAttendanceSchedulesList';
 import {
   buildAttendanceQueryFromFilters,
   useAttendanceFilters,
 } from '@features/client/attendance/hooks/useAttendanceFilters';
+import { useAttendanceSchedulesList } from '@features/client/attendance/hooks/useAttendanceSchedulesList';
 
 const AttendanceSchedulesPage = () => {
   const list = useAttendanceSchedulesList();

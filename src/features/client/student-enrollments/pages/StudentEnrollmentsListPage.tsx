@@ -29,15 +29,8 @@ const StudentEnrollmentsListPage = () => {
             type: 'text',
             name: 'query',
             label: 'Buscar',
-            placeholder: 'Aluno ou documento',
+            placeholder: 'Aluno, documento ou código',
             mobileOrder: 1,
-          },
-          {
-            type: 'text',
-            name: 'enrollmentCode',
-            label: 'Código',
-            placeholder: 'Código da matrícula',
-            mobileOrder: 2,
           },
           {
             type: 'select',
@@ -50,7 +43,7 @@ const StudentEnrollmentsListPage = () => {
               { value: 'cancelled', label: 'Cancelada' },
               { value: 'transferred', label: 'Transferida' },
             ],
-            mobileOrder: 3,
+            mobileOrder: 2,
           },
           {
             type: 'dateRange',
@@ -58,7 +51,7 @@ const StudentEnrollmentsListPage = () => {
             label: 'Período',
             startName: 'startDate',
             endName: 'endDate',
-            mobileOrder: 4,
+            mobileOrder: 3,
           },
         ]}
         values={model.filterValues}
@@ -84,7 +77,9 @@ const StudentEnrollmentsListPage = () => {
         emptyTitle="Nenhuma matrícula encontrada"
         emptyDescription="Crie uma matrícula para começar."
         toolbarContent={
-          <AppText color="text.secondary">Use a busca para filtrar por aluno ou código.</AppText>
+          <AppText color="text.secondary">
+            Use a busca geral para filtrar por aluno, documento ou código.
+          </AppText>
         }
         hideToolbar
       />

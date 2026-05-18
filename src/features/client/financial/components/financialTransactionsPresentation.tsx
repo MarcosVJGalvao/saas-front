@@ -1,8 +1,10 @@
-import { AppStack } from '@shared/components/layout/AppStack';
 import { AppText } from '@shared/components/data-display/AppText';
 import { LocalizedStatusBadge } from '@shared/components/data-display/LocalizedStatusBadge';
 import type { DataListMobileConfig } from '@shared/components/data-display/data/dataList.types';
 import type { DataTableColumn } from '@shared/components/data-display/data/DataTable';
+import { RowActionsMenu } from '@shared/components/data-display/data/RowActionsMenu';
+import type { RowActionItem } from '@shared/components/data-display/data/RowActionsMenu';
+import { AppStack } from '@shared/components/layout/AppStack';
 import { formatIsoDate } from '@shared/formatters';
 import { formatCurrency } from '@shared/formatters/currencyFormatter';
 import {
@@ -11,6 +13,10 @@ import {
   translateFinancialTransactionType,
 } from '@shared/i18n/pt-BR/enums';
 import type { FinancialTransaction } from '@features/client/financial/types/financial.types';
+
+type FinancialTransactionsPresentationParams = {
+  buildRowActions: (row: FinancialTransaction) => RowActionItem[];
+};
 
 const getDescription = (row: FinancialTransaction): string => row.description || '-';
 
@@ -33,7 +39,19 @@ const renderStatus = (row: FinancialTransaction) =>
     '-'
   );
 
-export const financialTransactionsColumns: DataTableColumn<FinancialTransaction>[] = [
+const renderActions = (
+  row: FinancialTransaction,
+  buildRowActions: (row: FinancialTransaction) => RowActionItem[],
+) => (
+  <RowActionsMenu
+    triggerAriaLabel={`Abrir ações de ${getDescription(row)}`}
+    actions={buildRowActions(row)}
+  />
+);
+
+export const buildFinancialTransactionsTableColumns = ({
+  buildRowActions,
+}: FinancialTransactionsPresentationParams): DataTableColumn<FinancialTransaction>[] => [
   {
     key: 'description',
     header: 'Descrição',
@@ -70,12 +88,21 @@ export const financialTransactionsColumns: DataTableColumn<FinancialTransaction>
     render: renderStatus,
     mobileRender: (row) => (row.status ? translateFinancialRecordStatus(row.status) : '-'),
   },
+  {
+    key: 'actions',
+    header: 'Ações',
+    align: 'right',
+    render: (row) => renderActions(row, buildRowActions),
+  },
 ];
 
-export const financialTransactionsMobileConfig: DataListMobileConfig<FinancialTransaction> = {
+export const buildFinancialTransactionsMobileConfig = ({
+  buildRowActions,
+}: FinancialTransactionsPresentationParams): DataListMobileConfig<FinancialTransaction> => ({
   renderTitle: getDescription,
   renderSubtitle: getAmount,
   renderStatus,
+  renderActions: (row) => renderActions(row, buildRowActions),
   renderDetails: (row) => (
     <AppStack spacing={1}>
       <AppStack direction="row" sx={{ justifyContent: 'space-between', gap: 2 }}>
@@ -106,4 +133,4 @@ export const financialTransactionsMobileConfig: DataListMobileConfig<FinancialTr
       </AppStack>
     </AppStack>
   ),
-};
+});

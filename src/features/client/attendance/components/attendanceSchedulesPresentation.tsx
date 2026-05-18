@@ -1,7 +1,7 @@
-import { AppStack } from '@shared/components/layout/AppStack';
 import { AppText } from '@shared/components/data-display/AppText';
 import type { DataListMobileConfig } from '@shared/components/data-display/data/dataList.types';
 import type { DataTableColumn } from '@shared/components/data-display/data/DataTable';
+import { AppStack } from '@shared/components/layout/AppStack';
 import type { AttendanceSchedule } from '@features/client/attendance/types/attendance.types';
 
 const getClassName = (row: AttendanceSchedule): string => row.schoolClass?.name ?? '-';

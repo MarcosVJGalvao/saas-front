@@ -1,10 +1,10 @@
-import { RowActionsMenu } from '@shared/components/data-display/data/RowActionsMenu';
-import type { RowActionItem } from '@shared/components/data-display/data/RowActionsMenu';
-import { AppStack } from '@shared/components/layout/AppStack';
 import { AppText } from '@shared/components/data-display/AppText';
 import { LocalizedStatusBadge } from '@shared/components/data-display/LocalizedStatusBadge';
 import type { DataListMobileConfig } from '@shared/components/data-display/data/dataList.types';
 import type { DataTableColumn } from '@shared/components/data-display/data/DataTable';
+import { RowActionsMenu } from '@shared/components/data-display/data/RowActionsMenu';
+import type { RowActionItem } from '@shared/components/data-display/data/RowActionsMenu';
+import { AppStack } from '@shared/components/layout/AppStack';
 import { formatIsoDate } from '@shared/formatters';
 import { formatCurrency } from '@shared/formatters/currencyFormatter';
 import { translateFinancialRecordStatus } from '@shared/i18n/pt-BR/enums';

@@ -37,7 +37,6 @@ export type FinancialCostCenter = {
 export type FinancialEntity = FinancialCategory | FinancialCostCenter;
 
 export type FinancialEntityQueryParams = ClientBaseQueryParams & {
-  name?: string | undefined;
   code?: string | undefined;
   status?: FinancialEntityStatus | undefined;
   type?: FinancialCategoryType | undefined;

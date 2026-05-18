@@ -1,4 +1,5 @@
 import { useCallback, useMemo, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import type { RowActionItem } from '@shared/components/data-display/data/RowActionsMenu';
 import {
   buildFinancialRecordsMobileConfig,
@@ -37,6 +38,7 @@ type FinancialRecordAction = 'settle' | 'cancel';
 
 type FinancialRecordsPageViewModelParams = {
   mode: FinancialRecordsPageMode;
+  routeBase: string;
   service: FinancialRecordsService;
   errorMessageFallback: string;
 };
@@ -87,9 +89,11 @@ const buildQueryFromFilters = (
 
 export const useFinancialRecordsPageViewModel = ({
   mode,
+  routeBase,
   service,
   errorMessageFallback,
 }: FinancialRecordsPageViewModelParams) => {
+  const navigate = useNavigate();
   const list = useFinancialRecordsList(service, errorMessageFallback);
   const [filterValues, setFilterValues] =
     useState<FinancialRecordFilterValues>(initialFilterValues);
@@ -142,6 +146,7 @@ export const useFinancialRecordsPageViewModel = ({
     if (!selectedRecordId || !selectedAction) return;
     setActionLoading(true);
     setActionErrorMessage(undefined);
+
     try {
       if (selectedAction === 'cancel') {
         await service.cancel(selectedRecordId);
@@ -166,6 +171,11 @@ export const useFinancialRecordsPageViewModel = ({
   const buildRowActions = useCallback(
     (row: FinancialRecord): RowActionItem[] => [
       {
+        key: 'details',
+        label: 'Ver detalhes',
+        onClick: () => void navigate(`${routeBase}/${row.id}`),
+      },
+      {
         key: 'settle',
         label: mode === 'payable' ? 'Pagar' : 'Receber',
         onClick: () => openAction(row.id, 'settle'),
@@ -176,7 +186,7 @@ export const useFinancialRecordsPageViewModel = ({
         onClick: () => openAction(row.id, 'cancel'),
       },
     ],
-    [mode, openAction],
+    [mode, navigate, openAction, routeBase],
   );
 
   const selectedDescription = selectedRecord?.description ?? selectedRecord?.name ?? 'selecionado';

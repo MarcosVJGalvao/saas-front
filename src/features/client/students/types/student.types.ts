@@ -68,9 +68,6 @@ export type Student = {
 };
 
 export type StudentQueryParams = ClientBaseQueryParams & {
-  name?: string | undefined;
-  documentNumber?: string | undefined;
-  registrationCode?: string | undefined;
   status?: StudentStatus | undefined;
   schoolClassId?: string | undefined;
 };
@@ -94,7 +91,5 @@ export type LegalGuardian = {
 };
 
 export type LegalGuardianQueryParams = ClientBaseQueryParams & {
-  name?: string | undefined;
-  documentNumber?: string | undefined;
   relationshipType?: LegalGuardianRelationshipType | undefined;
 };

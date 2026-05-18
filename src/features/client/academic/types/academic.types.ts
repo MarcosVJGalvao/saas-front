@@ -21,7 +21,6 @@ export type AcademicYear = {
 
 export type AcademicYearQueryParams = ClientBaseQueryParams & {
   status?: AcademicYearStatus | undefined;
-  name?: string | undefined;
   code?: string | undefined;
 };
 
@@ -40,7 +39,6 @@ export type AcademicCatalogItem = {
 };
 
 export type AcademicCatalogQueryParams = ClientBaseQueryParams & {
-  name?: string | undefined;
   code?: string | undefined;
   status?: 'active' | 'inactive' | undefined;
 };
@@ -76,7 +74,6 @@ export type SchoolClass = {
 export type SchoolClassQueryParams = ClientBaseQueryParams & {
   status?: SchoolClassStatus | undefined;
   shift?: SchoolClassShift | undefined;
-  name?: string | undefined;
   code?: string | undefined;
   academicYearId?: string | undefined;
   gradeId?: string | undefined;

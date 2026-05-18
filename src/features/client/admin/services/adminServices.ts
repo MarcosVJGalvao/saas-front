@@ -1,23 +1,23 @@
 import { createClientCrudService } from '@features/client/shared/services/createClientCrudService';
 import type {
-  ClientApiRecord,
-  ClientBaseQueryParams,
-} from '@features/client/shared/types/clientApi.types';
-
-type AdminQuery = ClientBaseQueryParams & ClientApiRecord;
+  ClientAdminPayload,
+  ClientAdminQueryParams,
+  ClientRole,
+  ClientUser,
+} from '@features/client/admin/types/admin.types';
 
 export const clientUsersService = createClientCrudService<
-  ClientApiRecord,
-  ClientApiRecord,
-  ClientApiRecord,
-  ClientApiRecord,
-  AdminQuery
+  ClientUser,
+  ClientUser,
+  ClientAdminPayload,
+  ClientAdminPayload,
+  ClientAdminQueryParams
 >('/api/users');
 
 export const clientRolesService = createClientCrudService<
-  ClientApiRecord,
-  ClientApiRecord,
-  ClientApiRecord,
-  ClientApiRecord,
-  AdminQuery
+  ClientRole,
+  ClientRole,
+  ClientAdminPayload,
+  ClientAdminPayload,
+  ClientAdminQueryParams
 >('/api/roles');

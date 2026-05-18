@@ -1,8 +1,8 @@
-import { AppStack } from '@shared/components/layout/AppStack';
 import { AppText } from '@shared/components/data-display/AppText';
 import { LocalizedStatusBadge } from '@shared/components/data-display/LocalizedStatusBadge';
 import type { DataListMobileConfig } from '@shared/components/data-display/data/dataList.types';
 import type { DataTableColumn } from '@shared/components/data-display/data/DataTable';
+import { AppStack } from '@shared/components/layout/AppStack';
 import { translateAttendanceStatus } from '@shared/i18n/pt-BR/enums';
 import type { AttendanceSummary } from '@features/client/attendance/types/attendance.types';
 

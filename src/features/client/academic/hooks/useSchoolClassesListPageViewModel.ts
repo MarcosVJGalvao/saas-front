@@ -49,7 +49,6 @@ const buildQueryFromFilters = (
   filterValues: SchoolClassFilterValues,
 ): Partial<SchoolClassQueryParams> => ({
   search: getOptionalString(filterValues.query),
-  name: getOptionalString(filterValues.query),
   code: getOptionalString(filterValues.code),
   status: getOptionalStatus(filterValues.status),
   shift: getOptionalShift(filterValues.shift),
@@ -74,7 +73,6 @@ export const useSchoolClassesListPageViewModel = () => {
     list.updateQuery({
       page: 1,
       search: undefined,
-      name: undefined,
       code: undefined,
       status: undefined,
       shift: undefined,
@@ -99,7 +97,7 @@ export const useSchoolClassesListPageViewModel = () => {
     onFilterChange,
     applyFilters,
     clearFilters,
-    onQueryChange: (search: string) => list.updateQuery({ search, name: search, page: 1 }),
+    onQueryChange: (search: string) => list.updateQuery({ search, page: 1 }),
     onPageChange: (page: number) => list.updateQuery({ page }),
     onLimitChange: (limit: number) => list.updateQuery({ limit, page: 1 }),
     columns: buildSchoolClassesTableColumns({ buildRowActions }),
