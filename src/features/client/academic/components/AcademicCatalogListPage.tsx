@@ -1,14 +1,15 @@
-import { AppStack } from '@shared/components/layout/AppStack';
+import { useNavigate } from 'react-router-dom';
 import { AppText } from '@shared/components/data-display/AppText';
 import { ListFilters } from '@shared/components/data-display/data/ListFilters';
-import { PageHeader } from '@shared/components/layout/PageHeader';
 import { QueryDataTable } from '@shared/components/data-display/data/QueryDataTable';
-import type { ClientCrudService } from '@features/client/shared/types/clientApi.types';
+import { AppStack } from '@shared/components/layout/AppStack';
+import { PageHeader } from '@shared/components/layout/PageHeader';
 import { useAcademicCatalogListPageViewModel } from '@features/client/academic/hooks/useAcademicCatalogListPageViewModel';
 import type {
   AcademicCatalogItem,
   AcademicCatalogQueryParams,
 } from '@features/client/academic/types/academic.types';
+import type { ClientCrudService } from '@features/client/shared/types/clientApi.types';
 
 type AcademicCatalogService = Pick<
   ClientCrudService<
@@ -42,6 +43,7 @@ export const AcademicCatalogListPage = ({
   emptyDescription,
   showEducationLevel = false,
 }: AcademicCatalogListPageProps) => {
+  const navigate = useNavigate();
   const model = useAcademicCatalogListPageViewModel({
     service,
     routeBase,
@@ -51,7 +53,12 @@ export const AcademicCatalogListPage = ({
 
   return (
     <AppStack spacing={2}>
-      <PageHeader title={title} subtitle={subtitle} />
+      <PageHeader
+        title={title}
+        subtitle={subtitle}
+        actionLabel="Cadastrar"
+        onAction={() => void navigate(`${routeBase}/new`)}
+      />
       <ListFilters
         fields={[
           {

@@ -1,11 +1,13 @@
-import { AppStack } from '@shared/components/layout/AppStack';
+import { useNavigate } from 'react-router-dom';
 import { AppText } from '@shared/components/data-display/AppText';
 import { ListFilters } from '@shared/components/data-display/data/ListFilters';
-import { PageHeader } from '@shared/components/layout/PageHeader';
 import { QueryDataTable } from '@shared/components/data-display/data/QueryDataTable';
+import { AppStack } from '@shared/components/layout/AppStack';
+import { PageHeader } from '@shared/components/layout/PageHeader';
 import { useStudentsListPageViewModel } from '@features/client/students/hooks/useStudentsListPageViewModel';
 
 const StudentsPage = () => {
+  const navigate = useNavigate();
   const model = useStudentsListPageViewModel();
 
   return (
@@ -13,6 +15,8 @@ const StudentsPage = () => {
       <PageHeader
         title="Alunos"
         subtitle="Gerencie cadastro, responsáveis, documentos e histórico financeiro dos alunos."
+        actionLabel="Cadastrar"
+        onAction={() => void navigate('/client/students/new')}
       />
       <ListFilters
         fields={[
@@ -61,7 +65,7 @@ const StudentsPage = () => {
         emptyDescription="Os alunos cadastrados aparecerão aqui."
         toolbarContent={
           <AppText color="text.secondary">
-            Use os filtros para localizar alunos por nome, documento, código ou status.
+            Use a busca geral para localizar alunos por nome, documento ou código.
           </AppText>
         }
         hideToolbar

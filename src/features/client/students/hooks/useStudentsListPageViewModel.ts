@@ -70,6 +70,11 @@ export const useStudentsListPageViewModel = () => {
         onClick: () => void navigate(`/client/students/${row.id}`),
       },
       {
+        key: 'edit',
+        label: 'Editar',
+        onClick: () => void navigate(`/client/students/${row.id}/edit`),
+      },
+      {
         key: 'new-enrollment',
         label: 'Nova matrícula',
         onClick: () => void navigate('/client/student-enrollments/new'),

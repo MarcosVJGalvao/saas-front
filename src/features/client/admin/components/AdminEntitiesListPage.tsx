@@ -1,3 +1,4 @@
+import { useNavigate } from 'react-router-dom';
 import { AppStack } from '@shared/components/layout/AppStack';
 import { AppText } from '@shared/components/data-display/AppText';
 import { ListFilters } from '@shared/components/data-display/data/ListFilters';
@@ -46,6 +47,7 @@ export const AdminEntitiesListPage = ({
   showRole = false,
   showPermissions = false,
 }: AdminEntitiesListPageProps) => {
+  const navigate = useNavigate();
   const model = useAdminEntitiesListPageViewModel({
     service,
     errorMessageFallback,
@@ -56,7 +58,12 @@ export const AdminEntitiesListPage = ({
 
   return (
     <AppStack spacing={2}>
-      <PageHeader title={title} subtitle={subtitle} />
+      <PageHeader
+        title={title}
+        subtitle={subtitle}
+        actionLabel="Cadastrar"
+        onAction={() => void navigate(`${routeBase}/new`)}
+      />
       <ListFilters
         fields={[
           {

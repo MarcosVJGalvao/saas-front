@@ -113,6 +113,11 @@ export const useFinancialEntitiesListPageViewModel = ({
         label: 'Ver detalhes',
         onClick: () => void navigate(`${routeBase}/${row.id}`),
       },
+      {
+        key: 'edit',
+        label: 'Editar',
+        onClick: () => void navigate(`${routeBase}/${row.id}/edit`),
+      },
     ],
     [navigate, routeBase],
   );

@@ -1,16 +1,17 @@
-import { AppStack } from '@shared/components/layout/AppStack';
+import { useNavigate } from 'react-router-dom';
 import { AppText } from '@shared/components/data-display/AppText';
 import { ListFilters } from '@shared/components/data-display/data/ListFilters';
 import type { FilterField } from '@shared/components/data-display/data/listFilters.types';
-import { PageHeader } from '@shared/components/layout/PageHeader';
 import { QueryDataTable } from '@shared/components/data-display/data/QueryDataTable';
-import type { ClientCrudService } from '@features/client/shared/types/clientApi.types';
+import { AppStack } from '@shared/components/layout/AppStack';
+import { PageHeader } from '@shared/components/layout/PageHeader';
 import { useFinancialEntitiesListPageViewModel } from '@features/client/financial/hooks/useFinancialEntitiesListPageViewModel';
 import type {
   FinancialEntity,
   FinancialEntityPayload,
   FinancialEntityQueryParams,
 } from '@features/client/financial/types/financial.types';
+import type { ClientCrudService } from '@features/client/shared/types/clientApi.types';
 
 type FinancialEntitiesService = Pick<
   ClientCrudService<
@@ -44,6 +45,7 @@ export const FinancialEntitiesListPage = ({
   emptyDescription,
   showType = false,
 }: FinancialEntitiesListPageProps) => {
+  const navigate = useNavigate();
   const model = useFinancialEntitiesListPageViewModel({
     service,
     routeBase,
@@ -69,7 +71,12 @@ export const FinancialEntitiesListPage = ({
 
   return (
     <AppStack spacing={2}>
-      <PageHeader title={title} subtitle={subtitle} />
+      <PageHeader
+        title={title}
+        subtitle={subtitle}
+        actionLabel="Cadastrar"
+        onAction={() => void navigate(`${routeBase}/new`)}
+      />
       <ListFilters
         fields={[
           {

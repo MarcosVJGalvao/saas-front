@@ -45,6 +45,37 @@ describe('academic catalog services', () => {
     expect(response.name).toBe('1º ano');
   });
 
+  it('cria disciplina pelo endpoint correto', async () => {
+    const postSpy = vi.spyOn(httpClient, 'post').mockResolvedValueOnce({
+      data: { id: 'subject-1', name: 'Matemática', status: 'active' },
+    });
+
+    const response = await subjectService.create({ name: 'Matemática', status: 'active' });
+
+    expect(postSpy).toHaveBeenCalledWith('/api/subjects', {
+      name: 'Matemática',
+      status: 'active',
+    });
+    expect(response.name).toBe('Matemática');
+  });
+
+  it('atualiza disciplina pelo endpoint correto', async () => {
+    const patchSpy = vi.spyOn(httpClient, 'patch').mockResolvedValueOnce({
+      data: { id: 'subject-1', name: 'Matemática', status: 'active' },
+    });
+
+    const response = await subjectService.update('subject-1', {
+      name: 'Matemática',
+      status: 'active',
+    });
+
+    expect(patchSpy).toHaveBeenCalledWith('/api/subjects/subject-1', {
+      name: 'Matemática',
+      status: 'active',
+    });
+    expect(response.name).toBe('Matemática');
+  });
+
   it('remove disciplina pelo endpoint correto', async () => {
     const deleteSpy = vi.spyOn(httpClient, 'delete').mockResolvedValueOnce({ data: undefined });
 

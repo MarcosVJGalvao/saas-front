@@ -75,6 +75,11 @@ export const useLegalGuardiansListPageViewModel = () => {
         label: 'Ver detalhes',
         onClick: () => void navigate(`/client/legal-guardians/${row.id}`),
       },
+      {
+        key: 'edit',
+        label: 'Editar',
+        onClick: () => void navigate(`/client/legal-guardians/${row.id}/edit`),
+      },
     ],
     [navigate],
   );

@@ -64,25 +64,43 @@ const AcademicYearDetailsPage = lazy(
 const EducationLevelsPage = lazy(
   () => import('@features/client/academic/pages/EducationLevelsPage'),
 );
+const EducationLevelCreatePage = lazy(
+  () => import('@features/client/academic/pages/EducationLevelCreatePage'),
+);
+const EducationLevelEditPage = lazy(
+  () => import('@features/client/academic/pages/EducationLevelEditPage'),
+);
 const EducationLevelDetailsPage = lazy(
   () => import('@features/client/academic/pages/EducationLevelDetailsPage'),
 );
 const GradesPage = lazy(() => import('@features/client/academic/pages/GradesPage'));
+const GradeCreatePage = lazy(() => import('@features/client/academic/pages/GradeCreatePage'));
+const GradeEditPage = lazy(() => import('@features/client/academic/pages/GradeEditPage'));
 const GradeDetailsPage = lazy(() => import('@features/client/academic/pages/GradeDetailsPage'));
 const SchoolClassesPage = lazy(() => import('@features/client/academic/pages/SchoolClassesPage'));
 const SchoolClassDetailsPage = lazy(
   () => import('@features/client/academic/pages/SchoolClassDetailsPage'),
 );
 const SubjectsPage = lazy(() => import('@features/client/academic/pages/SubjectsPage'));
+const SubjectCreatePage = lazy(() => import('@features/client/academic/pages/SubjectCreatePage'));
+const SubjectEditPage = lazy(() => import('@features/client/academic/pages/SubjectEditPage'));
 const SubjectDetailsPage = lazy(() => import('@features/client/academic/pages/SubjectDetailsPage'));
 const TeacherSubjectsPage = lazy(
   () => import('@features/client/academic/pages/TeacherSubjectsPage'),
 );
 const StudentsPage = lazy(() => import('@features/client/students/pages/StudentsPage'));
+const StudentCreatePage = lazy(() => import('@features/client/students/pages/StudentCreatePage'));
 const StudentDetailsPage = lazy(() => import('@features/client/students/pages/StudentDetailsPage'));
+const StudentEditPage = lazy(() => import('@features/client/students/pages/StudentEditPage'));
 const LegalGuardiansPage = lazy(() => import('@features/client/students/pages/LegalGuardiansPage'));
+const LegalGuardianCreatePage = lazy(
+  () => import('@features/client/students/pages/LegalGuardianCreatePage'),
+);
 const LegalGuardianDetailsPage = lazy(
   () => import('@features/client/students/pages/LegalGuardianDetailsPage'),
+);
+const LegalGuardianEditPage = lazy(
+  () => import('@features/client/students/pages/LegalGuardianEditPage'),
 );
 const AttendanceSchedulesPage = lazy(
   () => import('@features/client/attendance/pages/AttendanceSchedulesPage'),
@@ -103,23 +121,47 @@ const FinancialDashboardPage = lazy(
 const AccountsPayablePage = lazy(
   () => import('@features/client/financial/pages/AccountsPayablePage'),
 );
+const AccountsPayableCreatePage = lazy(
+  () => import('@features/client/financial/pages/AccountsPayableCreatePage'),
+);
 const AccountsPayableDetailsPage = lazy(
   () => import('@features/client/financial/pages/AccountsPayableDetailsPage'),
+);
+const AccountsPayableEditPage = lazy(
+  () => import('@features/client/financial/pages/AccountsPayableEditPage'),
 );
 const AccountsReceivablePage = lazy(
   () => import('@features/client/financial/pages/AccountsReceivablePage'),
 );
+const AccountsReceivableCreatePage = lazy(
+  () => import('@features/client/financial/pages/AccountsReceivableCreatePage'),
+);
 const AccountsReceivableDetailsPage = lazy(
   () => import('@features/client/financial/pages/AccountsReceivableDetailsPage'),
 );
+const AccountsReceivableEditPage = lazy(
+  () => import('@features/client/financial/pages/AccountsReceivableEditPage'),
+);
 const FinancialCategoriesPage = lazy(
   () => import('@features/client/financial/pages/FinancialCategoriesPage'),
+);
+const FinancialCategoryCreatePage = lazy(
+  () => import('@features/client/financial/pages/FinancialCategoryCreatePage'),
+);
+const FinancialCategoryEditPage = lazy(
+  () => import('@features/client/financial/pages/FinancialCategoryEditPage'),
 );
 const FinancialCategoryDetailsPage = lazy(
   () => import('@features/client/financial/pages/FinancialCategoryDetailsPage'),
 );
 const FinancialCostCentersPage = lazy(
   () => import('@features/client/financial/pages/FinancialCostCentersPage'),
+);
+const FinancialCostCenterCreatePage = lazy(
+  () => import('@features/client/financial/pages/FinancialCostCenterCreatePage'),
+);
+const FinancialCostCenterEditPage = lazy(
+  () => import('@features/client/financial/pages/FinancialCostCenterEditPage'),
 );
 const FinancialCostCenterDetailsPage = lazy(
   () => import('@features/client/financial/pages/FinancialCostCenterDetailsPage'),
@@ -155,13 +197,21 @@ const ReportCardProcessingsPage = lazy(
   () => import('@features/client/report-cards/pages/ReportCardProcessingsPage'),
 );
 const ClientUsersPage = lazy(() => import('@features/client/admin/pages/ClientUsersPage'));
+const ClientUserCreatePage = lazy(
+  () => import('@features/client/admin/pages/ClientUserCreatePage'),
+);
 const ClientUserDetailsPage = lazy(
   () => import('@features/client/admin/pages/ClientUserDetailsPage'),
 );
+const ClientUserEditPage = lazy(() => import('@features/client/admin/pages/ClientUserEditPage'));
 const ClientRolesPage = lazy(() => import('@features/client/admin/pages/ClientRolesPage'));
+const ClientRoleCreatePage = lazy(
+  () => import('@features/client/admin/pages/ClientRoleCreatePage'),
+);
 const ClientRoleDetailsPage = lazy(
   () => import('@features/client/admin/pages/ClientRoleDetailsPage'),
 );
+const ClientRoleEditPage = lazy(() => import('@features/client/admin/pages/ClientRoleEditPage'));
 
 const TOKEN_EXPIRED_EVENT = 'app:token-expired';
 
@@ -453,10 +503,26 @@ export const AppRouter = () => {
             }
           />
           <Route
+            path="/client/education-levels/new"
+            element={
+              <ProtectedClientRoute>
+                <EducationLevelCreatePage />
+              </ProtectedClientRoute>
+            }
+          />
+          <Route
             path="/client/education-levels/:id"
             element={
               <ProtectedClientRoute>
                 <EducationLevelDetailsPage />
+              </ProtectedClientRoute>
+            }
+          />
+          <Route
+            path="/client/education-levels/:id/edit"
+            element={
+              <ProtectedClientRoute>
+                <EducationLevelEditPage />
               </ProtectedClientRoute>
             }
           />
@@ -469,10 +535,26 @@ export const AppRouter = () => {
             }
           />
           <Route
+            path="/client/grades/new"
+            element={
+              <ProtectedClientRoute>
+                <GradeCreatePage />
+              </ProtectedClientRoute>
+            }
+          />
+          <Route
             path="/client/grades/:id"
             element={
               <ProtectedClientRoute>
                 <GradeDetailsPage />
+              </ProtectedClientRoute>
+            }
+          />
+          <Route
+            path="/client/grades/:id/edit"
+            element={
+              <ProtectedClientRoute>
+                <GradeEditPage />
               </ProtectedClientRoute>
             }
           />
@@ -501,10 +583,26 @@ export const AppRouter = () => {
             }
           />
           <Route
+            path="/client/subjects/new"
+            element={
+              <ProtectedClientRoute>
+                <SubjectCreatePage />
+              </ProtectedClientRoute>
+            }
+          />
+          <Route
             path="/client/subjects/:id"
             element={
               <ProtectedClientRoute>
                 <SubjectDetailsPage />
+              </ProtectedClientRoute>
+            }
+          />
+          <Route
+            path="/client/subjects/:id/edit"
+            element={
+              <ProtectedClientRoute>
+                <SubjectEditPage />
               </ProtectedClientRoute>
             }
           />
@@ -525,10 +623,26 @@ export const AppRouter = () => {
             }
           />
           <Route
+            path="/client/students/new"
+            element={
+              <ProtectedClientRoute>
+                <StudentCreatePage />
+              </ProtectedClientRoute>
+            }
+          />
+          <Route
             path="/client/students/:id"
             element={
               <ProtectedClientRoute>
                 <StudentDetailsPage />
+              </ProtectedClientRoute>
+            }
+          />
+          <Route
+            path="/client/students/:id/edit"
+            element={
+              <ProtectedClientRoute>
+                <StudentEditPage />
               </ProtectedClientRoute>
             }
           />
@@ -541,10 +655,26 @@ export const AppRouter = () => {
             }
           />
           <Route
+            path="/client/legal-guardians/new"
+            element={
+              <ProtectedClientRoute>
+                <LegalGuardianCreatePage />
+              </ProtectedClientRoute>
+            }
+          />
+          <Route
             path="/client/legal-guardians/:id"
             element={
               <ProtectedClientRoute>
                 <LegalGuardianDetailsPage />
+              </ProtectedClientRoute>
+            }
+          />
+          <Route
+            path="/client/legal-guardians/:id/edit"
+            element={
+              <ProtectedClientRoute>
+                <LegalGuardianEditPage />
               </ProtectedClientRoute>
             }
           />
@@ -605,10 +735,26 @@ export const AppRouter = () => {
             }
           />
           <Route
+            path="/client/financial/accounts-payable/new"
+            element={
+              <ProtectedClientRoute>
+                <AccountsPayableCreatePage />
+              </ProtectedClientRoute>
+            }
+          />
+          <Route
             path="/client/financial/accounts-payable/:id"
             element={
               <ProtectedClientRoute>
                 <AccountsPayableDetailsPage />
+              </ProtectedClientRoute>
+            }
+          />
+          <Route
+            path="/client/financial/accounts-payable/:id/edit"
+            element={
+              <ProtectedClientRoute>
+                <AccountsPayableEditPage />
               </ProtectedClientRoute>
             }
           />
@@ -621,10 +767,26 @@ export const AppRouter = () => {
             }
           />
           <Route
+            path="/client/financial/accounts-receivable/new"
+            element={
+              <ProtectedClientRoute>
+                <AccountsReceivableCreatePage />
+              </ProtectedClientRoute>
+            }
+          />
+          <Route
             path="/client/financial/accounts-receivable/:id"
             element={
               <ProtectedClientRoute>
                 <AccountsReceivableDetailsPage />
+              </ProtectedClientRoute>
+            }
+          />
+          <Route
+            path="/client/financial/accounts-receivable/:id/edit"
+            element={
+              <ProtectedClientRoute>
+                <AccountsReceivableEditPage />
               </ProtectedClientRoute>
             }
           />
@@ -637,10 +799,26 @@ export const AppRouter = () => {
             }
           />
           <Route
+            path="/client/financial/categories/new"
+            element={
+              <ProtectedClientRoute>
+                <FinancialCategoryCreatePage />
+              </ProtectedClientRoute>
+            }
+          />
+          <Route
             path="/client/financial/categories/:id"
             element={
               <ProtectedClientRoute>
                 <FinancialCategoryDetailsPage />
+              </ProtectedClientRoute>
+            }
+          />
+          <Route
+            path="/client/financial/categories/:id/edit"
+            element={
+              <ProtectedClientRoute>
+                <FinancialCategoryEditPage />
               </ProtectedClientRoute>
             }
           />
@@ -653,10 +831,26 @@ export const AppRouter = () => {
             }
           />
           <Route
+            path="/client/financial/cost-centers/new"
+            element={
+              <ProtectedClientRoute>
+                <FinancialCostCenterCreatePage />
+              </ProtectedClientRoute>
+            }
+          />
+          <Route
             path="/client/financial/cost-centers/:id"
             element={
               <ProtectedClientRoute>
                 <FinancialCostCenterDetailsPage />
+              </ProtectedClientRoute>
+            }
+          />
+          <Route
+            path="/client/financial/cost-centers/:id/edit"
+            element={
+              <ProtectedClientRoute>
+                <FinancialCostCenterEditPage />
               </ProtectedClientRoute>
             }
           />
@@ -749,10 +943,26 @@ export const AppRouter = () => {
             }
           />
           <Route
+            path="/client/users/new"
+            element={
+              <ProtectedClientRoute>
+                <ClientUserCreatePage />
+              </ProtectedClientRoute>
+            }
+          />
+          <Route
             path="/client/users/:id"
             element={
               <ProtectedClientRoute>
                 <ClientUserDetailsPage />
+              </ProtectedClientRoute>
+            }
+          />
+          <Route
+            path="/client/users/:id/edit"
+            element={
+              <ProtectedClientRoute>
+                <ClientUserEditPage />
               </ProtectedClientRoute>
             }
           />
@@ -765,10 +975,26 @@ export const AppRouter = () => {
             }
           />
           <Route
+            path="/client/roles/new"
+            element={
+              <ProtectedClientRoute>
+                <ClientRoleCreatePage />
+              </ProtectedClientRoute>
+            }
+          />
+          <Route
             path="/client/roles/:id"
             element={
               <ProtectedClientRoute>
                 <ClientRoleDetailsPage />
+              </ProtectedClientRoute>
+            }
+          />
+          <Route
+            path="/client/roles/:id/edit"
+            element={
+              <ProtectedClientRoute>
+                <ClientRoleEditPage />
               </ProtectedClientRoute>
             }
           />

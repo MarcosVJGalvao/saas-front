@@ -1,3 +1,4 @@
+import { useNavigate } from 'react-router-dom';
 import { AppText } from '@shared/components/data-display/AppText';
 import { ListFilters } from '@shared/components/data-display/data/ListFilters';
 import type { FilterField } from '@shared/components/data-display/data/listFilters.types';
@@ -108,6 +109,7 @@ export const FinancialRecordsPage = ({
   emptyTitle,
   emptyDescription,
 }: FinancialRecordsPageProps) => {
+  const navigate = useNavigate();
   const model = useFinancialRecordsPageViewModel({
     mode,
     routeBase,
@@ -120,7 +122,12 @@ export const FinancialRecordsPage = ({
 
   return (
     <AppStack spacing={2}>
-      <PageHeader title={title} subtitle={subtitle} />
+      <PageHeader
+        title={title}
+        subtitle={subtitle}
+        actionLabel="Cadastrar"
+        onAction={() => void navigate(`${routeBase}/new`)}
+      />
       <ListFilters
         fields={filterFields}
         values={model.filterValues}

@@ -176,6 +176,11 @@ export const useFinancialRecordsPageViewModel = ({
         onClick: () => void navigate(`${routeBase}/${row.id}`),
       },
       {
+        key: 'edit',
+        label: 'Editar',
+        onClick: () => void navigate(`${routeBase}/${row.id}/edit`),
+      },
+      {
         key: 'settle',
         label: mode === 'payable' ? 'Pagar' : 'Receber',
         onClick: () => openAction(row.id, 'settle'),

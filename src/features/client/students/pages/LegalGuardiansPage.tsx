@@ -1,11 +1,13 @@
-import { AppStack } from '@shared/components/layout/AppStack';
+import { useNavigate } from 'react-router-dom';
 import { AppText } from '@shared/components/data-display/AppText';
 import { ListFilters } from '@shared/components/data-display/data/ListFilters';
-import { PageHeader } from '@shared/components/layout/PageHeader';
 import { QueryDataTable } from '@shared/components/data-display/data/QueryDataTable';
+import { AppStack } from '@shared/components/layout/AppStack';
+import { PageHeader } from '@shared/components/layout/PageHeader';
 import { useLegalGuardiansListPageViewModel } from '@features/client/students/hooks/useLegalGuardiansListPageViewModel';
 
 const LegalGuardiansPage = () => {
+  const navigate = useNavigate();
   const model = useLegalGuardiansListPageViewModel();
 
   return (
@@ -13,6 +15,8 @@ const LegalGuardiansPage = () => {
       <PageHeader
         title="Responsáveis"
         subtitle="Gerencie responsáveis legais e vínculos com alunos."
+        actionLabel="Cadastrar"
+        onAction={() => void navigate('/client/legal-guardians/new')}
       />
       <ListFilters
         fields={[
