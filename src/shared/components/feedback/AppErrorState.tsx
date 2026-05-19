@@ -1,7 +1,10 @@
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import type { SxProps, Theme } from '@mui/material/styles';
+import { sharedComponentsI18n } from '@shared/i18n/pt-BR/components';
 import { AppButton } from '@shared/components/inputs/AppButton';
+
+const i18n = sharedComponentsI18n.errorState;
 
 interface AppErrorStateProps {
   title?: string | undefined;
@@ -12,9 +15,9 @@ interface AppErrorStateProps {
 }
 
 export const AppErrorState = ({
-  title = 'Erro ao carregar',
+  title = i18n.title,
   message,
-  retryLabel = 'Tentar novamente',
+  retryLabel = i18n.retryLabel,
   onRetry,
   sx,
 }: AppErrorStateProps) => (

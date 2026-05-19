@@ -73,6 +73,79 @@ plugins: ['eslint-comments'];
 }
 ```
 
+## Regras de arquitetura por camada
+
+Além das regras globais, o projeto aplica regras específicas por camada via `files` no ESLint.
+
+### Hooks (`src/**/hooks/**/*.{ts,tsx}`)
+
+```js
+'no-restricted-syntax': [
+  'error',
+  {
+    selector: 'JSXElement, JSXFragment',
+    message: 'Hooks não podem conter JSX. Mova o componente para pages/ ou components/.',
+  },
+],
+```
+
+Bloqueia JSX dentro de qualquer arquivo de hook. Se um hook tiver JSX, o build falha.
+
+### `services/endpoints.ts`
+
+```js
+'no-restricted-syntax': [
+  'error',
+  { selector: 'AwaitExpression', message: 'endpoints.ts não pode usar await.' },
+  { selector: "MemberExpression[property.name='data']", message: 'endpoints.ts não pode acessar .data.' },
+],
+```
+
+Garante que `endpoints.ts` só retorna Promises do httpClient, sem `await` nem `.data`.
+
+### `services/service.ts`
+
+```js
+'no-restricted-imports': [
+  'error',
+  { patterns: [{ group: ['**/httpClient*'], message: 'service.ts não pode importar httpClient diretamente.' }] },
+],
+```
+
+Garante que `service.ts` só usa `endpoints.ts`, nunca importa `httpClient` diretamente.
+
+### Hooks importando endpoints
+
+```js
+// src/**/hooks/**/*.ts
+'no-restricted-imports': [
+  'error',
+  { patterns: [{ group: ['**/endpoints*'], message: 'Hooks não podem importar endpoints diretamente. Use service.ts.' }] },
+],
+```
+
+### Pages (`src/pages/**/*.{ts,tsx}`)
+
+```js
+'no-restricted-syntax': [
+  { selector: "CallExpression[callee.name=/^use(State|Effect|Memo|Callback|Reducer|Ref)$/]",
+    message: 'Pages devem ser composição; mova lógica para hooks.' },
+  { selector: "CallExpression[callee.object.name=/.+Service$/]",
+    message: 'Pages não devem chamar services diretamente; use hooks.' },
+],
+complexity: ['error', 3],
+```
+
+### Variáveis com nomes curtos
+
+```js
+'id-length': ['error', { min: 2, exceptions: ['i', 'j', '_'], properties: 'never' }],
+```
+
+Já ativo globalmente. Bloqueia variáveis de 1 caractere como `q`, `p`, `n` (exceto iteradores `i`, `j`).
+
+---
+
 ## Proibido
 
 - Relaxar regra para fazer build passar.

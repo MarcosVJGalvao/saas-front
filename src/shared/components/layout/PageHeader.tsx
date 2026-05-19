@@ -1,5 +1,6 @@
 import Breadcrumbs from '@mui/material/Breadcrumbs';
 import Link from '@mui/material/Link';
+import type { SxProps, Theme } from '@mui/material/styles';
 import type { ReactNode } from 'react';
 import { PermissionGate } from '@app/guards/PermissionGate';
 import { AppText } from '@shared/components/data-display/AppText';
@@ -21,6 +22,7 @@ interface PageHeaderProps {
   actionIcon?: ReactNode | undefined;
   canShowAction?: boolean | undefined;
   onAction?: (() => void) | undefined;
+  sx?: SxProps<Theme> | undefined;
 }
 
 const renderPrimaryAction = ({
@@ -51,8 +53,9 @@ export const PageHeader = ({
   actionIcon,
   canShowAction,
   onAction,
+  sx,
 }: PageHeaderProps) => (
-  <AppStack spacing={1.5} sx={{ mb: 3 }}>
+  <AppStack spacing={1.5} sx={[{ mb: 3 }, ...(Array.isArray(sx) ? sx : sx ? [sx] : [])]}>
     {breadcrumbs.length > 0 ? (
       <Breadcrumbs aria-label="breadcrumb">
         {breadcrumbs.map((breadcrumb, index) => {

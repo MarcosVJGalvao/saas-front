@@ -128,6 +128,71 @@ export default tseslint.config(
     },
   },
   {
+    files: ['src/**/hooks/**/*.{ts,tsx}'],
+    rules: {
+      'no-restricted-syntax': [
+        'error',
+        {
+          selector: 'JSXElement, JSXFragment',
+          message:
+            'Hooks não podem conter JSX. Mova o componente para pages/ ou components/. Ver skill 09-hook-skill.',
+        },
+      ],
+    },
+  },
+  {
+    files: ['src/**/services/endpoints.ts'],
+    rules: {
+      'no-restricted-syntax': [
+        'error',
+        {
+          selector: 'AwaitExpression',
+          message:
+            'endpoints.ts não pode usar await. Apenas retorne a Promise do httpClient. Ver skill 08-service-api-skill.',
+        },
+        {
+          selector: "MemberExpression[property.name='data']",
+          message:
+            'endpoints.ts não pode acessar .data. Apenas retorne a Promise do httpClient. Ver skill 08-service-api-skill.',
+        },
+      ],
+    },
+  },
+  {
+    files: ['src/**/services/service.ts'],
+    rules: {
+      'no-restricted-imports': [
+        'error',
+        {
+          patterns: [
+            {
+              group: ['**/httpClient*', '@shared/services/httpClient'],
+              message:
+                'service.ts não pode importar httpClient diretamente. Use endpoints.ts. Ver skill 08-service-api-skill.',
+            },
+          ],
+        },
+      ],
+    },
+  },
+  {
+    files: ['src/**/hooks/**/*.ts'],
+    rules: {
+      'no-restricted-imports': [
+        'error',
+        {
+          patterns: [
+            {
+              group: ['**/endpoints*'],
+              message:
+                'Hooks não podem importar endpoints diretamente. Use service.ts. Ver skill 08-service-api-skill.',
+            },
+          ],
+        },
+      ],
+    },
+  },
+  {
     files: ['src/test/**/*.{ts,tsx}', '**/*.test.{ts,tsx}', '**/*.spec.{ts,tsx}'],
     rules: {
       '@typescript-eslint/no-explicit-any': 'off',

@@ -2,7 +2,10 @@ import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
+import { sharedComponentsI18n } from '@shared/i18n/pt-BR/components';
 import { AppButton } from '@shared/components/inputs/AppButton';
+
+const i18n = sharedComponentsI18n.confirmDialog;
 
 interface ConfirmDialogProps {
   open: boolean;
@@ -18,8 +21,8 @@ export const ConfirmDialog = ({
   open,
   title,
   description,
-  confirmLabel = 'Confirmar',
-  cancelLabel = 'Cancelar',
+  confirmLabel = i18n.confirmLabel,
+  cancelLabel = i18n.cancelLabel,
   onConfirm,
   onCancel,
 }: ConfirmDialogProps) => (

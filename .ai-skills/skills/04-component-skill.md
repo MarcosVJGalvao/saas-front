@@ -56,6 +56,39 @@ shared/components/
 - Componentes não devem conhecer detalhes de backend.
 - Componentes não devem montar payload.
 
+## Regra: `sx` obrigatório em todo shared component
+
+Todo shared component **deve aceitar `sx?: SxProps<Theme>`** e repassar ao elemento raiz. Isso permite que a page ajuste espaçamento, cor ou tamanho sem criar um wrapper desnecessário.
+
+```tsx
+import type { SxProps, Theme } from '@mui/material/styles';
+
+interface MyComponentProps {
+  sx?: SxProps<Theme>;
+  // ...outros props
+}
+
+// elemento raiz usa array merge para não sobrescrever o sx interno:
+<Box sx={[{ mb: 2 }, ...(Array.isArray(sx) ? sx : sx ? [sx] : [])]} />
+```
+
+Quando o componente não tem sx próprio, repasse diretamente: `<Card sx={sx}>`.
+
+## Regra: strings visíveis ao usuário vêm de `shared/i18n/pt-BR/components.ts`
+
+Toda string padrão exibida ao usuário por um shared component deve ter seu default em `sharedComponentsI18n` (ver skill 18). Strings dentro do componente nunca são hardcoded — elas são defaults de parâmetros vindos do i18n.
+
+```tsx
+// ❌ ERRADO — hardcoded dentro do componente
+confirmLabel = 'Confirmar',
+
+// ✅ CORRETO — default vem do i18n centralizado
+import { sharedComponentsI18n } from '@shared/i18n/pt-BR/components';
+confirmLabel = sharedComponentsI18n.confirmDialog.confirmLabel,
+```
+
+Props de texto que têm default i18n devem ser **opcionais** — a page só passa quando quer sobrescrever.
+
 ## Componentes com variantes
 
 Botões, inputs e feedbacks podem ter variantes padronizadas:

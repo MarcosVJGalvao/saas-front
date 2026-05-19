@@ -33,3 +33,5 @@ export const DATA_LIST_DEFAULTS = {
   mobileFallback: '-',
   rowPaddingY: spacingScale.xs,
 };
+
+/** @deprecated Usar sharedComponentsI18n de '@shared/i18n/pt-BR/components'. Este arquivo será removido. */

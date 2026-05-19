@@ -17,7 +17,7 @@ import { useMemo, useState } from 'react';
 import { ActionButtons } from '@shared/components/actions/ActionButtons';
 import { AppDatePicker } from '@shared/components/form/AppDatePicker';
 import { DateRangePicker } from '@shared/components/form/DateRangePicker';
-import { commonDataMessages } from '@shared/components/messages';
+import { sharedComponentsI18n } from '@shared/i18n/pt-BR/components';
 import type {
   FilterField,
   ListFiltersProps,
@@ -65,7 +65,7 @@ const renderTextField = ({
       fullWidth
       value={toStringValue(values[field.name])}
       onChange={(event) => onChange(field.name, event.target.value)}
-      placeholder={field.placeholder ?? commonDataMessages.searchPlaceholder}
+      placeholder={field.placeholder ?? sharedComponentsI18n.filters.searchPlaceholder}
       disabled={isDisabled}
       error={field.error}
       helperText={field.helperText}
@@ -102,7 +102,7 @@ const renderSelectField = ({
       helperText={field.helperText}
       slotProps={{ select: { displayEmpty: true } }}
     >
-      <MenuItem value="">{field.placeholder ?? 'Selecione'}</MenuItem>
+      <MenuItem value="">{field.placeholder ?? sharedComponentsI18n.filters.selectPlaceholder}</MenuItem>
       {field.options
         .filter((option) => option.value.length > 0)
         .map((option) => (
@@ -159,8 +159,8 @@ const renderFilterField = ({
       <Typography variant="body2">{field.label}</Typography>
       <DateRangePicker
         compact
-        startLabel="Data inicial"
-        endLabel="Data final"
+        startLabel={sharedComponentsI18n.filters.dateStartLabel}
+        endLabel={sharedComponentsI18n.filters.dateEndLabel}
         startValue={toDateValue(values[field.startName])}
         endValue={toDateValue(values[field.endName])}
         onStartChange={(nextValue) => onChange(field.startName, nextValue)}
@@ -215,7 +215,7 @@ const FiltersHeader = ({
   subtitle,
   onToggleExpanded,
 }: FiltersHeaderProps) => {
-  const collapseLabel = expanded ? 'Recolher filtros' : 'Expandir filtros';
+  const collapseLabel = expanded ? sharedComponentsI18n.filters.collapseLabel : sharedComponentsI18n.filters.expandLabel;
   const collapseIcon = expanded ? (
     <KeyboardArrowUpIcon sx={{ fontSize: 18 }} />
   ) : (
@@ -307,8 +307,8 @@ const FiltersHeader = ({
 };
 
 export const ListFilters = ({
-  title = 'Filtros',
-  subtitle = 'Refine sua busca e encontre exatamente o que precisa',
+  title = sharedComponentsI18n.filters.title,
+  subtitle = sharedComponentsI18n.filters.subtitle,
   fields,
   values,
   onChange,
@@ -317,8 +317,8 @@ export const ListFilters = ({
   loading = false,
   collapsible = true,
   defaultExpanded = true,
-  applyLabel = 'Aplicar filtros',
-  clearLabel = 'Limpar filtros',
+  applyLabel = sharedComponentsI18n.filters.applyLabel,
+  clearLabel = sharedComponentsI18n.filters.clearLabel,
 }: ListFiltersProps) => {
   const [expanded, setExpanded] = useState(defaultExpanded);
   const [applyRequested, setApplyRequested] = useState(false);
@@ -335,7 +335,7 @@ export const ListFilters = ({
     onClear();
   };
   const toggleExpanded = () => setExpanded((prev) => !prev);
-  const applyButtonLabel = isApplying ? 'Aplicando...' : applyLabel;
+  const applyButtonLabel = isApplying ? sharedComponentsI18n.filters.applyingLabel : applyLabel;
 
   return (
     <Box

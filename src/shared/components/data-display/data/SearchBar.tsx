@@ -3,7 +3,7 @@ import TextField from '@mui/material/TextField';
 import SearchIcon from '@mui/icons-material/Search';
 import InputAdornment from '@mui/material/InputAdornment';
 import { useDebouncedCallback } from '@shared/hooks/useDebounce/useDebouncedCallback';
-import { commonDataMessages } from '@shared/components/messages';
+import { sharedComponentsI18n } from '@shared/i18n/pt-BR/components';
 
 interface SearchBarProps {
   value: string;
@@ -15,7 +15,7 @@ interface SearchBarProps {
 export const SearchBar = ({
   value,
   onChange,
-  placeholder = commonDataMessages.searchPlaceholder,
+  placeholder = sharedComponentsI18n.filters.searchPlaceholder,
   debounceInMilliseconds = 0,
   sx,
 }: SearchBarProps) => {

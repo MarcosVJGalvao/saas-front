@@ -5,7 +5,10 @@ import ListItem from '@mui/material/ListItem';
 import Stack from '@mui/material/Stack';
 import Tooltip from '@mui/material/Tooltip';
 import Typography from '@mui/material/Typography';
+import { sharedComponentsI18n } from '@shared/i18n/pt-BR/components';
 import type { AppError } from '@shared/types/appError';
+
+const i18n = sharedComponentsI18n.snackbarError;
 
 interface AppSnackbarErrorContentProps {
   error: AppError;
@@ -28,13 +31,13 @@ export const AppSnackbarErrorContent = ({ error }: AppSnackbarErrorContentProps)
     {error.correlationId !== undefined ? (
       <Stack direction="row" spacing={0.5} sx={{ alignItems: 'center' }}>
         <Typography variant="caption" sx={{ fontSize: '0.72rem' }}>
-          Código: {error.correlationId}
+          {i18n.correlationIdLabel} {error.correlationId}
         </Typography>
-        <Tooltip title="Copiar código">
+        <Tooltip title={i18n.copyTooltip}>
           <IconButton
             size="small"
             color="inherit"
-            aria-label="Copiar código do erro"
+            aria-label={i18n.copyAriaLabel}
             onClick={() => void navigator.clipboard.writeText(error.correlationId ?? '')}
           >
             <ContentCopyIcon fontSize="inherit" />

@@ -1,109 +1,57 @@
-# Plataform SaaS Frontend
+# Plataform SaaS — Frontend
 
-Frontend da aplicação SaaS multi-contexto, construído com React, Vite, TypeScript e Material UI. O projeto separa o acesso administrativo da plataforma do acesso do cliente e mantém a implementação organizada por arquitetura, domínio e responsabilidade.
+Frontend da plataforma SaaS multi-tenant, construído com React + TypeScript. O projeto é organizado por domínio (Platform e Client), segue Clean Architecture adaptada para frontend e mantém padrões rígidos de separação de responsabilidades entre camadas.
+
+---
 
 ## Stack
 
-- React 19
-- Vite
-- TypeScript estrito
-- Material UI
-- React Router
-- React Hook Form
-- Zod
-- Axios
-- Vitest e Testing Library
-- ESLint e Prettier
+| Categoria | Tecnologia |
+|-----------|-----------|
+| UI | React 19 + Material UI |
+| Build | Vite |
+| Tipagem | TypeScript strict |
+| Roteamento | React Router v7 |
+| Formulários | React Hook Form + Zod |
+| HTTP | Axios |
+| Testes | Vitest + Testing Library |
+| Qualidade | ESLint + Prettier |
 
-## Como rodar o projeto
+---
 
-Instale as dependências:
+## Rodando o projeto
 
 ```bash
 npm install
-```
-
-Execute o ambiente local:
-
-```bash
 npm run dev
 ```
 
-Acesse:
+Acesso local: `http://localhost:5173`
 
-```txt
-http://localhost:5173
-```
+| Contexto | URL |
+|----------|-----|
+| Login plataforma | `/platform/login` |
+| Login cliente | `/client/login` |
 
-A página inicial exibe duas entradas temporárias:
+---
 
-- Login plataforma: `/platform/login`
-- Login cliente: `/client/login`
-
-## Scripts principais
+## Scripts
 
 ```bash
-npm run dev
+npm run dev          # servidor de desenvolvimento
+npm run build        # typecheck + build de produção
+npm run preview      # serve o build localmente
+npm run lint         # ESLint (falha em qualquer warning)
+npm run lint:fix     # correções automáticas de lint
+npm run typecheck    # tsc --noEmit nos dois tsconfigs
+npm run test         # suíte Vitest
+npm run compliance   # auditoria estática de arquitetura
+npm run check:all    # lint + typecheck + test + build
 ```
 
-Inicia o servidor de desenvolvimento do Vite.
+### Quality gate obrigatório
 
-```bash
-npm run build
-```
-
-Executa a checagem TypeScript por build e gera a versão de produção.
-
-```bash
-npm run preview
-```
-
-Serve localmente o build de produção.
-
-```bash
-npm run lint
-```
-
-Executa ESLint com cache e falha em qualquer warning.
-
-```bash
-npm run lint:fix
-```
-
-Executa correções automáticas do ESLint quando possível.
-
-```bash
-npm run typecheck
-```
-
-Executa TypeScript nos projetos da aplicação e de configuração:
-
-```txt
-tsc -p tsconfig.app.json --noEmit
-tsc -p tsconfig.node.json --noEmit
-```
-
-```bash
-npm run test
-```
-
-Executa a suíte de testes com Vitest.
-
-```bash
-npm run compliance
-```
-
-Executa a auditoria estática de compliance do projeto.
-
-```bash
-npm run check:all
-```
-
-Executa lint, typecheck, testes e build.
-
-## Quality gate obrigatório
-
-Antes de considerar uma alteração concluída, execute:
+Antes de considerar qualquer alteração concluída:
 
 ```bash
 npm run compliance
@@ -112,215 +60,280 @@ npm run typecheck
 npm run test
 ```
 
-Esses comandos existem para bloquear problemas de arquitetura, imports, TypeScript, encoding, lint e regressões de teste.
+---
 
-## Arquitetura
+## Domínios da aplicação
 
-O projeto segue Clean Architecture adaptada para frontend. O fluxo recomendado é:
+### Platform (`src/features/platform`)
 
-```txt
-Page -> Hook -> Service -> HttpClient -> API
-```
+Ambiente administrativo da plataforma. Gerencia clientes, planos e assinaturas.
 
-Responsabilidades:
+Rotas: `/platform/login` · `/platform/home` · `/platform/clients` · `/platform/plans` · `/platform/subscriptions`
 
-- Page: orquestra layout, componentes e hooks.
-- Hook: concentra comportamento da tela, estado local, filtros, navegação, loading, erro e sucesso.
-- Service: comunica com APIs e isola detalhes externos.
-- Schema: valida dados com Zod.
-- Normalizer: transforma dados de UI em payload de API e dados externos em estrutura amigável.
-- Component: renderiza UI a partir de props.
-- Shared: concentra recursos reutilizáveis, sem depender de features.
+### Client (`src/features/client`)
+
+Ambiente acessado pelo tenant (escola/instituição). Gerencia alunos, matrículas, colaboradores, financeiro e relatórios.
+
+Rotas: `/client/login` · `/client/home` · `/client/students` · `/client/employees` · ...
+
+---
 
 ## Estrutura de pastas
 
-```txt
+```
 src/
   app/
-    guards/
-    layout/
-    providers/
-    router/
-    theme/
+    guards/        → AuthGuard, RoleGuard, PermissionGuard
+    layout/        → AppLayout, Sidebar, Topbar
+    providers/     → QueryProvider, ThemeProvider, SnackbarProvider
+    router/        → definição centralizada de rotas
+    theme/         → tokens, palette, typography, createAppTheme
 
   features/
-    client/
-      auth/
-      dashboard/
-      home/
-
-    platform/
-      auth/
-      clients/
-      dashboard/
-      home/
-      plans/
-      subscriptions/
-
-  pages/
+    platform/      → features do contexto administrativo
+    client/        → features do contexto do cliente
 
   shared/
-    components/
-    formatters/
-    hooks/
-    i18n/
-    masks/
-    normalizers/
-    parsers/
-    services/
-    types/
+    components/    → design system: inputs, layout, feedback, data-display, form
+    hooks/         → hooks reutilizáveis
+    services/      → httpClient, interceptors
+    formatters/    → formatIsoDate, formatCurrency, ...
+    masks/         → maskCpf, maskPhone, maskCep, ...
+    parsers/       → parseCurrency, parseDate, ...
+    normalizers/   → transformações compartilhadas
+    i18n/pt-BR/    → errors.ts, enums.ts, labels.ts, validation.ts
+    types/         → PaginatedResponse, PaginationMeta, ...
     utils/
+
+  pages/           → páginas públicas ou neutras (sem feature)
+  main.tsx
 ```
 
-## Contextos da aplicação
+### Estrutura interna de cada feature
 
-O frontend trabalha com dois contextos principais dentro de `src/features`.
-
-### Platform
-
-Fica em `src/features/platform`.
-
-Representa o ambiente administrativo da plataforma. É onde vivem fluxos como:
-
-- autenticação administrativa;
-- dashboard da plataforma;
-- gestão de clientes;
-- gestão de planos;
-- gestão de assinaturas.
-
-Rotas principais:
-
-```txt
-/platform/login
-/platform/home
-/platform/clients
-/platform/plans
-/platform/subscriptions
+```
+feature/
+  types/           → entidade + requests + query params (contrato com o backend)
+  schemas/         → schemas Zod + types inferidos
+  normalizers/     → transformação de dados (funções puras)
+  services/
+    endpoints.ts   → chamadas HTTP puras
+    types.ts       → aliases de request/response
+    service.ts     → métodos async consumidos pelos hooks
+  hooks/           → estado, lógica de negócio, ações da tela
+  components/      → JSX exclusivo da feature (column builders, steps, etc.)
+  pages/           → orquestração de layout
 ```
 
-### Client
+---
 
-Fica em `src/features/client`.
+## Arquitetura
 
-Representa o ambiente acessado pelo cliente ou tenant. É onde vivem fluxos como:
+### Fluxo de dados
 
-- autenticação do cliente;
-- recuperação de senha;
-- home do cliente;
-- dashboard do cliente.
-
-Rotas principais:
-
-```txt
-/client/login
-/client/forgot-password
-/client/reset-password
-/client/home
+```
+Page → Hook → Service → HttpClient → API
 ```
 
-## Onde colocar cada tipo de código
+### Responsabilidade de cada camada
 
-Use `src/app` para infraestrutura global da aplicação:
+| Camada | Responsabilidade |
+|--------|-----------------|
+| `types/` | Contratos com o backend. Sem lógica, sem imports internos. |
+| `schemas/` | Validação com Zod. Types vêm de `z.infer` — nunca duplicar. |
+| `normalizers/` | Transformação de dados: form → payload, entidade → exibição. Funções puras. |
+| `services/` | Comunicação HTTP. Sempre 3 arquivos. Nunca importados diretamente por pages. |
+| `hooks/` | Estado, efeitos, lógica de negócio. Sem JSX. Sem exportar componentes. |
+| `components/` | JSX exclusivo da feature. Sem chamar services diretamente. |
+| `pages/` | Orquestra layout, hooks e shared components. Sem lógica inline. |
 
-- rotas;
-- guards;
-- providers;
-- layout global;
-- tema;
-- error boundary.
+### Regras de importação entre camadas
 
-Use `src/features/platform` para regras e telas do contexto administrativo.
+| Camada | Pode importar de | Proibido |
+|--------|-----------------|---------|
+| `types/` | nada | qualquer outra camada |
+| `schemas/` | `types/` | `hooks/`, `services/`, `components/` |
+| `normalizers/` | `types/`, `schemas/` | `hooks/`, `services/`, `components/` |
+| `services/` | `types/`, `httpClient` | `hooks/`, `components/` |
+| `hooks/` | `types/`, `services/`, `normalizers/` | JSX — extensão `.ts` se não tem JSX |
+| `components/` | `types/`, `hooks/`, `shared/` | `services/` diretamente |
+| `pages/` | tudo acima | lógica de negócio, `useState` de domínio, fetch direto |
 
-Use `src/features/client` para regras e telas do contexto do cliente.
+---
 
-Use `src/shared` para recursos reutilizáveis entre contextos:
+## Services — estrutura obrigatória
 
-- componentes genéricos;
-- hooks genéricos;
-- services compartilhados;
-- tipos compartilhados;
-- máscaras;
-- parsers;
-- formatters;
-- normalizers;
-- traduções em PT-BR.
+Toda feature tem exatamente 3 arquivos em `services/`. Nunca um arquivo único.
 
-Use `src/pages` apenas para páginas públicas ou neutras que não pertencem a uma feature específica. A home raiz temporária fica nessa pasta.
+```
+services/
+  endpoints.ts  → só httpClient.get/post/patch/delete — sem await, sem .data
+  types.ts      → aliases de request/response importados de types/feature.ts
+  service.ts    → métodos async: chama endpoint, retorna .data
+```
 
-## Regras importantes
+```ts
+// endpoints.ts — só retorna a Promise, sem await
+export const featureEndpoints = {
+  list: (params: FeatureListParams) =>
+    httpClient.get<FeatureListResponse>('/api/features', { params }),
+};
 
-- Não colocar regra de negócio em page.
-- Não chamar API diretamente em page ou componente visual.
-- Não deixar `shared` depender de `features`.
-- Não usar imports relativos profundos quando houver alias.
-- Não usar `any`, type assertion, `@ts-ignore` ou `eslint-disable`.
-- Não exibir enums ou erros técnicos diretamente ao usuário.
-- Toda UI deve estar em português brasileiro.
-- Datas, documentos, telefones e moedas devem usar masks, parsers, formatters ou normalizers centralizados.
-- Componentes visuais devem usar o Design System e componentes compartilhados.
+// service.ts — async/await sobre os endpoints
+export const featureService = {
+  async list(params: FeatureListParams): Promise<FeatureListResponse> {
+    const { data } = await featureEndpoints.list(params);
+    return data;
+  },
+};
+```
+
+---
+
+## Padrões canônicos de page
+
+Todo código novo segue um dos quatro padrões abaixo. Sem variações.
+
+### List page
+
+```
+hooks/useFeatureList.ts           → fetch, queryParams, paginação, loading, errorMessage
+hooks/useFeatureListPage.ts       → ações, modal de delete, column builders
+components/featureListColumns.tsx → buildFeatureColumns() com JSX das células
+pages/FeaturePage.tsx             → PageHeader + ListFilters + QueryDataTable + ConfirmDialog
+```
+
+### Details page
+
+```
+hooks/useFeatureDetailsPage.ts    → fetch, loading, errorMessage, onBack, onRetry
+pages/FeatureDetailsPage.tsx      → AppStack + SectionCard + KeyValueGrid (sem componente intermediário)
+```
+
+A page trata os três estados antes de renderizar:
+
+```tsx
+if (loading) return <AppLoadingIndicator />;
+if (errorMessage) return <AppErrorState message={errorMessage} onRetry={() => void onRetry()} />;
+if (!entity) return null;
+// renderiza com shared components
+```
+
+### Form page — create e edit sempre separados
+
+Create e Edit têm hooks, schemas e pages próprios. O Edit lê `location.state.entity` para evitar GET redundante ao vir de detalhes.
+
+```
+schemas/featureCreateForm.schema.ts
+schemas/featureEditForm.schema.ts
+normalizers/featureForm.normalizer.ts  → toCreatePayload + toEditFormValues + toEditPayload
+hooks/useFeatureCreatePage.ts
+hooks/useFeatureEditPage.ts            → lê location.state.entity, fallback para API
+pages/FeatureCreatePage.tsx
+pages/FeatureEditPage.tsx              → campos readonly fora do AppForm
+```
+
+Navegação de detalhes → edição (evita GET redundante):
+
+```ts
+navigate(`/client/features/${entity.id}/edit`, { state: { entity } });
+```
+
+### Wizard (multi-etapa)
+
+Usa o shared `StepperWizard`. Dois hooks com responsabilidades distintas.
+
+```
+hooks/useFeatureOnboardingForm.ts    → estado: activeStep, value, uiExtras, actions
+hooks/useFeatureOnboardingPage.ts    → navegação entre steps, disabled state, API call
+hooks/useFeatureOnboardingActions.ts → um método por campo
+components/onboarding/               → roteador de steps + steps individuais + Summary
+pages/FeatureOnboardingPage.tsx      → StepperWizard + Summary
+```
+
+Steps recebem sempre `{ value, uiExtras, actions }`. Normalização aplicada apenas no payload final.
+
+---
+
+## Hooks — regras
+
+- Hook é responsabilidade única: estado ou ações, nunca os dois misturados com lógica de layout.
+- Extensão `.ts` — se o arquivo tem JSX, está no lugar errado.
+- **Proibido:** exportar componente React de dentro de hook.
+- **Proibido:** montar estrutura de tabs/sections via `useMemo` — isso vai para o normalizer.
+- **Proibido:** JSX inline em arrays de colunas — vai para `components/featureListColumns.tsx`.
+- Separação obrigatória para listagens: `useFeatureList` (dados) + `useFeatureListPage` (lógica da page).
+
+---
+
+## Formulários — regras
+
+- Todo formulário usa React Hook Form + Zod.
+- Types vêm de `z.infer` — nunca duplicar o tipo do schema.
+- Create e Edit são sempre separados — nunca `isEditMode ? ... : ...`.
+- Payload é construído no normalizer, nunca na page.
+- Campos com máscara enviam dado limpo para o backend.
+
+| Dado | Exibição | Backend |
+|------|----------|---------|
+| CPF/CNPJ | `123.456.789-00` | `12345678900` |
+| Telefone | `(11) 99999-9999` | `11999999999` |
+| Data | `25/09/2024` | `2024-09-25` |
+| Moeda | `R$ 1.250,90` | `1250.9` |
+
+---
 
 ## Aliases de import
 
-Aliases disponíveis:
-
-```txt
-@/* -> src/*
-@app/* -> src/app/*
-@features/* -> src/features/*
-@shared/* -> src/shared/*
-@theme/* -> src/app/theme/*
-```
-
-Exemplo:
-
 ```ts
-import { AppButton } from '@shared/components/inputs/AppButton';
+@/*          → src/*
+@app/*       → src/app/*
+@features/*  → src/features/*
+@shared/*    → src/shared/*
+@theme/*     → src/app/theme/*
 ```
+
+Usar sempre aliases — sem imports relativos profundos (`../../..`).
+
+---
 
 ## Design System
 
-Tokens e tema ficam em:
+Tokens e tema em `src/app/theme/`. Todo componente visual usa cores, espaçamentos e tipografia do tema.
 
-```txt
-src/app/theme/
-  tokens/
-  mui/
-  utils/
-  ThemeProvider.tsx
-```
+Componentes wrapper disponíveis (usar sempre no lugar do MUI cru):
 
-Novas telas e componentes devem usar:
+`AppButton` · `AppTextField` · `AppSelect` · `AppDatePicker` · `AppForm` · `AppStack` · `PageHeader` · `SectionCard` · `KeyValueGrid` · `QueryDataTable` · `ListFilters` · `ConfirmDialog` · `AppAlert` · `AppLoadingIndicator` · `AppErrorState` · `StatusChip` · `RowActionsMenu`
 
-- cores do tema;
-- espaçamentos padronizados;
-- componentes compartilhados;
-- responsividade via `responsive({ mobile, tablet, desktop })`.
+---
 
 ## Testes
 
-Os testes ficam em `src/test` e devem cobrir principalmente:
+Cobertura prioritária:
 
-- schemas;
-- normalizers;
-- parsers;
-- formatters;
-- hooks;
-- services;
-- componentes compartilhados;
-- fluxos críticos.
-
-Execute:
+- schemas, normalizers, parsers, formatters
+- hooks com lógica de negócio
+- services
+- componentes compartilhados
+- fluxos críticos de formulário e autenticação
 
 ```bash
 npm run test
 ```
 
+---
+
 ## Compliance automatizado
 
-O projeto possui uma auditoria em:
+O script `scripts/compliance-scan.mjs` audita:
 
-```txt
-scripts/compliance-scan.mjs
+- padrões proibidos de código
+- imports problemáticos entre camadas
+- dependência indevida de `shared` → `features`
+- uso de MUI cru onde existe wrapper compartilhado
+- encoding corrompido (caractere `U+FFFD`)
+- TypeScript strict
+
+```bash
+npm run compliance
 ```
-
-Ela verifica padrões proibidos, imports problemáticos, dependência indevida de `shared` para `features`, uso indevido de MUI cru em features, encoding corrompido e TypeScript strict.

@@ -14,6 +14,7 @@ import type { ReactNode } from 'react';
 import { spacingScale } from '@theme/spacing';
 import { EmptyState } from '@shared/components/feedback/EmptyState';
 import { AppErrorState } from '@shared/components/feedback/AppErrorState';
+import { sharedComponentsI18n } from '@shared/i18n/pt-BR/components';
 import {
   DATA_LIST_DEFAULTS,
   DATA_LIST_DIMENSIONS,
@@ -128,8 +129,8 @@ const renderMobileHeader = (title: string, actionsLabel: string) => (
 );
 
 const getMobileHeaderLabels = <RowData,>(visibleColumns: DataListColumn<RowData>[]) => ({
-  title: visibleColumns[0]?.label ?? 'Itens',
-  actions: visibleColumns.find((column) => column.id === 'actions')?.label ?? 'Ações',
+  title: visibleColumns[0]?.label ?? sharedComponentsI18n.dataList.mobileItemsFallback,
+  actions: visibleColumns.find((column) => column.id === 'actions')?.label ?? sharedComponentsI18n.dataList.mobileActionsFallback,
 });
 
 const renderFallbackMobileCards = <RowData,>(
@@ -254,7 +255,7 @@ const DataListPagination = ({
         sx={{ alignItems: isMobile ? 'flex-start' : 'center', justifyContent: 'flex-end' }}
       >
         <Stack direction="row" spacing={spacingScale.xs} sx={{ alignItems: 'center' }}>
-          <Typography variant="body2">{DATA_LIST_PAGINATION_LABELS.rowsPerPage}</Typography>
+          <Typography variant="body2">{sharedComponentsI18n.dataList.pagination.rowsPerPage}</Typography>
           <Select
             size="small"
             value={pagination.rowsPerPage}
@@ -276,14 +277,14 @@ const DataListPagination = ({
         <Typography variant="body2">{getPaginationRangeLabel(pagination)}</Typography>
         <Stack direction="row" spacing={spacingScale.xxs}>
           <IconButton
-            aria-label={DATA_LIST_PAGINATION_LABELS.previous}
+            aria-label={sharedComponentsI18n.dataList.pagination.previous}
             onClick={() => pagination.onPageChange(Math.max(pagination.page - 1, 0))}
             disabled={isPreviousDisabled}
           >
             <ChevronLeftIcon fontSize="small" />
           </IconButton>
           <IconButton
-            aria-label={DATA_LIST_PAGINATION_LABELS.next}
+            aria-label={sharedComponentsI18n.dataList.pagination.next}
             onClick={() => pagination.onPageChange(Math.min(pagination.page + 1, pageCount - 1))}
             disabled={isNextDisabled}
           >
@@ -302,8 +303,8 @@ export const DataList = <RowData,>({
   pagination,
   mobileConfig,
   loading = false,
-  emptyTitle = DATA_LIST_DEFAULTS.emptyTitle,
-  emptyDescription = DATA_LIST_DEFAULTS.emptyDescription,
+  emptyTitle = sharedComponentsI18n.dataList.emptyTitle,
+  emptyDescription = sharedComponentsI18n.dataList.emptyDescription,
   errorMessage,
   onRetry,
   sx,

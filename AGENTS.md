@@ -159,6 +159,10 @@ O projeto pode conter os seguintes arquivos:
   24-structure-hygiene-skill.md
   25-ptbr-text-quality-skill.md
   26-automated-compliance-skill.md
+  27-list-page-canonical-skill.md
+  28-form-page-canonical-skill.md
+  29-details-page-canonical-skill.md
+  30-step-wizard-skill.md
 
 .ai-skills/checklists/
   pull-request-checklist.md
@@ -221,6 +225,9 @@ Ler:
 .ai-skills/skills/24-structure-hygiene-skill.md
 .ai-skills/skills/25-ptbr-text-quality-skill.md
 .ai-skills/skills/26-automated-compliance-skill.md
+.ai-skills/skills/27-list-page-canonical-skill.md
+.ai-skills/skills/28-form-page-canonical-skill.md
+.ai-skills/skills/29-details-page-canonical-skill.md
 ```
 
 Também ler a spec da feature:
@@ -238,6 +245,9 @@ skills/03-page-skill.md
 skills/05-component-usage-skill.md
 skills/09-hook-skill.md
 skills/10-routing-guard-skill.md
+skills/27-list-page-canonical-skill.md    ← obrigatório para list pages
+skills/28-form-page-canonical-skill.md    ← obrigatório para form pages (create/edit)
+skills/29-details-page-canonical-skill.md ← obrigatório para details pages
 ```
 
 ## Criar componente compartilhado
@@ -257,9 +267,21 @@ Ler:
 
 ```txt
 skills/07-form-skill.md
+skills/28-form-page-canonical-skill.md    ← obrigatório: modelo canônico create/edit
 skills/17-ui-normalization-skill.md
 skills/18-i18n-error-message-skill.md
 skills/16-accessibility-skill.md
+```
+
+## Criar formulário multi-etapa (wizard/onboarding)
+
+Ler:
+
+```txt
+skills/30-step-wizard-skill.md            ← obrigatório: padrão StepperWizard
+skills/07-form-skill.md
+skills/09-hook-skill.md
+skills/17-ui-normalization-skill.md
 ```
 
 ## Integrar endpoint ou service
@@ -597,6 +619,66 @@ Pages não podem:
 - proteger rota diretamente;
 - usar cores hardcoded;
 - usar MUI cru se existir wrapper compartilhado.
+
+---
+
+# 11a. Padrões canônicos de page — OBRIGATÓRIO
+
+**Todo agente que criar ou alterar uma page DEVE seguir os modelos canônicos definidos nas skills 27, 28 e 29. Não é permitido inventar estrutura própria.**
+
+## List Page → skill 27
+
+Estrutura obrigatória:
+
+```
+feature/
+  hooks/useFeatureList.ts         ← dados + paginação
+  hooks/useFeatureListPage.ts     ← lógica da página (ações, modais, columns)
+  components/featureListColumns.tsx ← buildFeatureColumns() com JSX das células
+  pages/FeaturePage.tsx           ← orquestra: hook + shared components
+```
+
+Proibido:
+- JSX de coluna dentro de hook
+- Page com lógica de delete/toggle inline
+- Componente intermediário apenas para "embrulhar" a page
+
+## Form Page (Create/Edit) → skill 28
+
+Estrutura obrigatória:
+
+```
+feature/
+  schemas/featureCreateForm.schema.ts
+  schemas/featureEditForm.schema.ts
+  normalizers/featureForm.normalizer.ts  ← toCreatePayload + toEditFormValues + toEditPayload
+  hooks/useFeatureCreatePage.ts
+  hooks/useFeatureEditPage.ts            ← lê location.state.entity, fallback para API
+  pages/FeatureCreatePage.tsx
+  pages/FeatureEditPage.tsx              ← campos readonly fora do AppForm
+```
+
+Proibido:
+- Create e Edit no mesmo componente com `isEditMode`
+- Schema único quando os campos diferem
+- Edit sem pré-carregamento via `location.state`
+- Campos readonly dentro do `AppForm`
+
+## Details Page → skill 29
+
+Estrutura obrigatória:
+
+```
+feature/
+  hooks/useFeatureDetailsPage.ts  ← retorna entity bruta, loading, errorMessage, onBack, onRetry
+  pages/FeatureDetailsPage.tsx    ← renderiza diretamente com AppStack + SectionCard + KeyValueGrid
+```
+
+Proibido:
+- Componente intermediário `FeatureDetailsPageContent` (exceto casos excepcionais justificados)
+- Constante `const CONTENT` de configuração de UI no hook ou fora da page
+- Hook montando estrutura de tabs/sections/items via `useMemo`
+- Page sem tratamento de `loading`, `errorMessage` e `!entity`
 
 ---
 

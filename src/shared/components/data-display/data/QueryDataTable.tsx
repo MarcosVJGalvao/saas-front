@@ -4,7 +4,7 @@ import Button from '@mui/material/Button';
 import Stack from '@mui/material/Stack';
 import type { PaginationMeta } from '@shared/types/pagination';
 import { spacingScale } from '@theme/spacing';
-import { commonDataMessages } from '@shared/components/messages';
+import { sharedComponentsI18n } from '@shared/i18n/pt-BR/components';
 import { DataList } from '@shared/components/data-display/data/DataList';
 import type { DataTableColumn } from '@shared/components/data-display/data/DataTable';
 import type { DataListMobileConfig } from '@shared/components/data-display/data/dataList.types';
@@ -67,7 +67,7 @@ const QueryDataTableToolbar = ({
         onClick={onOpenFilter}
         sx={{ width: { xs: '100%', sm: 'auto' } }}
       >
-        {commonDataMessages.filterButton}
+        {sharedComponentsI18n.filters.filterButton}
       </Button>
     ) : null}
   </Stack>
@@ -168,8 +168,8 @@ export const QueryDataTable = <TData,>({
   onCloseFilter,
   onApplyFilter,
   onClearFilter,
-  emptyTitle = commonDataMessages.emptyTitle,
-  emptyDescription = commonDataMessages.emptyDescription,
+  emptyTitle = sharedComponentsI18n.dataList.emptyTitle,
+  emptyDescription = sharedComponentsI18n.dataList.emptyDescription,
   hideToolbar = false,
   toolbarContent,
   mobileConfig,

@@ -3,7 +3,7 @@ import IconButton from '@mui/material/IconButton';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import { memo, useCallback, useState } from 'react';
-import { commonOverlayMessages } from '@shared/components/messages';
+import { sharedComponentsI18n } from '@shared/i18n/pt-BR/components';
 
 interface AppPopoverMenuItem {
   label: string;
@@ -23,7 +23,7 @@ export const AppPopoverMenu = memo(({ items }: AppPopoverMenuProps) => {
 
   return (
     <>
-      <IconButton onClick={openMenu} aria-label={commonOverlayMessages.openMenuAriaLabel}>
+      <IconButton onClick={openMenu} aria-label={sharedComponentsI18n.overlays.openMenuAriaLabel}>
         <MoreVertIcon />
       </IconButton>
       <Menu

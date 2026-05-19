@@ -45,6 +45,54 @@ Definir as regras obrigatórias para qualquer código, documentação, spec ou a
 - Exibir erro técnico do backend diretamente.
 - Exibir enum em inglês para o usuário.
 
+## Nomenclatura de variáveis e parâmetros
+
+Toda variável, parâmetro, propriedade e callback deve ser **autodescritivoa** — quem lê não pode precisar rastrear o contexto para entender o que ela contém.
+
+### Proibido — abreviações ambíguas
+
+```ts
+// ❌ — q, p, res, id como nome de timer, e, ev são proibidos
+const res = await service.list(query);
+const id = window.setTimeout(...);
+setQuery((q) => ({ ...q, ...patch }));
+onPageChange={(p) => updateQuery({ page: p + 1 })}
+```
+
+### Correto
+
+```ts
+// ✅ — nomes que descrevem o conteúdo
+const response = await service.list(queryParams);
+const timeoutId = window.setTimeout(...);
+setQueryParams((current) => ({ ...current, ...patch }));
+onPageChange={(pageIndex) => updateQueryParams({ page: pageIndex + 1 })}
+```
+
+### Regras de nomenclatura
+
+- Parâmetros de callback devem nomear o que representam: `pageIndex`, `rowsPerPage`, `filterKey`, `filterValue`, `feature`, `currentQuery`.
+- Variáveis de resultado de `await` devem nomear o conteúdo: `response`, `fetchedEntity`, `createdRecord`.
+- IDs de timer devem ser `timeoutId`, `intervalId` — nunca `id` (ambíguo com id de entidade).
+- Nunca usar letra única como nome de variável fora de índices em `for` clássico.
+- Estado derivado do `useState` deve ter nome que descreva o domínio: `queryParams`, `pagination`, `featurePendingDelete` — nunca `query`, `meta`, `item`.
+
+## Constantes de módulo
+
+Constantes de módulo (`const UPPER_CASE`) são permitidas apenas para valores genuinamente compartilhados e imutáveis (ex: `ROUTES`, `STATUS_OPTIONS`). É proibido usar constante de módulo para:
+
+- Configuração de UI específica de uma tela (`const CONTENT = { pageTitle: ... }`).
+- Valores que podem ser inlined no `useState` ou na props sem perda de legibilidade.
+
+```ts
+// ❌ — constante de módulo para config de UI de uma tela
+const DEFAULT_META: PaginationMeta = { total: 0, page: 1, limit: 10, totalPages: 0 };
+const CONTENT: EntityDetailsPageContent = { pageTitle: 'Detalhes', ... };
+
+// ✅ — inlined onde usado
+const [pagination, setPagination] = useState<PaginationMeta>({ total: 0, page: 1, limit: 10, totalPages: 0 });
+```
+
 ## Ordem de prioridade em conflitos
 
 1. Segurança de tipo e arquitetura.

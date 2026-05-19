@@ -13,16 +13,18 @@ export type EntityDetailsViewState =
   | 'forbidden';
 
 export type EntityDetailsPageContent = {
-  pageTitle: string;
+  /** @deprecated Mover para PageHeader na page. */
+  pageTitle?: string | undefined;
+  /** @deprecated Mover para PageHeader na page. */
   pageSubtitle?: string | undefined;
-  loadingLabel: string;
-  emptyTitle: string;
-  emptyMessage: string;
-  errorFallback: string;
-  unauthorizedTitle: string;
-  unauthorizedMessage: string;
-  forbiddenTitle: string;
-  forbiddenMessage: string;
+  loadingLabel?: string;
+  emptyTitle?: string;
+  emptyMessage?: string;
+  errorFallback?: string;
+  unauthorizedTitle?: string;
+  unauthorizedMessage?: string;
+  forbiddenTitle?: string;
+  forbiddenMessage?: string;
 };
 
 export type EntityDetailsPageData = {

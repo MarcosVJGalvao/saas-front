@@ -12,8 +12,16 @@ export const InfoItem = ({ label, value, noWrap = false }: InfoItemProps) => (
   <Box sx={{ minWidth: 0 }}>
     <Typography
       variant="caption"
-      color="text.secondary"
-      sx={{ display: 'block', mb: 0.5, fontWeight: 500, lineHeight: 1.35 }}
+      color="text.disabled"
+      sx={{
+        display: 'block',
+        mb: 0.375,
+        fontWeight: 600,
+        fontSize: '0.7rem',
+        letterSpacing: '0.06em',
+        textTransform: 'uppercase',
+        lineHeight: 1.35,
+      }}
     >
       {label}
     </Typography>
@@ -23,9 +31,18 @@ export const InfoItem = ({ label, value, noWrap = false }: InfoItemProps) => (
       color="text.primary"
       noWrap={noWrap}
       title={typeof value === 'string' ? value : undefined}
-      sx={{ fontWeight: 700, lineHeight: 1.45, overflowWrap: noWrap ? 'normal' : 'anywhere' }}
+      sx={{
+        fontWeight: 500,
+        fontSize: '0.9rem',
+        lineHeight: 1.5,
+        overflowWrap: noWrap ? 'normal' : 'anywhere',
+      }}
     >
-      {value ?? '-'}
+      {value ?? (
+        <Typography component="span" variant="body2" color="text.disabled" sx={{ fontStyle: 'italic' }}>
+          Não informado
+        </Typography>
+      )}
     </Typography>
   </Box>
 );

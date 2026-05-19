@@ -12,6 +12,7 @@ import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import type { PaginationMeta } from '@shared/types/pagination';
 import { spacingScale } from '@theme/spacing';
+import { sharedComponentsI18n } from '@shared/i18n/pt-BR/components';
 import type { DataListColumnVisibility } from '@shared/components/data-display/data/dataList.types';
 
 export interface DataTableColumn<TData> {
@@ -35,17 +36,7 @@ interface DataTableProps<TData> {
 }
 
 const ROWS_PER_PAGE_OPTIONS = [10, 20, 50];
-const EMPTY_MOBILE_VALUE = '-';
-const TABLE_ROWS_PER_PAGE_LABEL = 'Itens por página:';
-const TABLE_DISPLAYED_ROWS_LABEL = ({
-  from,
-  to,
-  count,
-}: {
-  from: number;
-  to: number;
-  count: number;
-}) => `${from}-${to} de ${count !== -1 ? count : `mais de ${to}`}`;
+const i18n = sharedComponentsI18n.dataList;
 
 export const DataTable = <TData,>({
   rows,
@@ -72,7 +63,7 @@ export const DataTable = <TData,>({
             {columns.map((column) => (
               <Typography key={column.key} variant="body2" sx={{ mb: spacingScale.xxs }}>
                 <strong>{column.header}:</strong>{' '}
-                {column.mobileRender !== undefined ? column.mobileRender(row) : EMPTY_MOBILE_VALUE}
+                {column.mobileRender !== undefined ? column.mobileRender(row) : i18n.mobileFallback}
               </Typography>
             ))}
           </Paper>
@@ -82,8 +73,8 @@ export const DataTable = <TData,>({
           count={meta.total}
           page={currentPage}
           rowsPerPage={meta.limit}
-          labelRowsPerPage={TABLE_ROWS_PER_PAGE_LABEL}
-          labelDisplayedRows={TABLE_DISPLAYED_ROWS_LABEL}
+          labelRowsPerPage={i18n.pagination.rowsPerPage}
+          labelDisplayedRows={i18n.pagination.rangeLabel}
           onPageChange={(_, page) => onPageChange(page + 1)}
           onRowsPerPageChange={(event) => onRowsPerPageChange(Number(event.target.value))}
           rowsPerPageOptions={ROWS_PER_PAGE_OPTIONS}
