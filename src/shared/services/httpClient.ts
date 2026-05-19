@@ -19,7 +19,23 @@ const CLIENT_REFRESH_PATH = '/api/auth/refresh';
 const PLATFORM_REFRESH_PATH = '/api/platform/auth/refresh';
 const CLIENT_API_BASE_PATH = '/api/client';
 const PLATFORM_API_BASE_PATH = '/api/platform';
-const AUTH_REQUEST_PATHS: ReadonlyArray<string> = ['/api/auth/login', '/api/platform/auth/login'];
+const AUTH_REQUEST_PATHS: ReadonlyArray<string> = [
+  '/api/auth/login',
+  '/api/auth/forgot-password',
+  '/api/auth/reset-password',
+  '/api/auth/change-password',
+  '/api/auth/logout',
+  '/api/auth/me',
+  '/api/platform/auth/login',
+  '/api/platform/auth/refresh',
+  '/api/platform/auth/me',
+  '/api/platform/auth/verify-totp',
+  '/api/platform/auth/verify-setup',
+  '/api/platform/auth/setup-from-challenge',
+  '/api/platform/auth/totp/reset-by-login',
+  '/api/platform/auth/change-password',
+  '/api/platform/auth/logout',
+];
 const UNAUTHORIZED_ERROR_CODE = 'UNAUTHORIZED';
 const TOKEN_EXPIRED_ERROR_CODE = 'TOKEN_EXPIRED';
 const REFRESH_TOKEN_INVALID_ERROR_CODE = 'REFRESH_TOKEN_INVALID';
@@ -57,6 +73,11 @@ const toRetriableRequestConfig = (
   }
   return config;
 };
+
+export const shouldSkipTokenRefreshForRequest = (requestUrl: string): boolean =>
+  AUTH_REQUEST_PATHS.some((path) => requestUrl.includes(path)) ||
+  requestUrl.includes(CLIENT_REFRESH_PATH) ||
+  requestUrl.includes(PLATFORM_REFRESH_PATH);
 
 export const httpClient = axios.create({
   baseURL: API_BASE_URL,
@@ -132,8 +153,7 @@ httpClient.interceptors.request.use((config) => {
   const requestUrl = config.url ?? '';
   const isClientRequest = requestUrl.includes(CLIENT_API_BASE_PATH);
   const isPlatformRequest = requestUrl.includes(PLATFORM_API_BASE_PATH);
-  const isClientRefreshCall = requestUrl.includes(CLIENT_REFRESH_PATH);
-  const isPlatformRefreshCall = requestUrl.includes(PLATFORM_REFRESH_PATH);
+  const shouldSkipRefresh = shouldSkipTokenRefreshForRequest(requestUrl);
 
   const session = isPlatformRequest
     ? readPlatformSession()
@@ -145,7 +165,7 @@ httpClient.interceptors.request.use((config) => {
     config.headers.Authorization = `Bearer ${session.accessToken}`;
   }
 
-  if (isClientRefreshCall || isPlatformRefreshCall || !shouldRefreshToken(session)) {
+  if (shouldSkipRefresh || !shouldRefreshToken(session)) {
     return config;
   }
 
