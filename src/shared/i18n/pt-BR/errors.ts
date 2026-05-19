@@ -11,6 +11,8 @@ export const errorCodeMessages: Record<string, string> = {
   ACCESS_DENIED: 'Você não tem permissão para executar esta ação.',
   NOT_FOUND: 'Registro não encontrado.',
   TOO_MANY_REQUESTS: 'Muitas tentativas. Aguarde alguns instantes.',
+  INVALID_CREDENTIALS: 'E-mail ou senha inválidos.',
+  ACCOUNT_LOCKED: 'Conta bloqueada. Entre em contato com o suporte.',
   PLATFORM_INVALID_CREDENTIALS: 'Credenciais da plataforma inválidas.',
   MFA_CHALLENGE_EXPIRED:
     'Autenticação multifator está incorreta ou expirou. Por favor, tente novamente.',

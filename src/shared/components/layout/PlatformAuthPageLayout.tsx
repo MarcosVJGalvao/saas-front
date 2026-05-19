@@ -29,6 +29,16 @@ const PLATFORM_AUTH_MESSAGES = {
   cityAlt: 'Cidade',
 };
 
+type AuthLayoutMessages = {
+  brandPrefix: string;
+  brandHighlight: string;
+  mainTitle: string;
+  mainDescription: string;
+  secureEnvironment: string;
+  copyright: string;
+  cityAlt: string;
+};
+
 const HIGHLIGHTS = [
   {
     title: 'Controle total',
@@ -49,6 +59,7 @@ const HIGHLIGHTS = [
 
 interface PlatformAuthPageLayoutProps {
   children: ReactNode;
+  messages?: Partial<AuthLayoutMessages> | undefined;
 }
 
 const HighlightList = memo(({ heroCardBackground }: { heroCardBackground: string }) => (
@@ -97,10 +108,19 @@ const HighlightList = memo(({ heroCardBackground }: { heroCardBackground: string
   </Stack>
 ));
 
-export const PlatformAuthPageLayout = ({ children }: PlatformAuthPageLayoutProps) => {
+export const PlatformAuthPageLayout = ({ children, messages }: PlatformAuthPageLayoutProps) => {
   const theme = useTheme();
   const { mode: themeMode, setMode } = useThemeMode();
   const authUi = getUiColorTokens(theme.palette.mode);
+  const layoutMessages: AuthLayoutMessages = {
+    brandPrefix: messages?.brandPrefix ?? PLATFORM_AUTH_MESSAGES.brandPrefix,
+    brandHighlight: messages?.brandHighlight ?? PLATFORM_AUTH_MESSAGES.brandHighlight,
+    mainTitle: messages?.mainTitle ?? PLATFORM_AUTH_MESSAGES.mainTitle,
+    mainDescription: messages?.mainDescription ?? PLATFORM_AUTH_MESSAGES.mainDescription,
+    secureEnvironment: messages?.secureEnvironment ?? PLATFORM_AUTH_MESSAGES.secureEnvironment,
+    copyright: messages?.copyright ?? PLATFORM_AUTH_MESSAGES.copyright,
+    cityAlt: messages?.cityAlt ?? PLATFORM_AUTH_MESSAGES.cityAlt,
+  };
 
   return (
     <Box
@@ -174,9 +194,9 @@ export const PlatformAuthPageLayout = ({ children }: PlatformAuthPageLayoutProps
             <Typography
               sx={{ fontSize: { md: '1.125rem', lg: '1.0625rem' }, fontWeight: 700, lineHeight: 1 }}
             >
-              {PLATFORM_AUTH_MESSAGES.brandPrefix}{' '}
+              {layoutMessages.brandPrefix}{' '}
               <Box component="span" sx={{ color: authUi.heroAccent }}>
-                {PLATFORM_AUTH_MESSAGES.brandHighlight}
+                {layoutMessages.brandHighlight}
               </Box>
             </Typography>
           </Stack>
@@ -191,7 +211,7 @@ export const PlatformAuthPageLayout = ({ children }: PlatformAuthPageLayoutProps
               zIndex: 2,
             }}
           >
-            {PLATFORM_AUTH_MESSAGES.mainTitle}
+            {layoutMessages.mainTitle}
           </Typography>
           <Typography
             sx={{
@@ -202,7 +222,7 @@ export const PlatformAuthPageLayout = ({ children }: PlatformAuthPageLayoutProps
               zIndex: 2,
             }}
           >
-            {PLATFORM_AUTH_MESSAGES.mainDescription}
+            {layoutMessages.mainDescription}
           </Typography>
           <Box
             sx={{
@@ -219,7 +239,7 @@ export const PlatformAuthPageLayout = ({ children }: PlatformAuthPageLayoutProps
           <Box
             component="img"
             src={BUILDING_IMAGE_URL}
-            alt={PLATFORM_AUTH_MESSAGES.cityAlt}
+            alt={layoutMessages.cityAlt}
             sx={{
               position: 'absolute',
               left: 0,
@@ -251,7 +271,7 @@ export const PlatformAuthPageLayout = ({ children }: PlatformAuthPageLayoutProps
           >
             <SecurityOutlinedIcon fontSize="small" />
             <Typography sx={{ fontSize: fontSizes.md }}>
-              {PLATFORM_AUTH_MESSAGES.secureEnvironment}
+              {layoutMessages.secureEnvironment}
             </Typography>
           </Stack>
         </Box>
@@ -259,7 +279,7 @@ export const PlatformAuthPageLayout = ({ children }: PlatformAuthPageLayoutProps
       <Typography
         sx={{ textAlign: 'center', color: 'text.secondary', pt: 0.5, fontSize: fontSizes.sm }}
       >
-        {PLATFORM_AUTH_MESSAGES.copyright}
+        {layoutMessages.copyright}
       </Typography>
     </Box>
   );

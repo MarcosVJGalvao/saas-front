@@ -5,7 +5,10 @@ import {
   buildDomainNavigation,
   type NavigationGroup,
 } from '@app/layout/admin-navigation/navigationBuilder';
-import { filterNavigationByPermissions } from '@app/layout/admin-navigation/permissions';
+import {
+  filterNavigationByPermissions,
+  localPermissionResolver,
+} from '@app/layout/admin-navigation/permissions';
 
 describe('admin navigation by domain', () => {
   it('builds platform and client menus with distinct groups', () => {
@@ -20,7 +23,7 @@ describe('admin navigation by domain', () => {
     );
   });
 
-  it('applies prefix, domain permission and domain id during build', () => {
+  it('applies route prefix and keeps client permission without domain prefix', () => {
     const groups: NavigationGroup[] = [
       {
         items: [
@@ -43,7 +46,7 @@ describe('admin navigation by domain', () => {
     }
     expect(firstItem.id).toBe('client-dashboard');
     expect(firstItem.href).toBe('/client/home');
-    expect(firstItem.permission).toBe('client:dashboard:read');
+    expect(firstItem.permission).toBe('dashboard:read');
   });
 
   it('hides a section when no subsequent item is permitted', () => {
@@ -63,5 +66,16 @@ describe('admin navigation by domain', () => {
 
     expect(filtered.some((item) => item.type === 'section' && item.label === 'Gestão')).toBe(true);
     expect(filtered.some((item) => item.id === 'platform-clientes')).toBe(true);
+  });
+
+  it('does not use wildcard permissions in local client defaults', () => {
+    const permissions = localPermissionResolver.getPermissions(AUTH_DOMAIN.CLIENT);
+
+    expect(permissions.some((permission) => permission.includes('*'))).toBe(false);
+    expect(permissions).toContain('student:read');
+    expect(permissions).toContain('student:create');
+    expect(permissions).toContain('student:update');
+    expect(permissions).toContain('student:delete');
+    expect(permissions).toContain('attendance:write');
   });
 });

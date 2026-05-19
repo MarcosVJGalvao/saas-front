@@ -44,7 +44,7 @@ const AttendanceSchedulesPage = () => {
         title="Horários de frequência"
         subtitle="Configure horários por turma, disciplina, professor e período."
         actionLabel="Cadastrar"
-        canShowAction={permissions.can('client:attendance:create')}
+        canShowAction={permissions.can('attendance:create')}
         onAction={() => void navigate('/client/attendance/schedules/new')}
       />
       <ListFilters

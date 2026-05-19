@@ -34,6 +34,7 @@ describe('useClientProfile', () => {
     await waitFor(() => expect(result.current.loading).toBe(false));
     expect(result.current.errorMessage).toBe('');
     expect(result.current.profile?.status).toBe('Ativo');
+    expect(result.current.profile?.permissions).toEqual(['*:*']);
     expect(result.current.profile?.client.role).toBe('Administrador');
   });
 

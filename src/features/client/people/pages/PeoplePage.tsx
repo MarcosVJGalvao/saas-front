@@ -18,7 +18,7 @@ const PeoplePage = () => {
         title="Pessoas"
         subtitle="Gerencie cadastros pessoais usados por alunos, responsáveis e usuários."
         actionLabel="Cadastrar"
-        canShowAction={permissions.can('client:person:create')}
+        canShowAction={permissions.can('person:create')}
         onAction={() => void navigate('/client/people/new')}
       />
       <ListFilters

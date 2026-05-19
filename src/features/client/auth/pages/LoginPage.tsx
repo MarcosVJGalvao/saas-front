@@ -11,7 +11,17 @@ const ClientLoginPage = () => {
   }
 
   return (
-    <PlatformAuthPageLayout>
+    <PlatformAuthPageLayout
+      messages={{
+        brandPrefix: 'Portal',
+        brandHighlight: 'Escolar',
+        mainTitle: 'Gestão escolar conectada ao seu dia a dia',
+        mainDescription:
+          'Acesse matrículas, alunos, financeiro, frequência e boletins em um ambiente seguro.',
+        secureEnvironment: 'Ambiente seguro do cliente',
+        copyright: '© 2024 SaaS Platform. Todos os direitos reservados.',
+      }}
+    >
       <ClientLoginFormCard
         form={model.form}
         loading={model.loading}

@@ -20,7 +20,7 @@ const AcademicYearsPage = () => {
         title="Anos letivos"
         subtitle="Gerencie períodos, políticas de boletim e encerramento do ano letivo."
         actionLabel="Cadastrar"
-        canShowAction={permissions.can('client:academic-year:create')}
+        canShowAction={permissions.can('academic-year:create')}
         onAction={() => void navigate('/client/academic-years/new')}
       />
       {model.actionErrorMessage ? (

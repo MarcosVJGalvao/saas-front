@@ -25,15 +25,7 @@ const normalizeStatus = (status: string): string =>
 const normalizeProfile = (profile: ClientMeResponse): ClientMeResponse => ({
   ...profile,
   status: normalizeStatus(profile.status),
-  permissions: profile.permissions.map((permission) => {
-    if (permission === '*:*') {
-      return 'client:*';
-    }
-    if (permission.startsWith('client:')) {
-      return permission;
-    }
-    return `client:${permission}`;
-  }),
+  permissions: profile.permissions,
 });
 
 export const useClientProfile = ({ enabled }: UseClientProfileParams): UseClientProfileState => {

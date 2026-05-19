@@ -18,7 +18,7 @@ const ContactsPage = () => {
         title="Contatos"
         subtitle="Gerencie contatos vinculados a pessoas, alunos e responsáveis."
         actionLabel="Cadastrar"
-        canShowAction={permissions.can('client:contact:create')}
+        canShowAction={permissions.can('contact:create')}
         onAction={() => void navigate('/client/contacts/new')}
       />
       <ListFilters

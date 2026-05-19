@@ -10,7 +10,7 @@ const FinancialCostCentersPage = () => (
     errorMessageFallback="Não foi possível carregar centros de custo."
     emptyTitle="Nenhum centro de custo encontrado"
     emptyDescription="Cadastre centros de custo para organizar lançamentos financeiros."
-    createPermission="client:finance:create"
+    createPermission="finance:create"
   />
 );
 

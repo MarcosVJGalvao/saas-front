@@ -18,8 +18,10 @@ export const flattenGroups = (groups: NavigationGroup[]): NavigationItem[] =>
     section ? [makeSectionItem(section.id, section.label), ...items] : items,
   );
 
-export const buildPermission = (domain: AuthDomain, permission: string): string =>
-  permission === '' ? '' : `${domain}:${permission}`;
+export const buildPermission = (domain: AuthDomain, permission: string): string => {
+  if (permission === '') return '';
+  return domain === 'platform' ? `${domain}:${permission}` : permission;
+};
 
 export const mapItemWithPrefix = (
   item: NavigationItem,

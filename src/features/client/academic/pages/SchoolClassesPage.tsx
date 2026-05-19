@@ -18,7 +18,7 @@ const SchoolClassesPage = () => {
         title="Turmas"
         subtitle="Gerencie turmas, capacidade, turno, alunos e professores vinculados."
         actionLabel="Cadastrar"
-        canShowAction={permissions.can('client:school-class:create')}
+        canShowAction={permissions.can('school-class:create')}
         onAction={() => void navigate('/client/school-classes/new')}
       />
       <ListFilters

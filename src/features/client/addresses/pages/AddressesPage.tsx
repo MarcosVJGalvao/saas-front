@@ -18,7 +18,7 @@ const AddressesPage = () => {
         title="Endereços"
         subtitle="Gerencie endereços vinculados a pessoas, alunos e responsáveis."
         actionLabel="Cadastrar"
-        canShowAction={permissions.can('client:address:create')}
+        canShowAction={permissions.can('address:create')}
         onAction={() => void navigate('/client/addresses/new')}
       />
       <ListFilters

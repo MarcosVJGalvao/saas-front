@@ -26,4 +26,14 @@ describe('ErrorHandler', () => {
     expect(result.message).toBe('custom backend error');
     expect(result.messages).toEqual(['custom backend error']);
   });
+
+  it('traduz credenciais inválidas do login do cliente', () => {
+    const result = ErrorHandler.fromHttp(401, {
+      errorCode: 'INVALID_CREDENTIALS',
+      message: 'Invalid credentials',
+    });
+
+    expect(result.message).toBe('E-mail ou senha inválidos.');
+    expect(result.displayMode).toBe(ErrorDisplayMode.SNACKBAR);
+  });
 });

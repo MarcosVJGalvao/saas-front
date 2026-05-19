@@ -18,7 +18,7 @@ const LegalGuardiansPage = () => {
         title="Responsáveis"
         subtitle="Gerencie responsáveis legais e vínculos com alunos."
         actionLabel="Cadastrar"
-        canShowAction={permissions.can('client:legal-guardian:create')}
+        canShowAction={permissions.can('legal-guardian:create')}
         onAction={() => void navigate('/client/legal-guardians/new')}
       />
       <ListFilters

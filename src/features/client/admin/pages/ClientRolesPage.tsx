@@ -10,7 +10,7 @@ const ClientRolesPage = () => (
     errorMessageFallback="Não foi possível carregar perfis."
     emptyTitle="Nenhum perfil encontrado"
     emptyDescription="Perfis de acesso cadastrados aparecerão nesta consulta."
-    createPermission="client:roles:create"
+    createPermission="roles:create"
     showPermissions
   />
 );

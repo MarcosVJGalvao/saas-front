@@ -11,7 +11,7 @@ const AccountsPayablePage = () => (
     errorMessageFallback="Não foi possível carregar contas a pagar."
     emptyTitle="Nenhuma conta a pagar encontrada"
     emptyDescription="Cadastre obrigações financeiras para acompanhar vencimentos."
-    createPermission="client:finance:create"
+    createPermission="finance:create"
   />
 );
 

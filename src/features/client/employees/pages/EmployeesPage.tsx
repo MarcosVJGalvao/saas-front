@@ -18,7 +18,7 @@ const EmployeesPage = () => {
         title="Funcionários"
         subtitle="Gerencie funcionários, cargos e vínculos pessoais."
         actionLabel="Cadastrar"
-        canShowAction={permissions.can('client:employees:create')}
+        canShowAction={permissions.can('employees:create')}
         onAction={() => void navigate('/client/employees/new')}
       />
       <ListFilters

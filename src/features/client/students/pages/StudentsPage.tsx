@@ -18,7 +18,7 @@ const StudentsPage = () => {
         title="Alunos"
         subtitle="Gerencie cadastro, responsáveis, documentos e histórico financeiro dos alunos."
         actionLabel="Cadastrar"
-        canShowAction={permissions.can('client:student:create')}
+        canShowAction={permissions.can('student:create')}
         onAction={() => void navigate('/client/students/new')}
       />
       <ListFilters

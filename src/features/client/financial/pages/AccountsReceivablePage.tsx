@@ -11,7 +11,7 @@ const AccountsReceivablePage = () => (
     errorMessageFallback="Não foi possível carregar contas a receber."
     emptyTitle="Nenhuma conta a receber encontrada"
     emptyDescription="Recebíveis de alunos e matrículas serão exibidos nesta consulta."
-    createPermission="client:finance:create"
+    createPermission="finance:create"
   />
 );
 

@@ -18,7 +18,7 @@ const MedicalInfoPage = () => {
         title="Informações médicas"
         subtitle="Gerencie registros médicos e contatos de emergência."
         actionLabel="Cadastrar"
-        canShowAction={permissions.can('client:medical-info:create')}
+        canShowAction={permissions.can('medical-info:create')}
         onAction={() => void navigate('/client/medical-info/new')}
       />
       <ListFilters
