@@ -10,6 +10,7 @@ const GradesPage = () => (
     errorMessageFallback="Erro ao carregar séries."
     emptyTitle="Nenhuma série encontrada"
     emptyDescription="Cadastre séries para organizar turmas e matrículas."
+    createPermission="client:grade:create"
     showEducationLevel
   />
 );

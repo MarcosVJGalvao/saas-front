@@ -4,6 +4,7 @@ export type DocumentTypeValue = 'CPF' | 'CNPJ' | 'RG' | 'PASSPORT' | 'OTHER';
 export type SubscriptionStatusValue = 'active' | 'canceled' | 'past_due' | 'trialing' | 'blocked';
 export type EnrollmentStatusValue = 'active' | 'cancelled' | 'transferred';
 export type StudentStatusValue = 'active' | 'inactive' | 'cancelled';
+export type EmployeeStatusValue = 'active' | 'inactive' | 'terminated';
 export type SchoolClassStatusValue = 'active' | 'inactive' | 'cancelled';
 export type SchoolClassShiftValue = 'morning' | 'afternoon' | 'evening' | 'full_time';
 export type AcademicYearStatusValue = 'scheduled' | 'active' | 'closed';
@@ -98,6 +99,12 @@ export const studentStatusLabels: Record<StudentStatusValue, string> = {
   active: 'Ativo',
   inactive: 'Inativo',
   cancelled: 'Cancelado',
+};
+
+export const employeeStatusLabels: Record<EmployeeStatusValue, string> = {
+  active: 'Ativo',
+  inactive: 'Inativo',
+  terminated: 'Desligado',
 };
 
 export const schoolClassStatusLabels: Record<SchoolClassStatusValue, string> = {
@@ -274,6 +281,9 @@ export const translateAttendanceStatus = (status: AttendanceStatusValue): string
 
 export const translateStudentStatus = (status: StudentStatusValue): string =>
   studentStatusLabels[status];
+
+export const translateEmployeeStatus = (status: EmployeeStatusValue): string =>
+  employeeStatusLabels[status];
 
 export const translateDocumentFormat = (format: DocumentFormatValue): string =>
   documentFormatLabels[format];

@@ -10,6 +10,7 @@ const ClientUsersPage = () => (
     errorMessageFallback="Não foi possível carregar usuários."
     emptyTitle="Nenhum usuário encontrado"
     emptyDescription="Usuários cadastrados aparecerão nesta consulta."
+    createPermission="client:users:create"
     showRole
   />
 );

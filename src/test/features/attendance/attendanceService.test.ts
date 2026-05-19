@@ -42,13 +42,13 @@ describe('attendanceService', () => {
     const response = await attendanceService.markAttendance({
       scheduleId: 'schedule-1',
       attendanceDate: '2026-05-18',
-      records: [{ studentId: 'student-1', status: 'present' }],
+      items: [{ studentEnrollmentId: 'enrollment-1', status: 'present' }],
     });
 
     expect(postSpy).toHaveBeenCalledWith('/api/attendance/records', {
       scheduleId: 'schedule-1',
       attendanceDate: '2026-05-18',
-      records: [{ studentId: 'student-1', status: 'present' }],
+      items: [{ studentEnrollmentId: 'enrollment-1', status: 'present' }],
     });
     expect(response.id).toBe('record-1');
   });

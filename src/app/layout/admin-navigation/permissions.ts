@@ -26,25 +26,31 @@ const platformDefaultPermissions = [
 const clientDefaultPermissions = [
   'client:dashboard:read',
   'client:panel:read',
-  'client:users:read',
-  'client:roles:read',
-  'client:finance:read',
+  'client:users:*',
+  'client:roles:*',
+  'client:finance:*',
   'client:reports:read',
-  'client:academic-year:read',
-  'client:education-level:read',
-  'client:grade:read',
-  'client:school-class:read',
-  'client:subject:read',
+  'client:academic-year:*',
+  'client:education-level:*',
+  'client:grade:*',
+  'client:school-class:*',
+  'client:subject:*',
   'client:teacher-subject:read',
-  'client:student:read',
+  'client:employees:*',
+  'client:student:*',
   'client:student-enroll:*',
-  'client:legal-guardian:read',
-  'client:attendance:read',
+  'client:legal-guardian:*',
+  'client:person:*',
+  'client:contact:*',
+  'client:address:*',
+  'client:medical-info:*',
+  'client:attendance:*',
   'client:documents:read',
+  'client:person-document:*',
   'client:report-card:read',
 ];
 
-const hasPermission = (permissions: string[], requiredPermission: string): boolean => {
+export const hasPermission = (permissions: string[], requiredPermission: string): boolean => {
   if (permissions.includes('*:*')) {
     return true;
   }

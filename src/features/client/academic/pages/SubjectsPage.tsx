@@ -10,6 +10,7 @@ const SubjectsPage = () => (
     errorMessageFallback="Erro ao carregar disciplinas."
     emptyTitle="Nenhuma disciplina encontrada"
     emptyDescription="Cadastre disciplinas para compor turmas e boletins."
+    createPermission="client:subject:create"
   />
 );
 

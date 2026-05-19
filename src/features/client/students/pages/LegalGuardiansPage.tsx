@@ -4,10 +4,12 @@ import { ListFilters } from '@shared/components/data-display/data/ListFilters';
 import { QueryDataTable } from '@shared/components/data-display/data/QueryDataTable';
 import { AppStack } from '@shared/components/layout/AppStack';
 import { PageHeader } from '@shared/components/layout/PageHeader';
+import { useClientPermission } from '@features/client/shared/hooks/useClientPermission';
 import { useLegalGuardiansListPageViewModel } from '@features/client/students/hooks/useLegalGuardiansListPageViewModel';
 
 const LegalGuardiansPage = () => {
   const navigate = useNavigate();
+  const permissions = useClientPermission();
   const model = useLegalGuardiansListPageViewModel();
 
   return (
@@ -16,6 +18,7 @@ const LegalGuardiansPage = () => {
         title="Responsáveis"
         subtitle="Gerencie responsáveis legais e vínculos com alunos."
         actionLabel="Cadastrar"
+        canShowAction={permissions.can('client:legal-guardian:create')}
         onAction={() => void navigate('/client/legal-guardians/new')}
       />
       <ListFilters

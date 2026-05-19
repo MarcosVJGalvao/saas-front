@@ -4,10 +4,12 @@ import { ListFilters } from '@shared/components/data-display/data/ListFilters';
 import { QueryDataTable } from '@shared/components/data-display/data/QueryDataTable';
 import { AppStack } from '@shared/components/layout/AppStack';
 import { PageHeader } from '@shared/components/layout/PageHeader';
+import { useClientPermission } from '@features/client/shared/hooks/useClientPermission';
 import { useStudentsListPageViewModel } from '@features/client/students/hooks/useStudentsListPageViewModel';
 
 const StudentsPage = () => {
   const navigate = useNavigate();
+  const permissions = useClientPermission();
   const model = useStudentsListPageViewModel();
 
   return (
@@ -16,6 +18,7 @@ const StudentsPage = () => {
         title="Alunos"
         subtitle="Gerencie cadastro, responsáveis, documentos e histórico financeiro dos alunos."
         actionLabel="Cadastrar"
+        canShowAction={permissions.can('client:student:create')}
         onAction={() => void navigate('/client/students/new')}
       />
       <ListFilters

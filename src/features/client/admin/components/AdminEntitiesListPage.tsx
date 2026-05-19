@@ -5,6 +5,7 @@ import { ListFilters } from '@shared/components/data-display/data/ListFilters';
 import { PageHeader } from '@shared/components/layout/PageHeader';
 import { QueryDataTable } from '@shared/components/data-display/data/QueryDataTable';
 import { useAdminEntitiesListPageViewModel } from '@features/client/admin/hooks/useAdminEntitiesListPageViewModel';
+import { useClientPermission } from '@features/client/shared/hooks/useClientPermission';
 import type {
   ClientAdminEntity,
   ClientAdminQueryParams,
@@ -32,6 +33,7 @@ type AdminEntitiesListPageProps = {
   errorMessageFallback: string;
   emptyTitle: string;
   emptyDescription: string;
+  createPermission: string;
   showRole?: boolean | undefined;
   showPermissions?: boolean | undefined;
 };
@@ -44,10 +46,12 @@ export const AdminEntitiesListPage = ({
   errorMessageFallback,
   emptyTitle,
   emptyDescription,
+  createPermission,
   showRole = false,
   showPermissions = false,
 }: AdminEntitiesListPageProps) => {
   const navigate = useNavigate();
+  const permissions = useClientPermission();
   const model = useAdminEntitiesListPageViewModel({
     service,
     errorMessageFallback,
@@ -62,6 +66,7 @@ export const AdminEntitiesListPage = ({
         title={title}
         subtitle={subtitle}
         actionLabel="Cadastrar"
+        canShowAction={permissions.can(createPermission)}
         onAction={() => void navigate(`${routeBase}/new`)}
       />
       <ListFilters

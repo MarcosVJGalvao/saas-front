@@ -20,7 +20,7 @@ describe('admin navigation by domain', () => {
     );
   });
 
-  it('applies prefix and domain permission during build', () => {
+  it('applies prefix, domain permission and domain id during build', () => {
     const groups: NavigationGroup[] = [
       {
         items: [
@@ -41,6 +41,7 @@ describe('admin navigation by domain', () => {
     if (firstItem === undefined) {
       throw new Error('Item de navegação não encontrado.');
     }
+    expect(firstItem.id).toBe('client-dashboard');
     expect(firstItem.href).toBe('/client/home');
     expect(firstItem.permission).toBe('client:dashboard:read');
   });
@@ -50,7 +51,7 @@ describe('admin navigation by domain', () => {
     const filtered = filterNavigationByPermissions(items, ['platform:dashboard:read']);
 
     expect(filtered.some((item) => item.type === 'section' && item.label === 'Gestão')).toBe(false);
-    expect(filtered.some((item) => item.id === 'dashboard')).toBe(true);
+    expect(filtered.some((item) => item.id === 'platform-dashboard')).toBe(true);
   });
 
   it('keeps a section when at least one subsequent item is permitted', () => {
@@ -61,6 +62,6 @@ describe('admin navigation by domain', () => {
     ]);
 
     expect(filtered.some((item) => item.type === 'section' && item.label === 'Gestão')).toBe(true);
-    expect(filtered.some((item) => item.id === 'clientes')).toBe(true);
+    expect(filtered.some((item) => item.id === 'platform-clientes')).toBe(true);
   });
 });

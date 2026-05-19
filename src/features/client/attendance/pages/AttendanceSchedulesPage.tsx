@@ -1,3 +1,4 @@
+import { useNavigate } from 'react-router-dom';
 import { AppText } from '@shared/components/data-display/AppText';
 import { ListFilters } from '@shared/components/data-display/data/ListFilters';
 import { QueryDataTable } from '@shared/components/data-display/data/QueryDataTable';
@@ -12,8 +13,11 @@ import {
   useAttendanceFilters,
 } from '@features/client/attendance/hooks/useAttendanceFilters';
 import { useAttendanceSchedulesList } from '@features/client/attendance/hooks/useAttendanceSchedulesList';
+import { useClientPermission } from '@features/client/shared/hooks/useClientPermission';
 
 const AttendanceSchedulesPage = () => {
+  const navigate = useNavigate();
+  const permissions = useClientPermission();
   const list = useAttendanceSchedulesList();
   const filters = useAttendanceFilters();
 
@@ -39,6 +43,9 @@ const AttendanceSchedulesPage = () => {
       <PageHeader
         title="Horários de frequência"
         subtitle="Configure horários por turma, disciplina, professor e período."
+        actionLabel="Cadastrar"
+        canShowAction={permissions.can('client:attendance:create')}
+        onAction={() => void navigate('/client/attendance/schedules/new')}
       />
       <ListFilters
         fields={[

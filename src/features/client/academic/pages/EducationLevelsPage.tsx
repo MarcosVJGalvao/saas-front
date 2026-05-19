@@ -10,6 +10,7 @@ const EducationLevelsPage = () => (
     errorMessageFallback="Erro ao carregar níveis de ensino."
     emptyTitle="Nenhum nível de ensino encontrado"
     emptyDescription="Cadastre níveis de ensino para organizar séries e turmas."
+    createPermission="client:education-level:create"
   />
 );
 

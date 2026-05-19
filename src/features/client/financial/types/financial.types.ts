@@ -74,6 +74,7 @@ export type FinancialRecord = {
   name?: string | undefined;
   status: FinancialRecordStatus;
   amount?: number | undefined;
+  paymentMethod?: string | undefined;
   dueDate?: string | undefined;
   paymentDate?: string | undefined;
   receivedDate?: string | undefined;
@@ -94,6 +95,9 @@ export type FinancialRecordQueryParams = ClientBaseQueryParams & {
   categoryId?: string | undefined;
   costCenterId?: string | undefined;
   studentId?: string | undefined;
+  studentEnrollmentId?: string | undefined;
+  schoolClassId?: string | undefined;
+  paymentMethod?: string | undefined;
 };
 
 export type FinancialRecordPayload = Record<string, unknown>;

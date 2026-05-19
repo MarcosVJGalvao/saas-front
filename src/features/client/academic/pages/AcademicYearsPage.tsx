@@ -1,13 +1,17 @@
-import { AppAlert } from '@shared/components/feedback/AppAlert';
-import { AppStack } from '@shared/components/layout/AppStack';
+import { useNavigate } from 'react-router-dom';
 import { AppText } from '@shared/components/data-display/AppText';
-import { ConfirmDialog } from '@shared/components/feedback/ConfirmDialog';
 import { ListFilters } from '@shared/components/data-display/data/ListFilters';
-import { PageHeader } from '@shared/components/layout/PageHeader';
 import { QueryDataTable } from '@shared/components/data-display/data/QueryDataTable';
+import { AppAlert } from '@shared/components/feedback/AppAlert';
+import { ConfirmDialog } from '@shared/components/feedback/ConfirmDialog';
+import { AppStack } from '@shared/components/layout/AppStack';
+import { PageHeader } from '@shared/components/layout/PageHeader';
 import { useAcademicYearsListPageViewModel } from '@features/client/academic/hooks/useAcademicYearsListPageViewModel';
+import { useClientPermission } from '@features/client/shared/hooks/useClientPermission';
 
 const AcademicYearsPage = () => {
+  const navigate = useNavigate();
+  const permissions = useClientPermission();
   const model = useAcademicYearsListPageViewModel();
 
   return (
@@ -15,6 +19,9 @@ const AcademicYearsPage = () => {
       <PageHeader
         title="Anos letivos"
         subtitle="Gerencie períodos, políticas de boletim e encerramento do ano letivo."
+        actionLabel="Cadastrar"
+        canShowAction={permissions.can('client:academic-year:create')}
+        onAction={() => void navigate('/client/academic-years/new')}
       />
       {model.actionErrorMessage ? (
         <AppAlert severity="error">{model.actionErrorMessage}</AppAlert>

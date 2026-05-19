@@ -86,6 +86,11 @@ export const useSchoolClassesListPageViewModel = () => {
         label: 'Ver detalhes',
         onClick: () => void navigate(`/client/school-classes/${row.id}`),
       },
+      {
+        key: 'edit',
+        label: 'Editar',
+        onClick: () => void navigate(`/client/school-classes/${row.id}/edit`),
+      },
     ],
     [navigate],
   );

@@ -5,6 +5,7 @@ import { QueryDataTable } from '@shared/components/data-display/data/QueryDataTa
 import { AppStack } from '@shared/components/layout/AppStack';
 import { PageHeader } from '@shared/components/layout/PageHeader';
 import { useAcademicCatalogListPageViewModel } from '@features/client/academic/hooks/useAcademicCatalogListPageViewModel';
+import { useClientPermission } from '@features/client/shared/hooks/useClientPermission';
 import type {
   AcademicCatalogItem,
   AcademicCatalogQueryParams,
@@ -30,6 +31,7 @@ type AcademicCatalogListPageProps = {
   errorMessageFallback: string;
   emptyTitle: string;
   emptyDescription: string;
+  createPermission: string;
   showEducationLevel?: boolean | undefined;
 };
 
@@ -41,9 +43,11 @@ export const AcademicCatalogListPage = ({
   errorMessageFallback,
   emptyTitle,
   emptyDescription,
+  createPermission,
   showEducationLevel = false,
 }: AcademicCatalogListPageProps) => {
   const navigate = useNavigate();
+  const permissions = useClientPermission();
   const model = useAcademicCatalogListPageViewModel({
     service,
     routeBase,
@@ -57,6 +61,7 @@ export const AcademicCatalogListPage = ({
         title={title}
         subtitle={subtitle}
         actionLabel="Cadastrar"
+        canShowAction={permissions.can(createPermission)}
         onAction={() => void navigate(`${routeBase}/new`)}
       />
       <ListFilters

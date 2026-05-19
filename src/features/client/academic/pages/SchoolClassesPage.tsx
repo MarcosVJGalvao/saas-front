@@ -1,11 +1,15 @@
-import { AppStack } from '@shared/components/layout/AppStack';
+import { useNavigate } from 'react-router-dom';
 import { AppText } from '@shared/components/data-display/AppText';
 import { ListFilters } from '@shared/components/data-display/data/ListFilters';
-import { PageHeader } from '@shared/components/layout/PageHeader';
 import { QueryDataTable } from '@shared/components/data-display/data/QueryDataTable';
+import { AppStack } from '@shared/components/layout/AppStack';
+import { PageHeader } from '@shared/components/layout/PageHeader';
 import { useSchoolClassesListPageViewModel } from '@features/client/academic/hooks/useSchoolClassesListPageViewModel';
+import { useClientPermission } from '@features/client/shared/hooks/useClientPermission';
 
 const SchoolClassesPage = () => {
+  const navigate = useNavigate();
+  const permissions = useClientPermission();
   const model = useSchoolClassesListPageViewModel();
 
   return (
@@ -13,6 +17,9 @@ const SchoolClassesPage = () => {
       <PageHeader
         title="Turmas"
         subtitle="Gerencie turmas, capacidade, turno, alunos e professores vinculados."
+        actionLabel="Cadastrar"
+        canShowAction={permissions.can('client:school-class:create')}
+        onAction={() => void navigate('/client/school-classes/new')}
       />
       <ListFilters
         fields={[

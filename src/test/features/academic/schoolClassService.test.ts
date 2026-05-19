@@ -57,6 +57,20 @@ describe('schoolClassService', () => {
       teacherSubjectIds: ['teacher-subject-1'],
     });
   });
+
+  it('remove alunos e professores-disciplina pelos endpoints corretos', async () => {
+    const postSpy = vi.spyOn(httpClient, 'post').mockResolvedValue({ data: undefined });
+
+    await schoolClassService.removeStudents('class-1', ['student-1']);
+    await schoolClassService.removeTeacherSubjects('class-1', ['teacher-subject-1']);
+
+    expect(postSpy).toHaveBeenCalledWith('/api/school-classes/class-1/students/remove', {
+      studentIds: ['student-1'],
+    });
+    expect(postSpy).toHaveBeenCalledWith('/api/school-classes/class-1/teacher-subjects/remove', {
+      teacherSubjectIds: ['teacher-subject-1'],
+    });
+  });
 });
 
 describe('teacherSubjectService', () => {

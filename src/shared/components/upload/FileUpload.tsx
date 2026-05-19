@@ -6,7 +6,7 @@ import { AppStack } from '@shared/components/layout/AppStack';
 interface FileUploadProps {
   accept?: string;
   onFileSelected: (file: File | null) => void;
-  selectedFileName?: string;
+  selectedFileName?: string | undefined;
 }
 
 export const FileUpload = ({ accept, onFileSelected, selectedFileName }: FileUploadProps) => (

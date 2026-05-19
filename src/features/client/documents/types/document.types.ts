@@ -17,7 +17,6 @@ export type GeneratedDocument = {
 };
 
 export type GeneratedDocumentQueryParams = ClientBaseQueryParams & {
-  title?: string | undefined;
   format?: DocumentFormat | undefined;
   status?: DocumentGenerationStatus | undefined;
   templateKey?: string | undefined;

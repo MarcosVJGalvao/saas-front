@@ -27,14 +27,17 @@ export const mapItemWithPrefix = (
   domain: AuthDomain,
 ): NavigationItem => ({
   ...item,
+  id: `${domain}-${item.id}`,
   href: item.href ? `${prefix}${item.href}` : undefined,
   permission: buildPermission(domain, item.permission),
   children: item.children?.map((child) => ({
     ...child,
+    id: `${domain}-${child.id}`,
     href: child.href ? `${prefix}${child.href}` : undefined,
     permission: buildPermission(domain, child.permission),
     children: child.children?.map((grandchild) => ({
       ...grandchild,
+      id: `${domain}-${grandchild.id}`,
       href: grandchild.href ? `${prefix}${grandchild.href}` : undefined,
       permission: buildPermission(domain, grandchild.permission),
     })),

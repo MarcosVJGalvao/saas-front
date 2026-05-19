@@ -9,6 +9,7 @@ import type {
 import { formatIsoDate } from '@shared/formatters';
 import { maskCep, maskCnpj, maskCpf, maskPhone } from '@shared/masks/inputMasks';
 import { onlyDigits } from '@shared/parsers/stringParsers';
+import { downloadBlob } from '@shared/utils/downloadBlob';
 import { translateDocumentType, translateStudentStatus } from '@shared/i18n/pt-BR/enums';
 import { studentsService } from '@features/client/students/services/studentServices';
 import type {
@@ -61,6 +62,7 @@ export const useStudentDetailsPageViewModel = () => {
   const { id } = useParams();
   const [student, setStudent] = useState<Student | null>(null);
   const [loading, setLoading] = useState(false);
+  const [downloading, setDownloading] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | undefined>(undefined);
 
   const load = useCallback(async () => {
@@ -79,6 +81,34 @@ export const useStudentDetailsPageViewModel = () => {
       setLoading(false);
     }
   }, [id]);
+
+  const downloadEnrollmentCertificate = useCallback(async (): Promise<void> => {
+    if (!id) return;
+    setDownloading(true);
+    setErrorMessage(undefined);
+    try {
+      const blob = await studentsService.downloadEnrollmentCertificate(id);
+      downloadBlob(blob, `atestado-matricula-${student?.registrationCode ?? id}.pdf`);
+    } catch {
+      setErrorMessage('Não foi possível baixar o atestado de matrícula.');
+    } finally {
+      setDownloading(false);
+    }
+  }, [id, student]);
+
+  const downloadSchoolHistory = useCallback(async (): Promise<void> => {
+    if (!id) return;
+    setDownloading(true);
+    setErrorMessage(undefined);
+    try {
+      const blob = await studentsService.downloadSchoolHistory(id);
+      downloadBlob(blob, `historico-escolar-${student?.registrationCode ?? id}.pdf`);
+    } catch {
+      setErrorMessage('Não foi possível baixar o histórico escolar.');
+    } finally {
+      setDownloading(false);
+    }
+  }, [id, student]);
 
   useEffect(() => {
     const timeoutId = window.setTimeout(() => {
@@ -197,8 +227,28 @@ export const useStudentDetailsPageViewModel = () => {
             },
           ]
         : [],
+      footerActions: student
+        ? [
+            {
+              id: 'download-enrollment-certificate',
+              label: downloading ? 'Baixando atestado...' : 'Baixar atestado',
+              onClick: () => {
+                void downloadEnrollmentCertificate();
+              },
+              disabled: downloading,
+            },
+            {
+              id: 'download-school-history',
+              label: downloading ? 'Baixando histórico...' : 'Baixar histórico',
+              onClick: () => {
+                void downloadSchoolHistory();
+              },
+              disabled: downloading,
+            },
+          ]
+        : [],
     }),
-    [student],
+    [downloadEnrollmentCertificate, downloadSchoolHistory, downloading, student],
   );
 
   return {

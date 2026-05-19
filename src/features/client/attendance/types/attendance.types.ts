@@ -72,9 +72,9 @@ export type AttendanceQueryParams = ClientBaseQueryParams & {
 export type MarkAttendancePayload = {
   scheduleId: string;
   attendanceDate: string;
-  records: Array<{
-    studentId: string;
+  items: Array<{
+    studentEnrollmentId: string;
     status: AttendanceStatus;
-    justification?: string | undefined;
+    observations?: string | undefined;
   }>;
 };

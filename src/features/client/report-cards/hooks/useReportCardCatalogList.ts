@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useState } from 'react';
 import type { PaginationMeta } from '@shared/types/pagination';
 import type {
+  ReportCardPayload,
   ReportCardCatalogEntity,
   ReportCardQueryParams,
 } from '@features/client/report-cards/types/reportCard.types';
@@ -8,6 +9,10 @@ import type {
 type ReportCardCatalogListService = (
   params: ReportCardQueryParams,
 ) => Promise<{ data: ReportCardCatalogEntity[]; meta: PaginationMeta }>;
+
+type ReportCardCatalogCreateService =
+  | ((payload: ReportCardPayload) => Promise<ReportCardCatalogEntity>)
+  | undefined;
 
 const initialMeta: PaginationMeta = {
   page: 1,
@@ -21,12 +26,14 @@ const initialMeta: PaginationMeta = {
 export const useReportCardCatalogList = (
   service: ReportCardCatalogListService,
   errorMessageFallback: string,
+  createService?: ReportCardCatalogCreateService,
 ) => {
   const [rows, setRows] = useState<ReportCardCatalogEntity[]>([]);
   const [meta, setMeta] = useState<PaginationMeta>(initialMeta);
   const [query, setQuery] = useState<ReportCardQueryParams>({ page: 1, limit: 10 });
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | undefined>(undefined);
+  const [successMessage, setSuccessMessage] = useState<string | undefined>(undefined);
 
   const load = useCallback(async () => {
     setLoading(true);
@@ -54,13 +61,34 @@ export const useReportCardCatalogList = (
     setQuery((currentQuery) => ({ ...currentQuery, ...patch }));
   }, []);
 
+  const createRecord = useCallback(
+    async (payload: ReportCardPayload, successMessageValue: string): Promise<void> => {
+      if (!createService) return;
+      setLoading(true);
+      setErrorMessage(undefined);
+      setSuccessMessage(undefined);
+      try {
+        await createService(payload);
+        setSuccessMessage(successMessageValue);
+        await load();
+      } catch {
+        setErrorMessage('Não foi possível criar o registro.');
+      } finally {
+        setLoading(false);
+      }
+    },
+    [createService, load],
+  );
+
   return {
     rows,
     meta,
     query,
     loading,
     errorMessage,
+    successMessage,
     updateQuery,
+    createRecord,
     reload: load,
   };
 };

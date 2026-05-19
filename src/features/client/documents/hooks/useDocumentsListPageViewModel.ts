@@ -53,7 +53,6 @@ const buildQueryFromFilters = (
   filterValues: DocumentFilterValues,
 ): Partial<GeneratedDocumentQueryParams> => ({
   search: getOptionalString(filterValues.query),
-  title: getOptionalString(filterValues.query),
   format: getOptionalFormat(filterValues.format),
   status: getOptionalStatus(filterValues.status),
   templateKey: getOptionalString(filterValues.templateKey),
@@ -93,7 +92,6 @@ export const useDocumentsListPageViewModel = () => {
     list.updateQuery({
       page: 1,
       search: undefined,
-      title: undefined,
       format: undefined,
       status: undefined,
       templateKey: undefined,
@@ -166,7 +164,7 @@ export const useDocumentsListPageViewModel = () => {
     onFilterChange,
     applyFilters,
     clearFilters,
-    onQueryChange: (search: string) => list.updateQuery({ search, title: search, page: 1 }),
+    onQueryChange: (search: string) => list.updateQuery({ search, page: 1 }),
     onPageChange: (page: number) => list.updateQuery({ page }),
     onLimitChange: (limit: number) => list.updateQuery({ limit, page: 1 }),
     columns: buildDocumentsTableColumns({ buildRowActions }),

@@ -58,6 +58,12 @@ const StudentEnrollmentEditPage = lazy(
   () => import('@features/client/student-enrollments/pages/StudentEnrollmentEditPage'),
 );
 const AcademicYearsPage = lazy(() => import('@features/client/academic/pages/AcademicYearsPage'));
+const AcademicYearCreatePage = lazy(
+  () => import('@features/client/academic/pages/AcademicYearCreatePage'),
+);
+const AcademicYearEditPage = lazy(
+  () => import('@features/client/academic/pages/AcademicYearEditPage'),
+);
 const AcademicYearDetailsPage = lazy(
   () => import('@features/client/academic/pages/AcademicYearDetailsPage'),
 );
@@ -78,6 +84,12 @@ const GradeCreatePage = lazy(() => import('@features/client/academic/pages/Grade
 const GradeEditPage = lazy(() => import('@features/client/academic/pages/GradeEditPage'));
 const GradeDetailsPage = lazy(() => import('@features/client/academic/pages/GradeDetailsPage'));
 const SchoolClassesPage = lazy(() => import('@features/client/academic/pages/SchoolClassesPage'));
+const SchoolClassCreatePage = lazy(
+  () => import('@features/client/academic/pages/SchoolClassCreatePage'),
+);
+const SchoolClassEditPage = lazy(
+  () => import('@features/client/academic/pages/SchoolClassEditPage'),
+);
 const SchoolClassDetailsPage = lazy(
   () => import('@features/client/academic/pages/SchoolClassDetailsPage'),
 );
@@ -102,8 +114,34 @@ const LegalGuardianDetailsPage = lazy(
 const LegalGuardianEditPage = lazy(
   () => import('@features/client/students/pages/LegalGuardianEditPage'),
 );
+const PeoplePage = lazy(() => import('@features/client/people/pages/PeoplePage'));
+const PersonFormPage = lazy(() => import('@features/client/people/pages/PersonFormPage'));
+const PersonDetailsPage = lazy(() => import('@features/client/people/pages/PersonDetailsPage'));
+const ContactsPage = lazy(() => import('@features/client/contacts/pages/ContactsPage'));
+const ContactFormPage = lazy(() => import('@features/client/contacts/pages/ContactFormPage'));
+const ContactDetailsPage = lazy(() => import('@features/client/contacts/pages/ContactDetailsPage'));
+const AddressesPage = lazy(() => import('@features/client/addresses/pages/AddressesPage'));
+const AddressFormPage = lazy(() => import('@features/client/addresses/pages/AddressFormPage'));
+const AddressDetailsPage = lazy(
+  () => import('@features/client/addresses/pages/AddressDetailsPage'),
+);
+const EmployeesPage = lazy(() => import('@features/client/employees/pages/EmployeesPage'));
+const EmployeeFormPage = lazy(() => import('@features/client/employees/pages/EmployeeFormPage'));
+const EmployeeDetailsPage = lazy(
+  () => import('@features/client/employees/pages/EmployeeDetailsPage'),
+);
+const MedicalInfoPage = lazy(() => import('@features/client/medical-info/pages/MedicalInfoPage'));
+const MedicalInfoFormPage = lazy(
+  () => import('@features/client/medical-info/pages/MedicalInfoFormPage'),
+);
+const MedicalInfoDetailsPage = lazy(
+  () => import('@features/client/medical-info/pages/MedicalInfoDetailsPage'),
+);
 const AttendanceSchedulesPage = lazy(
   () => import('@features/client/attendance/pages/AttendanceSchedulesPage'),
+);
+const AttendanceScheduleCreatePage = lazy(
+  () => import('@features/client/attendance/pages/AttendanceScheduleCreatePage'),
 );
 const AttendanceRecordsPage = lazy(
   () => import('@features/client/attendance/pages/AttendanceRecordsPage'),
@@ -114,6 +152,9 @@ const AttendanceSummariesPage = lazy(
 const DocumentsPage = lazy(() => import('@features/client/documents/pages/DocumentsPage'));
 const DocumentDetailsPage = lazy(
   () => import('@features/client/documents/pages/DocumentDetailsPage'),
+);
+const PersonDocumentsPage = lazy(
+  () => import('@features/client/person-documents/pages/PersonDocumentsPage'),
 );
 const FinancialDashboardPage = lazy(
   () => import('@features/client/financial/pages/FinancialDashboardPage'),
@@ -487,10 +528,26 @@ export const AppRouter = () => {
             }
           />
           <Route
+            path="/client/academic-years/new"
+            element={
+              <ProtectedClientRoute>
+                <AcademicYearCreatePage />
+              </ProtectedClientRoute>
+            }
+          />
+          <Route
             path="/client/academic-years/:id"
             element={
               <ProtectedClientRoute>
                 <AcademicYearDetailsPage />
+              </ProtectedClientRoute>
+            }
+          />
+          <Route
+            path="/client/academic-years/:id/edit"
+            element={
+              <ProtectedClientRoute>
+                <AcademicYearEditPage />
               </ProtectedClientRoute>
             }
           />
@@ -567,10 +624,26 @@ export const AppRouter = () => {
             }
           />
           <Route
+            path="/client/school-classes/new"
+            element={
+              <ProtectedClientRoute>
+                <SchoolClassCreatePage />
+              </ProtectedClientRoute>
+            }
+          />
+          <Route
             path="/client/school-classes/:id"
             element={
               <ProtectedClientRoute>
                 <SchoolClassDetailsPage />
+              </ProtectedClientRoute>
+            }
+          />
+          <Route
+            path="/client/school-classes/:id/edit"
+            element={
+              <ProtectedClientRoute>
+                <SchoolClassEditPage />
               </ProtectedClientRoute>
             }
           />
@@ -679,10 +752,178 @@ export const AppRouter = () => {
             }
           />
           <Route
+            path="/client/people"
+            element={
+              <ProtectedClientRoute>
+                <PeoplePage />
+              </ProtectedClientRoute>
+            }
+          />
+          <Route
+            path="/client/people/new"
+            element={
+              <ProtectedClientRoute>
+                <PersonFormPage />
+              </ProtectedClientRoute>
+            }
+          />
+          <Route
+            path="/client/people/:id"
+            element={
+              <ProtectedClientRoute>
+                <PersonDetailsPage />
+              </ProtectedClientRoute>
+            }
+          />
+          <Route
+            path="/client/people/:id/edit"
+            element={
+              <ProtectedClientRoute>
+                <PersonFormPage />
+              </ProtectedClientRoute>
+            }
+          />
+          <Route
+            path="/client/contacts"
+            element={
+              <ProtectedClientRoute>
+                <ContactsPage />
+              </ProtectedClientRoute>
+            }
+          />
+          <Route
+            path="/client/contacts/new"
+            element={
+              <ProtectedClientRoute>
+                <ContactFormPage />
+              </ProtectedClientRoute>
+            }
+          />
+          <Route
+            path="/client/contacts/:id"
+            element={
+              <ProtectedClientRoute>
+                <ContactDetailsPage />
+              </ProtectedClientRoute>
+            }
+          />
+          <Route
+            path="/client/contacts/:id/edit"
+            element={
+              <ProtectedClientRoute>
+                <ContactFormPage />
+              </ProtectedClientRoute>
+            }
+          />
+          <Route
+            path="/client/addresses"
+            element={
+              <ProtectedClientRoute>
+                <AddressesPage />
+              </ProtectedClientRoute>
+            }
+          />
+          <Route
+            path="/client/addresses/new"
+            element={
+              <ProtectedClientRoute>
+                <AddressFormPage />
+              </ProtectedClientRoute>
+            }
+          />
+          <Route
+            path="/client/addresses/:id"
+            element={
+              <ProtectedClientRoute>
+                <AddressDetailsPage />
+              </ProtectedClientRoute>
+            }
+          />
+          <Route
+            path="/client/addresses/:id/edit"
+            element={
+              <ProtectedClientRoute>
+                <AddressFormPage />
+              </ProtectedClientRoute>
+            }
+          />
+          <Route
+            path="/client/employees"
+            element={
+              <ProtectedClientRoute>
+                <EmployeesPage />
+              </ProtectedClientRoute>
+            }
+          />
+          <Route
+            path="/client/employees/new"
+            element={
+              <ProtectedClientRoute>
+                <EmployeeFormPage />
+              </ProtectedClientRoute>
+            }
+          />
+          <Route
+            path="/client/employees/:id"
+            element={
+              <ProtectedClientRoute>
+                <EmployeeDetailsPage />
+              </ProtectedClientRoute>
+            }
+          />
+          <Route
+            path="/client/employees/:id/edit"
+            element={
+              <ProtectedClientRoute>
+                <EmployeeFormPage />
+              </ProtectedClientRoute>
+            }
+          />
+          <Route
+            path="/client/medical-info"
+            element={
+              <ProtectedClientRoute>
+                <MedicalInfoPage />
+              </ProtectedClientRoute>
+            }
+          />
+          <Route
+            path="/client/medical-info/new"
+            element={
+              <ProtectedClientRoute>
+                <MedicalInfoFormPage />
+              </ProtectedClientRoute>
+            }
+          />
+          <Route
+            path="/client/medical-info/:id"
+            element={
+              <ProtectedClientRoute>
+                <MedicalInfoDetailsPage />
+              </ProtectedClientRoute>
+            }
+          />
+          <Route
+            path="/client/medical-info/:id/edit"
+            element={
+              <ProtectedClientRoute>
+                <MedicalInfoFormPage />
+              </ProtectedClientRoute>
+            }
+          />
+          <Route
             path="/client/attendance/schedules"
             element={
               <ProtectedClientRoute>
                 <AttendanceSchedulesPage />
+              </ProtectedClientRoute>
+            }
+          />
+          <Route
+            path="/client/attendance/schedules/new"
+            element={
+              <ProtectedClientRoute>
+                <AttendanceScheduleCreatePage />
               </ProtectedClientRoute>
             }
           />
@@ -715,6 +956,14 @@ export const AppRouter = () => {
             element={
               <ProtectedClientRoute>
                 <DocumentDetailsPage />
+              </ProtectedClientRoute>
+            }
+          />
+          <Route
+            path="/client/person-documents"
+            element={
+              <ProtectedClientRoute>
+                <PersonDocumentsPage />
               </ProtectedClientRoute>
             }
           />

@@ -10,6 +10,7 @@ const FinancialCategoriesPage = () => (
     errorMessageFallback="Não foi possível carregar categorias financeiras."
     emptyTitle="Nenhuma categoria encontrada"
     emptyDescription="Cadastre categorias para classificar movimentações financeiras."
+    createPermission="client:finance:create"
     showType
   />
 );

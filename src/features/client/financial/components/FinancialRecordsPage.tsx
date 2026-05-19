@@ -7,6 +7,7 @@ import { ConfirmDialog } from '@shared/components/feedback/ConfirmDialog';
 import { AppStack } from '@shared/components/layout/AppStack';
 import { PageHeader } from '@shared/components/layout/PageHeader';
 import { useFinancialRecordsPageViewModel } from '@features/client/financial/hooks/useFinancialRecordsPageViewModel';
+import { useClientPermission } from '@features/client/shared/hooks/useClientPermission';
 import type {
   FinancialRecord,
   FinancialRecordPayload,
@@ -41,6 +42,7 @@ type FinancialRecordsPageProps = {
   errorMessageFallback: string;
   emptyTitle: string;
   emptyDescription: string;
+  createPermission: string;
 };
 
 const baseFilterFields: FilterField[] = [
@@ -82,12 +84,19 @@ const baseFilterFields: FilterField[] = [
     mobileOrder: 4,
   },
   {
+    type: 'text',
+    name: 'paymentMethod',
+    label: 'Método de pagamento',
+    placeholder: 'pix, cash, credit_card...',
+    mobileOrder: 5,
+  },
+  {
     type: 'dateRange',
     name: 'period',
     label: 'Período',
     startName: 'startDate',
     endName: 'endDate',
-    mobileOrder: 6,
+    mobileOrder: 9,
   },
 ];
 
@@ -96,7 +105,23 @@ const studentFilterField: FilterField = {
   name: 'studentId',
   label: 'Aluno',
   placeholder: 'ID do aluno',
-  mobileOrder: 5,
+  mobileOrder: 6,
+};
+
+const studentEnrollmentFilterField: FilterField = {
+  type: 'text',
+  name: 'studentEnrollmentId',
+  label: 'Matrícula',
+  placeholder: 'ID da matrícula',
+  mobileOrder: 7,
+};
+
+const schoolClassFilterField: FilterField = {
+  type: 'text',
+  name: 'schoolClassId',
+  label: 'Turma',
+  placeholder: 'ID da turma',
+  mobileOrder: 8,
 };
 
 export const FinancialRecordsPage = ({
@@ -108,8 +133,10 @@ export const FinancialRecordsPage = ({
   errorMessageFallback,
   emptyTitle,
   emptyDescription,
+  createPermission,
 }: FinancialRecordsPageProps) => {
   const navigate = useNavigate();
+  const permissions = useClientPermission();
   const model = useFinancialRecordsPageViewModel({
     mode,
     routeBase,
@@ -118,7 +145,14 @@ export const FinancialRecordsPage = ({
   });
 
   const filterFields =
-    mode === 'receivable' ? [...baseFilterFields, studentFilterField] : baseFilterFields;
+    mode === 'receivable'
+      ? [
+          ...baseFilterFields,
+          studentFilterField,
+          studentEnrollmentFilterField,
+          schoolClassFilterField,
+        ]
+      : baseFilterFields;
 
   return (
     <AppStack spacing={2}>
@@ -126,6 +160,7 @@ export const FinancialRecordsPage = ({
         title={title}
         subtitle={subtitle}
         actionLabel="Cadastrar"
+        canShowAction={permissions.can(createPermission)}
         onAction={() => void navigate(`${routeBase}/new`)}
       />
       <ListFilters
@@ -157,7 +192,7 @@ export const FinancialRecordsPage = ({
         emptyDescription={emptyDescription}
         toolbarContent={
           <AppText color="text.secondary">
-            Use filtros para consultar status, categoria, centro de custo e período.
+            Use filtros para consultar status, categoria, centro de custo, método e período.
           </AppText>
         }
         hideToolbar

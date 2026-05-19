@@ -6,6 +6,7 @@ import { QueryDataTable } from '@shared/components/data-display/data/QueryDataTa
 import { AppStack } from '@shared/components/layout/AppStack';
 import { PageHeader } from '@shared/components/layout/PageHeader';
 import { useFinancialEntitiesListPageViewModel } from '@features/client/financial/hooks/useFinancialEntitiesListPageViewModel';
+import { useClientPermission } from '@features/client/shared/hooks/useClientPermission';
 import type {
   FinancialEntity,
   FinancialEntityPayload,
@@ -32,6 +33,7 @@ type FinancialEntitiesListPageProps = {
   errorMessageFallback: string;
   emptyTitle: string;
   emptyDescription: string;
+  createPermission: string;
   showType?: boolean | undefined;
 };
 
@@ -43,9 +45,11 @@ export const FinancialEntitiesListPage = ({
   errorMessageFallback,
   emptyTitle,
   emptyDescription,
+  createPermission,
   showType = false,
 }: FinancialEntitiesListPageProps) => {
   const navigate = useNavigate();
+  const permissions = useClientPermission();
   const model = useFinancialEntitiesListPageViewModel({
     service,
     routeBase,
@@ -75,6 +79,7 @@ export const FinancialEntitiesListPage = ({
         title={title}
         subtitle={subtitle}
         actionLabel="Cadastrar"
+        canShowAction={permissions.can(createPermission)}
         onAction={() => void navigate(`${routeBase}/new`)}
       />
       <ListFilters

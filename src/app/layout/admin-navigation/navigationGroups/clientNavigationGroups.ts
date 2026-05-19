@@ -1,8 +1,8 @@
-import HomeOutlinedIcon from '@mui/icons-material/HomeOutlined';
 import AssignmentIndOutlinedIcon from '@mui/icons-material/AssignmentIndOutlined';
 import DescriptionOutlinedIcon from '@mui/icons-material/DescriptionOutlined';
 import EventAvailableOutlinedIcon from '@mui/icons-material/EventAvailableOutlined';
 import GroupsOutlinedIcon from '@mui/icons-material/GroupsOutlined';
+import HomeOutlinedIcon from '@mui/icons-material/HomeOutlined';
 import LocalAtmOutlinedIcon from '@mui/icons-material/LocalAtmOutlined';
 import MenuBookOutlinedIcon from '@mui/icons-material/MenuBookOutlined';
 import SchoolOutlinedIcon from '@mui/icons-material/SchoolOutlined';
@@ -91,6 +91,34 @@ export const clientNavigationGroups: NavigationGroup[] = [
         href: '/legal-guardians',
         permission: 'legal-guardian:read',
         icon: GroupsOutlinedIcon,
+      },
+      {
+        id: 'people',
+        label: 'Pessoas',
+        href: '/people',
+        permission: 'person:read',
+        icon: GroupsOutlinedIcon,
+      },
+      {
+        id: 'contacts',
+        label: 'Contatos',
+        href: '/contacts',
+        permission: 'contact:read',
+        icon: AssignmentIndOutlinedIcon,
+      },
+      {
+        id: 'addresses',
+        label: 'Endereços',
+        href: '/addresses',
+        permission: 'address:read',
+        icon: AssignmentIndOutlinedIcon,
+      },
+      {
+        id: 'medical-info',
+        label: 'Informações médicas',
+        href: '/medical-info',
+        permission: 'medical-info:read',
+        icon: AssignmentIndOutlinedIcon,
       },
     ],
   },
@@ -184,6 +212,13 @@ export const clientNavigationGroups: NavigationGroup[] = [
         permission: 'documents:read',
         icon: DescriptionOutlinedIcon,
       },
+      {
+        id: 'person-documents',
+        label: 'Documentos da pessoa',
+        href: '/person-documents',
+        permission: 'person-document:read',
+        icon: DescriptionOutlinedIcon,
+      },
     ],
   },
   {
@@ -229,6 +264,13 @@ export const clientNavigationGroups: NavigationGroup[] = [
   {
     section: { id: 'section-administration', label: 'Administração' },
     items: [
+      {
+        id: 'employees',
+        label: 'Funcionários',
+        href: '/employees',
+        permission: 'employees:read',
+        icon: AssignmentIndOutlinedIcon,
+      },
       {
         id: 'users',
         label: 'Usuários',

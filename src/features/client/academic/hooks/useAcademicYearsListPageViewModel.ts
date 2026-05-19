@@ -117,6 +117,11 @@ export const useAcademicYearsListPageViewModel = () => {
         onClick: () => void navigate(`/client/academic-years/${row.id}`),
       },
       {
+        key: 'edit',
+        label: 'Editar',
+        onClick: () => void navigate(`/client/academic-years/${row.id}/edit`),
+      },
+      {
         key: 'close',
         label: 'Fechar ano letivo',
         onClick: () => requestAction('close', row),

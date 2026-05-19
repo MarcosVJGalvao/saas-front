@@ -6,6 +6,10 @@ import {
   buildFinancialRecordsTableColumns,
 } from '@features/client/financial/components/financialRecordsPresentation';
 import { useFinancialRecordsList } from '@features/client/financial/hooks/useFinancialRecordsList';
+import {
+  normalizeAccountsPayableSettlementPayload,
+  normalizeAccountsReceivableSettlementPayload,
+} from '@features/client/financial/normalizers/financialSettlementNormalizer';
 import type {
   FinancialRecord,
   FinancialRecordPayload,
@@ -49,6 +53,9 @@ const initialFilterValues: FinancialRecordFilterValues = {
   categoryId: '',
   costCenterId: '',
   studentId: '',
+  studentEnrollmentId: '',
+  schoolClassId: '',
+  paymentMethod: '',
   startDate: '',
   endDate: '',
 };
@@ -82,6 +89,9 @@ const buildQueryFromFilters = (
   categoryId: getOptionalString(filterValues.categoryId),
   costCenterId: getOptionalString(filterValues.costCenterId),
   studentId: getOptionalString(filterValues.studentId),
+  studentEnrollmentId: getOptionalString(filterValues.studentEnrollmentId),
+  schoolClassId: getOptionalString(filterValues.schoolClassId),
+  paymentMethod: getOptionalString(filterValues.paymentMethod),
   startDate: getOptionalString(filterValues.startDate),
   endDate: getOptionalString(filterValues.endDate),
   page: 1,
@@ -126,6 +136,9 @@ export const useFinancialRecordsPageViewModel = ({
       categoryId: undefined,
       costCenterId: undefined,
       studentId: undefined,
+      studentEnrollmentId: undefined,
+      schoolClassId: undefined,
+      paymentMethod: undefined,
       startDate: undefined,
       endDate: undefined,
     });
@@ -151,9 +164,15 @@ export const useFinancialRecordsPageViewModel = ({
       if (selectedAction === 'cancel') {
         await service.cancel(selectedRecordId);
       } else if (mode === 'payable' && service.pay) {
-        await service.pay(selectedRecordId, {});
+        await service.pay(
+          selectedRecordId,
+          normalizeAccountsPayableSettlementPayload(selectedRecord),
+        );
       } else if (mode === 'receivable' && service.receive) {
-        await service.receive(selectedRecordId, {});
+        await service.receive(
+          selectedRecordId,
+          normalizeAccountsReceivableSettlementPayload(selectedRecord),
+        );
       }
       closeAction();
       await list.reload();
