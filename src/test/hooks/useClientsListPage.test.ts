@@ -3,8 +3,8 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { useClientsListPage } from '@features/platform/clients/hooks/useClientsListPage';
 
 const mockNavigate = vi.fn();
-const mockRefresh = vi.fn();
-const mockRemove = vi.fn();
+const mockReload = vi.fn();
+const mockUpdateQueryParams = vi.fn();
 
 vi.mock('react-router-dom', () => ({
   useNavigate: () => mockNavigate,
@@ -13,20 +13,19 @@ vi.mock('react-router-dom', () => ({
 vi.mock('@features/platform/clients/hooks/useClientsList', () => ({
   useClientsList: () => ({
     rows: [],
-    refresh: mockRefresh,
-  }),
-}));
-
-vi.mock('@features/platform/clients/hooks/useClientDetails', () => ({
-  useClientDetails: () => ({
+    pagination: {
+      total: 0,
+      page: 1,
+      limit: 10,
+      totalPages: 0,
+      hasNextPage: false,
+      hasPreviousPage: false,
+    },
+    queryParams: { page: 1, limit: 10 },
     loading: false,
-    errorMessage: null,
-  }),
-}));
-
-vi.mock('@features/platform/clients/hooks/useClientsMutations', () => ({
-  useClientsMutations: () => ({
-    remove: mockRemove,
+    errorMessage: undefined,
+    updateQueryParams: mockUpdateQueryParams,
+    reload: mockReload,
   }),
 }));
 
@@ -35,21 +34,29 @@ describe('useClientsListPage', () => {
     vi.clearAllMocks();
   });
 
-  it('starts without selected client and updates selection in memory', () => {
+  it('manages filter state and clears applied filters', () => {
     const { result } = renderHook(() => useClientsListPage());
 
-    expect(result.current.selectedClientId).toBeUndefined();
-
     act(() => {
-      result.current.setSelectedClientId('client-2');
+      result.current.onFilterChange('query', 'escola');
+      result.current.onFilterChange('status', 'active');
     });
 
-    expect(result.current.selectedClientId).toBe('client-2');
+    expect(result.current.filterValues.query).toBe('escola');
+    expect(result.current.filterValues.status).toBe('active');
 
     act(() => {
-      result.current.setSelectedClientId(undefined);
+      result.current.clearFilters();
     });
 
-    expect(result.current.selectedClientId).toBeUndefined();
+    expect(result.current.filterValues.query).toBe('');
+    expect(result.current.filterValues.status).toBe('');
+    expect(mockUpdateQueryParams).toHaveBeenCalledWith({
+      search: undefined,
+      status: undefined,
+      startDate: undefined,
+      endDate: undefined,
+      page: 1,
+    });
   });
 });

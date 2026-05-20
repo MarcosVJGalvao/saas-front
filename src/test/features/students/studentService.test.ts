@@ -1,8 +1,8 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { studentsService } from '@features/client/students/services/studentServices';
+import { studentService } from '@features/client/students/services/service';
 import { httpClient } from '@shared/services/httpClient';
 
-describe('studentsService', () => {
+describe('studentService', () => {
   afterEach(() => {
     vi.restoreAllMocks();
   });
@@ -29,7 +29,7 @@ describe('studentsService', () => {
       },
     });
 
-    const response = await studentsService.list({ page: 1, limit: 10, status: 'active' });
+    const response = await studentService.list({ page: 1, limit: 10, status: 'active' });
 
     expect(getSpy).toHaveBeenCalledWith('/api/students', {
       params: { page: 1, limit: 10, status: 'active', sortOrder: 'DESC' },
@@ -46,7 +46,7 @@ describe('studentsService', () => {
       },
     });
 
-    const response = await studentsService.getById('student-1');
+    const response = await studentService.getById('student-1');
 
     expect(getSpy).toHaveBeenCalledWith('/api/students/student-1');
     expect(response.person?.fullName).toBe('Maria Silva');

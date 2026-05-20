@@ -1,10 +1,10 @@
 import { describe, expect, it } from 'vitest';
-import { toStudentEnrollmentUpdatePayload } from '@features/client/student-enrollments/normalizers/studentEnrollmentEditNormalizer';
-import { toStudentEnrollmentPayload } from '@features/client/student-enrollments/normalizers/studentEnrollmentOnboardingNormalizer';
-import type {
-  CreateStudentEnrollmentRequest,
-  StudentEnrollmentOnboardingUiExtras,
-} from '@features/client/student-enrollments/types/studentEnrollment.types';
+import {
+  toStudentEnrollmentCreatePayload,
+  toStudentEnrollmentEditPayload,
+} from '@features/client/student-enrollments/normalizers/studentEnrollmentForm.normalizer';
+import type { CreateStudentEnrollmentRequest } from '@features/client/student-enrollments/types/studentEnrollment.types';
+import type { StudentEnrollmentOnboardingUiExtras } from '@features/client/student-enrollments/types/studentEnrollmentOnboarding.types';
 
 const baseUiExtras: StudentEnrollmentOnboardingUiExtras = {
   selectedStudentId: '',
@@ -81,9 +81,9 @@ const baseValue: CreateStudentEnrollmentRequest = {
   observations: 'Aluno transferido.',
 };
 
-describe('toStudentEnrollmentPayload', () => {
+describe('toStudentEnrollmentCreatePayload', () => {
   it('normaliza aluno novo com documentos, telefones, CEP e datas limpos', () => {
-    const payload = toStudentEnrollmentPayload(baseValue, baseUiExtras);
+    const payload = toStudentEnrollmentCreatePayload(baseValue, baseUiExtras);
 
     expect(payload.studentId).toBeUndefined();
     expect(payload.student?.person.documentNumber).toBe('12345678900');
@@ -102,7 +102,7 @@ describe('toStudentEnrollmentPayload', () => {
   });
 
   it('prioriza studentId quando aluno existente é selecionado', () => {
-    const payload = toStudentEnrollmentPayload(baseValue, {
+    const payload = toStudentEnrollmentCreatePayload(baseValue, {
       ...baseUiExtras,
       selectedStudentId: 'student-123',
     });
@@ -112,9 +112,9 @@ describe('toStudentEnrollmentPayload', () => {
   });
 });
 
-describe('toStudentEnrollmentUpdatePayload', () => {
+describe('toStudentEnrollmentEditPayload', () => {
   it('normaliza atualização com data ISO e campos opcionais limpos', () => {
-    const payload = toStudentEnrollmentUpdatePayload({
+    const payload = toStudentEnrollmentEditPayload({
       academicYearId: 'year-2',
       schoolClassId: '',
       enrollmentDate: '18/05/2026',

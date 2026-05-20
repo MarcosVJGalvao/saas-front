@@ -7,10 +7,10 @@ import { fontSizes } from '@theme/fontSizes';
 import { spacingScale } from '@theme/spacing';
 import { maskCep, maskCnpj, maskCpf, maskPhone } from '@shared/masks/inputMasks';
 import { OnboardingField } from '@features/platform/clients/components/onboarding/OnboardingField';
-import type { OnboardingStepProps } from '@features/platform/clients/types/clientOnboardingPresentation';
+import type { ClientOnboardingStepProps } from '@features/platform/clients/types/clientOnboarding';
 
 export const ClientDataStep = memo(
-  ({ value, uiExtras, actions, addressLoading }: OnboardingStepProps) => (
+  ({ value, uiExtras, actions, addressLoading }: ClientOnboardingStepProps) => (
     <AppStack spacing={1.75}>
       <AppStack direction="row" spacing={0.75} sx={{ alignItems: 'center', mb: 0.2 }}>
         <AppStack

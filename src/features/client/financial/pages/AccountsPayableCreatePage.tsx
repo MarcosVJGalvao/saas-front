@@ -1,16 +1,82 @@
-import { FinancialRecordFormPage } from '@features/client/financial/components/FinancialRecordFormPage';
-import { accountsPayableService } from '@features/client/financial/services/financialServices';
+import { AppAlert } from '@shared/components/feedback/AppAlert';
+import { AppForm } from '@shared/components/form/AppForm';
+import { FormActions } from '@shared/components/form/FormActions';
+import { FormTextField } from '@shared/components/form/FormTextField';
+import { AppPaper } from '@shared/components/data-display/AppPaper';
+import { AppStack } from '@shared/components/layout/AppStack';
+import { PageHeader } from '@shared/components/layout/PageHeader';
+import { useAccountsPayableCreatePage } from '@features/client/financial/hooks/useAccountsPayableCreatePage';
+import type { AccountsPayableCreateFormValues } from '@features/client/financial/schemas/accountsPayableCreateForm.schema';
 
-const AccountsPayableCreatePage = () => (
-  <FinancialRecordFormPage
-    title="Nova conta a pagar"
-    editTitle="Editar conta a pagar"
-    subtitle="Cadastre obrigações financeiras, vencimentos e centros de custo."
-    backPath="/client/financial/accounts-payable"
-    service={accountsPayableService}
-    loadErrorMessage="Não foi possível carregar a conta a pagar."
-    submitErrorMessage="Não foi possível salvar a conta a pagar."
-  />
-);
+const AccountsPayableCreatePage = () => {
+  const accountsPayableCreatePage = useAccountsPayableCreatePage();
+
+  return (
+    <AppStack spacing={2}>
+      <PageHeader
+        title="Nova conta a pagar"
+        subtitle="Cadastre obrigações financeiras, vencimentos e centros de custo."
+        actionLabel="Voltar"
+        onAction={accountsPayableCreatePage.onBack}
+      />
+      {accountsPayableCreatePage.errorMessage ? (
+        <AppAlert severity="error">{accountsPayableCreatePage.errorMessage}</AppAlert>
+      ) : null}
+      <AppPaper sx={{ p: 3 }}>
+        <AppForm
+          form={accountsPayableCreatePage.form}
+          onSubmit={accountsPayableCreatePage.onSubmit}
+          useResponsiveGrid
+          columnsByDevice={{ mobile: 1, tablet: 2, desktop: 2 }}
+        >
+          <FormTextField<AccountsPayableCreateFormValues> name="description" label="Descrição" />
+          <FormTextField<AccountsPayableCreateFormValues>
+            name="amount"
+            label="Valor"
+            placeholder="R$ 0,00"
+          />
+          <FormTextField<AccountsPayableCreateFormValues>
+            name="dueDate"
+            label="Vencimento"
+            type="date"
+          />
+          <FormTextField<AccountsPayableCreateFormValues>
+            name="status"
+            label="Status"
+            placeholder="open, paid, received..."
+          />
+          <FormTextField<AccountsPayableCreateFormValues>
+            name="categoryId"
+            label="Categoria"
+            placeholder="ID da categoria"
+          />
+          <FormTextField<AccountsPayableCreateFormValues>
+            name="costCenterId"
+            label="Centro de custo"
+            placeholder="ID do centro de custo"
+          />
+          <FormActions
+            secondaryAction={{
+              type: 'back',
+              label: 'Cancelar',
+              onClick: accountsPayableCreatePage.onBack,
+              disabled: accountsPayableCreatePage.submitting,
+            }}
+            primaryAction={{
+              type: 'confirm',
+              label: 'Cadastrar',
+              onClick: () => {
+                void accountsPayableCreatePage.form.handleSubmit(
+                  accountsPayableCreatePage.onSubmit,
+                )();
+              },
+              loading: accountsPayableCreatePage.submitting,
+            }}
+          />
+        </AppForm>
+      </AppPaper>
+    </AppStack>
+  );
+};
 
 export default AccountsPayableCreatePage;

@@ -5,11 +5,11 @@ import { FormActions } from '@shared/components/form/FormActions';
 import { FormTextField } from '@shared/components/form/FormTextField';
 import { AppStack } from '@shared/components/layout/AppStack';
 import { PageHeader } from '@shared/components/layout/PageHeader';
-import { useAttendanceScheduleFormPageViewModel } from '@features/client/attendance/hooks/useAttendanceScheduleFormPageViewModel';
-import type { AttendanceScheduleFormValues } from '@features/client/attendance/schemas/attendanceFormSchemas';
+import { useAttendanceScheduleCreatePage } from '@features/client/attendance/hooks/useAttendanceScheduleCreatePage';
+import type { AttendanceScheduleCreateFormValues } from '@features/client/attendance/schemas/attendanceScheduleCreateForm.schema';
 
 const AttendanceScheduleCreatePage = () => {
-  const model = useAttendanceScheduleFormPageViewModel();
+  const attendanceScheduleCreatePage = useAttendanceScheduleCreatePage();
 
   return (
     <AppStack spacing={2}>
@@ -17,57 +17,59 @@ const AttendanceScheduleCreatePage = () => {
         title="Cadastrar horário"
         subtitle="Configure turma, disciplina, vínculo professor-disciplina e período do horário de frequência."
         actionLabel="Voltar"
-        onAction={model.onBack}
+        onAction={attendanceScheduleCreatePage.onBack}
       />
-      {model.errorMessage ? <AppAlert severity="error">{model.errorMessage}</AppAlert> : null}
+      {attendanceScheduleCreatePage.errorMessage ? (
+        <AppAlert severity="error">{attendanceScheduleCreatePage.errorMessage}</AppAlert>
+      ) : null}
       <AppPaper sx={{ p: 3 }}>
         <AppForm
-          form={model.form}
-          onSubmit={model.onSubmit}
+          form={attendanceScheduleCreatePage.form}
+          onSubmit={attendanceScheduleCreatePage.onSubmit}
           useResponsiveGrid
           columnsByDevice={{ mobile: 1, tablet: 2, desktop: 2 }}
         >
-          <FormTextField<AttendanceScheduleFormValues>
+          <FormTextField<AttendanceScheduleCreateFormValues>
             name="academicYearId"
             label="Ano letivo"
             placeholder="ID do ano letivo"
           />
-          <FormTextField<AttendanceScheduleFormValues>
+          <FormTextField<AttendanceScheduleCreateFormValues>
             name="schoolClassId"
             label="Turma"
             placeholder="ID da turma"
           />
-          <FormTextField<AttendanceScheduleFormValues>
+          <FormTextField<AttendanceScheduleCreateFormValues>
             name="subjectId"
             label="Disciplina"
             placeholder="ID da disciplina"
           />
-          <FormTextField<AttendanceScheduleFormValues>
+          <FormTextField<AttendanceScheduleCreateFormValues>
             name="teacherSubjectId"
             label="Professor-disciplina"
             placeholder="ID do vínculo professor-disciplina"
           />
-          <FormTextField<AttendanceScheduleFormValues>
+          <FormTextField<AttendanceScheduleCreateFormValues>
             name="weekday"
             label="Dia da semana"
             placeholder="Segunda-feira"
           />
-          <FormTextField<AttendanceScheduleFormValues>
+          <FormTextField<AttendanceScheduleCreateFormValues>
             name="startTime"
             label="Horário inicial"
             type="time"
           />
-          <FormTextField<AttendanceScheduleFormValues>
+          <FormTextField<AttendanceScheduleCreateFormValues>
             name="endTime"
             label="Horário final"
             type="time"
           />
-          <FormTextField<AttendanceScheduleFormValues>
+          <FormTextField<AttendanceScheduleCreateFormValues>
             name="startDate"
             label="Data inicial"
             type="date"
           />
-          <FormTextField<AttendanceScheduleFormValues>
+          <FormTextField<AttendanceScheduleCreateFormValues>
             name="endDate"
             label="Data final"
             type="date"
@@ -76,16 +78,18 @@ const AttendanceScheduleCreatePage = () => {
             secondaryAction={{
               type: 'back',
               label: 'Cancelar',
-              onClick: model.onBack,
-              disabled: model.submitting,
+              onClick: attendanceScheduleCreatePage.onBack,
+              disabled: attendanceScheduleCreatePage.submitting,
             }}
             primaryAction={{
               type: 'confirm',
               label: 'Cadastrar',
               onClick: () => {
-                void model.form.handleSubmit(model.onSubmit)();
+                void attendanceScheduleCreatePage.form.handleSubmit(
+                  attendanceScheduleCreatePage.onSubmit,
+                )();
               },
-              loading: model.submitting,
+              loading: attendanceScheduleCreatePage.submitting,
             }}
           />
         </AppForm>

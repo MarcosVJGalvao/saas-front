@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { legalGuardianService } from '@features/client/students/services/studentServices';
+import { legalGuardianService } from '@features/client/students/services/service';
 import { httpClient } from '@shared/services/httpClient';
 
 describe('legalGuardianService', () => {

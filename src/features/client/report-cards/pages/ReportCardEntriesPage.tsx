@@ -9,11 +9,11 @@ import { FormTextField } from '@shared/components/form/FormTextField';
 import { AppStack } from '@shared/components/layout/AppStack';
 import { PageHeader } from '@shared/components/layout/PageHeader';
 import { layoutSpacing } from '@theme/spacing';
-import { useReportCardEntriesPageViewModel } from '@features/client/report-cards/hooks/useReportCardEntriesPageViewModel';
+import { useReportCardEntriesPage } from '@features/client/report-cards/hooks/useReportCardEntriesPage';
 import type { ReportCardEntryFormValues } from '@features/client/report-cards/schemas/reportCardEntryFormSchema';
 
 const ReportCardEntriesPage = () => {
-  const model = useReportCardEntriesPageViewModel();
+  const model = useReportCardEntriesPage();
 
   return (
     <AppStack spacing={2}>

@@ -1,29 +1,27 @@
 import { useCallback, useEffect, useState } from 'react';
-import { studentsService } from '@features/client/students/services/studentServices';
-import type { Student, StudentQueryParams } from '@features/client/students/types/student.types';
 import type { PaginationMeta } from '@shared/types/pagination';
-
-const initialMeta: PaginationMeta = {
-  page: 1,
-  limit: 10,
-  total: 0,
-  totalPages: 0,
-  hasNextPage: false,
-  hasPreviousPage: false,
-};
+import { studentService } from '../services/service';
+import type { Student, StudentQueryParams } from '../types/student.types';
 
 export const useStudentsList = () => {
   const [rows, setRows] = useState<Student[]>([]);
-  const [meta, setMeta] = useState<PaginationMeta>(initialMeta);
+  const [meta, setMeta] = useState<PaginationMeta>({
+    page: 1,
+    limit: 10,
+    total: 0,
+    totalPages: 0,
+    hasNextPage: false,
+    hasPreviousPage: false,
+  });
   const [query, setQuery] = useState<StudentQueryParams>({ page: 1, limit: 10 });
   const [loading, setLoading] = useState(false);
-  const [errorMessage, setErrorMessage] = useState<string | undefined>(undefined);
+  const [errorMessage, setErrorMessage] = useState<string | undefined>();
 
   const load = useCallback(async () => {
     setLoading(true);
     setErrorMessage(undefined);
     try {
-      const response = await studentsService.list(query);
+      const response = await studentService.list(query);
       setRows(response.data);
       setMeta(response.meta);
     } catch {

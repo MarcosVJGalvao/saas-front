@@ -1,10 +1,10 @@
 import { Navigate } from 'react-router-dom';
 import { ClientLoginFormCard } from '@features/client/auth/components/ClientLoginFormCard';
-import { useClientLoginPageViewModel } from '@features/client/auth/hooks/useClientLoginPageViewModel';
+import { useClientLoginPage } from '@features/client/auth/hooks/useClientLoginPage';
 import { PlatformAuthPageLayout } from '@shared/components/layout/PlatformAuthPageLayout';
 
 const ClientLoginPage = () => {
-  const model = useClientLoginPageViewModel();
+  const model = useClientLoginPage();
 
   if (model.isAuthenticated) {
     return <Navigate to="/client/home" replace />;

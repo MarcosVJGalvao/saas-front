@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { reportCardService } from '@features/client/report-cards/services/reportCardServices';
+import { reportCardService } from '@features/client/report-cards/services/service';
 import { httpClient } from '@shared/services/httpClient';
 
 describe('report card services', () => {

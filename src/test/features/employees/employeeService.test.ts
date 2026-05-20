@@ -1,6 +1,6 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { httpClient } from '@shared/services/httpClient';
-import { employeeService } from '@features/client/employees/services/employeeServices';
+import { employeeService } from '@features/client/employees/services/service';
 
 describe('employeeService', () => {
   afterEach(() => {

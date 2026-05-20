@@ -6,10 +6,10 @@ import { ListFilters } from '@shared/components/data-display/data/ListFilters';
 import { AppStack } from '@shared/components/layout/AppStack';
 import { PageHeader } from '@shared/components/layout/PageHeader';
 import { layoutSpacing } from '@theme/spacing';
-import { useReportCardQueriesPageViewModel } from '@features/client/report-cards/hooks/useReportCardQueriesPageViewModel';
+import { useReportCardQueriesPage } from '@features/client/report-cards/hooks/useReportCardQueriesPage';
 
 const ReportCardQueriesPage = () => {
-  const model = useReportCardQueriesPageViewModel();
+  const model = useReportCardQueriesPage();
 
   return (
     <AppStack spacing={2}>

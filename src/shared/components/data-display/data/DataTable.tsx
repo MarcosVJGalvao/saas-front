@@ -135,8 +135,8 @@ export const DataTable = <TData,>({
         count={meta.total}
         page={currentPage}
         rowsPerPage={meta.limit}
-        labelRowsPerPage={TABLE_ROWS_PER_PAGE_LABEL}
-        labelDisplayedRows={TABLE_DISPLAYED_ROWS_LABEL}
+        labelRowsPerPage={i18n.pagination.rowsPerPage}
+        labelDisplayedRows={i18n.pagination.rangeLabel}
         onPageChange={(_, page) => onPageChange(page + 1)}
         onRowsPerPageChange={(event) => onRowsPerPageChange(Number(event.target.value))}
         rowsPerPageOptions={ROWS_PER_PAGE_OPTIONS}

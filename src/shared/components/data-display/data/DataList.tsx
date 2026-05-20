@@ -18,7 +18,6 @@ import { sharedComponentsI18n } from '@shared/i18n/pt-BR/components';
 import {
   DATA_LIST_DEFAULTS,
   DATA_LIST_DIMENSIONS,
-  DATA_LIST_PAGINATION_LABELS,
 } from '@shared/components/data-display/data/dataList.constants';
 import type {
   DataListColumn,
@@ -130,7 +129,9 @@ const renderMobileHeader = (title: string, actionsLabel: string) => (
 
 const getMobileHeaderLabels = <RowData,>(visibleColumns: DataListColumn<RowData>[]) => ({
   title: visibleColumns[0]?.label ?? sharedComponentsI18n.dataList.mobileItemsFallback,
-  actions: visibleColumns.find((column) => column.id === 'actions')?.label ?? sharedComponentsI18n.dataList.mobileActionsFallback,
+  actions:
+    visibleColumns.find((column) => column.id === 'actions')?.label ??
+    sharedComponentsI18n.dataList.mobileActionsFallback,
 });
 
 const renderFallbackMobileCards = <RowData,>(
@@ -255,7 +256,9 @@ const DataListPagination = ({
         sx={{ alignItems: isMobile ? 'flex-start' : 'center', justifyContent: 'flex-end' }}
       >
         <Stack direction="row" spacing={spacingScale.xs} sx={{ alignItems: 'center' }}>
-          <Typography variant="body2">{sharedComponentsI18n.dataList.pagination.rowsPerPage}</Typography>
+          <Typography variant="body2">
+            {sharedComponentsI18n.dataList.pagination.rowsPerPage}
+          </Typography>
           <Select
             size="small"
             value={pagination.rowsPerPage}

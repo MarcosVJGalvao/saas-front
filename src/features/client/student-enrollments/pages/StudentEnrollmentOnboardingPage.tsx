@@ -7,10 +7,10 @@ import { StudentEnrollmentSteps } from '@features/client/student-enrollments/com
 import { StudentEnrollmentSummary } from '@features/client/student-enrollments/components/onboarding/StudentEnrollmentSummary';
 import { layoutSpacing } from '@theme/spacing';
 import { shadowTokens } from '@theme/tokens/shadows';
-import { useStudentEnrollmentOnboardingPageViewModel } from '@features/client/student-enrollments/hooks/useStudentEnrollmentOnboardingPageViewModel';
+import { useStudentEnrollmentOnboardingPage } from '@features/client/student-enrollments/hooks/useStudentEnrollmentOnboardingPage';
 
 const StudentEnrollmentOnboardingPage = () => {
-  const model = useStudentEnrollmentOnboardingPageViewModel();
+  const studentEnrollmentOnboardingPage = useStudentEnrollmentOnboardingPage();
 
   return (
     <AppStack spacing={2}>
@@ -18,7 +18,9 @@ const StudentEnrollmentOnboardingPage = () => {
         title="Nova Matrícula"
         subtitle="Crie a matrícula, aluno e responsáveis em um fluxo guiado."
       />
-      {model.errorMessage ? <AppAlert severity="error">{model.errorMessage}</AppAlert> : null}
+      {studentEnrollmentOnboardingPage.errorMessage ? (
+        <AppAlert severity="error">{studentEnrollmentOnboardingPage.errorMessage}</AppAlert>
+      ) : null}
       <AppStack
         direction={{ xs: 'column', md: 'row' }}
         spacing={layoutSpacing.sectionGap}
@@ -35,24 +37,35 @@ const StudentEnrollmentOnboardingPage = () => {
           }}
         >
           <StepperWizard
-            activeStep={model.activeStep}
-            steps={model.steps}
-            onBack={model.onBack}
-            onCancel={model.onCancel}
-            onNext={model.handleNext}
-            isLastStep={model.isLastStep}
-            nextLoading={model.loading && model.isLastStep}
-            nextLabel={model.isLastStep ? 'Finalizar matrícula' : 'Próximo'}
-            nextDisabled={model.nextDisabled}
+            activeStep={studentEnrollmentOnboardingPage.activeStep}
+            steps={studentEnrollmentOnboardingPage.steps}
+            onBack={() => {
+              studentEnrollmentOnboardingPage.onBack();
+            }}
+            onCancel={() => {
+              void studentEnrollmentOnboardingPage.onCancel();
+            }}
+            onNext={() => void studentEnrollmentOnboardingPage.handleNext()}
+            isLastStep={studentEnrollmentOnboardingPage.isLastStep}
+            nextLoading={
+              studentEnrollmentOnboardingPage.loading && studentEnrollmentOnboardingPage.isLastStep
+            }
+            nextLabel={
+              studentEnrollmentOnboardingPage.isLastStep ? 'Finalizar matrícula' : 'Próximo'
+            }
+            nextDisabled={studentEnrollmentOnboardingPage.nextDisabled}
           >
-            <StudentEnrollmentSteps activeStep={model.activeStep} {...model.form} />
+            <StudentEnrollmentSteps
+              activeStep={studentEnrollmentOnboardingPage.activeStep}
+              {...studentEnrollmentOnboardingPage.form}
+            />
           </StepperWizard>
         </AppPaper>
         <StudentEnrollmentSummary
-          summary={model.committedSummary}
-          activeStep={model.activeStep}
-          maxCompletedStep={model.maxCompletedStep}
-          onStepSelect={model.onStepSelect}
+          summary={studentEnrollmentOnboardingPage.committedSummary}
+          activeStep={studentEnrollmentOnboardingPage.activeStep}
+          maxCompletedStep={studentEnrollmentOnboardingPage.maxCompletedStep}
+          onStepSelect={studentEnrollmentOnboardingPage.onStepSelect}
         />
       </AppStack>
     </AppStack>

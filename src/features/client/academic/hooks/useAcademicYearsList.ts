@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from 'react';
-import { academicYearService } from '@features/client/academic/services/academicServices';
+import { academicYearService } from '@features/client/academic/services/service';
 import type {
   AcademicYear,
   AcademicYearQueryParams,

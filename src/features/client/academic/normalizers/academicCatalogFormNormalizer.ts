@@ -1,11 +1,14 @@
-import type { AcademicCatalogFormValues } from '@features/client/academic/schemas/academicCatalogFormSchema';
+import type { AcademicCatalogCreateFormValues } from '@features/client/academic/schemas/academicCatalogCreateForm.schema';
+import type { AcademicCatalogEditFormValues } from '@features/client/academic/schemas/academicCatalogEditForm.schema';
 
 const optionalText = (value: string | undefined): string | undefined => {
   const trimmedValue = value?.trim() ?? '';
   return trimmedValue.length > 0 ? trimmedValue : undefined;
 };
 
-export const buildAcademicCatalogInitialValues = (): AcademicCatalogFormValues => ({
+type AcademicCatalogFormValues = AcademicCatalogCreateFormValues | AcademicCatalogEditFormValues;
+
+export const buildAcademicCatalogInitialValues = (): AcademicCatalogCreateFormValues => ({
   name: '',
   code: '',
   status: 'active',
@@ -13,13 +16,13 @@ export const buildAcademicCatalogInitialValues = (): AcademicCatalogFormValues =
   educationLevelId: '',
 });
 
-export const normalizeAcademicCatalogInitialValues = (value: {
+export const toAcademicCatalogEditFormValues = (value: {
   name?: string | undefined;
   code?: string | undefined;
   status?: 'active' | 'inactive' | undefined;
   description?: string | undefined;
   educationLevel?: { id: string } | null | undefined;
-}): AcademicCatalogFormValues => ({
+}): AcademicCatalogEditFormValues => ({
   name: value.name ?? '',
   code: value.code ?? '',
   status: value.status ?? 'active',
@@ -27,12 +30,18 @@ export const normalizeAcademicCatalogInitialValues = (value: {
   educationLevelId: value.educationLevel?.id ?? '',
 });
 
-export const normalizeAcademicCatalogPayload = (
-  values: AcademicCatalogFormValues,
-): Record<string, unknown> => ({
+const toAcademicCatalogPayload = (values: AcademicCatalogFormValues): Record<string, unknown> => ({
   name: values.name.trim(),
   code: optionalText(values.code),
   status: values.status,
   description: optionalText(values.description),
   educationLevelId: optionalText(values.educationLevelId),
 });
+
+export const toAcademicCatalogCreatePayload = (
+  values: AcademicCatalogCreateFormValues,
+): Record<string, unknown> => toAcademicCatalogPayload(values);
+
+export const toAcademicCatalogEditPayload = (
+  values: AcademicCatalogEditFormValues,
+): Record<string, unknown> => toAcademicCatalogPayload(values);

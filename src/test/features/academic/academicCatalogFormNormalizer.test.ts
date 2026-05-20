@@ -1,9 +1,9 @@
 import { describe, expect, it } from 'vitest';
 import {
   buildAcademicCatalogInitialValues,
-  normalizeAcademicCatalogPayload,
+  toAcademicCatalogCreatePayload,
 } from '@features/client/academic/normalizers/academicCatalogFormNormalizer';
-import { academicCatalogFormSchema } from '@features/client/academic/schemas/academicCatalogFormSchema';
+import { academicCatalogCreateFormSchema } from '@features/client/academic/schemas/academicCatalogCreateForm.schema';
 
 describe('academic catalog form normalizer', () => {
   it('cria estado inicial padrão', () => {
@@ -17,7 +17,7 @@ describe('academic catalog form normalizer', () => {
   });
 
   it('normaliza payload removendo textos vazios', () => {
-    const values = academicCatalogFormSchema.parse({
+    const values = academicCatalogCreateFormSchema.parse({
       name: ' Ensino Fundamental ',
       code: ' EF ',
       status: 'active',
@@ -25,7 +25,7 @@ describe('academic catalog form normalizer', () => {
       educationLevelId: ' level-1 ',
     });
 
-    expect(normalizeAcademicCatalogPayload(values)).toEqual({
+    expect(toAcademicCatalogCreatePayload(values)).toEqual({
       name: 'Ensino Fundamental',
       code: 'EF',
       status: 'active',

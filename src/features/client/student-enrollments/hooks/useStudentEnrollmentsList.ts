@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from 'react';
-import { studentEnrollmentService } from '@features/client/student-enrollments/services/studentEnrollmentService';
+import { studentEnrollmentService } from '@features/client/student-enrollments/services/service';
 import type {
   StudentEnrollment,
   StudentEnrollmentQueryParams,
@@ -17,8 +17,11 @@ const initialMeta: PaginationMeta = {
 
 export const useStudentEnrollmentsList = () => {
   const [rows, setRows] = useState<StudentEnrollment[]>([]);
-  const [meta, setMeta] = useState<PaginationMeta>(initialMeta);
-  const [query, setQuery] = useState<StudentEnrollmentQueryParams>({ page: 1, limit: 10 });
+  const [pagination, setPagination] = useState<PaginationMeta>(initialMeta);
+  const [queryParams, setQueryParams] = useState<StudentEnrollmentQueryParams>({
+    page: 1,
+    limit: 10,
+  });
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | undefined>(undefined);
 
@@ -26,15 +29,15 @@ export const useStudentEnrollmentsList = () => {
     setLoading(true);
     setErrorMessage(undefined);
     try {
-      const response = await studentEnrollmentService.list(query);
+      const response = await studentEnrollmentService.list(queryParams);
       setRows(response.data);
-      setMeta(response.meta);
+      setPagination(response.meta);
     } catch {
       setErrorMessage('Erro ao carregar matrículas.');
     } finally {
       setLoading(false);
     }
-  }, [query]);
+  }, [queryParams]);
 
   useEffect(() => {
     const timeoutId = window.setTimeout(() => {
@@ -44,17 +47,20 @@ export const useStudentEnrollmentsList = () => {
     return () => window.clearTimeout(timeoutId);
   }, [load]);
 
-  const updateQuery = useCallback((patch: Partial<StudentEnrollmentQueryParams>) => {
-    setQuery((currentQuery) => ({ ...currentQuery, ...patch }));
+  const updateQueryParams = useCallback((patch: Partial<StudentEnrollmentQueryParams>) => {
+    setQueryParams((currentQueryParams) => ({
+      ...currentQueryParams,
+      ...patch,
+    }));
   }, []);
 
   return {
     rows,
-    meta,
-    query,
+    pagination,
+    queryParams,
     loading,
     errorMessage,
-    updateQuery,
+    updateQueryParams,
     reload: load,
   };
 };

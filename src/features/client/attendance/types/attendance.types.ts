@@ -69,7 +69,19 @@ export type AttendanceQueryParams = ClientBaseQueryParams & {
   status?: AttendanceStatus | undefined;
 };
 
-export type MarkAttendancePayload = {
+export type AttendanceScheduleCreatePayload = {
+  academicYearId: string;
+  schoolClassId: string;
+  subjectId: string;
+  teacherSubjectId: string;
+  weekday: string;
+  startTime: string;
+  endTime: string;
+  startDate: string;
+  endDate: string;
+};
+
+export type AttendanceRecordCreatePayload = {
   scheduleId: string;
   attendanceDate: string;
   items: Array<{

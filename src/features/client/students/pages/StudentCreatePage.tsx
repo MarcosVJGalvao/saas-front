@@ -1,17 +1,158 @@
-import { StudentBasicFormPage } from '@features/client/students/components/StudentBasicFormPage';
-import { studentsService } from '@features/client/students/services/studentServices';
+import { Controller } from 'react-hook-form';
+import { AppAlert } from '@shared/components/feedback/AppAlert';
+import { AppForm } from '@shared/components/form/AppForm';
+import { FormActions } from '@shared/components/form/FormActions';
+import { AppSelect } from '@shared/components/inputs/AppSelect';
+import { AppTextField } from '@shared/components/inputs/AppTextField';
+import { AppStack } from '@shared/components/layout/AppStack';
+import { AppPaper } from '@shared/components/data-display/AppPaper';
+import { PageHeader } from '@shared/components/layout/PageHeader';
+import { useStudentCreatePage } from '@features/client/students/hooks/useStudentCreatePage';
 
-const StudentCreatePage = () => (
-  <StudentBasicFormPage
-    mode="student"
-    title="Novo aluno"
-    editTitle="Editar aluno"
-    subtitle="Cadastre dados principais do aluno e status acadêmico."
-    backPath="/client/students"
-    service={studentsService}
-    loadErrorMessage="Não foi possível carregar o aluno."
-    submitErrorMessage="Não foi possível salvar o aluno."
-  />
-);
+const StudentCreatePage = () => {
+  const studentCreatePage = useStudentCreatePage();
+
+  return (
+    <AppStack spacing={2}>
+      <PageHeader
+        title="Novo aluno"
+        subtitle="Cadastre dados principais do aluno e status acadêmico."
+        actionLabel="Voltar"
+        onAction={studentCreatePage.onBack}
+      />
+      {studentCreatePage.errorMessage ? (
+        <AppAlert severity="error">{studentCreatePage.errorMessage}</AppAlert>
+      ) : null}
+      <AppPaper sx={{ p: 3 }}>
+        <AppForm
+          form={studentCreatePage.form}
+          onSubmit={studentCreatePage.onSubmit}
+          useResponsiveGrid
+          columnsByDevice={{ mobile: 1, tablet: 2, desktop: 2 }}
+        >
+          <Controller
+            name="fullName"
+            control={studentCreatePage.form.control}
+            render={({ field, fieldState }) => (
+              <AppTextField
+                {...field}
+                label="Nome completo"
+                error={fieldState.invalid}
+                helperText={fieldState.error?.message}
+              />
+            )}
+          />
+          <Controller
+            name="documentNumber"
+            control={studentCreatePage.form.control}
+            render={({ field, fieldState }) => (
+              <AppTextField
+                {...field}
+                label="Documento"
+                error={fieldState.invalid}
+                helperText={fieldState.error?.message}
+              />
+            )}
+          />
+          <Controller
+            name="documentType"
+            control={studentCreatePage.form.control}
+            render={({ field, fieldState }) => (
+              <AppSelect
+                {...field}
+                label="Tipo de documento"
+                options={[
+                  { value: 'CPF', label: 'CPF' },
+                  { value: 'CNPJ', label: 'CNPJ' },
+                  { value: 'RG', label: 'RG' },
+                  { value: 'PASSPORT', label: 'Passaporte' },
+                  { value: 'OTHER', label: 'Outro' },
+                ]}
+                error={fieldState.invalid}
+                helperText={fieldState.error?.message}
+              />
+            )}
+          />
+          <Controller
+            name="dateOfBirth"
+            control={studentCreatePage.form.control}
+            render={({ field, fieldState }) => (
+              <AppTextField
+                {...field}
+                type="date"
+                label="Nascimento"
+                error={fieldState.invalid}
+                helperText={fieldState.error?.message}
+              />
+            )}
+          />
+          <Controller
+            name="gender"
+            control={studentCreatePage.form.control}
+            render={({ field, fieldState }) => (
+              <AppSelect
+                {...field}
+                label="Gênero"
+                options={[
+                  { value: 'male', label: 'Masculino' },
+                  { value: 'female', label: 'Feminino' },
+                  { value: 'other', label: 'Outro' },
+                  { value: 'prefer_not_to_say', label: 'Prefiro não informar' },
+                ]}
+                error={fieldState.invalid}
+                helperText={fieldState.error?.message}
+              />
+            )}
+          />
+          <Controller
+            name="registrationCode"
+            control={studentCreatePage.form.control}
+            render={({ field, fieldState }) => (
+              <AppTextField
+                {...field}
+                label="Código do aluno"
+                error={fieldState.invalid}
+                helperText={fieldState.error?.message}
+              />
+            )}
+          />
+          <Controller
+            name="status"
+            control={studentCreatePage.form.control}
+            render={({ field, fieldState }) => (
+              <AppSelect
+                {...field}
+                label="Status"
+                options={[
+                  { value: 'active', label: 'Ativo' },
+                  { value: 'inactive', label: 'Inativo' },
+                  { value: 'cancelled', label: 'Cancelado' },
+                ]}
+                error={fieldState.invalid}
+                helperText={fieldState.error?.message}
+              />
+            )}
+          />
+          <FormActions
+            secondaryAction={{
+              type: 'back',
+              label: 'Cancelar',
+              onClick: studentCreatePage.onBack,
+              disabled: studentCreatePage.submitting,
+            }}
+            primaryAction={{
+              type: 'confirm',
+              label: 'Cadastrar',
+              onClick: () => {
+                void studentCreatePage.form.handleSubmit(studentCreatePage.onSubmit)();
+              },
+              loading: studentCreatePage.submitting,
+            }}
+          />
+        </AppForm>
+      </AppPaper>
+    </AppStack>
+  );
+};
 
 export default StudentCreatePage;

@@ -1,36 +1,43 @@
-import { useCallback, useMemo, useState } from 'react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import type { CreateClientRequest } from '@features/platform/clients/types/clients';
-import { useClientsMutations } from '@features/platform/clients/hooks/useClientsMutations';
-import { normalizeClientPayload } from '@features/platform/clients/normalizers/clientPayloadNormalizer';
-
-const initialValue: CreateClientRequest = {
-  legalName: '',
-  tradeName: '',
-  documentNumber: '',
-  documentType: 'CNPJ',
-  email: '',
-  phone: '',
-  status: 'active',
-};
+import { useAppForm } from '@shared/hooks/useAppForm';
+import {
+  createClientCreateInitialValues,
+  toClientCreatePayload,
+} from '@features/platform/clients/normalizers/clientForm.normalizer';
+import { clientCreateFormSchema } from '@features/platform/clients/schemas/clientCreateForm.schema';
+import type { ClientCreateFormValues } from '@features/platform/clients/schemas/clientCreateForm.schema';
+import { clientsService } from '@features/platform/clients/services/service';
 
 export const useClientCreatePage = () => {
   const navigate = useNavigate();
-  const mutations = useClientsMutations();
-  const [value] = useState<CreateClientRequest>(initialValue);
+  const form = useAppForm<ClientCreateFormValues>(
+    clientCreateFormSchema,
+    createClientCreateInitialValues(),
+  );
+  const [submitting, setSubmitting] = useState(false);
+  const [errorMessage, setErrorMessage] = useState<string | undefined>();
 
-  const handleSubmit = useCallback(
-    async (payload: CreateClientRequest): Promise<void> => {
-      const created = await mutations.create(normalizeClientPayload(payload));
-      if (created) {
-        void navigate(`/platform/clients/${created.id}`);
-      }
+  const handleSubmit = async (formValues: ClientCreateFormValues): Promise<void> => {
+    setSubmitting(true);
+    setErrorMessage(undefined);
+    try {
+      const createdClient = await clientsService.create(toClientCreatePayload(formValues));
+      void navigate(`/platform/clients/${createdClient.id}`);
+    } catch {
+      setErrorMessage('Não foi possível cadastrar o cliente.');
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
+  return {
+    form,
+    submitting,
+    errorMessage,
+    onSubmit: handleSubmit,
+    onBack: () => {
+      void navigate('/platform/clients');
     },
-    [mutations, navigate],
-  );
-
-  return useMemo(
-    () => ({ value, loading: mutations.loading, handleSubmit }),
-    [handleSubmit, mutations.loading, value],
-  );
+  };
 };

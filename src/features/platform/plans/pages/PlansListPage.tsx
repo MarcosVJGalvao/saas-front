@@ -1,69 +1,84 @@
-import AddIcon from '@mui/icons-material/Add';
+import { AppAlert } from '@shared/components/feedback/AppAlert';
+import { ConfirmDialog } from '@shared/components/feedback/ConfirmDialog';
 import { ListFilters } from '@shared/components/data-display/data/ListFilters';
 import { QueryDataTable } from '@shared/components/data-display/data/QueryDataTable';
-import { ConfirmDialog } from '@shared/components/feedback/ConfirmDialog';
+import { AppStack } from '@shared/components/layout/AppStack';
 import { PageHeader } from '@shared/components/layout/PageHeader';
-import { usePlansListPageViewModel } from '@features/platform/plans/hooks/usePlansListPageViewModel';
+import { usePlansListPage } from '@features/platform/plans/hooks/usePlansListPage';
 
 const PlansListPage = () => {
-  const model = usePlansListPageViewModel();
+  const plansPage = usePlansListPage();
 
   return (
-    <>
+    <AppStack spacing={2}>
       <PageHeader
-        title="Listagem de Planos"
-        subtitle="Gerencie planos, preços e ciclos de cobrança"
-        actionLabel="Novo Plano"
-        actionIcon={<AddIcon fontSize="small" />}
-        onAction={() => void model.view.navigate('/platform/plans/new')}
+        title="Planos"
+        subtitle="Gerencie planos, preços, trials e ciclos de cobrança da plataforma."
+        actionLabel="Novo plano"
+        onAction={plansPage.onCreate}
       />
-
+      {plansPage.actionErrorMessage ? (
+        <AppAlert severity="error">{plansPage.actionErrorMessage}</AppAlert>
+      ) : null}
       <ListFilters
         fields={[
           {
             type: 'text',
-            name: 'query',
+            name: 'search',
             label: 'Buscar',
             placeholder: 'Buscar plano...',
             mobileOrder: 1,
           },
         ]}
-        values={{ query: model.query }}
-        onChange={(name, value) => {
-          if (name === 'query') model.onQueryChange(String(value));
+        values={{ search: plansPage.plansList.queryParams.search ?? '' }}
+        onChange={(filterKey, filterValue) => {
+          if (filterKey === 'search') {
+            plansPage.plansList.updateQueryParams({
+              search: typeof filterValue === 'string' ? filterValue : undefined,
+            });
+          }
         }}
         onApply={() => undefined}
-        onClear={() => model.onQueryChange('')}
-        loading={model.view.list.loading}
+        onClear={() => {
+          plansPage.plansList.updateQueryParams({ search: undefined });
+        }}
+        loading={plansPage.plansList.loading || plansPage.deleteModal.loading}
       />
-
       <QueryDataTable
-        rows={model.view.list.rows}
-        columns={model.columns}
-        mobileConfig={model.mobileConfig}
-        meta={model.view.list.meta}
-        query={model.query}
-        onQueryChange={model.onQueryChange}
-        loading={model.view.list.loading}
-        errorMessage={model.view.list.errorMessage}
-        onPageChange={model.onPageChange}
-        onRowsPerPageChange={model.onRowsPerPageChange}
+        rows={plansPage.plansList.rows}
+        columns={plansPage.tableColumns}
+        mobileConfig={plansPage.mobileConfig}
+        meta={plansPage.plansList.pagination}
+        query={plansPage.plansList.queryParams.search ?? ''}
+        onQueryChange={(search) => {
+          plansPage.plansList.updateQueryParams({ search });
+        }}
+        loading={plansPage.plansList.loading}
+        errorMessage={plansPage.plansList.errorMessage}
+        onRetry={() => {
+          void plansPage.plansList.reload();
+        }}
+        onPageChange={(page) => {
+          plansPage.plansList.updateQueryParams({ page });
+        }}
+        onRowsPerPageChange={(limit) => {
+          plansPage.plansList.updateQueryParams({ limit, page: 1 });
+        }}
         hideToolbar
         emptyTitle="Nenhum plano encontrado"
-        emptyDescription="Ajuste os filtros ou cadastre um novo plano."
+        emptyDescription="Cadastre planos para disponibilizar novas assinaturas."
       />
-
       <ConfirmDialog
-        open={Boolean(model.view.deleteId)}
-        title="Remover plano"
-        description="Confirma a remoção?"
-        confirmLabel="Remover"
-        onCancel={() => model.view.setDeleteId(undefined)}
+        open={Boolean(plansPage.deleteModal.planPendingDelete)}
+        title="Excluir plano"
+        description={`Deseja excluir o plano "${plansPage.deleteModal.planPendingDelete?.name ?? ''}"?`}
+        confirmLabel="Excluir"
+        onCancel={plansPage.deleteModal.close}
         onConfirm={() => {
-          void model.view.confirmDelete();
+          void plansPage.deleteModal.confirm();
         }}
       />
-    </>
+    </AppStack>
   );
 };
 

@@ -1,11 +1,11 @@
 import { describe, expect, it } from 'vitest';
 
-import { normalizeSubscriptionPayload } from '@features/platform/subscriptions/normalizers/subscriptionPayloadNormalizer';
+import { toSubscriptionCreatePayload } from '@features/platform/subscriptions/normalizers/subscriptionForm.normalizer';
 
-describe('subscriptionPayloadNormalizer', () => {
+describe('subscriptionForm.normalizer', () => {
   it('normaliza payload de assinatura', () => {
     expect(
-      normalizeSubscriptionPayload({
+      toSubscriptionCreatePayload({
         tenantId: ' tenant-1 ',
         planId: ' plan-1 ',
         status: 'active',

@@ -1,23 +1,23 @@
 import { describe, expect, it } from 'vitest';
 import {
-  buildLegalGuardianBasicInitialValues,
-  buildStudentBasicInitialValues,
-  normalizeLegalGuardianBasicPayload,
-  normalizeStudentBasicPayload,
-} from '@features/client/students/normalizers/studentBasicFormNormalizer';
+  createLegalGuardianInitialValues,
+  toLegalGuardianCreatePayload,
+} from '@features/client/students/normalizers/legalGuardianForm.normalizer';
 import {
-  legalGuardianBasicFormSchema,
-  studentBasicFormSchema,
-} from '@features/client/students/schemas/studentBasicFormSchema';
+  createStudentInitialValues,
+  toStudentCreatePayload,
+} from '@features/client/students/normalizers/studentForm.normalizer';
+import { legalGuardianCreateFormSchema } from '@features/client/students/schemas/legalGuardianCreateForm.schema';
+import { studentCreateFormSchema } from '@features/client/students/schemas/studentCreateForm.schema';
 
 describe('student basic form normalizer', () => {
   it('cria estados iniciais padrão', () => {
-    expect(buildStudentBasicInitialValues().status).toBe('active');
-    expect(buildLegalGuardianBasicInitialValues().relationshipType).toBe('legal_guardian');
+    expect(createStudentInitialValues().status).toBe('active');
+    expect(createLegalGuardianInitialValues().relationshipType).toBe('legal_guardian');
   });
 
   it('normaliza aluno com documento limpo', () => {
-    const values = studentBasicFormSchema.parse({
+    const values = studentCreateFormSchema.parse({
       fullName: ' Ana Lima ',
       documentNumber: '123.456.789-00',
       documentType: 'CPF',
@@ -27,7 +27,7 @@ describe('student basic form normalizer', () => {
       status: 'active',
     });
 
-    expect(normalizeStudentBasicPayload(values)).toEqual({
+    expect(toStudentCreatePayload(values)).toEqual({
       registrationCode: 'A-10',
       status: 'active',
       person: {
@@ -41,14 +41,14 @@ describe('student basic form normalizer', () => {
   });
 
   it('normaliza responsável com vínculo', () => {
-    const values = legalGuardianBasicFormSchema.parse({
+    const values = legalGuardianCreateFormSchema.parse({
       fullName: ' Maria Lima ',
       documentNumber: '123.456.789-00',
       documentType: 'CPF',
       relationshipType: 'mother',
     });
 
-    expect(normalizeLegalGuardianBasicPayload(values)).toEqual({
+    expect(toLegalGuardianCreatePayload(values)).toEqual({
       relationshipType: 'mother',
       person: {
         fullName: 'Maria Lima',

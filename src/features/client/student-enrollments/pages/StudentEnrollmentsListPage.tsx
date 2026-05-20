@@ -6,28 +6,44 @@ import { ConfirmDialog } from '@shared/components/feedback/ConfirmDialog';
 import { ListFilters } from '@shared/components/data-display/data/ListFilters';
 import { PageHeader } from '@shared/components/layout/PageHeader';
 import { QueryDataTable } from '@shared/components/data-display/data/QueryDataTable';
-import { useStudentEnrollmentsListPageViewModel } from '@features/client/student-enrollments/hooks/useStudentEnrollmentsListPageViewModel';
+import { AppButton } from '@shared/components/inputs/AppButton';
+import { useStudentEnrollmentsListPage } from '@features/client/student-enrollments/hooks/useStudentEnrollmentsListPage';
+import { useNavigate } from 'react-router-dom';
+
+const isStudentEnrollmentFilterKey = (
+  value: string,
+): value is 'search' | 'status' | 'startDate' | 'endDate' =>
+  value === 'search' || value === 'status' || value === 'startDate' || value === 'endDate';
 
 const StudentEnrollmentsListPage = () => {
-  const model = useStudentEnrollmentsListPageViewModel();
+  const navigate = useNavigate();
+  const studentEnrollmentsPage = useStudentEnrollmentsListPage();
 
   return (
     <AppStack spacing={2}>
       <PageHeader
         title="Matrículas"
         subtitle="Acompanhe e gerencie matrículas estudantis."
-        actionLabel="Nova matrícula"
-        actionIcon={<AddIcon />}
-        onAction={model.onCreate}
+        actions={
+          <AppButton
+            variant="contained"
+            startIcon={<AddIcon />}
+            onClick={() => {
+              void navigate('/client/student-enrollments/new');
+            }}
+          >
+            Nova matrícula
+          </AppButton>
+        }
       />
-      {model.actionErrorMessage ? (
-        <AppAlert severity="error">{model.actionErrorMessage}</AppAlert>
+      {studentEnrollmentsPage.actionErrorMessage ? (
+        <AppAlert severity="error">{studentEnrollmentsPage.actionErrorMessage}</AppAlert>
       ) : null}
       <ListFilters
         fields={[
           {
             type: 'text',
-            name: 'query',
+            name: 'search',
             label: 'Buscar',
             placeholder: 'Aluno, documento ou código',
             mobileOrder: 1,
@@ -54,26 +70,39 @@ const StudentEnrollmentsListPage = () => {
             mobileOrder: 3,
           },
         ]}
-        values={model.filterValues}
-        onChange={model.onFilterChange}
-        onApply={model.applyFilters}
-        onClear={model.clearFilters}
-        loading={model.list.loading || model.actionLoading}
+        values={studentEnrollmentsPage.filterValues}
+        onChange={(filterKey, filterValue) => {
+          if (typeof filterValue === 'string' && isStudentEnrollmentFilterKey(filterKey)) {
+            studentEnrollmentsPage.onFilterChange(filterKey, filterValue);
+          }
+        }}
+        onApply={studentEnrollmentsPage.applyFilters}
+        onClear={studentEnrollmentsPage.clearFilters}
+        loading={
+          studentEnrollmentsPage.studentEnrollmentsList.loading ||
+          studentEnrollmentsPage.deleteModal.isDeleting
+        }
       />
       <QueryDataTable
-        rows={model.list.rows}
-        columns={model.columns}
-        mobileConfig={model.mobileConfig}
-        meta={model.list.meta}
-        loading={model.list.loading}
-        errorMessage={model.list.errorMessage}
+        rows={studentEnrollmentsPage.studentEnrollmentsList.rows}
+        columns={studentEnrollmentsPage.tableColumns}
+        mobileConfig={studentEnrollmentsPage.mobileConfig}
+        meta={studentEnrollmentsPage.studentEnrollmentsList.pagination}
+        loading={studentEnrollmentsPage.studentEnrollmentsList.loading}
+        errorMessage={studentEnrollmentsPage.studentEnrollmentsList.errorMessage}
         onRetry={() => {
-          void model.list.reload();
+          void studentEnrollmentsPage.studentEnrollmentsList.reload();
         }}
-        query={model.query}
-        onQueryChange={model.onQueryChange}
-        onPageChange={model.onPageChange}
-        onRowsPerPageChange={model.onLimitChange}
+        query={studentEnrollmentsPage.studentEnrollmentsList.queryParams.search ?? ''}
+        onQueryChange={(search) =>
+          studentEnrollmentsPage.studentEnrollmentsList.updateQueryParams({ search, page: 1 })
+        }
+        onPageChange={(page) =>
+          studentEnrollmentsPage.studentEnrollmentsList.updateQueryParams({ page })
+        }
+        onRowsPerPageChange={(limit) =>
+          studentEnrollmentsPage.studentEnrollmentsList.updateQueryParams({ limit, page: 1 })
+        }
         emptyTitle="Nenhuma matrícula encontrada"
         emptyDescription="Crie uma matrícula para começar."
         toolbarContent={
@@ -84,13 +113,13 @@ const StudentEnrollmentsListPage = () => {
         hideToolbar
       />
       <ConfirmDialog
-        open={model.deleteDialogOpen}
-        title={model.deleteDialogTitle}
-        description={model.deleteDialogDescription}
-        confirmLabel={model.actionLoading ? 'Removendo...' : 'Remover'}
-        onCancel={model.closeDeleteDialog}
+        open={Boolean(studentEnrollmentsPage.deleteModal.enrollmentPendingDelete)}
+        title="Remover matrícula"
+        description={`Confirma a remoção da matrícula ${studentEnrollmentsPage.deleteModal.enrollmentPendingDelete?.enrollmentCode ?? 'selecionada'}?`}
+        confirmLabel={studentEnrollmentsPage.deleteModal.isDeleting ? 'Removendo...' : 'Remover'}
+        onCancel={studentEnrollmentsPage.deleteModal.close}
         onConfirm={() => {
-          void model.confirmDelete();
+          void studentEnrollmentsPage.deleteModal.confirm();
         }}
       />
     </AppStack>

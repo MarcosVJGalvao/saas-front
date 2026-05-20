@@ -5,12 +5,12 @@ import { QueryDataTable } from '@shared/components/data-display/data/QueryDataTa
 import { AppStack } from '@shared/components/layout/AppStack';
 import { PageHeader } from '@shared/components/layout/PageHeader';
 import { useClientPermission } from '@features/client/shared/hooks/useClientPermission';
-import { useStudentsListPageViewModel } from '@features/client/students/hooks/useStudentsListPageViewModel';
+import { useStudentsListPage } from '@features/client/students/hooks/useStudentsListPage';
 
 const StudentsPage = () => {
   const navigate = useNavigate();
   const permissions = useClientPermission();
-  const model = useStudentsListPageViewModel();
+  const studentListPage = useStudentsListPage();
 
   return (
     <AppStack spacing={2}>
@@ -44,26 +44,26 @@ const StudentsPage = () => {
             mobileOrder: 4,
           },
         ]}
-        values={model.filterValues}
-        onChange={model.onFilterChange}
-        onApply={model.applyFilters}
-        onClear={model.clearFilters}
-        loading={model.list.loading}
+        values={studentListPage.filterValues}
+        onChange={studentListPage.onFilterChange}
+        onApply={studentListPage.applyFilters}
+        onClear={studentListPage.clearFilters}
+        loading={studentListPage.studentList.loading}
       />
       <QueryDataTable
-        rows={model.list.rows}
-        columns={model.columns}
-        mobileConfig={model.mobileConfig}
-        meta={model.list.meta}
-        loading={model.list.loading}
-        errorMessage={model.list.errorMessage}
+        rows={studentListPage.studentList.rows}
+        columns={studentListPage.columns}
+        mobileConfig={studentListPage.mobileConfig}
+        meta={studentListPage.studentList.meta}
+        loading={studentListPage.studentList.loading}
+        errorMessage={studentListPage.studentList.errorMessage}
         onRetry={() => {
-          void model.list.reload();
+          void studentListPage.studentList.reload();
         }}
-        query={model.query}
-        onQueryChange={model.onQueryChange}
-        onPageChange={model.onPageChange}
-        onRowsPerPageChange={model.onLimitChange}
+        query={studentListPage.studentList.query.search ?? ''}
+        onQueryChange={studentListPage.onQueryChange}
+        onPageChange={studentListPage.onPageChange}
+        onRowsPerPageChange={studentListPage.onLimitChange}
         emptyTitle="Nenhum aluno encontrado"
         emptyDescription="Os alunos cadastrados aparecerão aqui."
         toolbarContent={

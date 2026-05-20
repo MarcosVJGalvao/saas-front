@@ -6,11 +6,11 @@ import { FormActions } from '@shared/components/form/FormActions';
 import { FormTextField } from '@shared/components/form/FormTextField';
 import { AppStack } from '@shared/components/layout/AppStack';
 import { PageHeader } from '@shared/components/layout/PageHeader';
-import { useAttendanceRecordFormPageViewModel } from '@features/client/attendance/hooks/useAttendanceRecordFormPageViewModel';
-import type { AttendanceRecordFormValues } from '@features/client/attendance/schemas/attendanceFormSchemas';
+import { useAttendanceRecordCreatePage } from '@features/client/attendance/hooks/useAttendanceRecordCreatePage';
+import type { AttendanceRecordCreateFormValues } from '@features/client/attendance/schemas/attendanceRecordCreateForm.schema';
 
 const AttendanceRecordsPage = () => {
-  const model = useAttendanceRecordFormPageViewModel();
+  const attendanceRecordCreatePage = useAttendanceRecordCreatePage();
 
   return (
     <AppStack spacing={2}>
@@ -22,38 +22,42 @@ const AttendanceRecordsPage = () => {
         Informe um horário configurado, a data da aula e a matrícula do aluno para registrar a
         frequência.
       </AppAlert>
-      {model.successMessage ? <AppAlert severity="success">{model.successMessage}</AppAlert> : null}
-      {model.errorMessage ? <AppAlert severity="error">{model.errorMessage}</AppAlert> : null}
+      {attendanceRecordCreatePage.successMessage ? (
+        <AppAlert severity="success">{attendanceRecordCreatePage.successMessage}</AppAlert>
+      ) : null}
+      {attendanceRecordCreatePage.errorMessage ? (
+        <AppAlert severity="error">{attendanceRecordCreatePage.errorMessage}</AppAlert>
+      ) : null}
       <AppPaper sx={{ p: 3 }}>
         <AppStack spacing={2}>
           <AppText variant="h6">Novo lançamento</AppText>
           <AppForm
-            form={model.form}
-            onSubmit={model.onSubmit}
+            form={attendanceRecordCreatePage.form}
+            onSubmit={attendanceRecordCreatePage.onSubmit}
             useResponsiveGrid
             columnsByDevice={{ mobile: 1, tablet: 2, desktop: 2 }}
           >
-            <FormTextField<AttendanceRecordFormValues>
+            <FormTextField<AttendanceRecordCreateFormValues>
               name="scheduleId"
               label="Horário"
               placeholder="ID do horário"
             />
-            <FormTextField<AttendanceRecordFormValues>
+            <FormTextField<AttendanceRecordCreateFormValues>
               name="attendanceDate"
               label="Data da aula"
               type="date"
             />
-            <FormTextField<AttendanceRecordFormValues>
+            <FormTextField<AttendanceRecordCreateFormValues>
               name="studentEnrollmentId"
               label="Matrícula"
               placeholder="ID da matrícula"
             />
-            <FormTextField<AttendanceRecordFormValues>
+            <FormTextField<AttendanceRecordCreateFormValues>
               name="status"
               label="Status"
               placeholder="present, absent ou justified"
             />
-            <FormTextField<AttendanceRecordFormValues>
+            <FormTextField<AttendanceRecordCreateFormValues>
               name="observations"
               label="Observações"
               placeholder="Observações opcionais"
@@ -63,9 +67,11 @@ const AttendanceRecordsPage = () => {
                 type: 'confirm',
                 label: 'Lançar frequência',
                 onClick: () => {
-                  void model.form.handleSubmit(model.onSubmit)();
+                  void attendanceRecordCreatePage.form.handleSubmit(
+                    attendanceRecordCreatePage.onSubmit,
+                  )();
                 },
-                loading: model.submitting,
+                loading: attendanceRecordCreatePage.submitting,
               }}
             />
           </AppForm>

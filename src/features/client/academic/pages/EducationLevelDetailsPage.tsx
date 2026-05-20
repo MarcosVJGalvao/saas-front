@@ -1,24 +1,41 @@
-import { AcademicCatalogDetailsPage } from '@features/client/academic/components/AcademicCatalogDetailsPage';
-import { educationLevelService } from '@features/client/academic/services/academicServices';
+import { useParams } from 'react-router-dom';
+import { EntityDetailsPage } from '@shared/components/data-display/details/EntityDetailsPage';
+import { AppStack } from '@shared/components/layout/AppStack';
+import { PageHeader } from '@shared/components/layout/PageHeader';
+import { educationLevelCatalogConfig } from '@features/client/academic/constants/academicCatalogPageConfigs';
+import { useAcademicCatalogDetailsPage } from '@features/client/academic/hooks/useAcademicCatalogDetailsPage';
 
-const EducationLevelDetailsPage = () => (
-  <AcademicCatalogDetailsPage
-    service={educationLevelService}
-    backPath="/client/education-levels"
-    errorMessageFallback="Erro ao carregar nível de ensino."
-    content={{
-      pageTitle: 'Detalhes do nível de ensino',
-      pageSubtitle: 'Consulte os dados do nível usado por séries, turmas e matrículas.',
-      loadingLabel: 'Carregando nível de ensino...',
-      emptyTitle: 'Nível de ensino não encontrado',
-      emptyMessage: 'Não encontramos o nível de ensino solicitado.',
-      errorFallback: 'Erro ao carregar nível de ensino.',
-      unauthorizedTitle: 'Acesso não autorizado',
-      unauthorizedMessage: 'Faça login novamente para consultar este nível de ensino.',
-      forbiddenTitle: 'Acesso negado',
-      forbiddenMessage: 'Você não possui permissão para consultar este nível de ensino.',
-    }}
-  />
-);
+const EducationLevelDetailsPage = () => {
+  const { id } = useParams<{ id: string }>();
+  const educationLevelDetailsPage = useAcademicCatalogDetailsPage({
+    id: id ?? '',
+    service: educationLevelCatalogConfig.service,
+    backPath: educationLevelCatalogConfig.routeBase,
+    errorMessageFallback: educationLevelCatalogConfig.errorMessageFallback,
+  });
+
+  if (!id) {
+    return null;
+  }
+
+  return (
+    <AppStack spacing={2}>
+      <PageHeader
+        title={educationLevelCatalogConfig.detailsTitle}
+        subtitle={educationLevelCatalogConfig.detailsSubtitle}
+        actionLabel="Voltar"
+        onAction={educationLevelDetailsPage.onBack}
+      />
+      <EntityDetailsPage
+        viewState={educationLevelDetailsPage.viewState}
+        data={educationLevelDetailsPage.data}
+        errorMessage={educationLevelDetailsPage.errorMessage}
+        onRetry={() => {
+          void educationLevelDetailsPage.onRetry();
+        }}
+      />
+    </AppStack>
+  );
+};
 
 export default EducationLevelDetailsPage;

@@ -1,15 +1,15 @@
 import { useEffect, useMemo, useState } from 'react';
 import type { Dispatch, SetStateAction } from 'react';
-import { isClientOnboardingClientDataStepValid } from '@features/platform/clients/schemas/clientsSchemas';
 import type { CreateClientOnboardingRequest } from '@features/platform/clients/types/clients';
 import type {
   ClientOnboardingActions,
   ClientOnboardingUiExtras,
-  OnboardingSummaryData,
+  ClientOnboardingSummaryData,
 } from '@features/platform/clients/types/clientOnboarding';
 import type { Plan } from '@features/platform/plans/types/plans';
 import { plansService } from '@features/platform/plans/services/service';
 import { toOnboardingPayload } from '@features/platform/clients/normalizers/clientOnboardingNormalizer';
+import { clientOnboardingClientStepSchema } from '@features/platform/clients/schemas/clientOnboarding.schema';
 import {
   initialClientOnboardingUiExtras,
   initialClientOnboardingValue,
@@ -24,7 +24,7 @@ export type UseClientOnboardingFormResult = {
   uiExtras: ClientOnboardingUiExtras;
   actions: ClientOnboardingActions;
   addressLoading: boolean;
-  summary: OnboardingSummaryData;
+  summary: ClientOnboardingSummaryData;
   onboardingPayload: CreateClientOnboardingRequest;
   isClientDataStepComplete: boolean;
   planOptions: Plan[];
@@ -66,7 +66,7 @@ export const useClientOnboardingForm = (): UseClientOnboardingFormResult => {
     [uiExtras, value],
   );
   const isClientDataStepComplete = useMemo(
-    () => isClientOnboardingClientDataStepValid(onboardingPayload),
+    () => clientOnboardingClientStepSchema.safeParse(onboardingPayload).success,
     [onboardingPayload],
   );
 

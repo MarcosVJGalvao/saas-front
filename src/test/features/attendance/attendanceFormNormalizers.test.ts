@@ -1,12 +1,10 @@
 import { describe, expect, it } from 'vitest';
-import {
-  normalizeAttendanceRecordPayload,
-  normalizeAttendanceSchedulePayload,
-} from '@features/client/attendance/normalizers/attendanceFormNormalizers';
+import { toAttendanceRecordCreatePayload } from '@features/client/attendance/normalizers/attendanceRecordForm.normalizer';
+import { toAttendanceScheduleCreatePayload } from '@features/client/attendance/normalizers/attendanceScheduleForm.normalizer';
 
 describe('attendance form normalizers', () => {
   it('normaliza o payload de horário', () => {
-    const payload = normalizeAttendanceSchedulePayload({
+    const payload = toAttendanceScheduleCreatePayload({
       academicYearId: ' year-1 ',
       schoolClassId: ' class-1 ',
       subjectId: ' subject-1 ',
@@ -32,7 +30,7 @@ describe('attendance form normalizers', () => {
   });
 
   it('normaliza o payload de lançamento', () => {
-    const payload = normalizeAttendanceRecordPayload({
+    const payload = toAttendanceRecordCreatePayload({
       scheduleId: ' schedule-1 ',
       attendanceDate: '2026-05-19',
       studentEnrollmentId: ' enrollment-1 ',

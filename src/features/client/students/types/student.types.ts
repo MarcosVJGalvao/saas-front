@@ -72,6 +72,20 @@ export type StudentQueryParams = ClientBaseQueryParams & {
   schoolClassId?: string | undefined;
 };
 
+export type StudentPersonRequest = {
+  fullName?: string | undefined;
+  documentNumber?: string | undefined;
+  documentType?: StudentDocumentType | undefined;
+  dateOfBirth?: string | undefined;
+  gender?: StudentGender | undefined;
+};
+
+export type StudentRequest = {
+  registrationCode?: string | undefined;
+  status?: StudentStatus | undefined;
+  person?: StudentPersonRequest | undefined;
+};
+
 export type LegalGuardianStudentLink = {
   id: string;
   registrationCode?: string | undefined;
@@ -93,3 +107,10 @@ export type LegalGuardian = {
 export type LegalGuardianQueryParams = ClientBaseQueryParams & {
   relationshipType?: LegalGuardianRelationshipType | undefined;
 };
+
+export type LegalGuardianRequest = {
+  relationshipType?: LegalGuardianRelationshipType | undefined;
+  person?: StudentPersonRequest | undefined;
+};
+
+export type StudentFinancialHistoryQueryParams = ClientBaseQueryParams;

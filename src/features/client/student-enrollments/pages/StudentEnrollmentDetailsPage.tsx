@@ -1,46 +1,45 @@
 import { ConfirmDialog } from '@shared/components/feedback/ConfirmDialog';
 import { EntityDetailsPage } from '@shared/components/data-display/details/EntityDetailsPage';
-import { useStudentEnrollmentDetailsPageViewModel } from '@features/client/student-enrollments/hooks/useStudentEnrollmentDetailsPageViewModel';
-
-const detailsContent = {
-  pageTitle: 'Detalhes da Matrícula',
-  pageSubtitle: 'Visualize os dados principais da matrícula.',
-  loadingLabel: 'Carregando detalhes da matrícula',
-  emptyTitle: 'Matrícula não encontrada',
-  emptyMessage: 'Não foi possível localizar a matrícula selecionada.',
-  errorFallback: 'Erro ao carregar matrícula.',
-  unauthorizedTitle: 'Sessão expirada',
-  unauthorizedMessage: 'Entre novamente para visualizar esta matrícula.',
-  forbiddenTitle: 'Acesso negado',
-  forbiddenMessage: 'Você não tem permissão para visualizar esta matrícula.',
-};
+import { PageHeader } from '@shared/components/layout/PageHeader';
+import { AppStack } from '@shared/components/layout/AppStack';
+import { useParams } from 'react-router-dom';
+import { useStudentEnrollmentDetailsPage } from '@features/client/student-enrollments/hooks/useStudentEnrollmentDetailsPage';
 
 const StudentEnrollmentDetailsPage = () => {
-  const model = useStudentEnrollmentDetailsPageViewModel();
+  const { id } = useParams<{ id: string }>();
+  const studentEnrollmentDetailsPage = useStudentEnrollmentDetailsPage(id ?? '');
 
   return (
-    <>
+    <AppStack spacing={2}>
+      <PageHeader
+        title="Detalhes da Matrícula"
+        subtitle="Visualize os dados principais da matrícula."
+        actionLabel="Voltar"
+        onAction={() => {
+          studentEnrollmentDetailsPage.onBack();
+        }}
+      />
       <EntityDetailsPage
-        viewState={model.viewState}
-        content={detailsContent}
-        data={model.data}
-        errorMessage={model.errorMessage}
-        onBack={model.onBack}
+        viewState={studentEnrollmentDetailsPage.viewState}
+        data={studentEnrollmentDetailsPage.data}
+        errorMessage={studentEnrollmentDetailsPage.errorMessage}
         onRetry={() => {
-          void model.onRetry();
+          void studentEnrollmentDetailsPage.onRetry();
         }}
       />
       <ConfirmDialog
-        open={model.deleteDialogOpen}
-        title={model.deleteTitle}
-        description={model.deleteDescription}
-        confirmLabel={model.actionLoading ? 'Removendo...' : 'Remover'}
-        onCancel={model.closeDeleteDialog}
+        open={Boolean(studentEnrollmentDetailsPage.deleteModal.enrollmentPendingDelete)}
+        title="Remover matrícula"
+        description={`Confirma a remoção da matrícula ${studentEnrollmentDetailsPage.deleteModal.enrollmentPendingDelete?.enrollmentCode ?? 'selecionada'}?`}
+        confirmLabel={
+          studentEnrollmentDetailsPage.deleteModal.isDeleting ? 'Removendo...' : 'Remover'
+        }
+        onCancel={studentEnrollmentDetailsPage.deleteModal.close}
         onConfirm={() => {
-          void model.confirmDelete();
+          void studentEnrollmentDetailsPage.deleteModal.confirm();
         }}
       />
-    </>
+    </AppStack>
   );
 };
 

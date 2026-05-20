@@ -3,7 +3,7 @@ import { AppMenuItem } from '@shared/components/inputs/AppMenuItem';
 import { AppStack } from '@shared/components/layout/AppStack';
 import { AppText } from '@shared/components/data-display/AppText';
 import { OnboardingField } from '@features/platform/clients/components/onboarding/OnboardingField';
-import type { OnboardingStepProps } from '@features/platform/clients/types/clientOnboardingPresentation';
+import type { ClientOnboardingStepProps } from '@features/platform/clients/types/clientOnboarding';
 
 const timezoneOptions: string[] = [
   'America/Sao_Paulo',
@@ -17,7 +17,7 @@ const localeOptions: string[] = ['pt-BR', 'en-US', 'es-ES'];
 
 const currencyOptions: string[] = ['BRL', 'USD', 'EUR'];
 
-export const TenantStep = ({ value, actions }: OnboardingStepProps) => (
+export const TenantStep = ({ value, actions }: ClientOnboardingStepProps) => (
   <AppStack spacing={1.5}>
     <AppText variant="h6">Configuração do Tenant</AppText>
     <AppGrid container spacing={1.5}>

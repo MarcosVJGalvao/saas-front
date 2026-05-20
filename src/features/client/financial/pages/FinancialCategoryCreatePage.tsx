@@ -1,17 +1,73 @@
-import { FinancialEntityFormPage } from '@features/client/financial/components/FinancialEntityFormPage';
-import { financialCategoryService } from '@features/client/financial/services/financialServices';
+import { AppAlert } from '@shared/components/feedback/AppAlert';
+import { AppForm } from '@shared/components/form/AppForm';
+import { FormActions } from '@shared/components/form/FormActions';
+import { FormTextField } from '@shared/components/form/FormTextField';
+import { AppPaper } from '@shared/components/data-display/AppPaper';
+import { AppStack } from '@shared/components/layout/AppStack';
+import { PageHeader } from '@shared/components/layout/PageHeader';
+import { useFinancialCategoryCreatePage } from '@features/client/financial/hooks/useFinancialCategoryCreatePage';
+import type { FinancialCategoryCreateFormValues } from '@features/client/financial/schemas/financialCategoryCreateForm.schema';
 
-const FinancialCategoryCreatePage = () => (
-  <FinancialEntityFormPage
-    title="Nova categoria financeira"
-    editTitle="Editar categoria financeira"
-    subtitle="Cadastre categorias para classificar receitas e despesas."
-    backPath="/client/financial/categories"
-    service={financialCategoryService}
-    loadErrorMessage="Não foi possível carregar a categoria financeira."
-    submitErrorMessage="Não foi possível salvar a categoria financeira."
-    includeType
-  />
-);
+const FinancialCategoryCreatePage = () => {
+  const financialCategoryCreatePage = useFinancialCategoryCreatePage();
+
+  return (
+    <AppStack spacing={2}>
+      <PageHeader
+        title="Nova categoria financeira"
+        subtitle="Cadastre categorias para classificar receitas e despesas."
+        actionLabel="Voltar"
+        onAction={financialCategoryCreatePage.onBack}
+      />
+      {financialCategoryCreatePage.errorMessage ? (
+        <AppAlert severity="error">{financialCategoryCreatePage.errorMessage}</AppAlert>
+      ) : null}
+      <AppPaper sx={{ p: 3 }}>
+        <AppForm
+          form={financialCategoryCreatePage.form}
+          onSubmit={financialCategoryCreatePage.onSubmit}
+          useResponsiveGrid
+          columnsByDevice={{ mobile: 1, tablet: 2, desktop: 2 }}
+        >
+          <FormTextField<FinancialCategoryCreateFormValues> name="name" label="Nome" />
+          <FormTextField<FinancialCategoryCreateFormValues> name="code" label="Código" />
+          <FormTextField<FinancialCategoryCreateFormValues>
+            name="type"
+            label="Tipo"
+            placeholder="revenue ou expense"
+          />
+          <FormTextField<FinancialCategoryCreateFormValues>
+            name="status"
+            label="Status"
+            placeholder="active ou inactive"
+          />
+          <FormTextField<FinancialCategoryCreateFormValues>
+            name="description"
+            label="Descrição"
+            placeholder="Descrição opcional"
+          />
+          <FormActions
+            secondaryAction={{
+              type: 'back',
+              label: 'Cancelar',
+              onClick: financialCategoryCreatePage.onBack,
+              disabled: financialCategoryCreatePage.submitting,
+            }}
+            primaryAction={{
+              type: 'confirm',
+              label: 'Cadastrar',
+              onClick: () => {
+                void financialCategoryCreatePage.form.handleSubmit(
+                  financialCategoryCreatePage.onSubmit,
+                )();
+              },
+              loading: financialCategoryCreatePage.submitting,
+            }}
+          />
+        </AppForm>
+      </AppPaper>
+    </AppStack>
+  );
+};
 
 export default FinancialCategoryCreatePage;

@@ -1,14 +1,14 @@
 import { describe, expect, it } from 'vitest';
 
 import {
-  normalizePlanPayload,
-  normalizePlanUpdatePayload,
-} from '@features/platform/plans/normalizers/planPayloadNormalizer';
+  toPlanCreatePayload,
+  toPlanEditPayload,
+} from '@features/platform/plans/normalizers/planForm.normalizer';
 
-describe('planPayloadNormalizer', () => {
+describe('planForm.normalizer', () => {
   it('normaliza payload de criação de plano', () => {
     expect(
-      normalizePlanPayload({
+      toPlanCreatePayload({
         name: ' Plano Pro ',
         description: ' ',
         price: 'R$ 1.250,90',
@@ -30,13 +30,23 @@ describe('planPayloadNormalizer', () => {
 
   it('normaliza payload parcial de edição de plano', () => {
     expect(
-      normalizePlanUpdatePayload({
+      toPlanEditPayload({
+        name: ' Plano Enterprise ',
+        description: ' plano anual ',
         price: '99.90',
         currency: ' usd ',
+        billingCycle: 'yearly',
+        trialDays: 7,
+        isActive: true,
       }),
     ).toEqual({
+      name: 'Plano Enterprise',
+      description: 'plano anual',
       price: '99.90',
       currency: 'USD',
+      billingCycle: 'yearly',
+      trialDays: 7,
+      isActive: true,
     });
   });
 });

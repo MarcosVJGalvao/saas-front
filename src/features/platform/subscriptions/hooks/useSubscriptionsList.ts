@@ -1,13 +1,12 @@
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import type { PaginationMeta } from '@shared/types/pagination';
+import { subscriptionsService } from '@features/platform/subscriptions/services/service';
 import type {
   Subscription,
   SubscriptionsQueryParams,
 } from '@features/platform/subscriptions/types/subscriptions';
-import { subscriptionsService } from '@features/platform/subscriptions/services/service';
-const QUERY_DEBOUNCE_IN_MILLISECONDS = 400;
 
-const defaultMeta: PaginationMeta = {
+const initialPagination: PaginationMeta = {
   page: 1,
   limit: 10,
   total: 0,
@@ -16,98 +15,83 @@ const defaultMeta: PaginationMeta = {
   hasPreviousPage: false,
 };
 
-const toNumberOrDefault = (value: unknown, fallback: number): number => {
-  if (typeof value === 'number' && Number.isFinite(value)) return value;
-  return fallback;
-};
-
-const isObject = (value: unknown): value is Record<string, unknown> =>
-  typeof value === 'object' && value !== null;
-
-const resolveMeta = (
-  response: unknown,
-  query: SubscriptionsQueryParams,
-  fallback: PaginationMeta,
+const buildPagination = (
+  queryParams: SubscriptionsQueryParams,
+  totalItems: number,
 ): PaginationMeta => {
-  if (isObject(response) && isObject(response.meta)) {
-    const page = toNumberOrDefault(response.meta.page, fallback.page);
-    const limit = toNumberOrDefault(response.meta.limit, fallback.limit);
-    const total = toNumberOrDefault(response.meta.total, fallback.total);
-    return {
-      page,
-      limit,
-      total,
-      totalPages: Math.max(1, Math.ceil(total / Math.max(limit, 1))),
-      hasNextPage: page * limit < total,
-      hasPreviousPage: page > 1,
-    };
-  }
+  const currentPage = queryParams.page ?? 1;
+  const rowsPerPage = queryParams.limit ?? 10;
+  const totalPages = Math.max(1, Math.ceil(totalItems / Math.max(rowsPerPage, 1)));
 
-  if (isObject(response)) {
-    const page = toNumberOrDefault(response.page, query.page ?? fallback.page);
-    const limit = toNumberOrDefault(response.limit, query.limit ?? fallback.limit);
-    const total = toNumberOrDefault(response.total, fallback.total);
-
-    return {
-      page,
-      limit,
-      total,
-      totalPages: Math.max(1, Math.ceil(total / Math.max(limit, 1))),
-      hasNextPage: page * limit < total,
-      hasPreviousPage: page > 1,
-    };
-  }
-
-  return fallback;
+  return {
+    page: currentPage,
+    limit: rowsPerPage,
+    total: totalItems,
+    totalPages,
+    hasNextPage: currentPage < totalPages,
+    hasPreviousPage: currentPage > 1,
+  };
 };
 
-export const useSubscriptionsList = (initialQuery?: SubscriptionsQueryParams) => {
+export const useSubscriptionsList = (initialQueryParams?: SubscriptionsQueryParams) => {
   const [rows, setRows] = useState<Subscription[]>([]);
-  const [meta, setMeta] = useState<PaginationMeta>(defaultMeta);
-  const [query, setQuery] = useState<SubscriptionsQueryParams>({
+  const [pagination, setPagination] = useState<PaginationMeta>(initialPagination);
+  const [queryParams, setQueryParams] = useState<SubscriptionsQueryParams>({
     page: 1,
     limit: 10,
-    ...initialQuery,
+    ...initialQueryParams,
   });
   const [loading, setLoading] = useState(true);
-  const [errorMessage, setErrorMessage] = useState<string>();
+  const [errorMessage, setErrorMessage] = useState<string | undefined>();
 
-  const fetchData = useCallback(async () => {
+  const fetchSubscriptions = useCallback(async () => {
     setLoading(true);
     setErrorMessage(undefined);
     try {
-      const response = await subscriptionsService.list(query);
+      const response = await subscriptionsService.list(queryParams);
       setRows(response.data);
-      setMeta(resolveMeta(response, query, defaultMeta));
+      setPagination(buildPagination(queryParams, response.meta.total));
     } catch (error) {
-      setErrorMessage(error instanceof Error ? error.message : 'Erro ao carregar assinaturas.');
+      setErrorMessage(
+        error instanceof Error ? error.message : 'Não foi possível carregar as assinaturas.',
+      );
     } finally {
       setLoading(false);
     }
-  }, [query]);
-
-  const updateQuery = useCallback(
-    (patch: Partial<SubscriptionsQueryParams>) => setQuery((prev) => ({ ...prev, ...patch })),
-    [],
-  );
+  }, [queryParams]);
 
   useEffect(() => {
-    const hasStartDate = query.startDate !== undefined && query.startDate.length > 0;
-    const hasEndDate = query.endDate !== undefined && query.endDate.length > 0;
-    const hasPartialPeriod = (hasStartDate && !hasEndDate) || (!hasStartDate && hasEndDate);
-
-    if (hasPartialPeriod) {
-      return undefined;
-    }
-
     const timeoutId = window.setTimeout(() => {
-      void fetchData();
-    }, QUERY_DEBOUNCE_IN_MILLISECONDS);
-    return () => window.clearTimeout(timeoutId);
-  }, [fetchData, query.startDate, query.endDate]);
+      void fetchSubscriptions();
+    }, 0);
 
-  return useMemo(
-    () => ({ rows, meta, query, loading, errorMessage, updateQuery, refresh: fetchData }),
-    [rows, meta, query, loading, errorMessage, updateQuery, fetchData],
-  );
+    return () => window.clearTimeout(timeoutId);
+  }, [fetchSubscriptions]);
+
+  const updateQueryParams = (patch: Partial<SubscriptionsQueryParams>) => {
+    setQueryParams((currentQueryParams) => {
+      const nextQueryParams = { ...currentQueryParams, ...patch };
+
+      if ('limit' in patch && patch.limit !== currentQueryParams.limit) {
+        nextQueryParams.page = 1;
+        return nextQueryParams;
+      }
+
+      if (!('page' in patch)) {
+        nextQueryParams.page = 1;
+      }
+
+      return nextQueryParams;
+    });
+  };
+
+  return {
+    rows,
+    pagination,
+    queryParams,
+    loading,
+    errorMessage,
+    updateQueryParams,
+    reload: fetchSubscriptions,
+  };
 };

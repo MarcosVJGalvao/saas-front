@@ -45,9 +45,9 @@ describe('useSubscriptionsList', () => {
 
     expect(subscriptionsService.list).toHaveBeenCalledWith({ page: 2, limit: 25 });
     expect(result.current.rows).toHaveLength(1);
-    expect(result.current.meta.page).toBe(2);
-    expect(result.current.meta.limit).toBe(25);
-    expect(result.current.meta.total).toBe(40);
+    expect(result.current.pagination.page).toBe(2);
+    expect(result.current.pagination.limit).toBe(25);
+    expect(result.current.pagination.total).toBe(40);
   });
 
   it('updates query and resets page when filter changes', async () => {
@@ -68,7 +68,7 @@ describe('useSubscriptionsList', () => {
     await waitFor(() => expect(result.current.loading).toBe(false));
 
     act(() => {
-      result.current.updateQuery({ status: 'trialing', page: 1 });
+      result.current.updateQueryParams({ status: 'trialing', page: 1 });
     });
 
     await waitFor(() => {

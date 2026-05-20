@@ -2,7 +2,7 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 import {
   schoolClassService,
   teacherSubjectService,
-} from '@features/client/academic/services/academicServices';
+} from '@features/client/academic/services/service';
 import { httpClient } from '@shared/services/httpClient';
 
 describe('schoolClassService', () => {

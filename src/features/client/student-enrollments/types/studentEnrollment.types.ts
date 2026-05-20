@@ -127,25 +127,6 @@ export type StudentEnrollmentListResponse = {
   meta: PaginationMeta;
 };
 
-export type StudentEnrollmentOnboardingUiExtras = {
-  selectedStudentId: string;
-  studentCep: string;
-  guardianCep: string;
-  guardianEmail: string;
-  guardianPhone: string;
-  studentEmail: string;
-  studentPhone: string;
-};
-
-export type StudentEnrollmentSummaryData = {
-  student: string;
-  guardians: string;
-  contactsAddress: string;
-  medicalInfo: string;
-  academic: string;
-  review: string;
-};
-
 export type StudentEnrollmentOption = {
   id: string;
   label: string;

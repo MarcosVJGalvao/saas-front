@@ -2,7 +2,7 @@ import { AdminStep } from '@features/platform/clients/components/onboarding/Admi
 import { ClientDataStep } from '@features/platform/clients/components/onboarding/ClientDataStep';
 import { PlanStep } from '@features/platform/clients/components/onboarding/PlanStep';
 import { TenantStep } from '@features/platform/clients/components/onboarding/TenantStep';
-import type { OnboardingStepsProps } from '@features/platform/clients/types/clientOnboardingPresentation';
+import type { ClientOnboardingStepsProps } from '@features/platform/clients/types/clientOnboarding';
 
 export const OnboardingSteps = ({
   activeStep,
@@ -12,7 +12,7 @@ export const OnboardingSteps = ({
   addressLoading,
   planOptions,
   plansLoading,
-}: OnboardingStepsProps) => {
+}: ClientOnboardingStepsProps) => {
   const sharedStepProps = {
     value,
     uiExtras,

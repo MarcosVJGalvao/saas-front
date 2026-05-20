@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from 'react';
-import { schoolClassService } from '@features/client/academic/services/academicServices';
+import { schoolClassService } from '@features/client/academic/services/service';
 import type {
   SchoolClass,
   SchoolClassQueryParams,

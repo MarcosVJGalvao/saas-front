@@ -3,36 +3,10 @@ import { ListFilters } from '@shared/components/data-display/data/ListFilters';
 import { QueryDataTable } from '@shared/components/data-display/data/QueryDataTable';
 import { AppStack } from '@shared/components/layout/AppStack';
 import { PageHeader } from '@shared/components/layout/PageHeader';
-import {
-  attendanceSummariesColumns,
-  attendanceSummariesMobileConfig,
-} from '@features/client/attendance/components/attendanceSummariesPresentation';
-import {
-  buildAttendanceQueryFromFilters,
-  useAttendanceFilters,
-} from '@features/client/attendance/hooks/useAttendanceFilters';
-import { useAttendanceSummariesList } from '@features/client/attendance/hooks/useAttendanceSummariesList';
+import { useAttendanceSummariesPage } from '@features/client/attendance/hooks/useAttendanceSummariesPage';
 
 const AttendanceSummariesPage = () => {
-  const list = useAttendanceSummariesList();
-  const filters = useAttendanceFilters();
-
-  const applyFilters = (): void => {
-    list.updateQuery(buildAttendanceQueryFromFilters(filters.filterValues));
-  };
-
-  const clearFilters = (): void => {
-    filters.resetFilters();
-    list.updateQuery({
-      page: 1,
-      schoolClassId: undefined,
-      subjectId: undefined,
-      studentId: undefined,
-      status: undefined,
-      startDate: undefined,
-      endDate: undefined,
-    });
-  };
+  const attendanceSummariesPage = useAttendanceSummariesPage();
 
   return (
     <AppStack spacing={2}>
@@ -78,26 +52,32 @@ const AttendanceSummariesPage = () => {
             mobileOrder: 4,
           },
         ]}
-        values={filters.filterValues}
-        onChange={filters.onFilterChange}
-        onApply={applyFilters}
-        onClear={clearFilters}
-        loading={list.loading}
+        values={attendanceSummariesPage.filterValues}
+        onChange={attendanceSummariesPage.onFilterChange}
+        onApply={attendanceSummariesPage.applyFilters}
+        onClear={attendanceSummariesPage.clearFilters}
+        loading={attendanceSummariesPage.attendanceSummariesList.loading}
       />
       <QueryDataTable
-        rows={list.rows}
-        columns={attendanceSummariesColumns}
-        mobileConfig={attendanceSummariesMobileConfig}
-        meta={list.meta}
-        loading={list.loading}
-        errorMessage={list.errorMessage}
+        rows={attendanceSummariesPage.attendanceSummariesList.rows}
+        columns={attendanceSummariesPage.tableColumns}
+        mobileConfig={attendanceSummariesPage.mobileConfig}
+        meta={attendanceSummariesPage.attendanceSummariesList.meta}
+        loading={attendanceSummariesPage.attendanceSummariesList.loading}
+        errorMessage={attendanceSummariesPage.attendanceSummariesList.errorMessage}
         onRetry={() => {
-          void list.reload();
+          void attendanceSummariesPage.attendanceSummariesList.reload();
         }}
-        query={list.query.search ?? ''}
-        onQueryChange={(search) => list.updateQuery({ search, page: 1 })}
-        onPageChange={(page) => list.updateQuery({ page })}
-        onRowsPerPageChange={(limit) => list.updateQuery({ limit, page: 1 })}
+        query={attendanceSummariesPage.attendanceSummariesList.query.search ?? ''}
+        onQueryChange={(search) =>
+          attendanceSummariesPage.attendanceSummariesList.updateQuery({ search, page: 1 })
+        }
+        onPageChange={(page) =>
+          attendanceSummariesPage.attendanceSummariesList.updateQuery({ page })
+        }
+        onRowsPerPageChange={(limit) =>
+          attendanceSummariesPage.attendanceSummariesList.updateQuery({ limit, page: 1 })
+        }
         emptyTitle="Nenhum resumo encontrado"
         emptyDescription="Os resumos aparecerão após lançamentos de frequência."
         toolbarContent={

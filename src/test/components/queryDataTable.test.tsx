@@ -88,7 +88,7 @@ describe('QueryDataTable', () => {
     );
 
     expect(getByText('Nenhum registro encontrado')).toBeInTheDocument();
-    expect(getByText('Ajuste os filtros e tente novamente.')).toBeInTheDocument();
+    expect(getByText('Tente ajustar os filtros ou criar um novo registro.')).toBeInTheDocument();
   });
 
   it('renders inline toolbar content', () => {

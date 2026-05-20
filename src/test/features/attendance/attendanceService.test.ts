@@ -1,8 +1,12 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { attendanceService } from '@features/client/attendance/services/attendanceServices';
+import {
+  attendanceRecordsService,
+  attendanceSchedulesService,
+  attendanceSummariesService,
+} from '@features/client/attendance/services/service';
 import { httpClient } from '@shared/services/httpClient';
 
-describe('attendanceService', () => {
+describe('attendance services', () => {
   afterEach(() => {
     vi.restoreAllMocks();
   });
@@ -22,7 +26,7 @@ describe('attendanceService', () => {
       },
     });
 
-    const response = await attendanceService.listSchedules({
+    const response = await attendanceSchedulesService.list({
       page: 1,
       limit: 10,
       schoolClassId: 'class-1',
@@ -39,7 +43,7 @@ describe('attendanceService', () => {
       data: { id: 'record-1' },
     });
 
-    const response = await attendanceService.markAttendance({
+    const response = await attendanceRecordsService.create({
       scheduleId: 'schedule-1',
       attendanceDate: '2026-05-18',
       items: [{ studentEnrollmentId: 'enrollment-1', status: 'present' }],
@@ -68,7 +72,7 @@ describe('attendanceService', () => {
       },
     });
 
-    const response = await attendanceService.listSummaries({
+    const response = await attendanceSummariesService.list({
       page: 1,
       limit: 10,
       status: 'present',

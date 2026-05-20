@@ -1,26 +1,21 @@
 import { useCallback, useEffect, useState } from 'react';
-import { legalGuardianService } from '@features/client/students/services/studentServices';
-import type {
-  LegalGuardian,
-  LegalGuardianQueryParams,
-} from '@features/client/students/types/student.types';
 import type { PaginationMeta } from '@shared/types/pagination';
-
-const initialMeta: PaginationMeta = {
-  page: 1,
-  limit: 10,
-  total: 0,
-  totalPages: 0,
-  hasNextPage: false,
-  hasPreviousPage: false,
-};
+import { legalGuardianService } from '../services/service';
+import type { LegalGuardian, LegalGuardianQueryParams } from '../types/student.types';
 
 export const useLegalGuardiansList = () => {
   const [rows, setRows] = useState<LegalGuardian[]>([]);
-  const [meta, setMeta] = useState<PaginationMeta>(initialMeta);
+  const [meta, setMeta] = useState<PaginationMeta>({
+    page: 1,
+    limit: 10,
+    total: 0,
+    totalPages: 0,
+    hasNextPage: false,
+    hasPreviousPage: false,
+  });
   const [query, setQuery] = useState<LegalGuardianQueryParams>({ page: 1, limit: 10 });
   const [loading, setLoading] = useState(false);
-  const [errorMessage, setErrorMessage] = useState<string | undefined>(undefined);
+  const [errorMessage, setErrorMessage] = useState<string | undefined>();
 
   const load = useCallback(async () => {
     setLoading(true);

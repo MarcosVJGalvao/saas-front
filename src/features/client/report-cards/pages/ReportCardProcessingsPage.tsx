@@ -6,10 +6,10 @@ import { AppAlert } from '@shared/components/feedback/AppAlert';
 import { AppStack } from '@shared/components/layout/AppStack';
 import { PageHeader } from '@shared/components/layout/PageHeader';
 import { layoutSpacing } from '@theme/spacing';
-import { useReportCardProcessingsPageViewModel } from '@features/client/report-cards/hooks/useReportCardProcessingsPageViewModel';
+import { useReportCardProcessingsPage } from '@features/client/report-cards/hooks/useReportCardProcessingsPage';
 
 const ReportCardProcessingsPage = () => {
-  const model = useReportCardProcessingsPageViewModel();
+  const model = useReportCardProcessingsPage();
   const isLoading = model.loadingAction !== undefined;
 
   return (

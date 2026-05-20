@@ -5,12 +5,12 @@ import { QueryDataTable } from '@shared/components/data-display/data/QueryDataTa
 import { AppStack } from '@shared/components/layout/AppStack';
 import { PageHeader } from '@shared/components/layout/PageHeader';
 import { useClientPermission } from '@features/client/shared/hooks/useClientPermission';
-import { useLegalGuardiansListPageViewModel } from '@features/client/students/hooks/useLegalGuardiansListPageViewModel';
+import { useLegalGuardiansListPage } from '@features/client/students/hooks/useLegalGuardiansListPage';
 
 const LegalGuardiansPage = () => {
   const navigate = useNavigate();
   const permissions = useClientPermission();
-  const model = useLegalGuardiansListPageViewModel();
+  const legalGuardianListPage = useLegalGuardiansListPage();
 
   return (
     <AppStack spacing={2}>
@@ -46,26 +46,26 @@ const LegalGuardiansPage = () => {
             mobileOrder: 2,
           },
         ]}
-        values={model.filterValues}
-        onChange={model.onFilterChange}
-        onApply={model.applyFilters}
-        onClear={model.clearFilters}
-        loading={model.list.loading}
+        values={legalGuardianListPage.filterValues}
+        onChange={legalGuardianListPage.onFilterChange}
+        onApply={legalGuardianListPage.applyFilters}
+        onClear={legalGuardianListPage.clearFilters}
+        loading={legalGuardianListPage.legalGuardianList.loading}
       />
       <QueryDataTable
-        rows={model.list.rows}
-        columns={model.columns}
-        mobileConfig={model.mobileConfig}
-        meta={model.list.meta}
-        loading={model.list.loading}
-        errorMessage={model.list.errorMessage}
+        rows={legalGuardianListPage.legalGuardianList.rows}
+        columns={legalGuardianListPage.columns}
+        mobileConfig={legalGuardianListPage.mobileConfig}
+        meta={legalGuardianListPage.legalGuardianList.meta}
+        loading={legalGuardianListPage.legalGuardianList.loading}
+        errorMessage={legalGuardianListPage.legalGuardianList.errorMessage}
         onRetry={() => {
-          void model.list.reload();
+          void legalGuardianListPage.legalGuardianList.reload();
         }}
-        query={model.query}
-        onQueryChange={model.onQueryChange}
-        onPageChange={model.onPageChange}
-        onRowsPerPageChange={model.onLimitChange}
+        query={legalGuardianListPage.legalGuardianList.query.search ?? ''}
+        onQueryChange={legalGuardianListPage.onQueryChange}
+        onPageChange={legalGuardianListPage.onPageChange}
+        onRowsPerPageChange={legalGuardianListPage.onLimitChange}
         emptyTitle="Nenhum responsável encontrado"
         emptyDescription="Responsáveis vinculados aos alunos aparecerão aqui."
         toolbarContent={

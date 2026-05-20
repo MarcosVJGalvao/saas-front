@@ -1,20 +1,34 @@
+import { useParams } from 'react-router-dom';
 import { EntityDetailsPage } from '@shared/components/data-display/details/EntityDetailsPage';
-import { useLegalGuardianDetailsPageViewModel } from '@features/client/students/hooks/useLegalGuardianDetailsPageViewModel';
+import { AppStack } from '@shared/components/layout/AppStack';
+import { PageHeader } from '@shared/components/layout/PageHeader';
+import { useLegalGuardianDetailsPage } from '@features/client/students/hooks/useLegalGuardianDetailsPage';
 
 const LegalGuardianDetailsPage = () => {
-  const model = useLegalGuardianDetailsPageViewModel();
+  const { id } = useParams<{ id: string }>();
+  const legalGuardianDetailsPage = useLegalGuardianDetailsPage(id ?? '');
+
+  if (!id) return null;
 
   return (
-    <EntityDetailsPage
-      viewState={model.viewState}
-      content={model.content}
-      data={model.data}
-      errorMessage={model.errorMessage}
-      onBack={model.onBack}
-      onRetry={() => {
-        void model.onRetry();
-      }}
-    />
+    <AppStack spacing={2}>
+      <PageHeader
+        title="Detalhes do responsável"
+        subtitle="Consulte dados pessoais, contatos, endereços e alunos vinculados."
+        actionLabel="Voltar"
+        onAction={() => {
+          void legalGuardianDetailsPage.onBack();
+        }}
+      />
+      <EntityDetailsPage
+        viewState={legalGuardianDetailsPage.viewState}
+        data={legalGuardianDetailsPage.data}
+        errorMessage={legalGuardianDetailsPage.errorMessage}
+        onRetry={() => {
+          void legalGuardianDetailsPage.onRetry();
+        }}
+      />
+    </AppStack>
   );
 };
 

@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { studentEnrollmentService } from '@features/client/student-enrollments/services/studentEnrollmentService';
+import { studentEnrollmentService } from '@features/client/student-enrollments/services/service';
 import { httpClient } from '@shared/services/httpClient';
 import type { CreateStudentEnrollmentRequest } from '@features/client/student-enrollments/types/studentEnrollment.types';
 

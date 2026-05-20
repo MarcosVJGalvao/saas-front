@@ -4,7 +4,7 @@ import { EnrollmentReviewStep } from '@features/client/student-enrollments/compo
 import { GuardiansStep } from '@features/client/student-enrollments/components/onboarding/GuardiansStep';
 import { MedicalInfoStep } from '@features/client/student-enrollments/components/onboarding/MedicalInfoStep';
 import { StudentStep } from '@features/client/student-enrollments/components/onboarding/StudentStep';
-import type { StudentEnrollmentStepsProps } from '@features/client/student-enrollments/components/onboarding/studentEnrollmentOnboarding.types';
+import type { StudentEnrollmentStepsProps } from '@features/client/student-enrollments/types/studentEnrollmentOnboarding.types';
 
 export const StudentEnrollmentSteps = ({
   activeStep,
