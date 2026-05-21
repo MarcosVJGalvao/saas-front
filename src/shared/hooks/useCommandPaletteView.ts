@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import type { NavigationItem, SearchScope } from '@shared/types/navigation';
 
 const flattenItems = (items: NavigationItem[]): NavigationItem[] =>
-  items.flatMap((item) => [item, ...(item.children ?? [])]);
+  items.flatMap((item) => [item, ...flattenItems(item.children ?? [])]);
 
 const normalizeText = (text: string): string =>
   text

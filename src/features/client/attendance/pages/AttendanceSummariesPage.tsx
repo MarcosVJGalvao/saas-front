@@ -1,10 +1,10 @@
+import { useAttendanceSummariesPage } from '@features/client/attendance/hooks/useAttendanceSummariesPage';
 import { AppText } from '@shared/components/data-display/AppText';
-import { AppAlert } from '@shared/components/feedback/AppAlert';
 import { ListFilters } from '@shared/components/data-display/data/ListFilters';
 import { QueryDataTable } from '@shared/components/data-display/data/QueryDataTable';
+import { AppAlert } from '@shared/components/feedback/AppAlert';
 import { AppStack } from '@shared/components/layout/AppStack';
 import { PageHeader } from '@shared/components/layout/PageHeader';
-import { useAttendanceSummariesPage } from '@features/client/attendance/hooks/useAttendanceSummariesPage';
 
 const AttendanceSummariesPage = () => {
   const attendanceSummariesPage = useAttendanceSummariesPage();
@@ -13,7 +13,7 @@ const AttendanceSummariesPage = () => {
     <AppStack spacing={2}>
       <PageHeader
         title="Resumos de frequência"
-        subtitle="Consulte presença e ausência consolidadas por aluno, turma e disciplina."
+        subtitle="Consulte presença e ausência consolidadas por matrícula, turma e disciplina."
       />
       {attendanceSummariesPage.referenceOptions.errorMessage ? (
         <AppAlert severity="error">
@@ -24,31 +24,26 @@ const AttendanceSummariesPage = () => {
         fields={[
           {
             type: 'select',
-            name: 'schoolClassId',
-            label: 'Turma',
-            placeholder: 'Todas as turmas',
-            options: attendanceSummariesPage.referenceOptions.schoolClassOptions,
+            name: 'academicYearId',
+            label: 'Ano letivo',
+            placeholder: 'Todos os anos letivos',
+            options: attendanceSummariesPage.referenceOptions.academicYearOptions,
             mobileOrder: 1,
           },
           {
             type: 'select',
-            name: 'studentId',
-            label: 'Aluno',
-            placeholder: 'Todos os alunos',
-            options: attendanceSummariesPage.referenceOptions.studentOptions,
+            name: 'schoolClassId',
+            label: 'Turma',
+            placeholder: 'Todas as turmas',
+            options: attendanceSummariesPage.referenceOptions.schoolClassOptions,
             mobileOrder: 2,
           },
           {
             type: 'select',
-            name: 'status',
-            label: 'Status',
-            placeholder: 'Todos os status',
-            options: [
-              { value: '', label: 'Todos os status' },
-              { value: 'present', label: 'Presente' },
-              { value: 'absent', label: 'Ausente' },
-              { value: 'justified', label: 'Justificada' },
-            ],
+            name: 'subjectId',
+            label: 'Disciplina',
+            placeholder: 'Todas as disciplinas',
+            options: attendanceSummariesPage.referenceOptions.subjectOptions,
             mobileOrder: 3,
           },
           {
@@ -93,7 +88,7 @@ const AttendanceSummariesPage = () => {
         emptyDescription="Os resumos aparecerão após lançamentos de frequência."
         toolbarContent={
           <AppText color="text.secondary">
-            Consulte consolidados por aluno, turma, disciplina e período.
+            Consulte consolidados por matrícula, turma, disciplina e período.
           </AppText>
         }
         hideToolbar

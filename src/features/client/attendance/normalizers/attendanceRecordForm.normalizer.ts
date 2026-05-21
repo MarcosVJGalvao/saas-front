@@ -1,5 +1,6 @@
 import type { AttendanceRecordCreateFormValues } from '@features/client/attendance/schemas/attendanceRecordCreateForm.schema';
 import type { AttendanceRecordCreatePayload } from '@features/client/attendance/types/attendance.types';
+import type { StudentEnrollment } from '@features/client/student-enrollments/types/studentEnrollment.types';
 
 const toOptionalText = (value: string | undefined): string | undefined => {
   const trimmedValue = value?.trim() ?? '';
@@ -9,21 +10,26 @@ const toOptionalText = (value: string | undefined): string | undefined => {
 export const attendanceRecordCreateInitialValues: AttendanceRecordCreateFormValues = {
   scheduleId: '',
   attendanceDate: '',
-  studentEnrollmentId: '',
-  status: 'present',
-  observations: '',
+  items: [],
 };
+
+export const toAttendanceRecordItemsFormValues = (
+  enrollments: StudentEnrollment[],
+): AttendanceRecordCreateFormValues['items'] =>
+  enrollments.map((enrollment) => ({
+    studentEnrollmentId: enrollment.id,
+    status: 'present',
+    observations: '',
+  }));
 
 export const toAttendanceRecordCreatePayload = (
   values: AttendanceRecordCreateFormValues,
 ): AttendanceRecordCreatePayload => ({
   scheduleId: values.scheduleId.trim(),
   attendanceDate: values.attendanceDate,
-  items: [
-    {
-      studentEnrollmentId: values.studentEnrollmentId.trim(),
-      status: values.status,
-      observations: toOptionalText(values.observations),
-    },
-  ],
+  items: values.items.map((item) => ({
+    studentEnrollmentId: item.studentEnrollmentId.trim(),
+    status: item.status,
+    observations: toOptionalText(item.observations),
+  })),
 });

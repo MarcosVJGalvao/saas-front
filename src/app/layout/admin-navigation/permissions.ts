@@ -112,22 +112,22 @@ export const localPermissionResolver: PermissionResolver = {
     domain === 'platform' ? platformDefaultPermissions : clientDefaultPermissions,
 };
 
-const filterChildrenByPermissions = (
+const filterItemByPermissions = (
   item: NavigationItem,
   permissions: string[],
 ): NavigationItem | null => {
-  if (item.type !== 'section' && !hasPermission(permissions, item.permission)) {
+  const filteredChildren = item.children
+    ?.map((child) => filterItemByPermissions(child, permissions))
+    .filter((child): child is NavigationItem => child !== null);
+  const hasVisibleChildren = (filteredChildren?.length ?? 0) > 0;
+
+  if (
+    item.type !== 'section' &&
+    !hasPermission(permissions, item.permission) &&
+    !hasVisibleChildren
+  ) {
     return null;
   }
-
-  const filteredChildren = item.children
-    ?.filter((child) => hasPermission(permissions, child.permission))
-    .map((child) => ({
-      ...child,
-      children: child.children?.filter((grandchild) =>
-        hasPermission(permissions, grandchild.permission),
-      ),
-    }));
 
   return {
     ...item,
@@ -166,7 +166,7 @@ export const filterNavigationByPermissions = (
       continue;
     }
 
-    const filteredItem = filterChildrenByPermissions(item, permissions);
+    const filteredItem = filterItemByPermissions(item, permissions);
 
     if (filteredItem !== null) {
       sectionItems.push(filteredItem);

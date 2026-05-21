@@ -12,7 +12,7 @@ import { useAttendanceReferenceOptions } from '@features/client/attendance/hooks
 export const useAttendanceSummariesPage = () => {
   const attendanceSummariesList = useAttendanceSummariesList();
   const filters = useAttendanceFilters();
-  const referenceOptions = useAttendanceReferenceOptions({ includeStudents: true });
+  const referenceOptions = useAttendanceReferenceOptions();
 
   return {
     attendanceSummariesList,
@@ -26,10 +26,9 @@ export const useAttendanceSummariesPage = () => {
       filters.resetFilters();
       attendanceSummariesList.updateQuery({
         page: 1,
+        academicYearId: undefined,
         schoolClassId: undefined,
         subjectId: undefined,
-        studentId: undefined,
-        status: undefined,
         startDate: undefined,
         endDate: undefined,
       });

@@ -1,3 +1,4 @@
+import { AttendanceRecordItemsFields } from '@features/client/attendance/components/AttendanceRecordItemsFields';
 import { useAttendanceRecordCreatePage } from '@features/client/attendance/hooks/useAttendanceRecordCreatePage';
 import type { AttendanceRecordCreateFormValues } from '@features/client/attendance/schemas/attendanceRecordCreateForm.schema';
 import { AppPaper } from '@shared/components/data-display/AppPaper';
@@ -7,23 +8,23 @@ import { AppForm } from '@shared/components/form/AppForm';
 import { FormActions } from '@shared/components/form/FormActions';
 import { FormDatePicker } from '@shared/components/form/FormDatePicker';
 import { FormSelect } from '@shared/components/form/FormSelect';
-import { FormTextField } from '@shared/components/form/FormTextField';
 import { AppStack } from '@shared/components/layout/AppStack';
 import { PageHeader } from '@shared/components/layout/PageHeader';
-import { attendanceStatusOptions } from '@shared/constants/selectOptions';
 
 const AttendanceRecordsPage = () => {
   const attendanceRecordCreatePage = useAttendanceRecordCreatePage();
+  const hasSelectedSchedule = Boolean(attendanceRecordCreatePage.selectedSchedule);
+  const hasAvailableEnrollments = attendanceRecordCreatePage.availableEnrollments.length > 0;
 
   return (
     <AppStack spacing={2}>
       <PageHeader
         title="Lançamentos de frequência"
-        subtitle="Marque presenças, faltas e justificativas por aula."
+        subtitle="Selecione a aula e marque a presença da turma em lote."
       />
       <AppAlert severity="info">
-        Informe um horário configurado, a data da aula e a matrícula do aluno para registrar a
-        frequência.
+        Escolha um horário e a data da aula para carregar automaticamente os alunos matriculados da
+        turma.
       </AppAlert>
       {attendanceRecordCreatePage.successMessage ? (
         <AppAlert severity="success">{attendanceRecordCreatePage.successMessage}</AppAlert>
@@ -36,9 +37,10 @@ const AttendanceRecordsPage = () => {
           {attendanceRecordCreatePage.referenceOptions.errorMessage}
         </AppAlert>
       ) : null}
+
       <AppPaper sx={{ p: 3 }}>
         <AppStack spacing={2}>
-          <AppText variant="h6">Novo lançamento</AppText>
+          <AppText variant="h6">Lançamento em lote</AppText>
           <AppForm
             form={attendanceRecordCreatePage.form}
             onSubmit={attendanceRecordCreatePage.onSubmit}
@@ -55,34 +57,42 @@ const AttendanceRecordsPage = () => {
               name="attendanceDate"
               label="Data da aula"
             />
-            <FormSelect<AttendanceRecordCreateFormValues>
-              name="studentEnrollmentId"
-              label="Matrícula"
-              options={attendanceRecordCreatePage.referenceOptions.studentEnrollmentOptions}
-              disabled={attendanceRecordCreatePage.referenceOptions.loading}
-            />
-            <FormSelect<AttendanceRecordCreateFormValues>
-              name="status"
-              label="Status"
-              options={attendanceStatusOptions}
-            />
-            <FormTextField<AttendanceRecordCreateFormValues>
-              name="observations"
-              label="Observações"
-              placeholder="Observações opcionais"
-            />
-            <FormActions
-              primaryAction={{
-                type: 'confirm',
-                label: 'Lançar frequência',
-                onClick: () => {
-                  void attendanceRecordCreatePage.form.handleSubmit(
-                    attendanceRecordCreatePage.onSubmit,
-                  )();
-                },
-                loading: attendanceRecordCreatePage.submitting,
-              }}
-            />
+
+            {!hasSelectedSchedule ? (
+              <AppAlert severity="info">
+                Selecione um horário para listar os alunos da turma e registrar a frequência.
+              </AppAlert>
+            ) : null}
+
+            {hasSelectedSchedule && !hasAvailableEnrollments ? (
+              <AppAlert severity="warning">
+                Não há matrículas vinculadas à turma deste horário. Verifique a turma selecionada ou
+                cadastre os alunos antes de lançar a frequência.
+              </AppAlert>
+            ) : null}
+
+            {hasAvailableEnrollments ? (
+              <>
+                <AttendanceRecordItemsFields
+                  enrollments={attendanceRecordCreatePage.availableEnrollments}
+                  disabled={attendanceRecordCreatePage.submitting}
+                />
+
+                <FormActions
+                  primaryAction={{
+                    type: 'confirm',
+                    label: 'Lançar frequência em lote',
+                    onClick: () => {
+                      void attendanceRecordCreatePage.form.handleSubmit(
+                        attendanceRecordCreatePage.onSubmit,
+                      )();
+                    },
+                    loading: attendanceRecordCreatePage.submitting,
+                    disabled: !attendanceRecordCreatePage.canSubmit,
+                  }}
+                />
+              </>
+            ) : null}
           </AppForm>
         </AppStack>
       </AppPaper>

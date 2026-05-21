@@ -81,6 +81,14 @@ const selectedSx = {
   '&.Mui-selected .MuiListItemIcon-root': { color: 'primary.main' },
 };
 
+const sidebarPrimaryTextSx = {
+  noWrap: true,
+  sx: {
+    fontSize: '0.875rem',
+    lineHeight: 1.2,
+  },
+};
+
 // Level 3 — leaf items (no children)
 const SidebarLeafItems = ({
   child,
@@ -99,16 +107,17 @@ const SidebarLeafItems = ({
         onClick={() => onItemClick(gc.href)}
         sx={{
           borderRadius: 1.5,
-          minHeight: submenuItemHeight - 8,
-          py: 0.25,
-          pl: 3.5,
+          minHeight: submenuItemHeight - 12,
+          py: 0.125,
+          pl: 3.25,
+          pr: 1,
           ...selectedSx,
         }}
       >
-        <ListItemIcon sx={{ minWidth: 26, justifyContent: 'center' }}>
+        <ListItemIcon sx={{ minWidth: 22, justifyContent: 'center' }}>
           {gc.icon !== undefined ? <gc.icon sx={{ fontSize: 16 }} /> : null}
         </ListItemIcon>
-        <ListItemText primary={gc.label} slotProps={{ primary: { variant: 'body2' } }} />
+        <ListItemText primary={gc.label} slotProps={{ primary: sidebarPrimaryTextSx }} />
       </ListItemButton>
     ))}
   </>
@@ -143,16 +152,17 @@ const SidebarSubItem = ({
         onClick={handleClick}
         sx={{
           borderRadius: 1.5,
-          minHeight: submenuItemHeight - 4,
-          py: 0.5,
-          pl: 2,
+          minHeight: submenuItemHeight - 8,
+          py: 0.25,
+          pl: 1.5,
+          pr: 1,
           ...selectedSx,
         }}
       >
-        <ListItemIcon sx={{ minWidth: 30, justifyContent: 'center' }}>
-          {child.icon !== undefined ? <child.icon sx={{ fontSize: 18 }} /> : null}
+        <ListItemIcon sx={{ minWidth: 26, justifyContent: 'center' }}>
+          {child.icon !== undefined ? <child.icon sx={{ fontSize: 17 }} /> : null}
         </ListItemIcon>
-        <ListItemText primary={child.label} slotProps={{ primary: { variant: 'body2' } }} />
+        <ListItemText primary={child.label} slotProps={{ primary: sidebarPrimaryTextSx }} />
         {child.hasChildren ? (
           child.isOpen ? (
             <ExpandLessIcon sx={{ fontSize: 16 }} />
@@ -220,10 +230,11 @@ const getExpandIndicatorIcon = (showExpandIcon: boolean, isOpen: boolean) => {
 
 const getSidebarMenuItemSx = (isCollapsed: boolean, sidebarItemHeight: number) => ({
   borderRadius: 2,
-  minHeight: sidebarItemHeight - 8,
+  minHeight: sidebarItemHeight - 14,
   color: 'text.primary',
   justifyContent: isCollapsed ? 'center' : 'flex-start',
-  px: isCollapsed ? 0 : 1.5,
+  px: isCollapsed ? 0 : 1,
+  py: 0.25,
   ...selectedSx,
 });
 
@@ -234,7 +245,7 @@ const SidebarMenuItemIcon = ({
   icon: SidebarMappedItem['icon'];
   isCollapsed: boolean;
 }) => (
-  <ListItemIcon sx={{ minWidth: isCollapsed ? 0 : 36, justifyContent: 'center' }}>
+  <ListItemIcon sx={{ minWidth: isCollapsed ? 0 : 30, justifyContent: 'center' }}>
     {Icon !== undefined ? <Icon /> : <HomeOutlinedIcon />}
   </ListItemIcon>
 );
@@ -273,11 +284,13 @@ const SidebarMenuItem = ({
         sx={itemSx}
       >
         <SidebarMenuItemIcon icon={item.icon} isCollapsed={isCollapsed} />
-        {!isCollapsed ? <ListItemText primary={item.label} /> : null}
+        {!isCollapsed ? (
+          <ListItemText primary={item.label} slotProps={{ primary: sidebarPrimaryTextSx }} />
+        ) : null}
         {getExpandIndicatorIcon(showExpandIcon, item.isOpen)}
       </ListItemButton>
       {showChildren ? (
-        <List sx={{ px: 1, py: 0.25, mt: 0 }}>
+        <List sx={{ px: 0.75, py: 0.125, mt: 0 }}>
           <SidebarItemChildren
             item={item}
             submenuItemHeight={submenuItemHeight}
@@ -343,10 +356,10 @@ export const SidebarContent = memo(
         <Divider />
         <List
           sx={{
-            p: 1,
+            p: 0.75,
             display: 'flex',
             flexDirection: 'column',
-            gap: 0.25,
+            gap: 0.125,
             overflowY: 'auto',
             flex: 1,
           }}

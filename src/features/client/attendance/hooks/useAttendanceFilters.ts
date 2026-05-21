@@ -7,6 +7,7 @@ import type {
 type AttendanceFilterValues = Record<string, unknown>;
 
 export const initialAttendanceFilterValues: AttendanceFilterValues = {
+  academicYearId: '',
   schoolClassId: '',
   subjectId: '',
   studentId: '',
@@ -33,6 +34,7 @@ const getOptionalStatus = (value: unknown): AttendanceStatus | undefined => {
 export const buildAttendanceQueryFromFilters = (
   filterValues: AttendanceFilterValues,
 ): Partial<AttendanceQueryParams> => ({
+  academicYearId: getOptionalString(filterValues.academicYearId),
   schoolClassId: getOptionalString(filterValues.schoolClassId),
   subjectId: getOptionalString(filterValues.subjectId),
   studentId: getOptionalString(filterValues.studentId),

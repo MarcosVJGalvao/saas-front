@@ -1,5 +1,8 @@
 import { describe, expect, it } from 'vitest';
-import { toAttendanceRecordCreatePayload } from '@features/client/attendance/normalizers/attendanceRecordForm.normalizer';
+import {
+  toAttendanceRecordCreatePayload,
+  toAttendanceRecordItemsFormValues,
+} from '@features/client/attendance/normalizers/attendanceRecordForm.normalizer';
 import { toAttendanceScheduleCreatePayload } from '@features/client/attendance/normalizers/attendanceScheduleForm.normalizer';
 
 describe('attendance form normalizers', () => {
@@ -29,13 +32,22 @@ describe('attendance form normalizers', () => {
     });
   });
 
-  it('normaliza o payload de lançamento', () => {
+  it('normaliza o payload de lançamento em lote', () => {
     const payload = toAttendanceRecordCreatePayload({
       scheduleId: ' schedule-1 ',
       attendanceDate: '2026-05-19',
-      studentEnrollmentId: ' enrollment-1 ',
-      status: 'justified',
-      observations: ' Consulta médica ',
+      items: [
+        {
+          studentEnrollmentId: ' enrollment-1 ',
+          status: 'justified',
+          observations: ' Consulta médica ',
+        },
+        {
+          studentEnrollmentId: ' enrollment-2 ',
+          status: 'present',
+          observations: '   ',
+        },
+      ],
     });
 
     expect(payload).toEqual({
@@ -47,7 +59,37 @@ describe('attendance form normalizers', () => {
           status: 'justified',
           observations: 'Consulta médica',
         },
+        {
+          studentEnrollmentId: 'enrollment-2',
+          status: 'present',
+          observations: undefined,
+        },
       ],
     });
+  });
+
+  it('prepara os itens iniciais do lançamento em lote', () => {
+    const formItems = toAttendanceRecordItemsFormValues([
+      {
+        id: 'enrollment-1',
+        status: 'active',
+        enrollmentDate: '2026-01-10',
+        student: {
+          id: 'student-1',
+          person: {
+            fullName: 'Ana Souza',
+            documentNumber: '12345678900',
+          },
+        },
+      },
+    ]);
+
+    expect(formItems).toEqual([
+      {
+        studentEnrollmentId: 'enrollment-1',
+        status: 'present',
+        observations: '',
+      },
+    ]);
   });
 });

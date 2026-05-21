@@ -21,6 +21,14 @@ describe('admin navigation by domain', () => {
     expect(clientItems.some((item) => item.type === 'section' && item.label === 'Gestão')).toBe(
       false,
     );
+    expect(
+      clientItems.some((item) => item.type === 'section' && item.label === 'Administração'),
+    ).toBe(true);
+    expect(
+      clientItems.some(
+        (item) => item.id === 'client-academic-structure' && item.children !== undefined,
+      ),
+    ).toBe(true);
   });
 
   it('applies route prefix and keeps client permission without domain prefix', () => {
@@ -66,6 +74,20 @@ describe('admin navigation by domain', () => {
 
     expect(filtered.some((item) => item.type === 'section' && item.label === 'Gestão')).toBe(true);
     expect(filtered.some((item) => item.id === 'platform-clientes')).toBe(true);
+  });
+
+  it('keeps expandable parents when only a nested child is permitted', () => {
+    const items = navigationByDomain.client;
+    const filtered = filterNavigationByPermissions(items, ['student-enroll:read']);
+    const registrationGroup = filtered.find((item) => item.id === 'client-students-registration');
+
+    expect(filtered.some((item) => item.type === 'section' && item.label === 'Alunos')).toBe(true);
+    expect(registrationGroup?.children).toEqual([
+      expect.objectContaining({
+        id: 'client-student-enrollments',
+        label: 'Matrículas',
+      }),
+    ]);
   });
 
   it('does not use wildcard permissions in local client defaults', () => {

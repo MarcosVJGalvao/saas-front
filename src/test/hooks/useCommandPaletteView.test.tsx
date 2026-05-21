@@ -28,9 +28,16 @@ const items: NavigationItem[] = [
   { id: 'dashboard', label: 'Dashboard', href: '/dashboard', permission: 'dashboard:read' },
   {
     id: 'users',
-    label: 'Usuarios',
+    label: 'Usuários',
     permission: 'users:read',
-    children: [{ id: 'users-list', label: 'Lista', href: '/users', permission: 'users:read' }],
+    children: [
+      {
+        id: 'users-management',
+        label: 'Gestão de usuários',
+        permission: 'users:read',
+        children: [{ id: 'users-list', label: 'Lista', href: '/users', permission: 'users:read' }],
+      },
+    ],
   },
 ];
 
@@ -42,6 +49,22 @@ describe('useCommandPaletteView', () => {
 
     expect(result.current.filteredItems).toHaveLength(1);
     expect(result.current.filteredItems[0]?.id).toBe('dashboard');
+  });
+
+  it('inclui destinos do terceiro nível na busca', () => {
+    const { result } = renderHook(
+      () => useCommandPaletteView('lista', 'lista', [], items, vi.fn()),
+      {
+        wrapper,
+      },
+    );
+
+    expect(result.current.filteredItems).toEqual([
+      expect.objectContaining({
+        id: 'users-list',
+        href: '/users',
+      }),
+    ]);
   });
 
   it('retorna todos os itens quando query está vazia', () => {

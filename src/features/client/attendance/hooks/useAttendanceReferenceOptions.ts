@@ -86,6 +86,9 @@ export const useAttendanceReferenceOptions = ({
   const [scheduleOptions, setScheduleOptions] = useState<AppSelectOption[]>([]);
   const [studentEnrollmentOptions, setStudentEnrollmentOptions] = useState<AppSelectOption[]>([]);
   const [studentOptions, setStudentOptions] = useState<AppSelectOption[]>([]);
+  const [schedules, setSchedules] = useState<AttendanceSchedule[]>([]);
+  const [studentEnrollments, setStudentEnrollments] = useState<StudentEnrollment[]>([]);
+  const [students, setStudents] = useState<Student[]>([]);
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | undefined>();
 
@@ -129,10 +132,13 @@ export const useAttendanceReferenceOptions = ({
         setSchoolClassOptions(schoolClassesResponse.data.map(toSchoolClassOption));
         setSubjectOptions(subjectsResponse.data.map(toCatalogOption));
         setTeacherSubjectOptions(teacherSubjectsResponse.data.map(toTeacherSubjectOption));
+        setSchedules(includeSchedules ? schedulesResponse.data : []);
         setScheduleOptions(includeSchedules ? schedulesResponse.data.map(toScheduleOption) : []);
+        setStudentEnrollments(includeStudentEnrollments ? studentEnrollmentsResponse.data : []);
         setStudentEnrollmentOptions(
           includeStudentEnrollments ? studentEnrollmentsResponse.data.map(toEnrollmentOption) : [],
         );
+        setStudents(includeStudents ? studentsResponse.data : []);
         setStudentOptions(includeStudents ? studentsResponse.data.map(toStudentOption) : []);
       } catch {
         if (!isMounted) {
@@ -159,8 +165,11 @@ export const useAttendanceReferenceOptions = ({
     schoolClassOptions,
     subjectOptions,
     teacherSubjectOptions,
+    schedules,
     scheduleOptions,
+    studentEnrollments,
     studentEnrollmentOptions,
+    students,
     studentOptions,
     loading,
     errorMessage,
