@@ -1,5 +1,6 @@
 import AccessTimeOutlinedIcon from '@mui/icons-material/AccessTimeOutlined';
 import type { SxProps, Theme } from '@mui/material/styles';
+import { responsive } from '@theme/utils/responsive';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import { useSessionTimer } from '@shared/hooks/useSessionTimer';
@@ -36,4 +37,6 @@ export const SessionTimer = ({
   );
 };
 
-export const sessionTimerSx: SxProps<Theme> = { minWidth: 160 };
+export const sessionTimerSx: SxProps<Theme> = {
+  minWidth: responsive({ xs: 0, sm: 120, md: 160 }),
+};

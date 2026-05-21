@@ -41,7 +41,7 @@ type SelectFilterField = Extract<FilterField, { type: 'select' }>;
 type TextFilterField = Extract<FilterField, { type: 'text' }>;
 
 const createBaseFieldSx = (mobileOrder: number): SxProps<Theme> => ({
-  order: responsive<number | string>({ mobile: mobileOrder, tablet: 'unset' }),
+  order: responsive<number | string>({ xs: mobileOrder, md: 'unset' }),
 });
 
 const renderTextField = ({
@@ -56,7 +56,7 @@ const renderTextField = ({
     spacing={spacingScale.xxs}
     sx={{
       ...createBaseFieldSx(mobileOrder),
-      gridColumn: responsive({ mobile: 'auto', tablet: 'span 2' }),
+      gridColumn: responsive({ xs: 'auto', md: 'span 2' }),
     }}
   >
     <Typography variant="body2">{field.label}</Typography>
@@ -154,7 +154,7 @@ const renderFilterField = ({
       spacing={spacingScale.xxs}
       sx={{
         ...createBaseFieldSx(mobileOrder),
-        gridColumn: responsive({ mobile: 'auto', tablet: 'span 2' }),
+        gridColumn: responsive({ xs: 'auto', md: 'span 2' }),
         minWidth: 0,
       }}
     >

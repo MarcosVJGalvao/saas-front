@@ -1,4 +1,4 @@
-﻿# 06 - Design System Skill
+# 06 - Design System Skill
 
 ## Objetivo
 
@@ -44,13 +44,16 @@ app/theme/
 
 ## Responsividade obrigatória
 
-Toda responsividade deve usar apenas 3 tiers globais:
+O projeto usa 6 breakpoints para cobrir a diversidade de dispositivos:
 
-```txt
-mobile
-tablet
-desktop
-```
+| Breakpoint | Valor  | Dispositivo alvo                     |
+| ---------- | ------ | ------------------------------------ |
+| `xs`       | 0px    | Phones pequenos (320–479px)          |
+| `sm`       | 480px  | Phones maiores (480–767px)           |
+| `md`       | 768px  | Tablets portrait / iPad              |
+| `lg`       | 1024px | Tablets landscape / laptops pequenos |
+| `xl`       | 1280px | Laptops padrão                       |
+| `xxl`      | 1536px | Telas grandes / monitores            |
 
 Arquivo obrigatório de tokens:
 
@@ -58,24 +61,60 @@ Arquivo obrigatório de tokens:
 app/theme/tokens/breakpoints.ts
 ```
 
-Helper obrigatório para fallback:
+Helper obrigatório:
 
 ```txt
 app/theme/utils/responsive.ts
 ```
 
-Regras:
+### Assinatura do helper
 
-- Não usar `xs`, `sm`, `md`, `lg`, `xl` em componentes novos ou alterados.
+```ts
+responsive({ xs, sm?, md?, lg?, xl?, xxl? })
+```
+
+- `xs` é obrigatório (mobile-first baseline).
+- Os demais são opcionais — apenas declare quando o valor muda.
+
+### Regras
+
+- Sempre usar `responsive()` em vez de objetos MUI diretos (`{ xs: ..., md: ... }`) para garantir type safety e cobertura de breakpoints.
+- Não criar `@media` hardcoded em TSX/TS — usar `theme.breakpoints` quando necessário fora de sx.
 - Não criar breakpoints locais por componente.
-- Sempre usar `responsive({ mobile, tablet?, desktop? })` para evitar gaps.
-- Se `tablet` não for informado, herda de `mobile`.
-- Se `desktop` não for informado, herda de `tablet` (ou `mobile`).
+- Usar `theme.breakpoints.down('lg')` em `useMediaQuery` para separar mobile de desktop (lg = 1024px).
 
-Exemplo correto:
+### Exemplos corretos
 
 ```tsx
+// Padding que cresce em telas maiores
 sx={{
-  px: responsive({ mobile: 2, desktop: 4 }),
+  px: responsive({ xs: 2, md: 4, lg: 8 }),
 }}
+
+// Layout de 1 coluna → 2 → 3
+sx={{
+  gridTemplateColumns: responsive({
+    xs: '1fr',
+    md: 'repeat(2, minmax(0, 1fr))',
+    lg: 'repeat(3, minmax(0, 1fr))',
+  }),
+}}
+
+// Flex que empilha em mobile
+sx={{
+  flexDirection: responsive({ xs: 'column', sm: 'row' }),
+}}
+```
+
+### Proibido
+
+```tsx
+// ❌ @media hardcoded
+'@media (max-width:450px)': { display: 'none' }
+
+// ❌ Objeto MUI direto sem responsive()
+{ xs: 2, md: 4 }
+
+// ❌ Breakpoint que não existe no sistema
+responsive({ mobile: 2, tablet: 4 })
 ```

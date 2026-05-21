@@ -86,7 +86,11 @@ export const DataTable = <TData,>({
   return (
     <TableContainer
       component={Paper}
-      sx={{ border: `1px solid ${theme.palette.divider}`, borderRadius: theme.spacing(1.5) }}
+      sx={{
+        border: `1px solid ${theme.palette.divider}`,
+        borderRadius: theme.spacing(1.5),
+        overflowX: 'auto',
+      }}
     >
       <Table>
         <TableHead>

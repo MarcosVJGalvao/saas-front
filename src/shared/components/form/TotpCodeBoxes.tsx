@@ -2,6 +2,7 @@ import { useRef } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
+import { responsive } from '@theme/utils/responsive';
 
 interface TotpCodeBoxesProps {
   name: string;
@@ -49,10 +50,16 @@ export const TotpCodeBoxes = ({ name }: TotpCodeBoxesProps) => {
                   },
                   maxLength: 1,
                   inputMode: 'numeric',
-                  style: { textAlign: 'center', fontSize: 22, fontWeight: 600, width: 36 },
+                  style: { textAlign: 'center', fontSize: 22, fontWeight: 600 },
                 },
               }}
-              sx={{ '& .MuiInputBase-root': { height: 54, width: 50, borderRadius: 2 } }}
+              sx={{
+                '& .MuiInputBase-root': {
+                  height: responsive({ xs: 44, sm: 50, md: 54 }),
+                  width: responsive({ xs: 40, sm: 44, md: 50 }),
+                  borderRadius: 2,
+                },
+              }}
             />
           ))}
           <input

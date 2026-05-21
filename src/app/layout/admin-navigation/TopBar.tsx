@@ -37,9 +37,6 @@ const getSearchContainerSx = (isMobile: boolean) => ({
   justifyContent: 'flex-start',
   flex: isMobile ? 1 : '1 1 auto',
   minWidth: 0,
-  '@media (max-width:450px)': {
-    flex: '0 0 42px',
-  },
 });
 
 const TopBarSearchLabel = () => (
@@ -50,9 +47,7 @@ const TopBarSearchLabel = () => (
       overflow: 'hidden',
       textOverflow: 'ellipsis',
       whiteSpace: 'nowrap',
-      '@media (max-width:450px)': {
-        display: 'none',
-      },
+      display: { xs: 'none', sm: 'block' },
     }}
   >
     {appLayoutMessages.searchPlaceholder}
@@ -83,9 +78,6 @@ const sessionTimerContainerSx = {
   display: { xs: 'none', md: 'flex' },
   alignItems: 'center',
   minWidth: 0,
-  '@media (max-width:450px)': {
-    display: 'flex',
-  },
 };
 
 const TopBarUserInfo = ({
@@ -148,10 +140,7 @@ export const TopBar = ({
           fontWeight: 600,
           fontSize: { xs: '1.125rem', lg: '1.25rem' },
           minWidth: { xs: 0, sm: 120, md: 140 },
-          maxWidth: { xs: 120, sm: 160, lg: 220 },
-          '@media (max-width:450px)': {
-            maxWidth: 76,
-          },
+          maxWidth: { xs: 76, sm: 160, lg: 220 },
           overflow: 'hidden',
           textOverflow: 'ellipsis',
           whiteSpace: 'nowrap',
@@ -165,32 +154,22 @@ export const TopBar = ({
           onClick={onOpenCommandPalette}
           startIcon={<SearchOutlinedIcon />}
           sx={{
-            width: '100%',
-            maxWidth: { xs: '100%', sm: 220, md: 260, lg: 340 },
-            minWidth: { xs: 0, sm: 180 },
-            justifyContent: isMobile ? 'flex-start' : 'space-between',
-            '@media (max-width:450px)': {
-              width: 42,
-              minWidth: 42,
-              maxWidth: 42,
-              justifyContent: 'center',
-              px: 0,
-            },
+            width: { xs: 42, sm: '100%' },
+            maxWidth: { xs: 42, sm: 220, md: 260, lg: 340 },
+            minWidth: { xs: 42, sm: 180 },
+            justifyContent: { xs: 'center', sm: isMobile ? 'flex-start' : 'space-between' },
             textTransform: 'none',
             border: 1,
             borderColor: 'divider',
             borderRadius: 1.5,
-            px: 1.25,
+            px: { xs: 0, sm: 1.25 },
             py: 0.25,
             height: 38,
             minHeight: 38,
             color: 'text.secondary',
             '& .MuiButton-startIcon': {
-              mr: 0.75,
-              '@media (max-width:450px)': {
-                mr: 0,
-                ml: 0,
-              },
+              mr: { xs: 0, sm: 0.75 },
+              ml: { xs: 0 },
             },
             overflow: 'hidden',
             whiteSpace: 'nowrap',
@@ -200,15 +179,12 @@ export const TopBar = ({
           <Box
             component="span"
             sx={{
-              display: 'flex',
+              display: { xs: 'none', sm: 'flex' },
               alignItems: 'center',
               justifyContent: 'space-between',
               flex: 1,
               minWidth: 0,
               gap: 1,
-              '@media (max-width:450px)': {
-                display: 'none',
-              },
             }}
           >
             <TopBarSearchLabel />

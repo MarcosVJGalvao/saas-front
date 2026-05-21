@@ -7,6 +7,7 @@ import { AppText } from '@shared/components/data-display/AppText';
 import { AppButton } from '@shared/components/inputs/AppButton';
 import { AppBox } from '@shared/components/layout/AppBox';
 import { AppStack } from '@shared/components/layout/AppStack';
+import { responsive } from '@theme/utils/responsive';
 
 export interface PageHeaderBreadcrumb {
   label: string;
@@ -82,10 +83,16 @@ export const PageHeader = ({
         </Breadcrumbs>
       ) : null}
       <AppBox
-        sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 2 }}
+        sx={{
+          display: 'flex',
+          alignItems: responsive({ xs: 'flex-start', sm: 'center' }),
+          justifyContent: 'space-between',
+          flexDirection: responsive({ xs: 'column', sm: 'row' }),
+          gap: responsive({ xs: 1.5, sm: 2 }),
+        }}
       >
-        <AppBox>
-          <AppText variant="h5" sx={{ fontWeight: 700 }}>
+        <AppBox sx={{ minWidth: 0 }}>
+          <AppText variant="h5" sx={{ fontWeight: 700, wordBreak: 'break-word' }}>
             {title}
           </AppText>
           {subtitle !== undefined ? (
@@ -94,7 +101,7 @@ export const PageHeader = ({
             </AppText>
           ) : null}
         </AppBox>
-        <AppStack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
+        <AppStack direction="row" spacing={1} sx={{ alignItems: 'center', flexShrink: 0 }}>
           {actions}
           {renderPrimaryAction({ actionIcon, actionLabel, canShowAction, onAction })}
         </AppStack>

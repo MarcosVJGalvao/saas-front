@@ -34,13 +34,13 @@ const HomePage = () => (
       color: 'text.primary',
       display: 'flex',
       alignItems: 'center',
-      px: responsive({ mobile: 2, tablet: 4, desktop: 8 }),
-      py: responsive({ mobile: 4, tablet: 6, desktop: 8 }),
+      px: responsive({ xs: 2, md: 4, lg: 8 }),
+      py: responsive({ xs: 4, md: 6, lg: 8 }),
       backgroundImage: `linear-gradient(135deg, ${theme.palette.background.default} 0%, ${theme.palette.background.paper} 100%)`,
     })}
   >
     <AppStack
-      spacing={responsive({ mobile: 4, desktop: 6 })}
+      spacing={responsive({ xs: 4, lg: 6 })}
       sx={{
         width: '100%',
         maxWidth: 1120,
@@ -56,7 +56,7 @@ const HomePage = () => (
           variant="h3"
           sx={{
             fontWeight: 800,
-            fontSize: responsive({ mobile: '2rem', tablet: '2.75rem', desktop: '3.25rem' }),
+            fontSize: responsive({ xs: '2rem', md: '2.75rem', lg: '3.25rem' }),
             lineHeight: 1.08,
           }}
         >
@@ -71,8 +71,8 @@ const HomePage = () => (
       <AppBox
         sx={{
           display: 'grid',
-          gridTemplateColumns: responsive({ mobile: '1fr', tablet: 'repeat(2, minmax(0, 1fr))' }),
-          gap: responsive({ mobile: 2, tablet: 3 }),
+          gridTemplateColumns: responsive({ xs: '1fr', md: 'repeat(2, minmax(0, 1fr))' }),
+          gap: responsive({ xs: 2, md: 3 }),
         }}
       >
         {accessOptions.map((option) => (
@@ -83,7 +83,7 @@ const HomePage = () => (
               bgcolor: 'background.paper',
               border: `1px solid ${theme.palette.divider}`,
               borderRadius: 2,
-              p: responsive({ mobile: 3, desktop: 4 }),
+              p: responsive({ xs: 3, lg: 4 }),
               boxShadow: theme.shadows[2],
             })}
           >

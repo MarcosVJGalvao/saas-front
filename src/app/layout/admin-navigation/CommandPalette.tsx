@@ -1,4 +1,5 @@
 import SearchOutlinedIcon from '@mui/icons-material/SearchOutlined';
+import { responsive } from '@theme/utils/responsive';
 import StarBorderOutlinedIcon from '@mui/icons-material/StarBorderOutlined';
 import StarIcon from '@mui/icons-material/Star';
 import ChevronRightOutlinedIcon from '@mui/icons-material/ChevronRightOutlined';
@@ -64,10 +65,10 @@ export const CommandPalette = ({
       slotProps={{
         paper: {
           sx: {
-            width: { xs: '88vw', md: '62vw', lg: '54vw' },
+            width: responsive({ xs: '92vw', sm: '82vw', md: '72vw', lg: '60vw', xl: '54vw' }),
             maxWidth: 760,
-            height: { xs: '74vh', md: '68vh', lg: '64vh' },
-            maxHeight: '72vh',
+            height: responsive({ xs: '80vh', md: '74vh', lg: '68vh', xl: '64vh' }),
+            maxHeight: '80vh',
             borderRadius: 2,
             border: 1,
             borderColor: 'divider',

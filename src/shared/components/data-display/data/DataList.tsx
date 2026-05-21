@@ -395,7 +395,7 @@ export const DataList = <RowData,>({
       }}
       aria-busy={loading}
     >
-      <Box sx={{ overflowX: 'hidden' }}>{renderStateContent()}</Box>
+      <Box sx={{ overflowX: 'auto' }}>{renderStateContent()}</Box>
       {pagination ? (
         <DataListPagination pagination={pagination} isMobile={viewport === 'mobile'} />
       ) : null}
