@@ -104,6 +104,8 @@ export const DataTable = <TData,>({
                   color: theme.palette.text.secondary,
                   fontWeight: 600,
                   py: theme.spacing(2.25),
+                  width: column.width ?? (column.key === 'actions' ? 1 : undefined),
+                  whiteSpace: 'nowrap',
                 }}
               >
                 {column.header}

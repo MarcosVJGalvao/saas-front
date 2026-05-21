@@ -1,5 +1,6 @@
 import { useCallback, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
+import { getLocationStateSearch } from '@shared/utils/getLocationStateSearch';
 import type { RowActionItem } from '@shared/components/data-display/data/RowActionsMenu';
 import { downloadBlob } from '@shared/utils/downloadBlob';
 import {
@@ -68,8 +69,13 @@ const resolveDownloadFileName = (
 
 export const useDocumentsListPage = () => {
   const navigate = useNavigate();
-  const documentsList = useDocumentsList();
-  const [filterValues, setFilterValues] = useState<DocumentFilterValues>(initialFilterValues);
+  const location = useLocation();
+  const initialSearch = getLocationStateSearch(location.state);
+  const documentsList = useDocumentsList(initialSearch ? { search: initialSearch } : undefined);
+  const [filterValues, setFilterValues] = useState<DocumentFilterValues>({
+    ...initialFilterValues,
+    query: initialSearch ?? '',
+  });
   const [documentPendingDelete, setDocumentPendingDelete] = useState<
     GeneratedDocument | undefined
   >();

@@ -44,7 +44,9 @@
       "Bash(npx tsc *)",
       "Bash(del \"c:\\\\Users\\\\marco\\\\Projetos Pessoais\\\\plataform-saas-front\\\\src\\\\shared\\\\components\\\\messages.ts\")",
       "Bash(Remove-Item \"c:\\\\Users\\\\marco\\\\Projetos Pessoais\\\\plataform-saas-front\\\\src\\\\shared\\\\components\\\\messages.ts\")",
-      "Bash(Get-ChildItem -Path \"c:\\\\Users\\\\marco\\\\Projetos Pessoais\\\\plataform-saas-front\" -Force)"
+      "Bash(Get-ChildItem -Path \"c:\\\\Users\\\\marco\\\\Projetos Pessoais\\\\plataform-saas-front\" -Force)",
+      "Bash(npx prettier *)",
+      "Bash(npx vitest *)"
     ]
   }
 }

@@ -1,5 +1,6 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
+import { getLocationStateSearch } from '@shared/utils/getLocationStateSearch';
 import {
   buildEmployeeColumns,
   buildEmployeeMobileConfig,
@@ -36,8 +37,13 @@ const buildQueryFromFilters = (
 
 export const useEmployeesListPage = () => {
   const navigate = useNavigate();
-  const employeesList = useEmployeesList();
-  const [filterValues, setFilterValues] = useState<EmployeeFilterValues>(initialFilterValues);
+  const location = useLocation();
+  const initialSearch = getLocationStateSearch(location.state);
+  const employeesList = useEmployeesList(initialSearch ? { search: initialSearch } : undefined);
+  const [filterValues, setFilterValues] = useState<EmployeeFilterValues>({
+    ...initialFilterValues,
+    search: initialSearch ?? '',
+  });
 
   const tableColumns = buildEmployeeColumns({
     onDetails: (employee) => {

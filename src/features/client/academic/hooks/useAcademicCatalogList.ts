@@ -29,10 +29,15 @@ const initialMeta: PaginationMeta = {
 export const useAcademicCatalogList = (
   service: AcademicCatalogListService,
   errorMessageFallback: string,
+  initialParams?: Partial<AcademicCatalogQueryParams>,
 ) => {
   const [rows, setRows] = useState<AcademicCatalogItem[]>([]);
   const [meta, setMeta] = useState<PaginationMeta>(initialMeta);
-  const [query, setQuery] = useState<AcademicCatalogQueryParams>({ page: 1, limit: 10 });
+  const [query, setQuery] = useState<AcademicCatalogQueryParams>({
+    page: 1,
+    limit: 10,
+    ...initialParams,
+  });
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | undefined>(undefined);
 

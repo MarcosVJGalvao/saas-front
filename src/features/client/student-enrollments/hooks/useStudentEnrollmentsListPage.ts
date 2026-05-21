@@ -1,5 +1,6 @@
 import { useCallback, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
+import { getLocationStateSearch } from '@shared/utils/getLocationStateSearch';
 import { downloadBlob } from '@shared/utils/downloadBlob';
 import {
   buildStudentEnrollmentColumns,
@@ -47,9 +48,15 @@ const buildQueryFromFilters = (
 
 export const useStudentEnrollmentsListPage = () => {
   const navigate = useNavigate();
-  const studentEnrollmentsList = useStudentEnrollmentsList();
-  const [filterValues, setFilterValues] =
-    useState<StudentEnrollmentFilterValues>(initialFilterValues);
+  const location = useLocation();
+  const initialSearch = getLocationStateSearch(location.state);
+  const studentEnrollmentsList = useStudentEnrollmentsList(
+    initialSearch ? { search: initialSearch } : undefined,
+  );
+  const [filterValues, setFilterValues] = useState<StudentEnrollmentFilterValues>({
+    ...initialFilterValues,
+    search: initialSearch,
+  });
   const [enrollmentPendingDelete, setEnrollmentPendingDelete] = useState<StudentEnrollment | null>(
     null,
   );

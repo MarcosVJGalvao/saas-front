@@ -15,10 +15,14 @@ const initialPagination: PaginationMeta = {
   hasPreviousPage: false,
 };
 
-export const useEmployeesList = () => {
+export const useEmployeesList = (initialParams?: Partial<EmployeeQueryParams>) => {
   const [rows, setRows] = useState<Employee[]>([]);
   const [pagination, setPagination] = useState<PaginationMeta>(initialPagination);
-  const [queryParams, setQueryParams] = useState<EmployeeQueryParams>({ page: 1, limit: 10 });
+  const [queryParams, setQueryParams] = useState<EmployeeQueryParams>({
+    page: 1,
+    limit: 10,
+    ...initialParams,
+  });
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | undefined>();
 

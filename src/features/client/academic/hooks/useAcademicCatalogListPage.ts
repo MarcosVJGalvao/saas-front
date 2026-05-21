@@ -1,5 +1,6 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
+import { getLocationStateSearch } from '@shared/utils/getLocationStateSearch';
 import {
   buildAcademicCatalogColumns,
   buildAcademicCatalogMobileConfig,
@@ -68,9 +69,17 @@ export const useAcademicCatalogListPage = ({
   showEducationLevel = false,
 }: UseAcademicCatalogListPageParams) => {
   const navigate = useNavigate();
-  const academicCatalogList = useAcademicCatalogList(service, errorMessageFallback);
-  const [filterValues, setFilterValues] =
-    useState<AcademicCatalogFilterValues>(initialFilterValues);
+  const location = useLocation();
+  const initialSearch = getLocationStateSearch(location.state);
+  const academicCatalogList = useAcademicCatalogList(
+    service,
+    errorMessageFallback,
+    initialSearch ? { search: initialSearch } : undefined,
+  );
+  const [filterValues, setFilterValues] = useState<AcademicCatalogFilterValues>({
+    ...initialFilterValues,
+    query: initialSearch ?? '',
+  });
 
   return {
     academicCatalogList,

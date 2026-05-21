@@ -15,12 +15,15 @@ const initialMeta: PaginationMeta = {
   hasPreviousPage: false,
 };
 
-export const useStudentEnrollmentsList = () => {
+export const useStudentEnrollmentsList = (
+  initialParams?: Partial<StudentEnrollmentQueryParams>,
+) => {
   const [rows, setRows] = useState<StudentEnrollment[]>([]);
   const [pagination, setPagination] = useState<PaginationMeta>(initialMeta);
   const [queryParams, setQueryParams] = useState<StudentEnrollmentQueryParams>({
     page: 1,
     limit: 10,
+    ...initialParams,
   });
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | undefined>(undefined);

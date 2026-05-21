@@ -27,18 +27,27 @@ feature/
 
 ## `hooks/useFeatureList.ts` — dados e paginação
 
+Sempre aceita `initialParams` para suportar pré-preenchimento via `location.state` (padrão CommandPalette).
+
 ```ts
 import { useCallback, useEffect, useState } from 'react';
 import type { PaginationMeta } from '@shared/types/pagination';
 import type { Feature, FeatureQueryParams } from '../types/feature';
 import { featureService } from '../services/service';
 
-export const useFeatureList = () => {
+export const useFeatureList = (initialParams?: Partial<FeatureQueryParams>) => {
   const [rows, setRows] = useState<Feature[]>([]);
   const [pagination, setPagination] = useState<PaginationMeta>({
-    total: 0, page: 1, limit: 10, totalPages: 0,
+    total: 0,
+    page: 1,
+    limit: 10,
+    totalPages: 0,
   });
-  const [queryParams, setQueryParams] = useState<FeatureQueryParams>({ page: 1, limit: 10 });
+  const [queryParams, setQueryParams] = useState<FeatureQueryParams>({
+    page: 1,
+    limit: 10,
+    ...initialParams,
+  });
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | undefined>();
 
@@ -76,17 +85,28 @@ export const useFeatureList = () => {
 
 ## `hooks/useFeatureListPage.ts` — lógica da página
 
+Sempre lê `location.state.search` para pré-preencher o filtro quando a página é aberta via CommandPalette ("Pesquisar em X"). Usar `getLocationStateSearch` de `@shared/utils/getLocationStateSearch`.
+
 ```ts
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
+import { getLocationStateSearch } from '@shared/utils/getLocationStateSearch';
 import { buildFeatureColumns } from '../components/featureListColumns';
 import { featureService } from '../services/service';
 import { useFeatureList } from './useFeatureList';
-import type { Feature } from '../types/feature';
+import type { Feature, FeatureFilterValues } from '../types/feature';
+
+const initialFilterValues: FeatureFilterValues = { search: '', status: '' };
 
 export const useFeatureListPage = () => {
   const navigate = useNavigate();
-  const featureList = useFeatureList();
+  const location = useLocation();
+  const initialSearch = getLocationStateSearch(location.state);
+  const featureList = useFeatureList(initialSearch ? { search: initialSearch } : undefined);
+  const [filterValues, setFilterValues] = useState<FeatureFilterValues>({
+    ...initialFilterValues,
+    search: initialSearch,
+  });
   const [featurePendingDelete, setFeaturePendingDelete] = useState<Feature | undefined>();
   const [isDeleting, setIsDeleting] = useState(false);
 
@@ -243,5 +263,7 @@ export default FeaturePage;
 - [ ] `featureListColumns.tsx` — extensão `.tsx`, exporta `buildFeatureColumns` e `FeatureColumnActions`
 - [ ] Nomes de parâmetros autodescritivos: `pageIndex`, `rowsPerPage`, `filterKey`, `filterValue`
 - [ ] `onEdit` passa `{ state: { entity: feature } }` na navegação
+- [ ] `useFeatureList` aceita `initialParams?: Partial<FeatureQueryParams>`
+- [ ] `useFeatureListPage` lê `getLocationStateSearch(location.state)` e inicializa filtro + queryParams
 - [ ] Nenhuma constante de módulo para valores que podem ser inlined
 - [ ] Page usa apenas shared components — sem MUI cru

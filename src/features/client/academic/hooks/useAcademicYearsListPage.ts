@@ -1,5 +1,6 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
+import { getLocationStateSearch } from '@shared/utils/getLocationStateSearch';
 import {
   buildAcademicYearColumns,
   buildAcademicYearMobileConfig,
@@ -48,8 +49,15 @@ const buildQueryFromFilters = (
 
 export const useAcademicYearsListPage = () => {
   const navigate = useNavigate();
-  const academicYearsList = useAcademicYearsList();
-  const [filterValues, setFilterValues] = useState<AcademicYearFilterValues>(initialFilterValues);
+  const location = useLocation();
+  const initialSearch = getLocationStateSearch(location.state);
+  const academicYearsList = useAcademicYearsList(
+    initialSearch ? { search: initialSearch } : undefined,
+  );
+  const [filterValues, setFilterValues] = useState<AcademicYearFilterValues>({
+    ...initialFilterValues,
+    query: initialSearch ?? '',
+  });
   const [actionType, setActionType] = useState<AcademicYearAction | undefined>();
   const [selectedAcademicYear, setSelectedAcademicYear] = useState<AcademicYear | undefined>();
   const [actionLoading, setActionLoading] = useState(false);

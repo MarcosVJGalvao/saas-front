@@ -1,5 +1,6 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
+import { getLocationStateSearch } from '@shared/utils/getLocationStateSearch';
 import {
   buildSchoolClassColumns,
   buildSchoolClassMobileConfig,
@@ -54,8 +55,15 @@ const buildQueryFromFilters = (
 
 export const useSchoolClassesListPage = () => {
   const navigate = useNavigate();
-  const schoolClassesList = useSchoolClassesList();
-  const [filterValues, setFilterValues] = useState<SchoolClassFilterValues>(initialFilterValues);
+  const location = useLocation();
+  const initialSearch = getLocationStateSearch(location.state);
+  const schoolClassesList = useSchoolClassesList(
+    initialSearch ? { search: initialSearch } : undefined,
+  );
+  const [filterValues, setFilterValues] = useState<SchoolClassFilterValues>({
+    ...initialFilterValues,
+    query: initialSearch ?? '',
+  });
 
   return {
     schoolClassesList,

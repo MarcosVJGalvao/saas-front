@@ -15,12 +15,13 @@ const initialMeta: PaginationMeta = {
   hasPreviousPage: false,
 };
 
-export const useDocumentsList = () => {
+export const useDocumentsList = (initialParams?: Partial<GeneratedDocumentQueryParams>) => {
   const [rows, setRows] = useState<GeneratedDocument[]>([]);
   const [pagination, setPagination] = useState<PaginationMeta>(initialMeta);
   const [queryParams, setQueryParams] = useState<GeneratedDocumentQueryParams>({
     page: 1,
     limit: 10,
+    ...initialParams,
   });
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | undefined>(undefined);

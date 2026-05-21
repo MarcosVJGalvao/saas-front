@@ -1,5 +1,6 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
+import { getLocationStateSearch } from '@shared/utils/getLocationStateSearch';
 import type { DataListMobileConfig } from '@shared/components/data-display/data/dataList.types';
 import type { DataTableColumn } from '@shared/components/data-display/data/DataTable';
 import {
@@ -73,9 +74,13 @@ export const useFinancialEntityListBase = ({
   mobileConfig: DataListMobileConfig<FinancialEntity>;
 } => {
   const navigate = useNavigate();
+  const location = useLocation();
+  const initialSearch = getLocationStateSearch(location.state);
   const financialEntityList = useFinancialEntitiesList(service, errorMessageFallback);
-  const [filterValues, setFilterValues] =
-    useState<FinancialEntityFilterValues>(initialFilterValues);
+  const [filterValues, setFilterValues] = useState<FinancialEntityFilterValues>({
+    ...initialFilterValues,
+    query: initialSearch,
+  });
 
   const onFilterChange = (fieldName: string, fieldValue: unknown): void => {
     setFilterValues((currentValues) => ({

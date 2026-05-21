@@ -71,6 +71,7 @@ const buildGridTemplateColumns = <RowData,>(columns: DataListColumn<RowData>[]):
   return columns
     .map((column) => {
       if (column.width) return column.width;
+      if (column.id === 'actions') return 'auto';
       if (column.minWidth) return `minmax(${column.minWidth}, 1fr)`;
       return 'minmax(0, 1fr)';
     })

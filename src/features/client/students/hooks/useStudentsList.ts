@@ -3,7 +3,7 @@ import type { PaginationMeta } from '@shared/types/pagination';
 import { studentService } from '../services/service';
 import type { Student, StudentQueryParams } from '../types/student.types';
 
-export const useStudentsList = () => {
+export const useStudentsList = (initialParams?: Partial<StudentQueryParams>) => {
   const [rows, setRows] = useState<Student[]>([]);
   const [pagination, setPagination] = useState<PaginationMeta>({
     page: 1,
@@ -13,7 +13,11 @@ export const useStudentsList = () => {
     hasNextPage: false,
     hasPreviousPage: false,
   });
-  const [queryParams, setQueryParams] = useState<StudentQueryParams>({ page: 1, limit: 10 });
+  const [queryParams, setQueryParams] = useState<StudentQueryParams>({
+    page: 1,
+    limit: 10,
+    ...initialParams,
+  });
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | undefined>();
 

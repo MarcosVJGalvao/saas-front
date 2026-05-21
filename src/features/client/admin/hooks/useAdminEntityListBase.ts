@@ -1,5 +1,6 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
+import { getLocationStateSearch } from '@shared/utils/getLocationStateSearch';
 import type { DataListMobileConfig } from '@shared/components/data-display/data/dataList.types';
 import type { DataTableColumn } from '@shared/components/data-display/data/DataTable';
 import {
@@ -69,8 +70,13 @@ export const useAdminEntityListBase = <TItem extends ClientAdminEntity>({
   mobileConfig: DataListMobileConfig<ClientAdminEntity>;
 } => {
   const navigate = useNavigate();
+  const location = useLocation();
+  const initialSearch = getLocationStateSearch(location.state);
   const adminEntityList = useAdminEntitiesList(service, errorMessageFallback);
-  const [filterValues, setFilterValues] = useState<AdminEntityFilterValues>(initialFilterValues);
+  const [filterValues, setFilterValues] = useState<AdminEntityFilterValues>({
+    ...initialFilterValues,
+    query: initialSearch,
+  });
 
   const onFilterChange = (fieldName: string, fieldValue: unknown): void => {
     setFilterValues((currentValues) => ({

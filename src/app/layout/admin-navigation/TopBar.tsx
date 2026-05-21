@@ -75,7 +75,7 @@ const TopBarSearchShortcut = ({ isMobile }: { isMobile: boolean }) =>
   ) : null;
 
 const sessionTimerContainerSx = {
-  display: { xs: 'none', md: 'flex' },
+  display: 'flex',
   alignItems: 'center',
   minWidth: 0,
 };

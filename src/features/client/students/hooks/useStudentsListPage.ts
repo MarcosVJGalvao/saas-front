@@ -1,5 +1,6 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
+import { getLocationStateSearch } from '@shared/utils/getLocationStateSearch';
 import {
   buildStudentListColumns,
   buildStudentMobileConfig,
@@ -36,8 +37,13 @@ const buildQueryFromFilters = (filterValues: StudentFilterValues): Partial<Stude
 
 export const useStudentsListPage = () => {
   const navigate = useNavigate();
-  const studentsList = useStudentsList();
-  const [filterValues, setFilterValues] = useState<StudentFilterValues>(initialFilterValues);
+  const location = useLocation();
+  const initialSearch = getLocationStateSearch(location.state);
+  const studentsList = useStudentsList(initialSearch ? { search: initialSearch } : undefined);
+  const [filterValues, setFilterValues] = useState<StudentFilterValues>({
+    ...initialFilterValues,
+    query: initialSearch,
+  });
 
   return {
     studentsList,

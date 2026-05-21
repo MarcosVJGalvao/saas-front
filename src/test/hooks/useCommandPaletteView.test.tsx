@@ -1,4 +1,4 @@
-import { act, fireEvent, render, renderHook, screen } from '@testing-library/react';
+import { fireEvent, render, renderHook, screen } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 import { describe, expect, it, vi } from 'vitest';
 import type { NavigationItem } from '@shared/types/navigation';
@@ -19,7 +19,7 @@ const wrapper = ({ children }: { children: React.ReactNode }) => (
 );
 
 const CommandPaletteKeydownHarness = ({ onClose }: { onClose: () => void }) => {
-  const view = useCommandPaletteView('dash', [], items, onClose);
+  const view = useCommandPaletteView('dash', 'dash', [], items, onClose);
 
   return <input aria-label="Busca" onKeyDown={view.onKeyDown} />;
 };
@@ -35,19 +35,21 @@ const items: NavigationItem[] = [
 ];
 
 describe('useCommandPaletteView', () => {
-  it('filtra itens por query e tab', () => {
-    const { result } = renderHook(() => useCommandPaletteView('dash', [], items, vi.fn()), {
+  it('filtra itens por query', () => {
+    const { result } = renderHook(() => useCommandPaletteView('dash', 'dash', [], items, vi.fn()), {
       wrapper,
     });
 
     expect(result.current.filteredItems).toHaveLength(1);
     expect(result.current.filteredItems[0]?.id).toBe('dashboard');
+  });
 
-    act(() => {
-      result.current.setActiveTab('users');
+  it('retorna todos os itens quando query está vazia', () => {
+    const { result } = renderHook(() => useCommandPaletteView('', '', [], items, vi.fn()), {
+      wrapper,
     });
 
-    expect(result.current.filteredItems).toHaveLength(0);
+    expect(result.current.filteredItems.length).toBeGreaterThan(0);
   });
 
   it('navega no enter e fecha palette', () => {
