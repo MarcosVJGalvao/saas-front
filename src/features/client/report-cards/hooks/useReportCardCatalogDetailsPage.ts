@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import type { EntityDetailsViewState } from '@shared/components/data-display/details/entityDetails.types';
 import { toReportCardCatalogDetailsData } from '@features/client/report-cards/normalizers/reportCardCatalogDetails.normalizer';
@@ -30,23 +30,28 @@ export const useReportCardCatalogDetailsPage = ({
   backPath,
   errorMessageFallback,
 }: UseReportCardCatalogDetailsPageParams) => {
+  const serviceRef = useRef(service);
   const navigate = useNavigate();
   const [entity, setEntity] = useState<ReportCardCatalogDetailsEntity | null>(null);
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | undefined>();
 
+  useEffect(() => {
+    serviceRef.current = service;
+  }, [service]);
+
   const load = useCallback(async () => {
     setLoading(true);
     setErrorMessage(undefined);
     try {
-      const response = await service.getById(id);
+      const response = await serviceRef.current.getById(id);
       setEntity(response);
     } catch {
       setErrorMessage(errorMessageFallback);
     } finally {
       setLoading(false);
     }
-  }, [errorMessageFallback, id, service]);
+  }, [errorMessageFallback, id]);
 
   useEffect(() => {
     const timeoutId = window.setTimeout(() => {

@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import type { PaginationMeta } from '@shared/types/pagination';
 import type {
   ReportCardPayload,
@@ -28,6 +28,8 @@ export const useReportCardCatalogList = (
   errorMessageFallback: string,
   createService?: ReportCardCatalogCreateService,
 ) => {
+  const serviceRef = useRef(service);
+  const createServiceRef = useRef(createService);
   const [rows, setRows] = useState<ReportCardCatalogEntity[]>([]);
   const [meta, setMeta] = useState<PaginationMeta>(initialMeta);
   const [query, setQuery] = useState<ReportCardQueryParams>({ page: 1, limit: 10 });
@@ -35,11 +37,19 @@ export const useReportCardCatalogList = (
   const [errorMessage, setErrorMessage] = useState<string | undefined>(undefined);
   const [successMessage, setSuccessMessage] = useState<string | undefined>(undefined);
 
+  useEffect(() => {
+    serviceRef.current = service;
+  }, [service]);
+
+  useEffect(() => {
+    createServiceRef.current = createService;
+  }, [createService]);
+
   const load = useCallback(async () => {
     setLoading(true);
     setErrorMessage(undefined);
     try {
-      const response = await service(query);
+      const response = await serviceRef.current(query);
       setRows(response.data);
       setMeta(response.meta);
     } catch {
@@ -47,7 +57,7 @@ export const useReportCardCatalogList = (
     } finally {
       setLoading(false);
     }
-  }, [errorMessageFallback, query, service]);
+  }, [errorMessageFallback, query]);
 
   useEffect(() => {
     const timeoutId = window.setTimeout(() => {
@@ -63,12 +73,12 @@ export const useReportCardCatalogList = (
 
   const createRecord = useCallback(
     async (payload: ReportCardPayload, successMessageValue: string): Promise<void> => {
-      if (!createService) return;
+      if (createServiceRef.current === undefined) return;
       setLoading(true);
       setErrorMessage(undefined);
       setSuccessMessage(undefined);
       try {
-        await createService(payload);
+        await createServiceRef.current(payload);
         setSuccessMessage(successMessageValue);
         await load();
       } catch {
@@ -77,7 +87,7 @@ export const useReportCardCatalogList = (
         setLoading(false);
       }
     },
-    [createService, load],
+    [load],
   );
 
   return {

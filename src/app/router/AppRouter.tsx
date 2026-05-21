@@ -3,6 +3,7 @@ import Box from '@mui/material/Box';
 import CircularProgress from '@mui/material/CircularProgress';
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
 import { DomainProtectedRoute } from '@app/guards/DomainProtectedRoute';
+import { PwaFeedbackBridge } from '@app/pwa/components/PwaFeedbackBridge';
 import { SessionExpiredDialog } from '@shared/components/feedback/SessionExpiredDialog';
 import { AppLayout } from '@app/layout/admin-navigation/AppLayout';
 import { AUTH_DOMAIN } from '@shared/types/auth/auth';
@@ -1098,6 +1099,7 @@ export const AppRouter = () => {
         open={sessionExpiredModalOpen}
         onClose={handleCloseSessionExpiredModal}
       />
+      <PwaFeedbackBridge />
     </BrowserRouter>
   );
 };
