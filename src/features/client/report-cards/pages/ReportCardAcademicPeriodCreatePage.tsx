@@ -1,4 +1,3 @@
-import { yesNoOptions } from '@features/client/report-cards/constants/reportCardFormOptions';
 import { useReportCardAcademicPeriodCreatePage } from '@features/client/report-cards/hooks/useReportCardAcademicPeriodCreatePage';
 import type { ReportCardAcademicPeriodCreateFormValues } from '@features/client/report-cards/schemas/reportCardAcademicPeriodCreateForm.schema';
 import { AppPaper } from '@shared/components/data-display/AppPaper';
@@ -10,6 +9,7 @@ import { FormSelect } from '@shared/components/form/FormSelect';
 import { FormTextField } from '@shared/components/form/FormTextField';
 import { AppStack } from '@shared/components/layout/AppStack';
 import { PageHeader } from '@shared/components/layout/PageHeader';
+import { yesNoOptions } from '@shared/constants/selectOptions';
 
 const ReportCardAcademicPeriodCreatePage = () => {
   const reportCardAcademicPeriodCreatePage = useReportCardAcademicPeriodCreatePage();

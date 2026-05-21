@@ -9,7 +9,7 @@ import { PageHeader } from '@shared/components/layout/PageHeader';
 import {
   financialCategoryTypeOptions,
   financialEntityStatusOptions,
-} from '@features/client/financial/constants/financialFormOptions';
+} from '@shared/constants/selectOptions';
 import { useFinancialCategoryCreatePage } from '@features/client/financial/hooks/useFinancialCategoryCreatePage';
 import type { FinancialCategoryCreateFormValues } from '@features/client/financial/schemas/financialCategoryCreateForm.schema';
 

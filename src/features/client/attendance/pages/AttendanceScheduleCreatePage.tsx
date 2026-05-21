@@ -1,4 +1,3 @@
-import { attendanceWeekdayOptions } from '@features/client/attendance/constants/attendanceFormOptions';
 import { useAttendanceScheduleCreatePage } from '@features/client/attendance/hooks/useAttendanceScheduleCreatePage';
 import type { AttendanceScheduleCreateFormValues } from '@features/client/attendance/schemas/attendanceScheduleCreateForm.schema';
 import { AppPaper } from '@shared/components/data-display/AppPaper';
@@ -10,6 +9,7 @@ import { FormSelect } from '@shared/components/form/FormSelect';
 import { FormTextField } from '@shared/components/form/FormTextField';
 import { AppStack } from '@shared/components/layout/AppStack';
 import { PageHeader } from '@shared/components/layout/PageHeader';
+import { attendanceWeekdayOptions } from '@shared/constants/selectOptions';
 
 const AttendanceScheduleCreatePage = () => {
   const attendanceScheduleCreatePage = useAttendanceScheduleCreatePage();

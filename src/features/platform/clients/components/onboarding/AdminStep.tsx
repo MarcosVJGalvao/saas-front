@@ -1,15 +1,19 @@
-import { AppGrid } from '@shared/components/layout/AppGrid';
-import { AppDatePicker } from '@shared/components/form/AppDatePicker';
-import { AppMenuItem } from '@shared/components/inputs/AppMenuItem';
-import { AppStack } from '@shared/components/layout/AppStack';
 import { AppText } from '@shared/components/data-display/AppText';
+import { AppDatePicker } from '@shared/components/form/AppDatePicker';
+import { AppGrid } from '@shared/components/layout/AppGrid';
+import { AppStack } from '@shared/components/layout/AppStack';
+import {
+  documentTypeOptions,
+  genderOptionsWithPlaceholder,
+  maritalStatusOptionsWithPlaceholder,
+} from '@shared/constants/selectOptions';
+import { maskCnpj, maskCpf, maskCurrency } from '@shared/masks/inputMasks';
+import { OnboardingField } from '@features/platform/clients/components/onboarding/OnboardingField';
 import {
   toOnboardingDocumentType,
   toOnboardingGender,
   toOnboardingMaritalStatus,
 } from '@features/platform/clients/normalizers/clientOnboardingFieldNormalizers';
-import { maskCnpj, maskCpf, maskCurrency } from '@shared/masks/inputMasks';
-import { OnboardingField } from '@features/platform/clients/components/onboarding/OnboardingField';
 import type { ClientOnboardingStepProps } from '@features/platform/clients/types/clientOnboarding';
 
 export const AdminStep = ({ value, actions }: ClientOnboardingStepProps) => (
@@ -36,13 +40,8 @@ export const AdminStep = ({ value, actions }: ClientOnboardingStepProps) => (
             actions.updateAdminDocumentType(documentType);
           }
         }}
-      >
-        <AppMenuItem value="CPF">CPF</AppMenuItem>
-        <AppMenuItem value="CNPJ">CNPJ</AppMenuItem>
-        <AppMenuItem value="RG">RG</AppMenuItem>
-        <AppMenuItem value="PASSPORT">PASSAPORTE</AppMenuItem>
-        <AppMenuItem value="OTHER">OUTRO</AppMenuItem>
-      </OnboardingField>
+        options={documentTypeOptions}
+      />
       <OnboardingField
         label="Documento do Admin"
         value={
@@ -65,13 +64,8 @@ export const AdminStep = ({ value, actions }: ClientOnboardingStepProps) => (
         label="Gênero"
         value={value.employee.person.gender ?? ''}
         onChange={(nextValue) => actions.updateAdminGender(toOnboardingGender(nextValue))}
-      >
-        <AppMenuItem value="">Selecione</AppMenuItem>
-        <AppMenuItem value="male">Masculino</AppMenuItem>
-        <AppMenuItem value="female">Feminino</AppMenuItem>
-        <AppMenuItem value="other">Outro</AppMenuItem>
-        <AppMenuItem value="prefer_not_to_say">Prefiro não informar</AppMenuItem>
-      </OnboardingField>
+        options={genderOptionsWithPlaceholder}
+      />
       <OnboardingField
         select
         label="Estado Civil"
@@ -79,14 +73,8 @@ export const AdminStep = ({ value, actions }: ClientOnboardingStepProps) => (
         onChange={(nextValue) =>
           actions.updateAdminMaritalStatus(toOnboardingMaritalStatus(nextValue))
         }
-      >
-        <AppMenuItem value="">Selecione</AppMenuItem>
-        <AppMenuItem value="single">Solteiro(a)</AppMenuItem>
-        <AppMenuItem value="married">Casado(a)</AppMenuItem>
-        <AppMenuItem value="divorced">Divorciado(a)</AppMenuItem>
-        <AppMenuItem value="widowed">Viúvo(a)</AppMenuItem>
-        <AppMenuItem value="other">Outro</AppMenuItem>
-      </OnboardingField>
+        options={maritalStatusOptionsWithPlaceholder}
+      />
       <OnboardingField
         label="Renda Mensal"
         value={maskCurrency(value.employee.person.monthlyIncome ?? '')}

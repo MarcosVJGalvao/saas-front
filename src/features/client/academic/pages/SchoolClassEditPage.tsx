@@ -1,7 +1,3 @@
-import {
-  schoolClassShiftOptions,
-  schoolClassStatusOptions,
-} from '@features/client/academic/constants/academicFormOptions';
 import { useSchoolClassEditPage } from '@features/client/academic/hooks/useSchoolClassEditPage';
 import type { SchoolClassEditFormValues } from '@features/client/academic/schemas/schoolClassEditForm.schema';
 import { AppCircularProgress } from '@shared/components/data-display/AppCircularProgress';
@@ -13,6 +9,7 @@ import { FormSelect } from '@shared/components/form/FormSelect';
 import { FormTextField } from '@shared/components/form/FormTextField';
 import { AppStack } from '@shared/components/layout/AppStack';
 import { PageHeader } from '@shared/components/layout/PageHeader';
+import { schoolClassShiftOptions, schoolClassStatusOptions } from '@shared/constants/selectOptions';
 import { useLocation, useParams } from 'react-router-dom';
 
 const SchoolClassEditPage = () => {

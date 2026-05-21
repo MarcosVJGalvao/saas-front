@@ -12,7 +12,7 @@ import { PageHeader } from '@shared/components/layout/PageHeader';
 import {
   financialCategoryTypeOptions,
   financialEntityStatusOptions,
-} from '@features/client/financial/constants/financialFormOptions';
+} from '@shared/constants/selectOptions';
 import { useFinancialCategoryEditPage } from '@features/client/financial/hooks/useFinancialCategoryEditPage';
 import type { FinancialCategoryEditFormValues } from '@features/client/financial/schemas/financialCategoryEditForm.schema';
 

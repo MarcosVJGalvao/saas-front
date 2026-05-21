@@ -10,7 +10,7 @@ import { FormTextField } from '@shared/components/form/FormTextField';
 import { AppPaper } from '@shared/components/data-display/AppPaper';
 import { AppStack } from '@shared/components/layout/AppStack';
 import { PageHeader } from '@shared/components/layout/PageHeader';
-import { financialRecordStatusOptions } from '@features/client/financial/constants/financialFormOptions';
+import { financialRecordStatusOptions } from '@shared/constants/selectOptions';
 import { useAccountsPayableEditPage } from '@features/client/financial/hooks/useAccountsPayableEditPage';
 import type { AccountsPayableEditFormValues } from '@features/client/financial/schemas/accountsPayableEditForm.schema';
 

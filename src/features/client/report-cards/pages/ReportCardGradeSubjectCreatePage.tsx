@@ -1,4 +1,3 @@
-import { yesNoOptions } from '@features/client/report-cards/constants/reportCardFormOptions';
 import { useReportCardGradeSubjectCreatePage } from '@features/client/report-cards/hooks/useReportCardGradeSubjectCreatePage';
 import type { ReportCardGradeSubjectCreateFormValues } from '@features/client/report-cards/schemas/reportCardGradeSubjectCreateForm.schema';
 import { AppPaper } from '@shared/components/data-display/AppPaper';
@@ -9,6 +8,7 @@ import { FormSelect } from '@shared/components/form/FormSelect';
 import { FormTextField } from '@shared/components/form/FormTextField';
 import { AppStack } from '@shared/components/layout/AppStack';
 import { PageHeader } from '@shared/components/layout/PageHeader';
+import { yesNoOptions } from '@shared/constants/selectOptions';
 
 const ReportCardGradeSubjectCreatePage = () => {
   const reportCardGradeSubjectCreatePage = useReportCardGradeSubjectCreatePage();

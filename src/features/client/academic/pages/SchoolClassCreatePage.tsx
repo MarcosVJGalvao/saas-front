@@ -1,7 +1,4 @@
-import {
-  schoolClassShiftOptions,
-  schoolClassStatusOptions,
-} from '@features/client/academic/constants/academicFormOptions';
+import { schoolClassShiftOptions, schoolClassStatusOptions } from '@shared/constants/selectOptions';
 import { useSchoolClassCreatePage } from '@features/client/academic/hooks/useSchoolClassCreatePage';
 import type { SchoolClassCreateFormValues } from '@features/client/academic/schemas/schoolClassCreateForm.schema';
 import { AppPaper } from '@shared/components/data-display/AppPaper';

@@ -3,11 +3,16 @@ import { AppAlert } from '@shared/components/feedback/AppAlert';
 import { AppDatePicker } from '@shared/components/form/AppDatePicker';
 import { AppForm } from '@shared/components/form/AppForm';
 import { FormActions } from '@shared/components/form/FormActions';
+import { AppPaper } from '@shared/components/data-display/AppPaper';
 import { AppSelect } from '@shared/components/inputs/AppSelect';
 import { AppTextField } from '@shared/components/inputs/AppTextField';
 import { AppStack } from '@shared/components/layout/AppStack';
-import { AppPaper } from '@shared/components/data-display/AppPaper';
 import { PageHeader } from '@shared/components/layout/PageHeader';
+import {
+  documentTypeOptions,
+  genderOptions,
+  studentStatusOptions,
+} from '@shared/constants/selectOptions';
 import { useStudentCreatePage } from '@features/client/students/hooks/useStudentCreatePage';
 
 const StudentCreatePage = () => {
@@ -62,13 +67,7 @@ const StudentCreatePage = () => {
               <AppSelect
                 {...field}
                 label="Tipo de documento"
-                options={[
-                  { value: 'CPF', label: 'CPF' },
-                  { value: 'CNPJ', label: 'CNPJ' },
-                  { value: 'RG', label: 'RG' },
-                  { value: 'PASSPORT', label: 'Passaporte' },
-                  { value: 'OTHER', label: 'Outro' },
-                ]}
+                options={documentTypeOptions}
                 error={fieldState.invalid}
                 helperText={fieldState.error?.message}
               />
@@ -94,12 +93,7 @@ const StudentCreatePage = () => {
               <AppSelect
                 {...field}
                 label="Gênero"
-                options={[
-                  { value: 'male', label: 'Masculino' },
-                  { value: 'female', label: 'Feminino' },
-                  { value: 'other', label: 'Outro' },
-                  { value: 'prefer_not_to_say', label: 'Prefiro não informar' },
-                ]}
+                options={genderOptions}
                 error={fieldState.invalid}
                 helperText={fieldState.error?.message}
               />
@@ -124,11 +118,7 @@ const StudentCreatePage = () => {
               <AppSelect
                 {...field}
                 label="Status"
-                options={[
-                  { value: 'active', label: 'Ativo' },
-                  { value: 'inactive', label: 'Inativo' },
-                  { value: 'cancelled', label: 'Cancelado' },
-                ]}
+                options={studentStatusOptions}
                 error={fieldState.invalid}
                 helperText={fieldState.error?.message}
               />

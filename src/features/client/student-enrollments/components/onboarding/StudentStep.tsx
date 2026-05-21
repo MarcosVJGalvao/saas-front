@@ -1,19 +1,24 @@
 import PersonOutlineOutlinedIcon from '@mui/icons-material/PersonOutlineOutlined';
+import { AppText } from '@shared/components/data-display/AppText';
 import { AppDatePicker } from '@shared/components/form/AppDatePicker';
-import { AppMenuItem } from '@shared/components/inputs/AppMenuItem';
 import { AppSelect } from '@shared/components/inputs/AppSelect';
 import { AppGrid } from '@shared/components/layout/AppGrid';
 import { AppStack } from '@shared/components/layout/AppStack';
-import { AppText } from '@shared/components/data-display/AppText';
+import {
+  documentTypeOptions,
+  genderOptionsWithPlaceholder,
+  maritalStatusOptionsWithPlaceholder,
+  nationalityOptions,
+} from '@shared/constants/selectOptions';
+import { maskCnpj, maskCpf } from '@shared/masks/inputMasks';
 import { EnrollmentOnboardingField } from '@features/client/student-enrollments/components/onboarding/EnrollmentOnboardingField';
-import type { StudentEnrollmentStepProps } from '@features/client/student-enrollments/types/studentEnrollmentOnboarding.types';
 import {
   toEnrollmentDocumentType,
   toEnrollmentGender,
   toEnrollmentMaritalStatus,
   toEnrollmentNationality,
 } from '@features/client/student-enrollments/normalizers/studentEnrollmentFieldNormalizers';
-import { maskCnpj, maskCpf } from '@shared/masks/inputMasks';
+import type { StudentEnrollmentStepProps } from '@features/client/student-enrollments/types/studentEnrollmentOnboarding.types';
 
 export const StudentStep = ({
   value,
@@ -68,15 +73,12 @@ export const StudentStep = ({
           value={documentType}
           onChange={(nextValue) => {
             const nextDocumentType = toEnrollmentDocumentType(nextValue);
-            if (nextDocumentType) actions.updateStudentDocumentType(nextDocumentType);
+            if (nextDocumentType) {
+              actions.updateStudentDocumentType(nextDocumentType);
+            }
           }}
-        >
-          <AppMenuItem value="CPF">CPF</AppMenuItem>
-          <AppMenuItem value="CNPJ">CNPJ</AppMenuItem>
-          <AppMenuItem value="RG">RG</AppMenuItem>
-          <AppMenuItem value="PASSPORT">Passaporte</AppMenuItem>
-          <AppMenuItem value="OTHER">Outro</AppMenuItem>
-        </EnrollmentOnboardingField>
+          options={documentTypeOptions}
+        />
         <EnrollmentOnboardingField
           label="Documento"
           value={documentType === 'CPF' ? maskCpf(documentNumber) : maskCnpj(documentNumber)}
@@ -95,13 +97,8 @@ export const StudentStep = ({
           label="Gênero"
           value={person?.gender ?? ''}
           onChange={(nextValue) => actions.updateStudentGender(toEnrollmentGender(nextValue))}
-        >
-          <AppMenuItem value="">Selecione</AppMenuItem>
-          <AppMenuItem value="male">Masculino</AppMenuItem>
-          <AppMenuItem value="female">Feminino</AppMenuItem>
-          <AppMenuItem value="other">Outro</AppMenuItem>
-          <AppMenuItem value="prefer_not_to_say">Prefiro não informar</AppMenuItem>
-        </EnrollmentOnboardingField>
+          options={genderOptionsWithPlaceholder}
+        />
         <EnrollmentOnboardingField
           select
           label="Estado civil"
@@ -109,14 +106,8 @@ export const StudentStep = ({
           onChange={(nextValue) =>
             actions.updateStudentMaritalStatus(toEnrollmentMaritalStatus(nextValue))
           }
-        >
-          <AppMenuItem value="">Selecione</AppMenuItem>
-          <AppMenuItem value="single">Solteiro(a)</AppMenuItem>
-          <AppMenuItem value="married">Casado(a)</AppMenuItem>
-          <AppMenuItem value="divorced">Divorciado(a)</AppMenuItem>
-          <AppMenuItem value="widowed">Viúvo(a)</AppMenuItem>
-          <AppMenuItem value="other">Outro</AppMenuItem>
-        </EnrollmentOnboardingField>
+          options={maritalStatusOptionsWithPlaceholder}
+        />
         <EnrollmentOnboardingField
           select
           label="Nacionalidade"
@@ -124,11 +115,8 @@ export const StudentStep = ({
           onChange={(nextValue) =>
             actions.updateStudentNationality(toEnrollmentNationality(nextValue))
           }
-        >
-          <AppMenuItem value="brazilian">Brasileira</AppMenuItem>
-          <AppMenuItem value="foreign">Estrangeira</AppMenuItem>
-          <AppMenuItem value="other">Outra</AppMenuItem>
-        </EnrollmentOnboardingField>
+          options={nationalityOptions}
+        />
       </AppGrid>
     </AppStack>
   );

@@ -1,21 +1,33 @@
-import { AppGrid } from '@shared/components/layout/AppGrid';
-import { AppMenuItem } from '@shared/components/inputs/AppMenuItem';
-import { AppStack } from '@shared/components/layout/AppStack';
+import type { AppSelectOption } from '@shared/components/inputs/AppSelect';
 import { AppText } from '@shared/components/data-display/AppText';
+import { AppGrid } from '@shared/components/layout/AppGrid';
+import { AppStack } from '@shared/components/layout/AppStack';
+import { createOptionsWithPlaceholder } from '@shared/constants/selectOptions';
 import { OnboardingField } from '@features/platform/clients/components/onboarding/OnboardingField';
 import type { ClientOnboardingStepProps } from '@features/platform/clients/types/clientOnboarding';
 
-const timezoneOptions: string[] = [
-  'America/Sao_Paulo',
-  'America/Manaus',
-  'America/Recife',
-  'America/Fortaleza',
-  'UTC',
-];
+const timezoneOptions: AppSelectOption[] = createOptionsWithPlaceholder(
+  ['America/Sao_Paulo', 'America/Manaus', 'America/Recife', 'America/Fortaleza', 'UTC'].map(
+    (option) => ({
+      value: option,
+      label: option,
+    }),
+  ),
+);
 
-const localeOptions: string[] = ['pt-BR', 'en-US', 'es-ES'];
+const localeOptions: AppSelectOption[] = createOptionsWithPlaceholder(
+  ['pt-BR', 'en-US', 'es-ES'].map((option) => ({
+    value: option,
+    label: option,
+  })),
+);
 
-const currencyOptions: string[] = ['BRL', 'USD', 'EUR'];
+const currencyOptions: AppSelectOption[] = createOptionsWithPlaceholder(
+  ['BRL', 'USD', 'EUR'].map((option) => ({
+    value: option,
+    label: option,
+  })),
+);
 
 export const TenantStep = ({ value, actions }: ClientOnboardingStepProps) => (
   <AppStack spacing={1.5}>
@@ -37,42 +49,24 @@ export const TenantStep = ({ value, actions }: ClientOnboardingStepProps) => (
         value={value.timezone ?? ''}
         onChange={actions.updateTimezone}
         gridSize={{ xs: 12, md: 4 }}
-      >
-        <AppMenuItem value="">Selecione</AppMenuItem>
-        {timezoneOptions.map((option) => (
-          <AppMenuItem key={option} value={option}>
-            {option}
-          </AppMenuItem>
-        ))}
-      </OnboardingField>
+        options={timezoneOptions}
+      />
       <OnboardingField
         select
         label="Idioma e Região"
         value={value.locale ?? ''}
         onChange={actions.updateLocale}
         gridSize={{ xs: 12, md: 4 }}
-      >
-        <AppMenuItem value="">Selecione</AppMenuItem>
-        {localeOptions.map((option) => (
-          <AppMenuItem key={option} value={option}>
-            {option}
-          </AppMenuItem>
-        ))}
-      </OnboardingField>
+        options={localeOptions}
+      />
       <OnboardingField
         select
         label="Moeda"
         value={value.currency ?? ''}
         onChange={actions.updateCurrency}
         gridSize={{ xs: 12, md: 4 }}
-      >
-        <AppMenuItem value="">Selecione</AppMenuItem>
-        {currencyOptions.map((option) => (
-          <AppMenuItem key={option} value={option}>
-            {option}
-          </AppMenuItem>
-        ))}
-      </OnboardingField>
+        options={currencyOptions}
+      />
     </AppGrid>
   </AppStack>
 );

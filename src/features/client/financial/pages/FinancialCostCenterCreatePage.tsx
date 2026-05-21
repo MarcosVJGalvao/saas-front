@@ -6,7 +6,7 @@ import { FormTextField } from '@shared/components/form/FormTextField';
 import { AppPaper } from '@shared/components/data-display/AppPaper';
 import { AppStack } from '@shared/components/layout/AppStack';
 import { PageHeader } from '@shared/components/layout/PageHeader';
-import { financialEntityStatusOptions } from '@features/client/financial/constants/financialFormOptions';
+import { financialEntityStatusOptions } from '@shared/constants/selectOptions';
 import { useFinancialCostCenterCreatePage } from '@features/client/financial/hooks/useFinancialCostCenterCreatePage';
 import type { FinancialCostCenterCreateFormValues } from '@features/client/financial/schemas/financialCostCenterCreateForm.schema';
 
