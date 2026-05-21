@@ -51,10 +51,8 @@ export const useSubscriptionsList = (initialQueryParams?: SubscriptionsQueryPara
       const response = await subscriptionsService.list(queryParams);
       setRows(response.data);
       setPagination(buildPagination(queryParams, response.meta.total));
-    } catch (error) {
-      setErrorMessage(
-        error instanceof Error ? error.message : 'Não foi possível carregar as assinaturas.',
-      );
+    } catch {
+      setErrorMessage('Não foi possível carregar assinaturas.');
     } finally {
       setLoading(false);
     }

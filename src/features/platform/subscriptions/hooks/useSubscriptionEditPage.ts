@@ -124,7 +124,7 @@ export const useSubscriptionEditPage = (id: string) => {
         `/platform/subscriptions/${updatedSubscription.id}?tenantId=${updatedSubscription.tenantId}`,
       );
     } catch {
-      setErrorMessage('Não foi possível salvar as alterações da assinatura.');
+      setErrorMessage('Não foi possível salvar a assinatura.');
     } finally {
       setSubmitting(false);
     }

@@ -84,6 +84,6 @@ describe('useSubscriptionsList', () => {
     const { result } = renderHook(() => useSubscriptionsList());
 
     await waitFor(() => expect(result.current.loading).toBe(false));
-    expect(result.current.errorMessage).toBe('erro-api');
+    expect(result.current.errorMessage).toBe('Não foi possível carregar assinaturas.');
   });
 });

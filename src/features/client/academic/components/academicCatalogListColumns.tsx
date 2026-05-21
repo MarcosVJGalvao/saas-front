@@ -12,7 +12,6 @@ export interface AcademicCatalogColumnActions {
   onEdit: (item: AcademicCatalogItem) => void;
 }
 
-const getCode = (item: AcademicCatalogItem): string => item.code ?? '-';
 const getDescription = (item: AcademicCatalogItem): string => item.description ?? '-';
 const getEducationLevel = (item: AcademicCatalogItem): string => item.educationLevel?.name ?? '-';
 
@@ -41,7 +40,6 @@ export const buildAcademicCatalogColumns = (params: {
   showEducationLevel?: boolean;
 }): DataTableColumn<AcademicCatalogItem>[] => [
   { key: 'name', header: 'Nome', render: (item) => item.name },
-  { key: 'code', header: 'Código', render: getCode },
   ...(params.showEducationLevel
     ? [
         {
@@ -65,7 +63,6 @@ export const buildAcademicCatalogMobileConfig = (params: {
   showEducationLevel?: boolean;
 }): DataListMobileConfig<AcademicCatalogItem> => ({
   renderTitle: (item) => item.name,
-  renderSubtitle: getCode,
   renderStatus,
   renderActions: (item) => renderActions(item, params.actions),
   renderDetails: (item) => (

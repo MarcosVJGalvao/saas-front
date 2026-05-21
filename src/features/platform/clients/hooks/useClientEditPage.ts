@@ -74,7 +74,7 @@ export const useClientEditPage = (id: string) => {
       const updatedClient = await clientsService.update(id, toClientEditPayload(formValues));
       void navigate(`/platform/clients/${updatedClient.id}`);
     } catch {
-      setErrorMessage('Não foi possível salvar as alterações do cliente.');
+      setErrorMessage('Não foi possível salvar o cliente.');
     } finally {
       setSubmitting(false);
     }

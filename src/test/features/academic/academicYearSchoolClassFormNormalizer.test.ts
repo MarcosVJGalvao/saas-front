@@ -3,25 +3,37 @@ import { normalizeAcademicYearPayload } from '@features/client/academic/normaliz
 import { normalizeSchoolClassPayload } from '@features/client/academic/normalizers/schoolClassFormNormalizer';
 
 describe('academic form normalizers', () => {
-  it('normaliza o payload do ano letivo conforme o guia', () => {
+  it('normaliza o payload do ano letivo conforme o dto', () => {
     const payload = normalizeAcademicYearPayload({
       name: ' Ano 2026 ',
       status: 'active',
       startDate: '2026-01-01',
       endDate: '2026-12-31',
-      periodName: ' 1º período ',
-      periodCode: ' P1 ',
-      periodSequence: '1',
-      periodStartDate: '2026-01-01',
-      periodEndDate: '2026-06-30',
-      periodWeight: '1,5',
-      periodIsFinal: 'false',
-      calculationType: ' weighted ',
+      academicPeriods: [
+        {
+          name: ' 1º período ',
+          code: ' P1 ',
+          sequence: '1',
+          startDate: '2026-01-01',
+          endDate: '2026-06-30',
+          weight: '1,5',
+          isFinalPeriod: false,
+        },
+        {
+          name: ' 2º período ',
+          code: ' P2 ',
+          sequence: '2',
+          startDate: '2026-07-01',
+          endDate: '2026-12-31',
+          weight: '',
+          isFinalPeriod: true,
+        },
+      ],
+      calculationType: 'weighted',
       passingGrade: '6',
       minimumAttendancePercentage: '75',
-      recoveryStrategy: ' replace_average ',
-      finalStatusStrategy: ' approval_recovery_or_failure ',
-      description: '',
+      recoveryStrategy: 'replace_average',
+      finalStatusStrategy: 'approval_recovery_or_failure',
     });
 
     expect(payload).toEqual({
@@ -39,6 +51,15 @@ describe('academic form normalizers', () => {
           weight: 1.5,
           isFinalPeriod: false,
         },
+        {
+          name: '2º período',
+          code: 'P2',
+          sequence: 2,
+          startDate: '2026-07-01',
+          endDate: '2026-12-31',
+          weight: undefined,
+          isFinalPeriod: true,
+        },
       ],
       reportCardPolicy: {
         calculationType: 'weighted',
@@ -47,7 +68,6 @@ describe('academic form normalizers', () => {
         recoveryStrategy: 'replace_average',
         finalStatusStrategy: 'approval_recovery_or_failure',
       },
-      description: undefined,
     });
   });
 

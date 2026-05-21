@@ -10,6 +10,9 @@ import {
   translateFinancialRecordStatus,
   translateFinancialTransactionType,
   translateGuardianRelationshipType,
+  translateReportCardCalculationType,
+  translateReportCardFinalStatusStrategy,
+  translateReportCardRecoveryStrategy,
   translateSchoolClassShift,
   translateSchoolClassStatus,
   translateStudentStatus,
@@ -29,6 +32,14 @@ describe('tradução de enums compartilhados', () => {
   it('traduz status de ano letivo', () => {
     expect(translateAcademicYearStatus('scheduled')).toBe('Agendado');
     expect(translateAcademicYearStatus('closed')).toBe('Encerrado');
+  });
+
+  it('traduz política de boletim', () => {
+    expect(translateReportCardCalculationType('arithmetic')).toBe('Média aritmética');
+    expect(translateReportCardRecoveryStrategy('replace_average')).toBe('Substitui a média');
+    expect(translateReportCardFinalStatusStrategy('approval_recovery_or_failure')).toBe(
+      'Aprovação, recuperação ou reprovação',
+    );
   });
 
   it('traduz status e turno de turma', () => {

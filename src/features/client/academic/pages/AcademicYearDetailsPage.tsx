@@ -16,7 +16,7 @@ const AcademicYearDetailsPage = () => {
     <AppStack spacing={2}>
       <PageHeader
         title="Detalhes do ano letivo"
-        subtitle="Consulte período, status e dados de controle do ano letivo."
+        subtitle="Consulte período, status, períodos acadêmicos e política de boletim."
         actionLabel="Voltar"
         onAction={() => {
           academicYearDetailsPage.onBack();

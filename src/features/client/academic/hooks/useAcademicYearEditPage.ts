@@ -1,8 +1,12 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import type { FieldPath } from 'react-hook-form';
 import { useAppForm } from '@shared/hooks/useAppForm';
+import { academicYearWizardSteps } from '@features/client/academic/constants/academicYearWizard';
 import {
+  buildAcademicYearSummary,
   normalizeAcademicYearInitialValues,
+  type AcademicYearSummaryData,
   normalizeAcademicYearPayload,
 } from '@features/client/academic/normalizers/academicYearFormNormalizer';
 import { academicYearEditFormSchema } from '@features/client/academic/schemas/academicYearEditForm.schema';
@@ -17,55 +21,93 @@ type AcademicYearEditLocationState = {
 const isAcademicYearEditLocationState = (value: unknown): value is AcademicYearEditLocationState =>
   typeof value === 'object' && value !== null && 'entity' in value;
 
+const hasCompleteAcademicYearForEdit = (
+  academicYear: AcademicYear | undefined,
+): academicYear is AcademicYear =>
+  academicYear !== undefined &&
+  academicYear.reportCardPolicy !== undefined &&
+  academicYear.reportCardPolicy !== null &&
+  academicYear.academicPeriods !== undefined;
+
 export const useAcademicYearEditPage = (id: string, locationStateValue: unknown) => {
   const navigate = useNavigate();
+  const [activeStep, setActiveStep] = useState(0);
+  const [maxCompletedStep, setMaxCompletedStep] = useState(0);
   const locationState = isAcademicYearEditLocationState(locationStateValue)
     ? locationStateValue
     : undefined;
-  const [loading, setLoading] = useState(false);
+  const locationStateEntity = locationState?.entity;
+  const hasLocationStateEntity = hasCompleteAcademicYearForEdit(locationStateEntity);
+  const [loading, setLoading] = useState(!hasLocationStateEntity);
   const [submitting, setSubmitting] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | undefined>();
+  const isLastStep = activeStep === academicYearWizardSteps.length - 1;
   const form = useAppForm<AcademicYearEditFormValues>(
     academicYearEditFormSchema,
-    locationState?.entity
-      ? normalizeAcademicYearInitialValues(locationState.entity)
+    hasLocationStateEntity && locationStateEntity
+      ? normalizeAcademicYearInitialValues(locationStateEntity)
       : {
           name: '',
           status: 'scheduled',
           startDate: '',
           endDate: '',
-          periodName: '',
-          periodCode: '',
-          periodSequence: '',
-          periodStartDate: '',
-          periodEndDate: '',
-          periodWeight: '',
-          periodIsFinal: '',
-          calculationType: '',
+          academicPeriods: [
+            {
+              name: '',
+              code: '',
+              sequence: '1',
+              startDate: '',
+              endDate: '',
+              weight: '',
+              isFinalPeriod: false,
+            },
+          ],
+          calculationType: 'arithmetic',
           passingGrade: '',
           minimumAttendancePercentage: '',
-          recoveryStrategy: '',
-          finalStatusStrategy: '',
-          description: '',
+          recoveryStrategy: 'none',
+          finalStatusStrategy: 'approval_or_recovery',
         },
   );
+  const [committedSummary, setCommittedSummary] = useState<AcademicYearSummaryData>(
+    buildAcademicYearSummary(form.getValues()),
+  );
+  const summaryRef = useRef(buildAcademicYearSummary(form.getValues()));
+
+  useEffect(() => {
+    const subscription = form.watch(() => {
+      summaryRef.current = buildAcademicYearSummary(form.getValues());
+    });
+
+    return () => {
+      subscription.unsubscribe();
+    };
+  }, [form]);
 
   const load = useCallback(async () => {
-    if (locationState?.entity) {
-      form.reset(normalizeAcademicYearInitialValues(locationState.entity));
+    if (hasCompleteAcademicYearForEdit(locationStateEntity)) {
+      const normalizedInitialValues = normalizeAcademicYearInitialValues(locationStateEntity);
+      form.reset(normalizedInitialValues);
+      const nextSummary = buildAcademicYearSummary(normalizedInitialValues);
+      summaryRef.current = nextSummary;
+      setCommittedSummary(nextSummary);
       return;
     }
     setLoading(true);
     setErrorMessage(undefined);
     try {
       const response = await academicYearService.getById(id);
-      form.reset(normalizeAcademicYearInitialValues(response));
+      const normalizedInitialValues = normalizeAcademicYearInitialValues(response);
+      form.reset(normalizedInitialValues);
+      const nextSummary = buildAcademicYearSummary(normalizedInitialValues);
+      summaryRef.current = nextSummary;
+      setCommittedSummary(nextSummary);
     } catch {
       setErrorMessage('Não foi possível carregar o ano letivo.');
     } finally {
       setLoading(false);
     }
-  }, [form, id, locationState]);
+  }, [form, id, locationStateEntity]);
 
   useEffect(() => {
     const timeoutId = window.setTimeout(() => {
@@ -87,12 +129,64 @@ export const useAcademicYearEditPage = (id: string, locationStateValue: unknown)
     }
   };
 
+  const getStepFields = (): FieldPath<AcademicYearEditFormValues>[] | 'academicPeriods' => {
+    if (activeStep === 0) {
+      return ['name', 'status', 'startDate', 'endDate'];
+    }
+
+    if (activeStep === 1) {
+      return 'academicPeriods';
+    }
+
+    return [
+      'calculationType',
+      'passingGrade',
+      'minimumAttendancePercentage',
+      'recoveryStrategy',
+      'finalStatusStrategy',
+    ];
+  };
+
+  const handleNext = async (): Promise<void> => {
+    const isCurrentStepValid = await form.trigger(getStepFields());
+
+    if (!isCurrentStepValid) {
+      return;
+    }
+
+    setCommittedSummary(summaryRef.current);
+
+    if (isLastStep) {
+      await form.handleSubmit(handleSubmit)();
+      return;
+    }
+
+    setActiveStep((currentStep) => {
+      const nextStep = Math.min(currentStep + 1, academicYearWizardSteps.length - 1);
+      setMaxCompletedStep((currentMaxCompletedStep) => Math.max(currentMaxCompletedStep, nextStep));
+      return nextStep;
+    });
+  };
+
   return {
     form,
+    activeStep,
+    maxCompletedStep,
+    committedSummary,
+    steps: academicYearWizardSteps,
+    isLastStep,
     loading,
     submitting,
     errorMessage,
     onSubmit: handleSubmit,
+    onNext: handleNext,
+    onPrevious: () => {
+      setActiveStep((currentStep) => Math.max(0, currentStep - 1));
+    },
+    onStepSelect: (stepIndex: number) => {
+      setCommittedSummary(summaryRef.current);
+      setActiveStep(stepIndex);
+    },
     onBack: () => {
       void navigate('/client/academic-years');
     },

@@ -90,7 +90,7 @@ export const usePlanEditPage = (id: string) => {
       const updatedPlan = await plansService.update(id, toPlanEditPayload(values));
       void navigate(`/platform/plans/${updatedPlan.id}`);
     } catch {
-      setErrorMessage('Não foi possível salvar as alterações do plano.');
+      setErrorMessage('Não foi possível salvar o plano.');
     } finally {
       setSubmitting(false);
     }

@@ -1,93 +1,132 @@
 import type { AcademicYearFormValues } from '@features/client/academic/schemas/academicYearFormSchema';
-import type { AcademicYear } from '@features/client/academic/types/academic.types';
+import {
+  type AcademicYear,
+  type AcademicYearPeriodInput,
+  type AcademicYearUpsertPayload,
+} from '@features/client/academic/types/academic.types';
 
 const optionalText = (value: string | undefined): string | undefined => {
   const trimmedValue = value?.trim() ?? '';
   return trimmedValue.length > 0 ? trimmedValue : undefined;
 };
 
-const optionalNumber = (value: string | undefined): number | undefined => {
+const parseOptionalNumber = (value: string | undefined): number | undefined => {
   const normalizedValue = optionalText(value);
   return normalizedValue ? Number(normalizedValue.replace(',', '.')) : undefined;
 };
 
-const requiredNumber = (value: string): number => Number(value.trim().replace(',', '.'));
+const parseRequiredNumber = (value: string): number => Number(value.trim().replace(',', '.'));
 
-const parseBooleanText = (value: string | undefined): boolean | undefined => {
-  const normalizedValue = optionalText(value)?.toLowerCase();
-  if (normalizedValue === 'true' || normalizedValue === 'sim') return true;
-  if (normalizedValue === 'false' || normalizedValue === 'não' || normalizedValue === 'nao') {
-    return false;
+const buildDefaultAcademicPeriod = (): AcademicYearFormValues['academicPeriods'][number] => ({
+  name: '',
+  code: '',
+  sequence: '1',
+  startDate: '',
+  endDate: '',
+  weight: '1',
+  isFinalPeriod: false,
+});
+
+export type AcademicYearSummaryData = Pick<
+  AcademicYearFormValues,
+  'name' | 'status' | 'academicPeriods' | 'passingGrade' | 'minimumAttendancePercentage'
+>;
+
+const normalizeAcademicPeriodFormValues = (
+  academicYear: AcademicYear,
+): AcademicYearFormValues['academicPeriods'] => {
+  const availableAcademicPeriods = academicYear.academicPeriods ?? [];
+
+  if (availableAcademicPeriods.length === 0) {
+    return [
+      {
+        ...buildDefaultAcademicPeriod(),
+        startDate: academicYear.startDate ?? '',
+        endDate: academicYear.endDate ?? '',
+      },
+    ];
   }
-  return undefined;
+
+  return availableAcademicPeriods.map((academicPeriod, periodIndex) => ({
+    name: academicPeriod.name,
+    code: academicPeriod.code ?? '',
+    sequence: String(academicPeriod.sequence ?? periodIndex + 1),
+    startDate: academicPeriod.startDate ?? '',
+    endDate: academicPeriod.endDate ?? '',
+    weight:
+      academicPeriod.weight === undefined
+        ? ''
+        : academicPeriod.weight.toLocaleString('pt-BR', { maximumFractionDigits: 2 }),
+    isFinalPeriod: academicPeriod.isFinalPeriod === true || academicPeriod.isFinalPeriod === 1,
+  }));
 };
+
+const toAcademicPeriodPayload = (
+  academicPeriod: AcademicYearFormValues['academicPeriods'][number],
+): AcademicYearPeriodInput => ({
+  name: academicPeriod.name.trim(),
+  code: academicPeriod.code.trim(),
+  sequence: Number(academicPeriod.sequence.trim()),
+  startDate: academicPeriod.startDate,
+  endDate: academicPeriod.endDate,
+  weight: parseOptionalNumber(academicPeriod.weight),
+  isFinalPeriod: academicPeriod.isFinalPeriod,
+});
 
 export const buildAcademicYearInitialValues = (): AcademicYearFormValues => ({
   name: '',
   status: 'scheduled',
   startDate: '',
   endDate: '',
-  periodName: '1º período',
-  periodCode: 'P1',
-  periodSequence: '1',
-  periodStartDate: '',
-  periodEndDate: '',
-  periodWeight: '1',
-  periodIsFinal: 'false',
-  calculationType: 'weighted',
+  academicPeriods: [buildDefaultAcademicPeriod()],
+  calculationType: 'arithmetic',
   passingGrade: '6',
   minimumAttendancePercentage: '75',
   recoveryStrategy: 'replace_average',
   finalStatusStrategy: 'approval_recovery_or_failure',
-  description: '',
 });
 
 export const normalizeAcademicYearInitialValues = (
-  value: AcademicYear,
+  academicYear: AcademicYear,
 ): AcademicYearFormValues => ({
-  name: value.name,
-  status: value.status,
-  startDate: value.startDate ?? '',
-  endDate: value.endDate ?? '',
-  periodName: '1º período',
-  periodCode: 'P1',
-  periodSequence: '1',
-  periodStartDate: value.startDate ?? '',
-  periodEndDate: value.endDate ?? '',
-  periodWeight: '1',
-  periodIsFinal: 'false',
-  calculationType: 'weighted',
-  passingGrade: '6',
-  minimumAttendancePercentage: '75',
-  recoveryStrategy: 'replace_average',
-  finalStatusStrategy: 'approval_recovery_or_failure',
-  description: value.description ?? '',
+  name: academicYear.name,
+  status: academicYear.status,
+  startDate: academicYear.startDate ?? '',
+  endDate: academicYear.endDate ?? '',
+  academicPeriods: normalizeAcademicPeriodFormValues(academicYear),
+  calculationType: academicYear.reportCardPolicy?.calculationType ?? 'arithmetic',
+  passingGrade: String(academicYear.reportCardPolicy?.passingGrade ?? 6),
+  minimumAttendancePercentage: String(
+    academicYear.reportCardPolicy?.minimumAttendancePercentage ?? 75,
+  ),
+  recoveryStrategy: academicYear.reportCardPolicy?.recoveryStrategy ?? 'replace_average',
+  finalStatusStrategy:
+    academicYear.reportCardPolicy?.finalStatusStrategy ?? 'approval_recovery_or_failure',
 });
 
 export const normalizeAcademicYearPayload = (
   values: AcademicYearFormValues,
-): Record<string, unknown> => ({
+): AcademicYearUpsertPayload => ({
   name: values.name.trim(),
   startDate: values.startDate,
   endDate: values.endDate,
   isClosed: values.status === 'closed',
-  academicPeriods: [
-    {
-      name: values.periodName.trim(),
-      code: values.periodCode.trim(),
-      sequence: requiredNumber(values.periodSequence),
-      startDate: values.periodStartDate,
-      endDate: values.periodEndDate,
-      weight: optionalNumber(values.periodWeight),
-      isFinalPeriod: parseBooleanText(values.periodIsFinal),
-    },
-  ],
+  academicPeriods: values.academicPeriods.map(toAcademicPeriodPayload),
   reportCardPolicy: {
-    calculationType: values.calculationType.trim(),
-    passingGrade: requiredNumber(values.passingGrade),
-    minimumAttendancePercentage: requiredNumber(values.minimumAttendancePercentage),
-    recoveryStrategy: values.recoveryStrategy.trim(),
-    finalStatusStrategy: values.finalStatusStrategy.trim(),
+    calculationType: values.calculationType,
+    passingGrade: parseRequiredNumber(values.passingGrade),
+    minimumAttendancePercentage: parseRequiredNumber(values.minimumAttendancePercentage),
+    recoveryStrategy: values.recoveryStrategy,
+    finalStatusStrategy: values.finalStatusStrategy,
   },
-  description: optionalText(values.description),
+});
+
+export const buildAcademicYearSummary = (
+  values: AcademicYearFormValues,
+): AcademicYearSummaryData => ({
+  name: values.name,
+  status: values.status,
+  academicPeriods: values.academicPeriods,
+  passingGrade: values.passingGrade,
+  minimumAttendancePercentage: values.minimumAttendancePercentage,
 });

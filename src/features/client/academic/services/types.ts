@@ -4,6 +4,7 @@ import type {
   AcademicCatalogItem,
   AcademicCatalogQueryParams,
   AcademicYear,
+  AcademicYearUpsertPayload,
   AcademicYearQueryParams,
   SchoolClass,
   SchoolClassQueryParams,
@@ -15,9 +16,9 @@ import type {
 export type AcademicYearListParams = AcademicYearQueryParams;
 export type AcademicYearListResponse = PaginatedResponse<AcademicYear>;
 export type AcademicYearDetailsResponse = AcademicYear;
-export type AcademicYearCreatePayload = ClientApiRecord;
+export type AcademicYearCreatePayload = AcademicYearUpsertPayload;
 export type AcademicYearCreateResponse = AcademicYear;
-export type AcademicYearUpdatePayload = ClientApiRecord;
+export type AcademicYearUpdatePayload = AcademicYearUpsertPayload;
 export type AcademicYearUpdateResponse = AcademicYear;
 export type AcademicYearCloseResponse = void;
 export type AcademicYearReopenResponse = void;

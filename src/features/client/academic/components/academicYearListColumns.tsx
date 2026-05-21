@@ -48,7 +48,6 @@ export const buildAcademicYearColumns = (
   actions: AcademicYearColumnActions,
 ): DataTableColumn<AcademicYear>[] => [
   { key: 'name', header: 'Ano letivo', render: (academicYear) => academicYear.name },
-  { key: 'code', header: 'Código', render: (academicYear) => academicYear.code ?? '-' },
   { key: 'period', header: 'Período', render: getPeriod },
   { key: 'status', header: 'Status', render: renderStatus },
   {
@@ -63,7 +62,7 @@ export const buildAcademicYearMobileConfig = (
   actions: AcademicYearColumnActions,
 ): DataListMobileConfig<AcademicYear> => ({
   renderTitle: (academicYear) => academicYear.name,
-  renderSubtitle: (academicYear) => academicYear.code ?? getPeriod(academicYear),
+  renderSubtitle: (academicYear) => getPeriod(academicYear),
   renderStatus,
   renderActions: (academicYear) => renderActions(academicYear, actions),
   renderDetails: (academicYear) => (

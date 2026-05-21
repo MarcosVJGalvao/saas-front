@@ -1,15 +1,16 @@
 import { useLocation, useParams } from 'react-router-dom';
 import { AppCircularProgress } from '@shared/components/data-display/AppCircularProgress';
 import { AppPaper } from '@shared/components/data-display/AppPaper';
-import { AppText } from '@shared/components/data-display/AppText';
 import { AppAlert } from '@shared/components/feedback/AppAlert';
 import { AppForm } from '@shared/components/form/AppForm';
-import { FormActions } from '@shared/components/form/FormActions';
-import { FormTextField } from '@shared/components/form/FormTextField';
 import { AppStack } from '@shared/components/layout/AppStack';
 import { PageHeader } from '@shared/components/layout/PageHeader';
+import { StepperWizard } from '@shared/components/navigation/StepperWizard';
+import { AcademicYearWizardSummary } from '@features/client/academic/components/onboarding/AcademicYearWizardSummary';
+import { AcademicYearWizardSteps } from '@features/client/academic/components/onboarding/AcademicYearWizardSteps';
 import { useAcademicYearEditPage } from '@features/client/academic/hooks/useAcademicYearEditPage';
-import type { AcademicYearEditFormValues } from '@features/client/academic/schemas/academicYearEditForm.schema';
+import { layoutSpacing } from '@theme/spacing';
+import { shadowTokens } from '@theme/tokens/shadows';
 
 const AcademicYearEditPage = () => {
   const { id } = useParams<{ id: string }>();
@@ -24,7 +25,7 @@ const AcademicYearEditPage = () => {
     <AppStack spacing={2}>
       <PageHeader
         title="Editar ano letivo"
-        subtitle="Defina período, política de boletim e dados de controle do ano letivo."
+        subtitle="Atualize o ano letivo por etapas, com períodos acadêmicos e política de boletim."
         actionLabel="Voltar"
         onAction={academicYearEditPage.onBack}
       />
@@ -32,112 +33,50 @@ const AcademicYearEditPage = () => {
         <AppAlert severity="error">{academicYearEditPage.errorMessage}</AppAlert>
       ) : null}
       {academicYearEditPage.loading ? (
-        <AppCircularProgress ariaLabel="Carregando formulário" />
+        <AppCircularProgress ariaLabel="Carregando formulário do ano letivo" />
       ) : (
-        <AppPaper sx={{ p: 3 }}>
-          <AppForm
-            form={academicYearEditPage.form}
-            onSubmit={academicYearEditPage.onSubmit}
-            useResponsiveGrid
-            columnsByDevice={{ mobile: 1, tablet: 2, desktop: 2 }}
+        <AppStack
+          direction={{ xs: 'column', md: 'row' }}
+          spacing={layoutSpacing.sectionGap}
+          sx={{ alignItems: 'flex-start' }}
+        >
+          <AppPaper
+            sx={{
+              p: 2,
+              flex: 1,
+              borderRadius: 1.5,
+              border: '1px solid',
+              borderColor: 'divider',
+              boxShadow: shadowTokens.card,
+            }}
           >
-            <AppText variant="h6">Ano letivo</AppText>
-            <FormTextField<AcademicYearEditFormValues> name="name" label="Nome" />
-            <FormTextField<AcademicYearEditFormValues>
-              name="status"
-              label="Status"
-              placeholder="scheduled, active ou closed"
-            />
-            <FormTextField<AcademicYearEditFormValues>
-              name="startDate"
-              label="Data inicial"
-              type="date"
-            />
-            <FormTextField<AcademicYearEditFormValues>
-              name="endDate"
-              label="Data final"
-              type="date"
-            />
-            <FormTextField<AcademicYearEditFormValues>
-              name="description"
-              label="Descrição"
-              placeholder="Descrição opcional"
-            />
-            <AppText variant="h6">Período acadêmico inicial</AppText>
-            <FormTextField<AcademicYearEditFormValues> name="periodName" label="Nome do período" />
-            <FormTextField<AcademicYearEditFormValues>
-              name="periodCode"
-              label="Código do período"
-            />
-            <FormTextField<AcademicYearEditFormValues>
-              name="periodSequence"
-              label="Sequência"
-              placeholder="1"
-            />
-            <FormTextField<AcademicYearEditFormValues>
-              name="periodStartDate"
-              label="Data inicial do período"
-              type="date"
-            />
-            <FormTextField<AcademicYearEditFormValues>
-              name="periodEndDate"
-              label="Data final do período"
-              type="date"
-            />
-            <FormTextField<AcademicYearEditFormValues>
-              name="periodWeight"
-              label="Peso do período"
-              placeholder="1"
-            />
-            <FormTextField<AcademicYearEditFormValues>
-              name="periodIsFinal"
-              label="Período final"
-              placeholder="true ou false"
-            />
-            <AppText variant="h6">Política de boletim</AppText>
-            <FormTextField<AcademicYearEditFormValues>
-              name="calculationType"
-              label="Tipo de cálculo"
-              placeholder="arithmetic ou weighted"
-            />
-            <FormTextField<AcademicYearEditFormValues>
-              name="passingGrade"
-              label="Nota mínima"
-              placeholder="6"
-            />
-            <FormTextField<AcademicYearEditFormValues>
-              name="minimumAttendancePercentage"
-              label="Frequência mínima"
-              placeholder="75"
-            />
-            <FormTextField<AcademicYearEditFormValues>
-              name="recoveryStrategy"
-              label="Estratégia de recuperação"
-              placeholder="none, replace_lowest ou replace_average"
-            />
-            <FormTextField<AcademicYearEditFormValues>
-              name="finalStatusStrategy"
-              label="Estratégia de status final"
-              placeholder="approval_or_recovery ou approval_recovery_or_failure"
-            />
-            <FormActions
-              secondaryAction={{
-                type: 'back',
-                label: 'Cancelar',
-                onClick: academicYearEditPage.onBack,
-                disabled: academicYearEditPage.submitting,
-              }}
-              primaryAction={{
-                type: 'confirm',
-                label: 'Salvar alterações',
-                onClick: () => {
-                  void academicYearEditPage.form.handleSubmit(academicYearEditPage.onSubmit)();
-                },
-                loading: academicYearEditPage.submitting,
-              }}
-            />
-          </AppForm>
-        </AppPaper>
+            <AppForm form={academicYearEditPage.form} onSubmit={academicYearEditPage.onSubmit}>
+              <StepperWizard
+                activeStep={academicYearEditPage.activeStep}
+                steps={academicYearEditPage.steps}
+                onBack={academicYearEditPage.onPrevious}
+                onCancel={academicYearEditPage.onBack}
+                onStepSelect={academicYearEditPage.onStepSelect}
+                onNext={() => {
+                  void academicYearEditPage.onNext();
+                }}
+                isLastStep={academicYearEditPage.isLastStep}
+                nextLabel={academicYearEditPage.isLastStep ? 'Salvar alterações' : 'Próximo'}
+                nextDisabled={academicYearEditPage.submitting}
+                nextLoading={academicYearEditPage.submitting && academicYearEditPage.isLastStep}
+              >
+                <AcademicYearWizardSteps activeStep={academicYearEditPage.activeStep} />
+              </StepperWizard>
+            </AppForm>
+          </AppPaper>
+          <AcademicYearWizardSummary
+            values={academicYearEditPage.committedSummary}
+            activeStep={academicYearEditPage.activeStep}
+            maxCompletedStep={academicYearEditPage.maxCompletedStep}
+            showProgress={false}
+            onStepSelect={academicYearEditPage.onStepSelect}
+          />
+        </AppStack>
       )}
     </AppStack>
   );
