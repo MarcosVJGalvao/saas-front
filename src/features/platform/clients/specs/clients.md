@@ -20,13 +20,13 @@ Gerenciar clientes da plataforma com listagem, criação, edição, detalhes e o
 
 ## Camadas
 
-- Pages: `src/features/clients/pages`.
-- Components: `src/features/clients/components`.
-- Hooks: `src/features/clients/hooks`.
-- Services: `src/features/clients/services`.
-- Schemas: `src/features/clients/schemas`.
-- Types: `src/features/clients/types`.
-- Normalizers: `src/features/clients/normalizers`.
+- Pages: `src/features/platform/clients/pages`.
+- Components: `src/features/platform/clients/components`.
+- Hooks: `src/features/platform/clients/hooks`.
+- Services: `src/features/platform/clients/services`.
+- Schemas: `src/features/platform/clients/schemas`.
+- Types: `src/features/platform/clients/types`.
+- Normalizers: `src/features/platform/clients/normalizers`.
 
 ## Fluxo
 

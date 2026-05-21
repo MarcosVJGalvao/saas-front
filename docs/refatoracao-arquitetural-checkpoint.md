@@ -19,7 +19,7 @@
   - sem hooks exportando componentes
   - sem pages genéricas concentrando comportamento de feature
   - sem services monolíticos fora do padrão
-  - `lint`, `typecheck` e `test` verdes
+  - `compliance`, `lint`, `typecheck` e `test` verdes
 
 ## Estrutura-alvo obrigatória
 
@@ -83,8 +83,8 @@ Regras complementares:
 - [x] mapear pages em `components/`
 - [x] mapear hooks `.tsx` sem necessidade
 - [x] mapear services monolíticos
-- [ ] mapear schemas fora do padrão em todos os módulos
-- [ ] mapear normalizers ausentes em todos os módulos
+- [x] mapear schemas fora do padrão em todos os módulos
+- [x] mapear normalizers ausentes em todos os módulos
 - [x] registrar inventário inicial
 
 ### Etapa 1. Remoção da navegação dos módulos reutilizáveis
@@ -103,8 +103,8 @@ Checklist:
 - [x] remover lazy imports
 - [x] remover rotas
 - [x] remover permissões exclusivamente ligadas à navegação autônoma
-- [ ] remover ações de navegação residual
-- [ ] manter apenas contratos reutilizáveis necessários
+- [x] remover ações de navegação residual
+- [x] manter apenas contratos reutilizáveis necessários
 
 ### Etapa 2. Refatoração módulo a módulo
 
@@ -177,12 +177,8 @@ Ordem oficial:
 - [x] reescrever `platform/home` para page direta + hook de page
 - [x] excluir `ClientHomeContent`, `useClientHomeData` e `useClientHomePageViewModel`
 - [x] atualizar testes do bloco
-- [ ] validar aderência visual final em navegação real
-- [ ] validar quality gate do módulo
-  - `typecheck`: verde
-  - `test`: verde
-  - `lint`: bloqueado fora do módulo por `addresses`, `contacts`, `documents`, `medical-info`, `people`, `person-documents` e débitos atuais em `shared`
-  - `compliance`: bloqueado fora do módulo pelos mesmos módulos antigos
+- [x] validar aderência visual final em navegação real
+- [x] validar quality gate do módulo
 
 ### Status
 
@@ -190,6 +186,8 @@ Ordem oficial:
 
 ### Evidências atuais
 
+- `compliance`: verde
+- `lint`: verde
 - `typecheck`: verde
 - `test`: verde
 
@@ -348,12 +346,8 @@ Ordem oficial:
 - [x] separar normalizers de form e details
 - [x] excluir `ViewModel`, presentation helper, details wrapper e schema legado
 - [x] atualizar teste do normalizer
-- [ ] validar integração com `platform/subscriptions`
-- [ ] validar quality gate do módulo
-  - `typecheck`: verde
-  - `test`: verde
-  - `lint`: bloqueado fora do módulo por `addresses`, `contacts`, `documents`, `medical-info`, `people`, `person-documents` e débitos atuais em `shared`
-  - `compliance`: bloqueado fora do módulo pelos mesmos módulos antigos
+- [x] validar integração com `platform/subscriptions`
+- [x] validar quality gate do módulo
 
 ### Status
 
@@ -361,6 +355,8 @@ Ordem oficial:
 
 ### Evidências atuais
 
+- `compliance`: verde
+- `lint`: verde
 - `typecheck`: verde
 - `test`: verde
 - `plans` sem legado estrutural residual
@@ -451,12 +447,8 @@ Ordem oficial:
 - [x] separar normalizers de form e details
 - [x] excluir `ViewModel`, filters helper, presentation helper, details wrapper e schema legado
 - [x] atualizar testes do normalizer e hook de listagem
-- [ ] validar integração com `platform/plans` e `platform/clients`
-- [ ] validar quality gate do módulo
-  - `typecheck`: verde
-  - `test`: verde
-  - `lint`: bloqueado fora do módulo por `addresses`, `contacts`, `documents`, `medical-info`, `people`, `person-documents` e débitos atuais em `shared`
-  - `compliance`: bloqueado fora do módulo pelos mesmos módulos antigos
+- [x] validar integração com `platform/plans` e `platform/clients`
+- [x] validar quality gate do módulo
 
 ### Status
 
@@ -464,41 +456,49 @@ Ordem oficial:
 
 ### Evidências atuais
 
+- `compliance`: verde
+- `lint`: verde
 - `typecheck`: verde
 - `test`: verde
 - `subscriptions` sem legado estrutural residual
 
-## Inventário inicial consolidado
+## Inventário consolidado pós-refatoração
 
-- Rotas autônomas a remover:
+- Rotas autônomas removidas:
   - `/client/people`
   - `/client/contacts`
   - `/client/addresses`
   - `/client/medical-info`
   - `/client/person-documents`
-- Itens de menu a remover:
+- Itens de menu removidos:
   - `people`
   - `contacts`
   - `addresses`
   - `medical-info`
   - `person-documents`
-- Módulos com pages ainda em `components/`:
-  - `client/academic`
-  - `client/admin`
-  - `client/financial`
-  - `client/report-cards`
-- Módulos com service monolítico mapeado:
+- Módulos reutilizáveis mantidos apenas como contratos:
+  - `addresses`
+  - `contacts`
+  - `people`
+  - `medical-info`
+  - `person-documents`
+- Módulos navegáveis concluídos no padrão canônico:
   - `client/students`
-  - `client/addresses`
-  - `client/contacts`
-  - `client/medical-info`
-  - `client/people`
+  - `client/student-enrollments`
+  - `client/employees`
+  - `platform/clients`
+  - `client/academic`
+  - `client/report-cards`
   - `client/financial`
   - `client/admin`
   - `client/attendance`
-  - `client/report-cards`
+  - `client/auth`
+  - `platform/auth`
+  - `platform/plans`
+  - `platform/subscriptions`
+  - `client/home`
+  - `platform/home`
   - `client/documents`
-  - `client/employees`
 
 ## Módulo: client/students
 
@@ -699,12 +699,8 @@ Ordem oficial:
 - [x] refatorar lançamento de frequência
 - [x] refatorar listagem de resumos
 - [x] excluir presentations e arquivos antigos substituídos
-- [ ] validar integrações com `academic` e `student-enrollments`
-- [ ] validar quality gate do módulo
-  - `typecheck`: verde
-  - `test`: verde
-  - `lint`: bloqueado fora do módulo por `addresses`, `contacts`, `documents`, `medical-info`, `people`, `person-documents` e débitos atuais em `shared`
-  - `compliance`: bloqueado fora do módulo por `addresses`, `contacts`, `documents`, `medical-info` e `people`
+- [x] validar integrações com `academic` e `student-enrollments`
+- [x] validar quality gate do módulo
 
 ### Status
 
@@ -712,10 +708,10 @@ Ordem oficial:
 
 ### Evidências atuais
 
+- `compliance`: verde
+- `lint`: verde
 - `typecheck`: verde
 - `test`: verde
-- `lint`: sem bloqueios residuais em `attendance`; falha global restante está fora do módulo
-- `compliance`: sem bloqueios residuais em `attendance`; falha global restante está fora do módulo
 
 ## Módulo: client/academic
 
@@ -823,23 +819,20 @@ Ordem oficial:
 - [x] substituir wrappers genéricas de catálogo por pages canônicas reais
 - [x] migrar services para `endpoints.ts`, `types.ts` e `service.ts`
 - [x] excluir arquivos antigos substituídos
-- [ ] validar integrações com `report-cards` e `attendance`
-- [ ] validar quality gate do módulo
-  - `compliance`: bloqueado fora do módulo por `addresses`, `contacts`, `documents`, `medical-info` e `people`
-  - `lint`: bloqueado fora do módulo e em `shared`
-  - `typecheck`: verde
-  - `test`: verde
+- [x] validar integrações com `report-cards` e `attendance`
+- [x] validar quality gate do módulo
 
 ### Status
 
-- `em refatoração`
+- `concluído`
 
 ### Evidências atuais
 
+- `compliance`: verde
+- `lint`: verde
 - `typecheck`: verde
 - `test`: verde
-- `compliance`: sem bloqueios residuais em `academic`; falha global restante está em módulos ainda antigos
-- `lint`: `academic` saiu dos bloqueios estruturais principais, mas a rodada global ainda falha por módulos legados e débitos atuais em `shared`
+- `academic` sem legado estrutural residual
 
 ## Módulo: client/report-cards
 
@@ -911,23 +904,19 @@ Ordem oficial:
 - [x] refatorar `queries`
 - [x] refatorar `processings`
 - [x] excluir hooks legados restantes do módulo
-- [ ] validar integrações com `academic`
-- [ ] validar quality gate do módulo
-  - `typecheck`: verde
-  - `test`: verde
-  - `compliance`: módulo limpo; rodada global ainda bloqueada por `addresses`, `contacts`, `documents`, `medical-info` e `people`
-  - `lint`: módulo limpo no escopo da feature; rodada global ainda bloqueada por módulos legados e por débitos atuais em `shared`
+- [x] validar integrações com `academic`
+- [x] validar quality gate do módulo
 
 ### Status
 
-- `em refatoração`
+- `concluído`
 
 ### Evidências atuais
 
+- `compliance`: verde
+- `lint`: verde
 - `typecheck`: verde
 - `test`: verde
-- `compliance`: sem bloqueios residuais em `report-cards`; falha global restante está fora do módulo
-- `lint`: sem bloqueios residuais em `report-cards`; falha global restante está fora do módulo
 - catálogo e fluxos operacionais já seguem a estrutura final do módulo
 
 ## Módulo: client/financial
@@ -1065,12 +1054,8 @@ Ordem oficial:
 - [x] refatorar dashboard e relatórios para hooks canônicos
 - [x] excluir wrappers genéricos, presentations, `ViewModel` e service legado
 - [x] atualizar testes do módulo para `services/service.ts`
-- [ ] validar integrações com `students` e `student-enrollments`
-- [ ] validar quality gate do módulo
-  - `typecheck`: verde
-  - `test`: verde
-  - `compliance`: bloqueado fora do módulo por `addresses`, `contacts`, `documents`, `medical-info` e `people`
-  - `lint`: bloqueado fora do módulo por `addresses`, `contacts`, `documents`, `medical-info`, `people`, `person-documents` e débitos atuais em `shared`
+- [x] validar integrações com `students` e `student-enrollments`
+- [x] validar quality gate do módulo
 
 ### Status
 
@@ -1078,10 +1063,10 @@ Ordem oficial:
 
 ### Evidências atuais
 
+- `compliance`: verde
+- `lint`: verde
 - `typecheck`: verde
 - `test`: verde
-- `lint`: sem bloqueios residuais em `financial`; falha global restante está fora do módulo
-- `compliance`: sem bloqueios residuais em `financial`; falha global restante está fora do módulo
 - service monolítico removido
 - wrappers genéricos removidos
 - hooks `ViewModel` removidos
@@ -1117,23 +1102,15 @@ Ordem oficial:
   - `ClientOnboardingPage.tsx`
 - Hooks atuais:
   - `useClientsList.ts`
-  - `useClientsListFilters.ts`
   - `useClientsListPage.ts`
-  - `useClientsListPageViewModel.ts`
-  - `useClientDetails.ts`
-  - `useClientDetailsPageViewModel.ts`
   - `useClientCreatePage.ts`
-  - `useClientCreatePageViewModel.ts`
+  - `useClientDetailsPage.ts`
   - `useClientEditPage.ts`
-  - `useClientEditPageViewModel.ts`
-  - `useClientOnboardingForm.ts`
   - `useClientOnboardingActions.ts`
-  - `useClientOnboardingPageViewModel.ts`
-  - `useClientsMutations.ts`
+  - `useClientOnboardingForm.ts`
+  - `useClientOnboardingPage.ts`
 - Components atuais:
-  - `clientsListPresentation.tsx`
-  - `clientDetailsPresentation.tsx`
-  - `clientDetailsDrawerSchema.tsx`
+  - `clientListColumns.tsx`
   - `ClientFormFields.tsx`
   - `components/onboarding/*`
 - Services atuais:
@@ -1141,9 +1118,12 @@ Ordem oficial:
   - `services/types.ts`
   - `services/service.ts`
 - Schemas atuais:
-  - `clientsSchemas.ts`
+  - `clientCreateForm.schema.ts`
+  - `clientEditForm.schema.ts`
+  - `clientOnboarding.schema.ts`
 - Normalizers atuais:
-  - `clientPayloadNormalizer.ts`
+  - `clientDetails.normalizer.ts`
+  - `clientForm.normalizer.ts`
   - `clientOnboardingNormalizer.ts`
   - `clientOnboardingInitialState.ts`
   - `clientOnboardingSummary.ts`
@@ -1216,11 +1196,7 @@ Ordem oficial:
 - [x] consolidar normalizers no naming final
 - [x] excluir `ViewModel`, presentation helpers e arquivos antigos substituídos
 - [x] atualizar testes do módulo
-- [ ] validar quality gate do módulo
-  - `typecheck`: verde
-  - `test`: verde
-  - `compliance`: bloqueado fora do módulo por hooks antigos em `academic`, `addresses`, `contacts`, `documents`, `medical-info` e `people`
-  - `lint`: bloqueado fora do módulo por hooks antigos desses módulos e por débitos atuais em `shared`
+- [x] validar quality gate do módulo
 
 ### Riscos
 
@@ -1231,21 +1207,21 @@ Ordem oficial:
 
 ### Status
 
-- `em refatoração`
+- `concluído`
 
 ### Evidências atuais
 
+- `compliance`: verde
+- `lint`: verde
 - `typecheck`: verde
 - `test`: verde
-- `compliance`: módulo limpo; rodada global ainda bloqueada por módulos legados restantes
-- `lint`: rodada global ainda bloqueada por módulos legados e componentes de `shared` fora do escopo desta onda
-- `lint`: ainda bloqueado por débitos pré-existentes em outros módulos e componentes compartilhados fora do escopo já refatorado
+- onboarding preservado visualmente com estrutura interna reescrita no padrão final
 
-## Próximos módulos
+## Execução serial concluída
 
-- `client/student-enrollments`: depende da estabilidade dos contratos de `students`
-- `client/employees`: deve absorver padrões reutilizáveis sem depender de pages autônomas de pessoa/contato/endereço
-- `platform/clients`: revisar onboarding e contratos compartilhados
+- `client/student-enrollments` foi fechado após a estabilização de `students`
+- `client/employees` foi fechado absorvendo apenas contratos reutilizáveis
+- `platform/clients` foi fechado com onboarding reconstruído no padrão final
 
 ## Módulo: client/student-enrollments
 
@@ -1276,28 +1252,28 @@ Ordem oficial:
   - `StudentEnrollmentEditPage.tsx`
 - Hooks atuais:
   - `useStudentEnrollmentsList.ts`
-  - `useStudentEnrollmentsListPageViewModel.ts`
-  - `useStudentEnrollmentOnboardingPageViewModel.ts`
+  - `useStudentEnrollmentsListPage.ts`
+  - `useStudentEnrollmentDetailsPage.ts`
   - `useStudentEnrollmentOnboardingForm.ts`
-  - `useStudentEnrollmentEditPageViewModel.ts`
-  - `useStudentEnrollmentDetailsPageViewModel.tsx`
-  - `useStudentEnrollmentDetails.ts`
-  - `useStudentEnrollmentActions.ts`
+  - `useStudentEnrollmentOnboardingActions.ts`
+  - `useStudentEnrollmentOnboardingPage.ts`
+  - `useStudentEnrollmentEditPage.ts`
 - Components atuais:
-  - `studentEnrollmentsListPresentation.tsx`
+  - `studentEnrollmentListColumns.tsx`
   - `components/onboarding/*`
 - Services atuais:
-  - `studentEnrollmentService.ts`
-  - `studentEnrollmentEndpoints.ts`
+  - `services/endpoints.ts`
+  - `services/types.ts`
+  - `services/service.ts`
 - Schemas atuais:
-  - `studentEnrollmentSchemas.ts`
+  - `studentEnrollmentCreateForm.schema.ts`
+  - `studentEnrollmentEditForm.schema.ts`
 - Normalizers atuais:
-  - `studentEnrollmentSummary.ts`
-  - `studentEnrollmentOnboardingNormalizer.ts`
-  - `studentEnrollmentInitialState.ts`
+  - `studentEnrollmentDetails.normalizer.ts`
   - `studentEnrollmentFieldNormalizers.ts`
-  - `studentEnrollmentEditNormalizer.ts`
-  - `studentEnrollmentEditInitialState.ts`
+  - `studentEnrollmentForm.normalizer.ts`
+  - `studentEnrollmentOnboardingInitialState.ts`
+  - `studentEnrollmentOnboardingSummary.ts`
 - Rotas:
   - `/client/student-enrollments/*`
 - Menu:
@@ -1354,21 +1330,20 @@ Ordem oficial:
 - [x] consolidar schemas e normalizers no naming final
 - [x] migrar services para o padrão final
 - [x] excluir arquivos antigos substituídos
-- [ ] validar integrações com `students`
-- [ ] validar quality gate do módulo
-  - `typecheck`: verde
-  - `test`: verde
-  - `lint`: bloqueado por módulos ainda fora do padrão (`addresses`, `contacts`, `documents`, `medical-info`, `people`, `person-documents`) e por débitos atuais em `shared`
+- [x] validar integrações com `students`
+- [x] validar quality gate do módulo
 
 ### Status
 
-- `em refatoração`
+- `concluído`
 
 ### Evidências atuais
 
+- `compliance`: verde
+- `lint`: verde
 - `typecheck`: verde
 - `test`: verde
-- `lint`: módulo limpo; rodada global ainda bloqueada fora de `student-enrollments`
+- onboarding manteve visual/UX atual com estrutura interna refeita no padrão final
 
 ## Módulo: client/employees
 
@@ -1458,17 +1433,16 @@ Ordem oficial:
 - [x] consolidar schemas e normalizers no naming final
 - [x] migrar services para o padrão final
 - [x] excluir arquivos antigos substituídos
-- [ ] validar integrações com contratos compartilhados
-- [ ] validar quality gate do módulo
-  - `typecheck`: verde
-  - `test`: verde
-  - `lint`: pendente de rodada global
+- [x] validar integrações com contratos compartilhados
+- [x] validar quality gate do módulo
 
 ### Status
 
-- `em refatoração`
+- `concluído`
 
 ### Evidências atuais
 
+- `compliance`: verde
+- `lint`: verde
 - `typecheck`: verde
 - `test`: verde
