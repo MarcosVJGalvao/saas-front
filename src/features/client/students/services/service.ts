@@ -1,12 +1,5 @@
-import { legalGuardianEndpoints, studentEndpoints } from './endpoints';
+import { studentEndpoints } from './endpoints';
 import type {
-  LegalGuardianCreatePayload,
-  LegalGuardianCreateResponse,
-  LegalGuardianDetailsResponse,
-  LegalGuardiansListParams,
-  LegalGuardiansListResponse,
-  LegalGuardianUpdatePayload,
-  LegalGuardianUpdateResponse,
   StudentCreatePayload,
   StudentCreateResponse,
   StudentDetailsResponse,
@@ -56,30 +49,5 @@ export const studentService = {
   async downloadSchoolHistory(id: string): Promise<Blob> {
     const { data } = await studentEndpoints.downloadSchoolHistory(id);
     return data;
-  },
-};
-
-export const legalGuardianService = {
-  async list(params: LegalGuardiansListParams): Promise<LegalGuardiansListResponse> {
-    const { data } = await legalGuardianEndpoints.list(params);
-    return data;
-  },
-  async getById(id: string): Promise<LegalGuardianDetailsResponse> {
-    const { data } = await legalGuardianEndpoints.getById(id);
-    return data;
-  },
-  async create(payload: LegalGuardianCreatePayload): Promise<LegalGuardianCreateResponse> {
-    const { data } = await legalGuardianEndpoints.create(payload);
-    return data;
-  },
-  async update(
-    id: string,
-    payload: LegalGuardianUpdatePayload,
-  ): Promise<LegalGuardianUpdateResponse> {
-    const { data } = await legalGuardianEndpoints.update(id, payload);
-    return data;
-  },
-  async remove(id: string): Promise<void> {
-    await legalGuardianEndpoints.remove(id);
   },
 };

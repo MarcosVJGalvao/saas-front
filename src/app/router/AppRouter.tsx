@@ -104,16 +104,6 @@ const StudentsPage = lazy(() => import('@features/client/students/pages/Students
 const StudentCreatePage = lazy(() => import('@features/client/students/pages/StudentCreatePage'));
 const StudentDetailsPage = lazy(() => import('@features/client/students/pages/StudentDetailsPage'));
 const StudentEditPage = lazy(() => import('@features/client/students/pages/StudentEditPage'));
-const LegalGuardiansPage = lazy(() => import('@features/client/students/pages/LegalGuardiansPage'));
-const LegalGuardianCreatePage = lazy(
-  () => import('@features/client/students/pages/LegalGuardianCreatePage'),
-);
-const LegalGuardianDetailsPage = lazy(
-  () => import('@features/client/students/pages/LegalGuardianDetailsPage'),
-);
-const LegalGuardianEditPage = lazy(
-  () => import('@features/client/students/pages/LegalGuardianEditPage'),
-);
 const EmployeesPage = lazy(() => import('@features/client/employees/pages/EmployeesPage'));
 const EmployeeCreatePage = lazy(
   () => import('@features/client/employees/pages/EmployeeCreatePage'),
@@ -704,38 +694,6 @@ export const AppRouter = () => {
             element={
               <ProtectedClientRoute>
                 <StudentEditPage />
-              </ProtectedClientRoute>
-            }
-          />
-          <Route
-            path="/client/legal-guardians"
-            element={
-              <ProtectedClientRoute>
-                <LegalGuardiansPage />
-              </ProtectedClientRoute>
-            }
-          />
-          <Route
-            path="/client/legal-guardians/new"
-            element={
-              <ProtectedClientRoute>
-                <LegalGuardianCreatePage />
-              </ProtectedClientRoute>
-            }
-          />
-          <Route
-            path="/client/legal-guardians/:id"
-            element={
-              <ProtectedClientRoute>
-                <LegalGuardianDetailsPage />
-              </ProtectedClientRoute>
-            }
-          />
-          <Route
-            path="/client/legal-guardians/:id/edit"
-            element={
-              <ProtectedClientRoute>
-                <LegalGuardianEditPage />
               </ProtectedClientRoute>
             }
           />

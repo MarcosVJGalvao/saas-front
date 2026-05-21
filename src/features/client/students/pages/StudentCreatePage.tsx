@@ -1,5 +1,6 @@
 import { Controller } from 'react-hook-form';
 import { AppAlert } from '@shared/components/feedback/AppAlert';
+import { AppDatePicker } from '@shared/components/form/AppDatePicker';
 import { AppForm } from '@shared/components/form/AppForm';
 import { FormActions } from '@shared/components/form/FormActions';
 import { AppSelect } from '@shared/components/inputs/AppSelect';
@@ -77,10 +78,10 @@ const StudentCreatePage = () => {
             name="dateOfBirth"
             control={studentCreatePage.form.control}
             render={({ field, fieldState }) => (
-              <AppTextField
-                {...field}
-                type="date"
+              <AppDatePicker
                 label="Nascimento"
+                value={field.value ?? null}
+                onChange={field.onChange}
                 error={fieldState.invalid}
                 helperText={fieldState.error?.message}
               />

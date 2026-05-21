@@ -55,46 +55,50 @@ export const PageHeader = ({
   onAction,
   sx,
 }: PageHeaderProps) => (
-  <AppStack spacing={1.5} sx={[{ mb: 3 }, ...(Array.isArray(sx) ? sx : sx ? [sx] : [])]}>
-    {breadcrumbs.length > 0 ? (
-      <Breadcrumbs aria-label="breadcrumb">
-        {breadcrumbs.map((breadcrumb, index) => {
-          const isLastItem = index === breadcrumbs.length - 1;
-          if (breadcrumb.href !== undefined && !isLastItem) {
+  <AppBox sx={sx}>
+    <AppStack spacing={1.5} sx={{ mb: 3 }}>
+      {breadcrumbs.length > 0 ? (
+        <Breadcrumbs aria-label="breadcrumb">
+          {breadcrumbs.map((breadcrumb, index) => {
+            const isLastItem = index === breadcrumbs.length - 1;
+            if (breadcrumb.href !== undefined && !isLastItem) {
+              return (
+                <Link
+                  key={`${breadcrumb.label}-${index}`}
+                  underline="hover"
+                  color="inherit"
+                  href={breadcrumb.href}
+                >
+                  {breadcrumb.label}
+                </Link>
+              );
+            }
             return (
-              <Link
-                key={`${breadcrumb.label}-${index}`}
-                underline="hover"
-                color="inherit"
-                href={breadcrumb.href}
-              >
+              <AppText key={`${breadcrumb.label}-${index}`} color="text.primary">
                 {breadcrumb.label}
-              </Link>
+              </AppText>
             );
-          }
-          return (
-            <AppText key={`${breadcrumb.label}-${index}`} color="text.primary">
-              {breadcrumb.label}
-            </AppText>
-          );
-        })}
-      </Breadcrumbs>
-    ) : null}
-    <AppBox sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 2 }}>
-      <AppBox>
-        <AppText variant="h5" sx={{ fontWeight: 700 }}>
-          {title}
-        </AppText>
-        {subtitle !== undefined ? (
-          <AppText variant="body2" color="text.secondary">
-            {subtitle}
+          })}
+        </Breadcrumbs>
+      ) : null}
+      <AppBox
+        sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 2 }}
+      >
+        <AppBox>
+          <AppText variant="h5" sx={{ fontWeight: 700 }}>
+            {title}
           </AppText>
-        ) : null}
+          {subtitle !== undefined ? (
+            <AppText variant="body2" color="text.secondary">
+              {subtitle}
+            </AppText>
+          ) : null}
+        </AppBox>
+        <AppStack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
+          {actions}
+          {renderPrimaryAction({ actionIcon, actionLabel, canShowAction, onAction })}
+        </AppStack>
       </AppBox>
-      <AppStack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
-        {actions}
-        {renderPrimaryAction({ actionIcon, actionLabel, canShowAction, onAction })}
-      </AppStack>
-    </AppBox>
-  </AppStack>
+    </AppStack>
+  </AppBox>
 );

@@ -2,8 +2,17 @@ import { formatIsoDate } from '@shared/formatters';
 import { translateDocumentType, translateStudentStatus } from '@shared/i18n/pt-BR/enums';
 import { maskCep, maskCnpj, maskCpf, maskPhone } from '@shared/masks/inputMasks';
 import { onlyDigits } from '@shared/parsers/stringParsers';
-import type { EntityDetailsPageData } from '@shared/components/data-display/details/entityDetails.types';
+import type {
+  EntityDetailsPageData,
+  EntityDetailsPageContent,
+} from '@shared/components/data-display/details/entityDetails.types';
 import type { Student, StudentAddress, StudentContact } from '../types/student.types';
+
+export const studentDetailsContent: EntityDetailsPageContent = {
+  emptyTitle: 'Aluno não encontrado',
+  emptyMessage: 'Não foi possível localizar o aluno solicitado.',
+  errorFallback: 'Não foi possível carregar os detalhes do aluno.',
+};
 
 const formatDate = (value: string | undefined): string => (value ? formatIsoDate(value) : '-');
 

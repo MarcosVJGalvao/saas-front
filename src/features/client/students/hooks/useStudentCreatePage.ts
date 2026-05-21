@@ -17,7 +17,7 @@ export const useStudentCreatePage = () => {
   const [submitting, setSubmitting] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | undefined>();
 
-  const onSubmit = async (values: StudentCreateFormValues): Promise<void> => {
+  const handleSubmit = async (values: StudentCreateFormValues): Promise<void> => {
     setSubmitting(true);
     setErrorMessage(undefined);
     try {
@@ -34,7 +34,7 @@ export const useStudentCreatePage = () => {
     form,
     submitting,
     errorMessage,
-    onSubmit,
+    onSubmit: handleSubmit,
     onBack: () => {
       void navigate('/client/students');
     },

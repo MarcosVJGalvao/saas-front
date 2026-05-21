@@ -14,12 +14,19 @@ type DetailsSectionProps = Pick<CardProps, 'sx' | 'className'> & {
   children: ReactNode;
 };
 
-export const DetailsSection = ({ title, icon, action, children, sx, className }: DetailsSectionProps) => (
-  <Card
-    variant="outlined"
-    className={className}
-    sx={[
-      (theme) => ({
+export const DetailsSection = ({
+  title,
+  icon,
+  action,
+  children,
+  sx,
+  className,
+}: DetailsSectionProps) => (
+  <Box sx={sx}>
+    <Card
+      variant="outlined"
+      className={className}
+      sx={(theme) => ({
         borderColor: alpha(theme.palette.divider, 0.55),
         borderRadius: 2,
         boxShadow: 0,
@@ -31,21 +38,20 @@ export const DetailsSection = ({ title, icon, action, children, sx, className }:
           borderColor: alpha(theme.palette.primary.main, 0.24),
           boxShadow: theme.shadows[1],
         },
-      }),
-      ...(Array.isArray(sx) ? sx : sx ? [sx] : []),
-    ]}
-  >
-    <Stack spacing={spacingScale.sm}>
-      <Stack direction="row" sx={{ alignItems: 'center', justifyContent: 'space-between' }}>
-        <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
-          {icon ? <Box sx={{ color: 'primary.main', display: 'inline-flex' }}>{icon}</Box> : null}
-          <Typography variant="subtitle2" sx={{ fontWeight: 700 }}>
-            {title}
-          </Typography>
+      })}
+    >
+      <Stack spacing={spacingScale.sm}>
+        <Stack direction="row" sx={{ alignItems: 'center', justifyContent: 'space-between' }}>
+          <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
+            {icon ? <Box sx={{ color: 'primary.main', display: 'inline-flex' }}>{icon}</Box> : null}
+            <Typography variant="subtitle2" sx={{ fontWeight: 700 }}>
+              {title}
+            </Typography>
+          </Stack>
+          {action ? <Box>{action}</Box> : null}
         </Stack>
-        {action ? <Box>{action}</Box> : null}
+        {children}
       </Stack>
-      {children}
-    </Stack>
-  </Card>
+    </Card>
+  </Box>
 );

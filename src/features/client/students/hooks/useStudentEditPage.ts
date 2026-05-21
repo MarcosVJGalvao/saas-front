@@ -68,12 +68,12 @@ export const useStudentEditPage = (id: string) => {
     return () => window.clearTimeout(timeoutId);
   }, [fetchStudent]);
 
-  const onSubmit = async (values: StudentEditFormValues): Promise<void> => {
+  const handleSubmit = async (values: StudentEditFormValues): Promise<void> => {
     setSubmitting(true);
     setErrorMessage(undefined);
     try {
       await studentService.update(id, toStudentEditPayload(values));
-      void navigate('/client/students');
+      void navigate(`/client/students/${id}`);
     } catch {
       setErrorMessage('Não foi possível salvar o aluno.');
     } finally {
@@ -87,9 +87,9 @@ export const useStudentEditPage = (id: string) => {
     loading,
     submitting,
     errorMessage,
-    onSubmit,
+    onSubmit: handleSubmit,
     onBack: () => {
-      void navigate('/client/students');
+      void navigate(entity ? `/client/students/${entity.id}` : '/client/students');
     },
   };
 };

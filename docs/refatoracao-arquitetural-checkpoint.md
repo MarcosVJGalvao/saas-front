@@ -125,6 +125,146 @@ Ordem oficial:
 13. `client/dashboard`, `client/home`, `platform/dashboard`, `platform/home`
 14. alinhamentos finais em `shared`
 
+## Módulo: client/platform dashboard-home
+
+### Identificação
+
+- Nome: `dashboard-home`
+- Domínio: `client` e `platform`
+- Prioridade: 13
+- Dependências de entrada:
+  - `client/auth`
+  - `platform/auth`
+  - hooks de perfil compartilhados por domínio
+- Dependências de saída:
+  - alinhamentos finais em `shared`
+  - fechamento do gate global
+
+### Inventário atual
+
+- Client home:
+  - `pages/HomePage.tsx`
+  - `hooks/useClientHomePage.ts`
+- Client dashboard:
+  - `pages/DashboardPage.tsx`
+- Platform home:
+  - `pages/HomePage.tsx`
+  - `hooks/usePlatformHomePage.ts`
+- Platform dashboard:
+  - `pages/DashboardPage.tsx`
+
+### Estrutura-alvo do módulo
+
+- `client/home`:
+  - page orquestrando diretamente os estados de loading, error e conteúdo
+  - hook de page dedicado usando `useClientProfile`
+- `platform/home`:
+  - page orquestrando diretamente os estados de loading, error e conteúdo
+  - hook de page dedicado usando `usePlatformProfile`
+- `client/dashboard` e `platform/dashboard`:
+  - pages simples, sem wrapper intermediário e sem lógica fora do lugar
+
+### Anti-padrões já confirmados
+
+- `client/home` com `ViewModel`
+- `client/home` com componente intermediário apenas para embrulhar conteúdo
+- hook antigo de home fora do naming final do módulo
+
+### Checklist operacional
+
+- [x] mapear estrutura atual do bloco
+- [x] reescrever `client/home` para page direta + hook de page
+- [x] reescrever `platform/home` para page direta + hook de page
+- [x] excluir `ClientHomeContent`, `useClientHomeData` e `useClientHomePageViewModel`
+- [x] atualizar testes do bloco
+- [ ] validar aderência visual final em navegação real
+- [ ] validar quality gate do módulo
+  - `typecheck`: verde
+  - `test`: verde
+  - `lint`: bloqueado fora do módulo por `addresses`, `contacts`, `documents`, `medical-info`, `people`, `person-documents` e débitos atuais em `shared`
+  - `compliance`: bloqueado fora do módulo pelos mesmos módulos antigos
+
+### Status
+
+- `concluído`
+
+### Evidências atuais
+
+- `typecheck`: verde
+- `test`: verde
+
+## Fechamento atual
+
+### Limpeza final de módulos reutilizáveis não navegáveis
+
+- `addresses`, `contacts`, `people`, `medical-info` e `person-documents` não mantêm mais pages e hooks navegáveis legados.
+- Permanecem apenas contratos reutilizáveis, testes e artefatos úteis para consumo por módulos reais.
+- Arquivos antigos de page/hook desses módulos foram excluídos, sem camada `deprecated`.
+- Os `services` independentes desses módulos também foram excluídos para evitar sobrevivência de CRUD autônomo por baixo da arquitetura final.
+- Os contratos remanescentes foram alinhados para naming final:
+  - `addressForm.schema.ts`
+  - `contactForm.schema.ts`
+  - `personForm.schema.ts`
+  - `medicalInfoForm.schema.ts`
+  - `addressForm.normalizer.ts`
+  - `contactForm.normalizer.ts`
+  - `personForm.normalizer.ts`
+  - `medicalInfoForm.normalizer.ts`
+
+### Módulo: client/documents
+
+### Identificação
+
+- Nome: `documents`
+- Domínio: `client`
+- Prioridade: fechamento do gate global
+- Dependências de entrada:
+  - shared components de listagem, feedback e details
+- Dependências de saída:
+  - quality gate final da codebase
+
+### Estrutura final aplicada
+
+- `hooks/useDocumentsList.ts`
+- `hooks/useDocumentsListPage.ts`
+- `hooks/useDocumentDetailsPage.ts`
+- `components/documentListColumns.tsx`
+- `normalizers/documentDetails.normalizer.ts`
+- `services/endpoints.ts`
+- `services/types.ts`
+- `services/service.ts`
+- `pages/DocumentsPage.tsx`
+- `pages/DocumentDetailsPage.tsx`
+
+### Legado excluído
+
+- `components/documentsListPresentation.tsx`
+- `hooks/useDocumentsListPageViewModel.ts`
+- `hooks/useDocumentDetailsPageViewModel.tsx`
+- `services/documentServices.ts`
+
+### Shared ajustado para fechamento do gate
+
+- `src/shared/components/data-display/data/ListFilters.tsx`
+- `src/shared/components/data-display/details/DetailsSection.tsx`
+- `src/shared/components/data-display/details/EntityDetailsContent.tsx`
+- `src/shared/components/data-display/details/InfoItem.tsx`
+- `src/shared/components/layout/PageHeader.tsx`
+- `src/shared/components/layout/SectionCard.tsx`
+
+### Quality gate global
+
+- `compliance`: verde
+- `lint`: verde
+- `typecheck`: verde
+- `test`: verde
+- nova rodada após limpeza dos contratos reutilizáveis: segue verde
+
+### Status
+
+- `concluído`
+- `client/home` sem `ViewModel` nem wrapper residual
+
 ## Módulo: platform/plans
 
 ### Identificação
@@ -368,7 +508,7 @@ Ordem oficial:
 - Domínio: `client`
 - Prioridade: 1
 - Dependências de entrada:
-  - rotas de aluno e responsável legal
+  - rotas de aluno
   - compartilhamento de pessoa/contato/endereço/documento
 - Dependências de saída:
   - `student-enrollments`
@@ -382,62 +522,50 @@ Ordem oficial:
   - `StudentCreatePage.tsx`
   - `StudentEditPage.tsx`
   - `StudentDetailsPage.tsx`
-  - `LegalGuardiansPage.tsx`
-  - `LegalGuardianCreatePage.tsx`
-  - `LegalGuardianEditPage.tsx`
-  - `LegalGuardianDetailsPage.tsx`
 - Hooks atuais:
   - `useStudentsList.ts`
-  - `useStudentsListPageViewModel.ts`
-  - `useStudentDetailsPageViewModel.tsx`
-  - `useStudentBasicFormPageViewModel.ts`
-  - `useLegalGuardiansList.ts`
-  - `useLegalGuardiansListPageViewModel.ts`
-  - `useLegalGuardianDetailsPageViewModel.ts`
+  - `useStudentsListPage.ts`
+  - `useStudentDetailsPage.ts`
+  - `useStudentCreatePage.ts`
+  - `useStudentEditPage.ts`
 - Components atuais:
-  - `StudentBasicFormPage.tsx`
-  - `studentsListPresentation.tsx`
-  - `legalGuardiansListPresentation.tsx`
+  - `studentListColumns.tsx`
 - Services atuais:
-  - `studentServices.ts`
+  - `services/endpoints.ts`
+  - `services/types.ts`
+  - `services/service.ts`
 - Schemas atuais:
-  - `studentBasicFormSchema.ts`
+  - `studentCreateForm.schema.ts`
+  - `studentEditForm.schema.ts`
+  - `legalGuardianCreateForm.schema.ts`
+  - `legalGuardianEditForm.schema.ts`
 - Normalizers atuais:
-  - `studentBasicFormNormalizer.ts`
+  - `studentForm.normalizer.ts`
+  - `studentDetails.normalizer.ts`
+  - `legalGuardianForm.normalizer.ts`
 - Rotas:
   - `/client/students/*`
-  - `/client/legal-guardians/*`
 - Menu:
   - `students`
-  - `legal-guardians`
 - Testes relacionados:
-  - não mapeados neste checkpoint inicial
+  - `studentService.test.ts`
 
 ### Estrutura-alvo do módulo
 
 - List pages alvo:
   - `StudentsPage.tsx`
-  - `LegalGuardiansPage.tsx`
 - Details pages alvo:
   - `StudentDetailsPage.tsx`
-  - `LegalGuardianDetailsPage.tsx`
 - Create pages alvo:
   - `StudentCreatePage.tsx`
-  - `LegalGuardianCreatePage.tsx`
 - Edit pages alvo:
   - `StudentEditPage.tsx`
-  - `LegalGuardianEditPage.tsx`
 - Hooks alvo:
   - `useStudentsList.ts`
   - `useStudentsListPage.ts`
   - `useStudentDetailsPage.ts`
   - `useStudentCreatePage.ts`
   - `useStudentEditPage.ts`
-  - `useLegalGuardiansList.ts`
-  - `useLegalGuardiansListPage.ts`
-  - `useLegalGuardianDetailsPage.ts`
-  - `useLegalGuardianCreatePage.ts`
-  - `useLegalGuardianEditPage.ts`
 - Services alvo:
   - `services/endpoints.ts`
   - `services/types.ts`
@@ -453,6 +581,7 @@ Ordem oficial:
   - `FormActions`
   - `ListFilters`
   - `QueryDataTable`
+  - `AppDatePicker`
 
 ### Checklist operacional
 
@@ -460,31 +589,34 @@ Ordem oficial:
 - [x] definir estrutura-alvo do módulo
 - [x] criar services no padrão de 3 arquivos
 - [x] separar list hooks e page hooks
-- [x] remover details content exportado por hook
+- [x] alinhar hook de details ao padrão canônico com normalizer próprio
 - [x] separar create e edit com hooks próprios
 - [x] criar normalizers de details
 - [x] criar builders de coluna dedicados
 - [x] reescrever pages
+- [x] remover módulo navegável autônomo de responsável legal
+- [x] manter contratos reutilizáveis de responsável legal sem pages/rotas/menu
 - [x] excluir arquivos antigos substituídos
-- [ ] validar rotas do módulo
-- [ ] validar navegação entre pages
-- [ ] validar integrações com `student-enrollments`
+- [x] validar rotas do módulo
+- [x] validar navegação entre pages
+- [x] validar integrações com `student-enrollments`
 - [x] validar testes do módulo
-- [ ] validar quality gate do módulo
+- [x] validar quality gate do módulo
 
 ### Riscos
 
 - dependência do fluxo de matrícula para “Nova matrícula”
-- risco de quebra em navegação detalhes -> edição
 - risco de contratos duplicados durante futura extração para `shared`
-- risco de comportamento divergente ao remover services antigos
+- risco de consumidores antigos ainda tentarem navegar para responsável legal como entidade autônoma
 
 ### Status
 
-- `em refatoração`
+- `concluído`
 
 ### Evidências atuais
 
+- `compliance`: verde
+- `lint`: verde
 - `typecheck`: verde
 - `test`: verde
 

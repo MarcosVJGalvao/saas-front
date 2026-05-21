@@ -5,7 +5,10 @@ import type {
   EntityDetailsPageData,
   EntityDetailsViewState,
 } from '@shared/components/data-display/details/entityDetails.types';
-import { toStudentDetailsData } from '../normalizers/studentDetails.normalizer';
+import {
+  studentDetailsContent,
+  toStudentDetailsData,
+} from '../normalizers/studentDetails.normalizer';
 import { studentService } from '../services/service';
 import type { Student } from '../types/student.types';
 
@@ -67,6 +70,7 @@ export const useStudentDetailsPage = (id: string) => {
   }, [fetchStudent]);
 
   return {
+    content: studentDetailsContent,
     data: student
       ? toStudentDetailsData(
           student,
@@ -77,6 +81,7 @@ export const useStudentDetailsPage = (id: string) => {
       : ({ headerData: null, tabs: [] } satisfies EntityDetailsPageData),
     viewState,
     errorMessage,
+    entity: student,
     onBack: () => navigate('/client/students'),
     onRetry: fetchStudent,
   };

@@ -36,11 +36,11 @@ const buildQueryFromFilters = (filterValues: StudentFilterValues): Partial<Stude
 
 export const useStudentsListPage = () => {
   const navigate = useNavigate();
-  const studentList = useStudentsList();
+  const studentsList = useStudentsList();
   const [filterValues, setFilterValues] = useState<StudentFilterValues>(initialFilterValues);
 
   return {
-    studentList,
+    studentsList,
     filterValues,
     onFilterChange: (filterKey: string, filterValue: unknown) => {
       setFilterValues((current) => ({
@@ -49,20 +49,20 @@ export const useStudentsListPage = () => {
       }));
     },
     applyFilters: () => {
-      studentList.updateQuery(buildQueryFromFilters(filterValues));
+      studentsList.updateQueryParams(buildQueryFromFilters(filterValues));
     },
     clearFilters: () => {
       setFilterValues(initialFilterValues);
-      studentList.updateQuery({
+      studentsList.updateQueryParams({
         page: 1,
         search: undefined,
         status: undefined,
       });
     },
-    onQueryChange: (search: string) => studentList.updateQuery({ search, page: 1 }),
-    onPageChange: (page: number) => studentList.updateQuery({ page }),
-    onLimitChange: (limit: number) => studentList.updateQuery({ limit, page: 1 }),
-    columns: buildStudentListColumns({
+    onQueryChange: (search: string) => studentsList.updateQueryParams({ search, page: 1 }),
+    onPageChange: (page: number) => studentsList.updateQueryParams({ page }),
+    onRowsPerPageChange: (limit: number) => studentsList.updateQueryParams({ limit, page: 1 }),
+    tableColumns: buildStudentListColumns({
       onDetails: (student: Student) => {
         void navigate(`/client/students/${student.id}`);
       },

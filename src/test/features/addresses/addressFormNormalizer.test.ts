@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { normalizeAddressPayload } from '@features/client/addresses/normalizers/addressFormNormalizer';
+import { normalizeAddressPayload } from '@features/client/addresses/normalizers/addressForm.normalizer';
 
 describe('addressFormNormalizer', () => {
   it('normaliza CEP e campos opcionais', () => {

@@ -85,13 +85,6 @@ export const clientNavigationGroups: NavigationGroup[] = [
         permission: 'student-enroll:read',
         icon: AssignmentIndOutlinedIcon,
       },
-      {
-        id: 'legal-guardians',
-        label: 'Responsáveis',
-        href: '/legal-guardians',
-        permission: 'legal-guardian:read',
-        icon: GroupsOutlinedIcon,
-      },
     ],
   },
   {

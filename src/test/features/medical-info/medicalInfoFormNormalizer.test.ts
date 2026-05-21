@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { normalizeMedicalInfoPayload } from '@features/client/medical-info/normalizers/medicalInfoFormNormalizer';
+import { normalizeMedicalInfoPayload } from '@features/client/medical-info/normalizers/medicalInfoForm.normalizer';
 
 describe('medicalInfoFormNormalizer', () => {
   it('normaliza informações médicas para o payload do guia', () => {

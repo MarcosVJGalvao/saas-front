@@ -102,7 +102,9 @@ const renderSelectField = ({
       helperText={field.helperText}
       slotProps={{ select: { displayEmpty: true } }}
     >
-      <MenuItem value="">{field.placeholder ?? sharedComponentsI18n.filters.selectPlaceholder}</MenuItem>
+      <MenuItem value="">
+        {field.placeholder ?? sharedComponentsI18n.filters.selectPlaceholder}
+      </MenuItem>
       {field.options
         .filter((option) => option.value.length > 0)
         .map((option) => (
@@ -215,7 +217,9 @@ const FiltersHeader = ({
   subtitle,
   onToggleExpanded,
 }: FiltersHeaderProps) => {
-  const collapseLabel = expanded ? sharedComponentsI18n.filters.collapseLabel : sharedComponentsI18n.filters.expandLabel;
+  const collapseLabel = expanded
+    ? sharedComponentsI18n.filters.collapseLabel
+    : sharedComponentsI18n.filters.expandLabel;
   const collapseIcon = expanded ? (
     <KeyboardArrowUpIcon sx={{ fontSize: 18 }} />
   ) : (

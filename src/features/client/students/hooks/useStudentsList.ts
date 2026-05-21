@@ -5,7 +5,7 @@ import type { Student, StudentQueryParams } from '../types/student.types';
 
 export const useStudentsList = () => {
   const [rows, setRows] = useState<Student[]>([]);
-  const [meta, setMeta] = useState<PaginationMeta>({
+  const [pagination, setPagination] = useState<PaginationMeta>({
     page: 1,
     limit: 10,
     total: 0,
@@ -13,43 +13,43 @@ export const useStudentsList = () => {
     hasNextPage: false,
     hasPreviousPage: false,
   });
-  const [query, setQuery] = useState<StudentQueryParams>({ page: 1, limit: 10 });
+  const [queryParams, setQueryParams] = useState<StudentQueryParams>({ page: 1, limit: 10 });
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | undefined>();
 
-  const load = useCallback(async () => {
+  const fetchStudents = useCallback(async () => {
     setLoading(true);
     setErrorMessage(undefined);
     try {
-      const response = await studentService.list(query);
+      const response = await studentService.list(queryParams);
       setRows(response.data);
-      setMeta(response.meta);
+      setPagination(response.meta);
     } catch {
       setErrorMessage('Erro ao carregar alunos.');
     } finally {
       setLoading(false);
     }
-  }, [query]);
+  }, [queryParams]);
 
   useEffect(() => {
     const timeoutId = window.setTimeout(() => {
-      void load();
+      void fetchStudents();
     }, 0);
 
     return () => window.clearTimeout(timeoutId);
-  }, [load]);
+  }, [fetchStudents]);
 
-  const updateQuery = useCallback((patch: Partial<StudentQueryParams>) => {
-    setQuery((currentQuery) => ({ ...currentQuery, ...patch }));
+  const updateQueryParams = useCallback((patch: Partial<StudentQueryParams>) => {
+    setQueryParams((currentQueryParams) => ({ ...currentQueryParams, ...patch }));
   }, []);
 
   return {
     rows,
-    meta,
-    query,
+    pagination,
+    queryParams,
     loading,
     errorMessage,
-    updateQuery,
-    reload: load,
+    updateQueryParams,
+    reload: fetchStudents,
   };
 };
