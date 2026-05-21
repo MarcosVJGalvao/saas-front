@@ -1,15 +1,18 @@
 import { useParams } from 'react-router-dom';
-import { AppAlert } from '@shared/components/feedback/AppAlert';
+import { gradeCatalogConfig } from '@features/client/academic/constants/academicCatalogPageConfigs';
+import { useAcademicReferenceOptions } from '@features/client/academic/hooks/useAcademicReferenceOptions';
+import { useAcademicCatalogEditPage } from '@features/client/academic/hooks/useAcademicCatalogEditPage';
+import type { AcademicCatalogEditFormValues } from '@features/client/academic/schemas/academicCatalogEditForm.schema';
 import { AppCircularProgress } from '@shared/components/data-display/AppCircularProgress';
 import { AppPaper } from '@shared/components/data-display/AppPaper';
+import { AppAlert } from '@shared/components/feedback/AppAlert';
 import { AppForm } from '@shared/components/form/AppForm';
 import { FormActions } from '@shared/components/form/FormActions';
+import { FormSelect } from '@shared/components/form/FormSelect';
 import { FormTextField } from '@shared/components/form/FormTextField';
 import { AppStack } from '@shared/components/layout/AppStack';
 import { PageHeader } from '@shared/components/layout/PageHeader';
-import { gradeCatalogConfig } from '@features/client/academic/constants/academicCatalogPageConfigs';
-import { useAcademicCatalogEditPage } from '@features/client/academic/hooks/useAcademicCatalogEditPage';
-import type { AcademicCatalogEditFormValues } from '@features/client/academic/schemas/academicCatalogEditForm.schema';
+import { activeInactiveStatusOptions } from '@shared/constants/selectOptions';
 
 const GradeEditPage = () => {
   const { id } = useParams<{ id: string }>();
@@ -20,6 +23,7 @@ const GradeEditPage = () => {
     loadErrorMessage: gradeCatalogConfig.loadErrorMessage,
     submitErrorMessage: gradeCatalogConfig.submitErrorMessage,
   });
+  const referenceOptions = useAcademicReferenceOptions({ includeEducationLevels: true });
 
   if (!id) {
     return null;
@@ -40,6 +44,9 @@ const GradeEditPage = () => {
       {gradeEditPage.errorMessage ? (
         <AppAlert severity="error">{gradeEditPage.errorMessage}</AppAlert>
       ) : null}
+      {referenceOptions.errorMessage ? (
+        <AppAlert severity="error">{referenceOptions.errorMessage}</AppAlert>
+      ) : null}
       <AppPaper sx={{ p: 3 }}>
         <AppForm
           form={gradeEditPage.form}
@@ -49,15 +56,16 @@ const GradeEditPage = () => {
         >
           <FormTextField<AcademicCatalogEditFormValues> name="name" label="Nome" />
           <FormTextField<AcademicCatalogEditFormValues> name="code" label="Código" />
-          <FormTextField<AcademicCatalogEditFormValues>
+          <FormSelect<AcademicCatalogEditFormValues>
             name="status"
             label="Status"
-            placeholder="active ou inactive"
+            options={activeInactiveStatusOptions}
           />
-          <FormTextField<AcademicCatalogEditFormValues>
+          <FormSelect<AcademicCatalogEditFormValues>
             name="educationLevelId"
             label="Nível de ensino"
-            placeholder="ID do nível de ensino"
+            options={referenceOptions.educationLevelOptions}
+            disabled={referenceOptions.loading}
           />
           <FormTextField<AcademicCatalogEditFormValues>
             name="description"

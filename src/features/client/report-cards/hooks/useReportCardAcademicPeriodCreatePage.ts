@@ -10,9 +10,11 @@ import {
   type ReportCardAcademicPeriodCreateFormValues,
 } from '@features/client/report-cards/schemas/reportCardAcademicPeriodCreateForm.schema';
 import { reportCardService } from '@features/client/report-cards/services/service';
+import { useReportCardReferenceOptions } from '@features/client/report-cards/hooks/useReportCardReferenceOptions';
 
 export const useReportCardAcademicPeriodCreatePage = () => {
   const navigate = useNavigate();
+  const referenceOptions = useReportCardReferenceOptions();
   const form = useAppForm<ReportCardAcademicPeriodCreateFormValues>(
     reportCardAcademicPeriodCreateFormSchema,
     buildReportCardAcademicPeriodInitialValues(),
@@ -35,6 +37,7 @@ export const useReportCardAcademicPeriodCreatePage = () => {
 
   return {
     form,
+    referenceOptions,
     submitting,
     errorMessage,
     onSubmit: handleSubmit,

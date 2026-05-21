@@ -1,14 +1,16 @@
-import { AppAlert } from '@shared/components/feedback/AppAlert';
-import { AppCard } from '@shared/components/data-display/AppCard';
-import { AppCircularProgress } from '@shared/components/data-display/AppCircularProgress';
-import { AppForm } from '@shared/components/form/AppForm';
-import { AppStack } from '@shared/components/layout/AppStack';
-import { FormActions } from '@shared/components/form/FormActions';
-import { FormTextField } from '@shared/components/form/FormTextField';
-import { PageHeader } from '@shared/components/layout/PageHeader';
 import { useParams } from 'react-router-dom';
 import { useStudentEnrollmentEditPage } from '@features/client/student-enrollments/hooks/useStudentEnrollmentEditPage';
 import type { StudentEnrollmentEditFormValues } from '@features/client/student-enrollments/schemas/studentEnrollmentEditForm.schema';
+import { AppCard } from '@shared/components/data-display/AppCard';
+import { AppCircularProgress } from '@shared/components/data-display/AppCircularProgress';
+import { AppAlert } from '@shared/components/feedback/AppAlert';
+import { AppForm } from '@shared/components/form/AppForm';
+import { FormActions } from '@shared/components/form/FormActions';
+import { FormDatePicker } from '@shared/components/form/FormDatePicker';
+import { FormSelect } from '@shared/components/form/FormSelect';
+import { FormTextField } from '@shared/components/form/FormTextField';
+import { AppStack } from '@shared/components/layout/AppStack';
+import { PageHeader } from '@shared/components/layout/PageHeader';
 
 const StudentEnrollmentEditPage = () => {
   const { id } = useParams<{ id: string }>();
@@ -31,23 +33,36 @@ const StudentEnrollmentEditPage = () => {
       {studentEnrollmentEditPage.errorMessage ? (
         <AppAlert severity="error">{studentEnrollmentEditPage.errorMessage}</AppAlert>
       ) : null}
+      {studentEnrollmentEditPage.referenceOptions.errorMessage ? (
+        <AppAlert severity="error">
+          {studentEnrollmentEditPage.referenceOptions.errorMessage}
+        </AppAlert>
+      ) : null}
       <AppCard>
         <AppForm
           form={studentEnrollmentEditPage.form}
           onSubmit={studentEnrollmentEditPage.onSubmit}
           useResponsiveGrid
         >
-          <FormTextField<StudentEnrollmentEditFormValues>
+          <FormSelect<StudentEnrollmentEditFormValues>
             name="academicYearId"
-            label="ID do ano letivo"
-            disabled={studentEnrollmentEditPage.submitting}
+            label="Ano letivo"
+            options={studentEnrollmentEditPage.referenceOptions.academicYearOptions}
+            disabled={
+              studentEnrollmentEditPage.submitting ||
+              studentEnrollmentEditPage.referenceOptions.loading
+            }
           />
-          <FormTextField<StudentEnrollmentEditFormValues>
+          <FormSelect<StudentEnrollmentEditFormValues>
             name="schoolClassId"
-            label="ID da turma"
-            disabled={studentEnrollmentEditPage.submitting}
+            label="Turma"
+            options={studentEnrollmentEditPage.referenceOptions.schoolClassOptions}
+            disabled={
+              studentEnrollmentEditPage.submitting ||
+              studentEnrollmentEditPage.referenceOptions.loading
+            }
           />
-          <FormTextField<StudentEnrollmentEditFormValues>
+          <FormDatePicker<StudentEnrollmentEditFormValues>
             name="enrollmentDate"
             label="Data da matrícula"
             disabled={studentEnrollmentEditPage.submitting}

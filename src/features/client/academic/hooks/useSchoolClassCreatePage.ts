@@ -8,9 +8,13 @@ import {
 import { schoolClassCreateFormSchema } from '@features/client/academic/schemas/schoolClassCreateForm.schema';
 import type { SchoolClassCreateFormValues } from '@features/client/academic/schemas/schoolClassCreateForm.schema';
 import { schoolClassService } from '@features/client/academic/services/service';
+import { useAcademicReferenceOptions } from '@features/client/academic/hooks/useAcademicReferenceOptions';
 
 export const useSchoolClassCreatePage = () => {
   const navigate = useNavigate();
+  const referenceOptions = useAcademicReferenceOptions({
+    includeEducationLevels: true,
+  });
   const form = useAppForm<SchoolClassCreateFormValues>(
     schoolClassCreateFormSchema,
     buildSchoolClassInitialValues(),
@@ -33,6 +37,7 @@ export const useSchoolClassCreatePage = () => {
 
   return {
     form,
+    referenceOptions,
     submitting,
     errorMessage,
     onSubmit: handleSubmit,

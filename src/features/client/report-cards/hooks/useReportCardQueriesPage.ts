@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useReportCardReferenceOptions } from '@features/client/report-cards/hooks/useReportCardReferenceOptions';
 import { reportCardService } from '@features/client/report-cards/services/service';
 
 type ReportCardQueryMode = 'student' | 'class';
@@ -12,6 +13,10 @@ const initialValues: ReportCardQueryValues = {
 const getStringValue = (value: unknown): string => (typeof value === 'string' ? value.trim() : '');
 
 export const useReportCardQueriesPage = () => {
+  const referenceOptions = useReportCardReferenceOptions({
+    includeSchoolClasses: true,
+    includeStudents: true,
+  });
   const [values, setValues] = useState<ReportCardQueryValues>(initialValues);
   const [loadingMode, setLoadingMode] = useState<ReportCardQueryMode | undefined>(undefined);
   const [errorMessage, setErrorMessage] = useState<string | undefined>(undefined);
@@ -66,6 +71,7 @@ export const useReportCardQueriesPage = () => {
   };
 
   return {
+    referenceOptions,
     values,
     loadingMode,
     errorMessage,

@@ -1,10 +1,13 @@
 import { AppAlert } from '@shared/components/feedback/AppAlert';
 import { AppForm } from '@shared/components/form/AppForm';
+import { FormDatePicker } from '@shared/components/form/FormDatePicker';
 import { FormActions } from '@shared/components/form/FormActions';
+import { FormSelect } from '@shared/components/form/FormSelect';
 import { FormTextField } from '@shared/components/form/FormTextField';
 import { AppPaper } from '@shared/components/data-display/AppPaper';
 import { AppStack } from '@shared/components/layout/AppStack';
 import { PageHeader } from '@shared/components/layout/PageHeader';
+import { financialRecordStatusOptions } from '@features/client/financial/constants/financialFormOptions';
 import { useAccountsPayableCreatePage } from '@features/client/financial/hooks/useAccountsPayableCreatePage';
 import type { AccountsPayableCreateFormValues } from '@features/client/financial/schemas/accountsPayableCreateForm.schema';
 
@@ -22,6 +25,11 @@ const AccountsPayableCreatePage = () => {
       {accountsPayableCreatePage.errorMessage ? (
         <AppAlert severity="error">{accountsPayableCreatePage.errorMessage}</AppAlert>
       ) : null}
+      {accountsPayableCreatePage.referenceOptions.errorMessage ? (
+        <AppAlert severity="error">
+          {accountsPayableCreatePage.referenceOptions.errorMessage}
+        </AppAlert>
+      ) : null}
       <AppPaper sx={{ p: 3 }}>
         <AppForm
           form={accountsPayableCreatePage.form}
@@ -35,25 +43,23 @@ const AccountsPayableCreatePage = () => {
             label="Valor"
             placeholder="R$ 0,00"
           />
-          <FormTextField<AccountsPayableCreateFormValues>
-            name="dueDate"
-            label="Vencimento"
-            type="date"
-          />
-          <FormTextField<AccountsPayableCreateFormValues>
+          <FormDatePicker<AccountsPayableCreateFormValues> name="dueDate" label="Vencimento" />
+          <FormSelect<AccountsPayableCreateFormValues>
             name="status"
             label="Status"
-            placeholder="open, paid, received..."
+            options={financialRecordStatusOptions}
           />
-          <FormTextField<AccountsPayableCreateFormValues>
+          <FormSelect<AccountsPayableCreateFormValues>
             name="categoryId"
             label="Categoria"
-            placeholder="ID da categoria"
+            options={accountsPayableCreatePage.referenceOptions.categoryOptions}
+            disabled={accountsPayableCreatePage.referenceOptions.loading}
           />
-          <FormTextField<AccountsPayableCreateFormValues>
+          <FormSelect<AccountsPayableCreateFormValues>
             name="costCenterId"
             label="Centro de custo"
-            placeholder="ID do centro de custo"
+            options={accountsPayableCreatePage.referenceOptions.costCenterOptions}
+            disabled={accountsPayableCreatePage.referenceOptions.loading}
           />
           <FormActions
             secondaryAction={{

@@ -1,14 +1,19 @@
-import { useLocation, useParams } from 'react-router-dom';
+import {
+  schoolClassShiftOptions,
+  schoolClassStatusOptions,
+} from '@features/client/academic/constants/academicFormOptions';
+import { useSchoolClassEditPage } from '@features/client/academic/hooks/useSchoolClassEditPage';
+import type { SchoolClassEditFormValues } from '@features/client/academic/schemas/schoolClassEditForm.schema';
 import { AppCircularProgress } from '@shared/components/data-display/AppCircularProgress';
-import { AppAlert } from '@shared/components/feedback/AppAlert';
 import { AppPaper } from '@shared/components/data-display/AppPaper';
+import { AppAlert } from '@shared/components/feedback/AppAlert';
 import { AppForm } from '@shared/components/form/AppForm';
 import { FormActions } from '@shared/components/form/FormActions';
+import { FormSelect } from '@shared/components/form/FormSelect';
 import { FormTextField } from '@shared/components/form/FormTextField';
 import { AppStack } from '@shared/components/layout/AppStack';
 import { PageHeader } from '@shared/components/layout/PageHeader';
-import { useSchoolClassEditPage } from '@features/client/academic/hooks/useSchoolClassEditPage';
-import type { SchoolClassEditFormValues } from '@features/client/academic/schemas/schoolClassEditForm.schema';
+import { useLocation, useParams } from 'react-router-dom';
 
 const SchoolClassEditPage = () => {
   const { id } = useParams<{ id: string }>();
@@ -30,6 +35,9 @@ const SchoolClassEditPage = () => {
       {schoolClassEditPage.errorMessage ? (
         <AppAlert severity="error">{schoolClassEditPage.errorMessage}</AppAlert>
       ) : null}
+      {schoolClassEditPage.referenceOptions.errorMessage ? (
+        <AppAlert severity="error">{schoolClassEditPage.referenceOptions.errorMessage}</AppAlert>
+      ) : null}
       {schoolClassEditPage.loading ? (
         <AppCircularProgress ariaLabel="Carregando formulário" />
       ) : (
@@ -42,35 +50,38 @@ const SchoolClassEditPage = () => {
           >
             <FormTextField<SchoolClassEditFormValues> name="name" label="Nome" />
             <FormTextField<SchoolClassEditFormValues> name="code" label="Código" />
-            <FormTextField<SchoolClassEditFormValues>
+            <FormSelect<SchoolClassEditFormValues>
               name="status"
               label="Status"
-              placeholder="active, inactive ou cancelled"
+              options={schoolClassStatusOptions}
             />
-            <FormTextField<SchoolClassEditFormValues>
+            <FormSelect<SchoolClassEditFormValues>
               name="shift"
               label="Turno"
-              placeholder="morning, afternoon, evening ou full_time"
+              options={schoolClassShiftOptions}
             />
             <FormTextField<SchoolClassEditFormValues>
               name="capacity"
               label="Capacidade"
               placeholder="Quantidade de vagas"
             />
-            <FormTextField<SchoolClassEditFormValues>
+            <FormSelect<SchoolClassEditFormValues>
               name="academicYearId"
               label="Ano letivo"
-              placeholder="ID do ano letivo"
+              options={schoolClassEditPage.referenceOptions.academicYearOptions}
+              disabled={schoolClassEditPage.referenceOptions.loading}
             />
-            <FormTextField<SchoolClassEditFormValues>
+            <FormSelect<SchoolClassEditFormValues>
               name="gradeId"
               label="Série"
-              placeholder="ID da série"
+              options={schoolClassEditPage.referenceOptions.gradeOptions}
+              disabled={schoolClassEditPage.referenceOptions.loading}
             />
-            <FormTextField<SchoolClassEditFormValues>
+            <FormSelect<SchoolClassEditFormValues>
               name="educationLevelId"
               label="Nível de ensino"
-              placeholder="ID do nível de ensino"
+              options={schoolClassEditPage.referenceOptions.educationLevelOptions}
+              disabled={schoolClassEditPage.referenceOptions.loading}
             />
             <FormTextField<SchoolClassEditFormValues>
               name="description"

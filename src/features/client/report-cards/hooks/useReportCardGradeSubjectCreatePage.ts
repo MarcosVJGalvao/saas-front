@@ -10,9 +10,11 @@ import {
   type ReportCardGradeSubjectCreateFormValues,
 } from '@features/client/report-cards/schemas/reportCardGradeSubjectCreateForm.schema';
 import { reportCardService } from '@features/client/report-cards/services/service';
+import { useReportCardReferenceOptions } from '@features/client/report-cards/hooks/useReportCardReferenceOptions';
 
 export const useReportCardGradeSubjectCreatePage = () => {
   const navigate = useNavigate();
+  const referenceOptions = useReportCardReferenceOptions();
   const form = useAppForm<ReportCardGradeSubjectCreateFormValues>(
     reportCardGradeSubjectCreateFormSchema,
     buildReportCardGradeSubjectInitialValues(),
@@ -35,6 +37,7 @@ export const useReportCardGradeSubjectCreatePage = () => {
 
   return {
     form,
+    referenceOptions,
     submitting,
     errorMessage,
     onSubmit: handleSubmit,

@@ -1,4 +1,5 @@
 import { AppGrid } from '@shared/components/layout/AppGrid';
+import { AppDatePicker } from '@shared/components/form/AppDatePicker';
 import { AppMenuItem } from '@shared/components/inputs/AppMenuItem';
 import { AppStack } from '@shared/components/layout/AppStack';
 import { AppText } from '@shared/components/data-display/AppText';
@@ -7,7 +8,7 @@ import {
   toOnboardingGender,
   toOnboardingMaritalStatus,
 } from '@features/platform/clients/normalizers/clientOnboardingFieldNormalizers';
-import { maskCnpj, maskCpf, maskCurrency, maskDateInput } from '@shared/masks/inputMasks';
+import { maskCnpj, maskCpf, maskCurrency } from '@shared/masks/inputMasks';
 import { OnboardingField } from '@features/platform/clients/components/onboarding/OnboardingField';
 import type { ClientOnboardingStepProps } from '@features/platform/clients/types/clientOnboarding';
 
@@ -51,11 +52,14 @@ export const AdminStep = ({ value, actions }: ClientOnboardingStepProps) => (
         }
         onChange={actions.updateAdminDocumentNumber}
       />
-      <OnboardingField
-        label="Data de Nascimento"
-        value={maskDateInput(value.employee.person.dateOfBirth ?? '')}
-        onChange={actions.updateAdminDateOfBirth}
-      />
+      <AppGrid size={{ xs: 12, md: 6 }}>
+        <AppDatePicker
+          label="Data de Nascimento"
+          value={value.employee.person.dateOfBirth ?? ''}
+          onChange={(nextValue) => actions.updateAdminDateOfBirth(nextValue ?? '')}
+          textFieldSlotProps={{ size: 'small' }}
+        />
+      </AppGrid>
       <OnboardingField
         select
         label="Gênero"

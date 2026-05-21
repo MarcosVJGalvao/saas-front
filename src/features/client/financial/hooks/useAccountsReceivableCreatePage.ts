@@ -2,6 +2,7 @@ import { useNavigate } from 'react-router-dom';
 import { useAppForm } from '@shared/hooks/useAppForm';
 import { useState } from 'react';
 import { toAccountsReceivableCreatePayload } from '@features/client/financial/normalizers/accountsReceivableForm.normalizer';
+import { useFinancialReferenceOptions } from '@features/client/financial/hooks/useFinancialReferenceOptions';
 import {
   accountsReceivableCreateFormSchema,
   type AccountsReceivableCreateFormValues,
@@ -12,6 +13,7 @@ export const useAccountsReceivableCreatePage = () => {
   const navigate = useNavigate();
   const [submitting, setSubmitting] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | undefined>();
+  const referenceOptions = useFinancialReferenceOptions({ includeStudents: true });
   const form = useAppForm<AccountsReceivableCreateFormValues>(accountsReceivableCreateFormSchema, {
     description: '',
     amount: '',
@@ -37,6 +39,7 @@ export const useAccountsReceivableCreatePage = () => {
 
   return {
     form,
+    referenceOptions,
     submitting,
     errorMessage,
     onSubmit,

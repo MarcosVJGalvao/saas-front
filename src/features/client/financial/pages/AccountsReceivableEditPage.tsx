@@ -3,11 +3,14 @@ import { AppAlert } from '@shared/components/feedback/AppAlert';
 import { AppCircularProgress } from '@shared/components/data-display/AppCircularProgress';
 import { AppTextField } from '@shared/components/inputs/AppTextField';
 import { AppForm } from '@shared/components/form/AppForm';
+import { FormDatePicker } from '@shared/components/form/FormDatePicker';
 import { FormActions } from '@shared/components/form/FormActions';
+import { FormSelect } from '@shared/components/form/FormSelect';
 import { FormTextField } from '@shared/components/form/FormTextField';
 import { AppPaper } from '@shared/components/data-display/AppPaper';
 import { AppStack } from '@shared/components/layout/AppStack';
 import { PageHeader } from '@shared/components/layout/PageHeader';
+import { financialRecordStatusOptions } from '@features/client/financial/constants/financialFormOptions';
 import { useAccountsReceivableEditPage } from '@features/client/financial/hooks/useAccountsReceivableEditPage';
 import type { AccountsReceivableEditFormValues } from '@features/client/financial/schemas/accountsReceivableEditForm.schema';
 
@@ -30,6 +33,11 @@ const AccountsReceivableEditPage = () => {
       {accountsReceivableEditPage.errorMessage ? (
         <AppAlert severity="error">{accountsReceivableEditPage.errorMessage}</AppAlert>
       ) : null}
+      {accountsReceivableEditPage.referenceOptions.errorMessage ? (
+        <AppAlert severity="error">
+          {accountsReceivableEditPage.referenceOptions.errorMessage}
+        </AppAlert>
+      ) : null}
       <AppTextField
         label="Descrição"
         value={
@@ -51,30 +59,29 @@ const AccountsReceivableEditPage = () => {
             label="Valor"
             placeholder="R$ 0,00"
           />
-          <FormTextField<AccountsReceivableEditFormValues>
-            name="dueDate"
-            label="Vencimento"
-            type="date"
-          />
-          <FormTextField<AccountsReceivableEditFormValues>
+          <FormDatePicker<AccountsReceivableEditFormValues> name="dueDate" label="Vencimento" />
+          <FormSelect<AccountsReceivableEditFormValues>
             name="status"
             label="Status"
-            placeholder="open, paid, received..."
+            options={financialRecordStatusOptions}
           />
-          <FormTextField<AccountsReceivableEditFormValues>
+          <FormSelect<AccountsReceivableEditFormValues>
             name="categoryId"
             label="Categoria"
-            placeholder="ID da categoria"
+            options={accountsReceivableEditPage.referenceOptions.categoryOptions}
+            disabled={accountsReceivableEditPage.referenceOptions.loading}
           />
-          <FormTextField<AccountsReceivableEditFormValues>
+          <FormSelect<AccountsReceivableEditFormValues>
             name="costCenterId"
             label="Centro de custo"
-            placeholder="ID do centro de custo"
+            options={accountsReceivableEditPage.referenceOptions.costCenterOptions}
+            disabled={accountsReceivableEditPage.referenceOptions.loading}
           />
-          <FormTextField<AccountsReceivableEditFormValues>
+          <FormSelect<AccountsReceivableEditFormValues>
             name="studentId"
             label="Aluno"
-            placeholder="ID do aluno"
+            options={accountsReceivableEditPage.referenceOptions.studentOptions}
+            disabled={accountsReceivableEditPage.referenceOptions.loading}
           />
           <FormActions
             secondaryAction={{

@@ -1,12 +1,14 @@
-import { AppAlert } from '@shared/components/feedback/AppAlert';
+import { yesNoOptions } from '@features/client/report-cards/constants/reportCardFormOptions';
+import { useReportCardGradeSubjectCreatePage } from '@features/client/report-cards/hooks/useReportCardGradeSubjectCreatePage';
+import type { ReportCardGradeSubjectCreateFormValues } from '@features/client/report-cards/schemas/reportCardGradeSubjectCreateForm.schema';
 import { AppPaper } from '@shared/components/data-display/AppPaper';
+import { AppAlert } from '@shared/components/feedback/AppAlert';
 import { AppForm } from '@shared/components/form/AppForm';
 import { FormActions } from '@shared/components/form/FormActions';
+import { FormSelect } from '@shared/components/form/FormSelect';
 import { FormTextField } from '@shared/components/form/FormTextField';
 import { AppStack } from '@shared/components/layout/AppStack';
 import { PageHeader } from '@shared/components/layout/PageHeader';
-import { useReportCardGradeSubjectCreatePage } from '@features/client/report-cards/hooks/useReportCardGradeSubjectCreatePage';
-import type { ReportCardGradeSubjectCreateFormValues } from '@features/client/report-cards/schemas/reportCardGradeSubjectCreateForm.schema';
 
 const ReportCardGradeSubjectCreatePage = () => {
   const reportCardGradeSubjectCreatePage = useReportCardGradeSubjectCreatePage();
@@ -22,6 +24,11 @@ const ReportCardGradeSubjectCreatePage = () => {
       {reportCardGradeSubjectCreatePage.errorMessage ? (
         <AppAlert severity="error">{reportCardGradeSubjectCreatePage.errorMessage}</AppAlert>
       ) : null}
+      {reportCardGradeSubjectCreatePage.referenceOptions.errorMessage ? (
+        <AppAlert severity="error">
+          {reportCardGradeSubjectCreatePage.referenceOptions.errorMessage}
+        </AppAlert>
+      ) : null}
       <AppPaper sx={{ p: 3 }}>
         <AppForm
           form={reportCardGradeSubjectCreatePage.form}
@@ -29,20 +36,23 @@ const ReportCardGradeSubjectCreatePage = () => {
           useResponsiveGrid
           columnsByDevice={{ mobile: 1, tablet: 2, desktop: 2 }}
         >
-          <FormTextField<ReportCardGradeSubjectCreateFormValues>
+          <FormSelect<ReportCardGradeSubjectCreateFormValues>
             name="academicYearId"
             label="Ano letivo"
-            placeholder="ID do ano letivo"
+            options={reportCardGradeSubjectCreatePage.referenceOptions.academicYearOptions}
+            disabled={reportCardGradeSubjectCreatePage.referenceOptions.loading}
           />
-          <FormTextField<ReportCardGradeSubjectCreateFormValues>
+          <FormSelect<ReportCardGradeSubjectCreateFormValues>
             name="gradeId"
             label="Série"
-            placeholder="ID da série"
+            options={reportCardGradeSubjectCreatePage.referenceOptions.gradeOptions}
+            disabled={reportCardGradeSubjectCreatePage.referenceOptions.loading}
           />
-          <FormTextField<ReportCardGradeSubjectCreateFormValues>
+          <FormSelect<ReportCardGradeSubjectCreateFormValues>
             name="subjectId"
             label="Disciplina"
-            placeholder="ID da disciplina"
+            options={reportCardGradeSubjectCreatePage.referenceOptions.subjectOptions}
+            disabled={reportCardGradeSubjectCreatePage.referenceOptions.loading}
           />
           <FormTextField<ReportCardGradeSubjectCreateFormValues>
             name="workloadHours"
@@ -54,10 +64,10 @@ const ReportCardGradeSubjectCreatePage = () => {
             label="Ordem"
             placeholder="1"
           />
-          <FormTextField<ReportCardGradeSubjectCreateFormValues>
+          <FormSelect<ReportCardGradeSubjectCreateFormValues>
             name="isMandatory"
             label="Obrigatória"
-            placeholder="true ou false"
+            options={yesNoOptions}
           />
           <FormActions
             secondaryAction={{

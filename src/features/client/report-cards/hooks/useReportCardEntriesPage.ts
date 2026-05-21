@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useAppForm } from '@shared/hooks/useAppForm';
+import { useReportCardReferenceOptions } from '@features/client/report-cards/hooks/useReportCardReferenceOptions';
 import { reportCardService } from '@features/client/report-cards/services/service';
 import {
   reportCardEntryFormSchema,
@@ -150,6 +151,11 @@ const parseIds = (value: unknown): string[] =>
     .filter((item) => item.length > 0);
 
 export const useReportCardEntriesPage = () => {
+  const referenceOptions = useReportCardReferenceOptions({
+    includeAcademicPeriods: true,
+    includeSchoolClasses: true,
+    includeStudentEnrollments: true,
+  });
   const form = useAppForm<ReportCardEntryFormValues>(
     reportCardEntryFormSchema,
     buildReportCardEntryInitialValues(),
@@ -308,6 +314,7 @@ export const useReportCardEntriesPage = () => {
 
   return {
     form,
+    referenceOptions,
     values,
     loading,
     confirmOpen,

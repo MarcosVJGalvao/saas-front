@@ -9,8 +9,13 @@ import {
   type AttendanceRecordCreateFormValues,
 } from '@features/client/attendance/schemas/attendanceRecordCreateForm.schema';
 import { attendanceRecordsService } from '@features/client/attendance/services/service';
+import { useAttendanceReferenceOptions } from '@features/client/attendance/hooks/useAttendanceReferenceOptions';
 
 export const useAttendanceRecordCreatePage = () => {
+  const referenceOptions = useAttendanceReferenceOptions({
+    includeSchedules: true,
+    includeStudentEnrollments: true,
+  });
   const form = useAppForm<AttendanceRecordCreateFormValues>(
     attendanceRecordCreateFormSchema,
     attendanceRecordCreateInitialValues,
@@ -20,6 +25,7 @@ export const useAttendanceRecordCreatePage = () => {
 
   return {
     form,
+    referenceOptions,
     submitting: form.formState.isSubmitting,
     successMessage,
     errorMessage,

@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useAppForm } from '@shared/hooks/useAppForm';
 import { isRecord } from '@shared/utils/isRecord';
@@ -45,6 +45,7 @@ export const useAcademicCatalogEditPage = ({
   loadErrorMessage,
   submitErrorMessage,
 }: UseAcademicCatalogEditPageParams) => {
+  const serviceRef = useRef(service);
   const navigate = useNavigate();
   const location = useLocation();
   const locationState = getLocationState(location.state);
@@ -60,6 +61,10 @@ export const useAcademicCatalogEditPage = ({
     educationLevelId: '',
   });
 
+  useEffect(() => {
+    serviceRef.current = service;
+  }, [service]);
+
   const fetchItem = useCallback(async () => {
     if (locationState?.entity) {
       return;
@@ -68,14 +73,14 @@ export const useAcademicCatalogEditPage = ({
     setLoading(true);
     setErrorMessage(undefined);
     try {
-      const response = await service.getById(id);
+      const response = await serviceRef.current.getById(id);
       setItem(response);
     } catch {
       setErrorMessage(loadErrorMessage);
     } finally {
       setLoading(false);
     }
-  }, [id, loadErrorMessage, locationState?.entity, service]);
+  }, [id, loadErrorMessage, locationState?.entity]);
 
   useEffect(() => {
     const timeoutId = window.setTimeout(() => {
@@ -96,7 +101,7 @@ export const useAcademicCatalogEditPage = ({
     setSubmitting(true);
     setErrorMessage(undefined);
     try {
-      await service.update(id, toAcademicCatalogEditPayload(values));
+      await serviceRef.current.update(id, toAcademicCatalogEditPayload(values));
       void navigate(`${backPath}/${id}`);
     } catch {
       setErrorMessage(submitErrorMessage);

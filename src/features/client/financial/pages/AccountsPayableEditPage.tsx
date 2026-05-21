@@ -3,11 +3,14 @@ import { AppAlert } from '@shared/components/feedback/AppAlert';
 import { AppCircularProgress } from '@shared/components/data-display/AppCircularProgress';
 import { AppTextField } from '@shared/components/inputs/AppTextField';
 import { AppForm } from '@shared/components/form/AppForm';
+import { FormDatePicker } from '@shared/components/form/FormDatePicker';
 import { FormActions } from '@shared/components/form/FormActions';
+import { FormSelect } from '@shared/components/form/FormSelect';
 import { FormTextField } from '@shared/components/form/FormTextField';
 import { AppPaper } from '@shared/components/data-display/AppPaper';
 import { AppStack } from '@shared/components/layout/AppStack';
 import { PageHeader } from '@shared/components/layout/PageHeader';
+import { financialRecordStatusOptions } from '@features/client/financial/constants/financialFormOptions';
 import { useAccountsPayableEditPage } from '@features/client/financial/hooks/useAccountsPayableEditPage';
 import type { AccountsPayableEditFormValues } from '@features/client/financial/schemas/accountsPayableEditForm.schema';
 
@@ -30,6 +33,11 @@ const AccountsPayableEditPage = () => {
       {accountsPayableEditPage.errorMessage ? (
         <AppAlert severity="error">{accountsPayableEditPage.errorMessage}</AppAlert>
       ) : null}
+      {accountsPayableEditPage.referenceOptions.errorMessage ? (
+        <AppAlert severity="error">
+          {accountsPayableEditPage.referenceOptions.errorMessage}
+        </AppAlert>
+      ) : null}
       <AppTextField
         label="Descrição"
         value={
@@ -49,25 +57,23 @@ const AccountsPayableEditPage = () => {
             label="Valor"
             placeholder="R$ 0,00"
           />
-          <FormTextField<AccountsPayableEditFormValues>
-            name="dueDate"
-            label="Vencimento"
-            type="date"
-          />
-          <FormTextField<AccountsPayableEditFormValues>
+          <FormDatePicker<AccountsPayableEditFormValues> name="dueDate" label="Vencimento" />
+          <FormSelect<AccountsPayableEditFormValues>
             name="status"
             label="Status"
-            placeholder="open, paid, received..."
+            options={financialRecordStatusOptions}
           />
-          <FormTextField<AccountsPayableEditFormValues>
+          <FormSelect<AccountsPayableEditFormValues>
             name="categoryId"
             label="Categoria"
-            placeholder="ID da categoria"
+            options={accountsPayableEditPage.referenceOptions.categoryOptions}
+            disabled={accountsPayableEditPage.referenceOptions.loading}
           />
-          <FormTextField<AccountsPayableEditFormValues>
+          <FormSelect<AccountsPayableEditFormValues>
             name="costCenterId"
             label="Centro de custo"
-            placeholder="ID do centro de custo"
+            options={accountsPayableEditPage.referenceOptions.costCenterOptions}
+            disabled={accountsPayableEditPage.referenceOptions.loading}
           />
           <FormActions
             secondaryAction={{

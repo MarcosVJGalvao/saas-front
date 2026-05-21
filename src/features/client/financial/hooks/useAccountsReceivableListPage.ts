@@ -1,8 +1,9 @@
-import { accountsReceivableService } from '@features/client/financial/services/service';
+import { useFinancialReferenceOptions } from '@features/client/financial/hooks/useFinancialReferenceOptions';
 import { useFinancialRecordListBase } from '@features/client/financial/hooks/useFinancialRecordListBase';
+import { accountsReceivableService } from '@features/client/financial/services/service';
 
-export const useAccountsReceivableListPage = () =>
-  useFinancialRecordListBase({
+export const useAccountsReceivableListPage = () => {
+  const financialRecordListPage = useFinancialRecordListBase({
     mode: 'receivable',
     routeBase: '/client/financial/accounts-receivable',
     service: {
@@ -12,3 +13,14 @@ export const useAccountsReceivableListPage = () =>
     },
     errorMessageFallback: 'Não foi possível carregar contas a receber.',
   });
+  const referenceOptions = useFinancialReferenceOptions({
+    includeStudents: true,
+    includeStudentEnrollments: true,
+    includeSchoolClasses: true,
+  });
+
+  return {
+    ...financialRecordListPage,
+    referenceOptions,
+  };
+};

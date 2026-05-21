@@ -10,6 +10,7 @@ import {
   type AccountsPayableEditFormValues,
 } from '@features/client/financial/schemas/accountsPayableEditForm.schema';
 import { accountsPayableService } from '@features/client/financial/services/service';
+import { useFinancialReferenceOptions } from '@features/client/financial/hooks/useFinancialReferenceOptions';
 import type { FinancialRecord } from '@features/client/financial/types/financial.types';
 
 type AccountsPayableEditLocationState = {
@@ -28,6 +29,7 @@ export const useAccountsPayableEditPage = (id: string) => {
     ? location.state
     : undefined;
   const [entity, setEntity] = useState<FinancialRecord | null>(locationState?.entity ?? null);
+  const referenceOptions = useFinancialReferenceOptions();
   const [loading, setLoading] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | undefined>();
@@ -88,6 +90,7 @@ export const useAccountsPayableEditPage = (id: string) => {
   return {
     form,
     entity,
+    referenceOptions,
     loading,
     submitting,
     errorMessage,

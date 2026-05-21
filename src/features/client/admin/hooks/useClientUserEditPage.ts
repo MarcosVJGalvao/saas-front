@@ -9,6 +9,7 @@ import {
   clientUserEditFormSchema,
   type ClientUserEditFormValues,
 } from '@features/client/admin/schemas/clientUserEditForm.schema';
+import { useAdminReferenceOptions } from '@features/client/admin/hooks/useAdminReferenceOptions';
 import { clientUsersService } from '@features/client/admin/services/service';
 import type { ClientUser } from '@features/client/admin/types/admin.types';
 
@@ -29,6 +30,7 @@ export const useClientUserEditPage = (id: string) => {
   const navigate = useNavigate();
   const location = useLocation();
   const locationState = isClientUserEditLocationState(location.state) ? location.state : null;
+  const referenceOptions = useAdminReferenceOptions();
   const [entity, setEntity] = useState<ClientUser | null>(locationState?.entity ?? null);
   const [loading, setLoading] = useState(entity === null);
   const [errorMessage, setErrorMessage] = useState<string | undefined>();
@@ -63,6 +65,7 @@ export const useClientUserEditPage = (id: string) => {
 
   return {
     form,
+    referenceOptions,
     entity,
     loading,
     submitting: form.formState.isSubmitting,

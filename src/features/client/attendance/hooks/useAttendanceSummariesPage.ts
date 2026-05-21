@@ -7,13 +7,16 @@ import {
   attendanceSummaryListColumns,
   attendanceSummaryMobileConfig,
 } from '@features/client/attendance/components/attendanceSummaryListColumns';
+import { useAttendanceReferenceOptions } from '@features/client/attendance/hooks/useAttendanceReferenceOptions';
 
 export const useAttendanceSummariesPage = () => {
   const attendanceSummariesList = useAttendanceSummariesList();
   const filters = useAttendanceFilters();
+  const referenceOptions = useAttendanceReferenceOptions({ includeStudents: true });
 
   return {
     attendanceSummariesList,
+    referenceOptions,
     filterValues: filters.filterValues,
     onFilterChange: filters.onFilterChange,
     applyFilters: () => {

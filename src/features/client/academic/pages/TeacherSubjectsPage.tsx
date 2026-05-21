@@ -7,6 +7,7 @@ import { ListFilters } from '@shared/components/data-display/data/ListFilters';
 import { PageHeader } from '@shared/components/layout/PageHeader';
 import { QueryDataTable } from '@shared/components/data-display/data/QueryDataTable';
 import { layoutSpacing } from '@theme/spacing';
+import { activeInactiveStatusOptions } from '@shared/constants/selectOptions';
 import { useTeacherSubjectsListPage } from '@features/client/academic/hooks/useTeacherSubjectsListPage';
 
 const TeacherSubjectsPage = () => {
@@ -24,23 +25,28 @@ const TeacherSubjectsPage = () => {
       {teacherSubjectsPage.actionSuccessMessage ? (
         <AppAlert severity="success">{teacherSubjectsPage.actionSuccessMessage}</AppAlert>
       ) : null}
+      {teacherSubjectsPage.referenceOptions.errorMessage ? (
+        <AppAlert severity="error">{teacherSubjectsPage.referenceOptions.errorMessage}</AppAlert>
+      ) : null}
       <AppPaper sx={{ p: layoutSpacing.cardPadding, borderRadius: 2 }}>
         <AppStack spacing={2}>
           <AppText variant="h6">Novo vínculo</AppText>
           <ListFilters
             fields={[
               {
-                type: 'text',
+                type: 'select',
                 name: 'teacherId',
                 label: 'Professor',
-                placeholder: 'ID do professor',
+                placeholder: 'Selecione o professor',
+                options: teacherSubjectsPage.referenceOptions.teacherOptions,
                 mobileOrder: 1,
               },
               {
-                type: 'text',
+                type: 'select',
                 name: 'subjectId',
                 label: 'Disciplina',
-                placeholder: 'ID da disciplina',
+                placeholder: 'Selecione a disciplina',
+                options: teacherSubjectsPage.referenceOptions.subjectOptions,
                 mobileOrder: 2,
               },
             ]}
@@ -53,7 +59,9 @@ const TeacherSubjectsPage = () => {
               teacherSubjectsPage.onCreateChange('teacherId', '');
               teacherSubjectsPage.onCreateChange('subjectId', '');
             }}
-            loading={teacherSubjectsPage.actionLoading}
+            loading={
+              teacherSubjectsPage.actionLoading || teacherSubjectsPage.referenceOptions.loading
+            }
             applyLabel="Criar vínculo"
           />
         </AppStack>
@@ -61,17 +69,19 @@ const TeacherSubjectsPage = () => {
       <ListFilters
         fields={[
           {
-            type: 'text',
+            type: 'select',
             name: 'teacherId',
             label: 'Professor',
-            placeholder: 'ID do professor',
+            placeholder: 'Todos os professores',
+            options: teacherSubjectsPage.referenceOptions.teacherOptions,
             mobileOrder: 1,
           },
           {
-            type: 'text',
+            type: 'select',
             name: 'subjectId',
             label: 'Disciplina',
-            placeholder: 'ID da disciplina',
+            placeholder: 'Todas as disciplinas',
+            options: teacherSubjectsPage.referenceOptions.subjectOptions,
             mobileOrder: 2,
           },
           {
@@ -79,11 +89,7 @@ const TeacherSubjectsPage = () => {
             name: 'status',
             label: 'Status',
             placeholder: 'Todos os status',
-            options: [
-              { value: '', label: 'Todos os status' },
-              { value: 'active', label: 'Ativo' },
-              { value: 'inactive', label: 'Inativo' },
-            ],
+            options: activeInactiveStatusOptions,
             mobileOrder: 3,
           },
         ]}
@@ -92,7 +98,9 @@ const TeacherSubjectsPage = () => {
         onApply={teacherSubjectsPage.applyFilters}
         onClear={teacherSubjectsPage.clearFilters}
         loading={
-          teacherSubjectsPage.teacherSubjectsList.loading || teacherSubjectsPage.actionLoading
+          teacherSubjectsPage.teacherSubjectsList.loading ||
+          teacherSubjectsPage.actionLoading ||
+          teacherSubjectsPage.referenceOptions.loading
         }
       />
       <QueryDataTable

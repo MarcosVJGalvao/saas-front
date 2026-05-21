@@ -106,7 +106,7 @@ const renderSelectField = ({
         {field.placeholder ?? sharedComponentsI18n.filters.selectPlaceholder}
       </MenuItem>
       {field.options
-        .filter((option) => option.value.length > 0)
+        .filter((option) => String(option.value).length > 0)
         .map((option) => (
           <MenuItem key={option.value} value={option.value}>
             {option.label}

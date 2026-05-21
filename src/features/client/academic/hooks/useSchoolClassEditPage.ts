@@ -8,6 +8,7 @@ import {
 import { schoolClassEditFormSchema } from '@features/client/academic/schemas/schoolClassEditForm.schema';
 import type { SchoolClassEditFormValues } from '@features/client/academic/schemas/schoolClassEditForm.schema';
 import { schoolClassService } from '@features/client/academic/services/service';
+import { useAcademicReferenceOptions } from '@features/client/academic/hooks/useAcademicReferenceOptions';
 import type { SchoolClass } from '@features/client/academic/types/academic.types';
 
 type SchoolClassEditLocationState = {
@@ -19,6 +20,9 @@ const isSchoolClassEditLocationState = (value: unknown): value is SchoolClassEdi
 
 export const useSchoolClassEditPage = (id: string, locationStateValue: unknown) => {
   const navigate = useNavigate();
+  const referenceOptions = useAcademicReferenceOptions({
+    includeEducationLevels: true,
+  });
   const locationState = isSchoolClassEditLocationState(locationStateValue)
     ? locationStateValue
     : undefined;
@@ -81,6 +85,7 @@ export const useSchoolClassEditPage = (id: string, locationStateValue: unknown) 
 
   return {
     form,
+    referenceOptions,
     loading,
     submitting,
     errorMessage,

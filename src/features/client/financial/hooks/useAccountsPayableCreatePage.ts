@@ -2,6 +2,7 @@ import { useNavigate } from 'react-router-dom';
 import { useAppForm } from '@shared/hooks/useAppForm';
 import { useState } from 'react';
 import { toAccountsPayableCreatePayload } from '@features/client/financial/normalizers/accountsPayableForm.normalizer';
+import { useFinancialReferenceOptions } from '@features/client/financial/hooks/useFinancialReferenceOptions';
 import {
   accountsPayableCreateFormSchema,
   type AccountsPayableCreateFormValues,
@@ -12,6 +13,7 @@ export const useAccountsPayableCreatePage = () => {
   const navigate = useNavigate();
   const [submitting, setSubmitting] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | undefined>();
+  const referenceOptions = useFinancialReferenceOptions();
   const form = useAppForm<AccountsPayableCreateFormValues>(accountsPayableCreateFormSchema, {
     description: '',
     amount: '',
@@ -36,6 +38,7 @@ export const useAccountsPayableCreatePage = () => {
 
   return {
     form,
+    referenceOptions,
     submitting,
     errorMessage,
     onSubmit,

@@ -1,12 +1,15 @@
-import { AppAlert } from '@shared/components/feedback/AppAlert';
+import { yesNoOptions } from '@features/client/report-cards/constants/reportCardFormOptions';
+import { useReportCardAcademicPeriodCreatePage } from '@features/client/report-cards/hooks/useReportCardAcademicPeriodCreatePage';
+import type { ReportCardAcademicPeriodCreateFormValues } from '@features/client/report-cards/schemas/reportCardAcademicPeriodCreateForm.schema';
 import { AppPaper } from '@shared/components/data-display/AppPaper';
+import { AppAlert } from '@shared/components/feedback/AppAlert';
 import { AppForm } from '@shared/components/form/AppForm';
 import { FormActions } from '@shared/components/form/FormActions';
+import { FormDatePicker } from '@shared/components/form/FormDatePicker';
+import { FormSelect } from '@shared/components/form/FormSelect';
 import { FormTextField } from '@shared/components/form/FormTextField';
 import { AppStack } from '@shared/components/layout/AppStack';
 import { PageHeader } from '@shared/components/layout/PageHeader';
-import { useReportCardAcademicPeriodCreatePage } from '@features/client/report-cards/hooks/useReportCardAcademicPeriodCreatePage';
-import type { ReportCardAcademicPeriodCreateFormValues } from '@features/client/report-cards/schemas/reportCardAcademicPeriodCreateForm.schema';
 
 const ReportCardAcademicPeriodCreatePage = () => {
   const reportCardAcademicPeriodCreatePage = useReportCardAcademicPeriodCreatePage();
@@ -22,6 +25,11 @@ const ReportCardAcademicPeriodCreatePage = () => {
       {reportCardAcademicPeriodCreatePage.errorMessage ? (
         <AppAlert severity="error">{reportCardAcademicPeriodCreatePage.errorMessage}</AppAlert>
       ) : null}
+      {reportCardAcademicPeriodCreatePage.referenceOptions.errorMessage ? (
+        <AppAlert severity="error">
+          {reportCardAcademicPeriodCreatePage.referenceOptions.errorMessage}
+        </AppAlert>
+      ) : null}
       <AppPaper sx={{ p: 3 }}>
         <AppForm
           form={reportCardAcademicPeriodCreatePage.form}
@@ -29,10 +37,11 @@ const ReportCardAcademicPeriodCreatePage = () => {
           useResponsiveGrid
           columnsByDevice={{ mobile: 1, tablet: 2, desktop: 2 }}
         >
-          <FormTextField<ReportCardAcademicPeriodCreateFormValues>
+          <FormSelect<ReportCardAcademicPeriodCreateFormValues>
             name="academicYearId"
             label="Ano letivo"
-            placeholder="ID do ano letivo"
+            options={reportCardAcademicPeriodCreatePage.referenceOptions.academicYearOptions}
+            disabled={reportCardAcademicPeriodCreatePage.referenceOptions.loading}
           />
           <FormTextField<ReportCardAcademicPeriodCreateFormValues> name="name" label="Nome" />
           <FormTextField<ReportCardAcademicPeriodCreateFormValues> name="code" label="Código" />
@@ -41,25 +50,23 @@ const ReportCardAcademicPeriodCreatePage = () => {
             label="Sequência"
             placeholder="1"
           />
-          <FormTextField<ReportCardAcademicPeriodCreateFormValues>
+          <FormDatePicker<ReportCardAcademicPeriodCreateFormValues>
             name="startDate"
             label="Data inicial"
-            type="date"
           />
-          <FormTextField<ReportCardAcademicPeriodCreateFormValues>
+          <FormDatePicker<ReportCardAcademicPeriodCreateFormValues>
             name="endDate"
             label="Data final"
-            type="date"
           />
           <FormTextField<ReportCardAcademicPeriodCreateFormValues>
             name="weight"
             label="Peso"
             placeholder="1"
           />
-          <FormTextField<ReportCardAcademicPeriodCreateFormValues>
+          <FormSelect<ReportCardAcademicPeriodCreateFormValues>
             name="isFinalPeriod"
             label="Período final"
-            placeholder="true ou false"
+            options={yesNoOptions}
           />
           <FormActions
             secondaryAction={{

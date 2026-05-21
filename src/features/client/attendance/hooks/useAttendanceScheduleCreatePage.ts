@@ -9,11 +9,13 @@ import {
   type AttendanceScheduleCreateFormValues,
 } from '@features/client/attendance/schemas/attendanceScheduleCreateForm.schema';
 import { attendanceSchedulesService } from '@features/client/attendance/services/service';
+import { useAttendanceReferenceOptions } from '@features/client/attendance/hooks/useAttendanceReferenceOptions';
 
 const backPath = '/client/attendance/schedules';
 
 export const useAttendanceScheduleCreatePage = () => {
   const navigate = useNavigate();
+  const referenceOptions = useAttendanceReferenceOptions();
   const form = useAppForm<AttendanceScheduleCreateFormValues>(
     attendanceScheduleCreateFormSchema,
     attendanceScheduleCreateInitialValues,
@@ -21,6 +23,7 @@ export const useAttendanceScheduleCreatePage = () => {
 
   return {
     form,
+    referenceOptions,
     submitting: form.formState.isSubmitting,
     errorMessage: undefined,
     onBack: () => {

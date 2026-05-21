@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useReportCardReferenceOptions } from '@features/client/report-cards/hooks/useReportCardReferenceOptions';
 import { reportCardService } from '@features/client/report-cards/services/service';
 
 type ProcessingAction = 'load' | 'resend' | 'resend-student' | 'finalize' | 'reopen';
@@ -14,6 +15,11 @@ const initialValues: ProcessingValues = {
 const getStringValue = (value: unknown): string => (typeof value === 'string' ? value.trim() : '');
 
 export const useReportCardProcessingsPage = () => {
+  const referenceOptions = useReportCardReferenceOptions({
+    includeAcademicPeriods: true,
+    includeSchoolClasses: true,
+    includeStudentEnrollments: true,
+  });
   const [values, setValues] = useState<ProcessingValues>(initialValues);
   const [loadingAction, setLoadingAction] = useState<ProcessingAction | undefined>(undefined);
   const [errorMessage, setErrorMessage] = useState<string | undefined>(undefined);
@@ -128,6 +134,7 @@ export const useReportCardProcessingsPage = () => {
   };
 
   return {
+    referenceOptions,
     values,
     loadingAction,
     errorMessage,

@@ -1,5 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 import { AppText } from '@shared/components/data-display/AppText';
+import { AppAlert } from '@shared/components/feedback/AppAlert';
 import { ListFilters } from '@shared/components/data-display/data/ListFilters';
 import { QueryDataTable } from '@shared/components/data-display/data/QueryDataTable';
 import { AppStack } from '@shared/components/layout/AppStack';
@@ -21,20 +22,27 @@ const AttendanceSchedulesPage = () => {
         canShowAction={permissions.can('attendance:create')}
         onAction={() => void navigate('/client/attendance/schedules/new')}
       />
+      {attendanceSchedulesPage.referenceOptions.errorMessage ? (
+        <AppAlert severity="error">
+          {attendanceSchedulesPage.referenceOptions.errorMessage}
+        </AppAlert>
+      ) : null}
       <ListFilters
         fields={[
           {
-            type: 'text',
+            type: 'select',
             name: 'schoolClassId',
             label: 'Turma',
-            placeholder: 'ID da turma',
+            placeholder: 'Todas as turmas',
+            options: attendanceSchedulesPage.referenceOptions.schoolClassOptions,
             mobileOrder: 1,
           },
           {
-            type: 'text',
+            type: 'select',
             name: 'subjectId',
             label: 'Disciplina',
-            placeholder: 'ID da disciplina',
+            placeholder: 'Todas as disciplinas',
+            options: attendanceSchedulesPage.referenceOptions.subjectOptions,
             mobileOrder: 2,
           },
           {
@@ -50,7 +58,10 @@ const AttendanceSchedulesPage = () => {
         onChange={attendanceSchedulesPage.onFilterChange}
         onApply={attendanceSchedulesPage.applyFilters}
         onClear={attendanceSchedulesPage.clearFilters}
-        loading={attendanceSchedulesPage.attendanceSchedulesList.loading}
+        loading={
+          attendanceSchedulesPage.attendanceSchedulesList.loading ||
+          attendanceSchedulesPage.referenceOptions.loading
+        }
       />
       <QueryDataTable
         rows={attendanceSchedulesPage.attendanceSchedulesList.rows}

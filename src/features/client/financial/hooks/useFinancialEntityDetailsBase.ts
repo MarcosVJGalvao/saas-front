@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import type {
   EntityDetailsPageData,
@@ -37,23 +37,28 @@ export const useFinancialEntityDetailsBase = ({
   onBack: () => void;
   onRetry: () => Promise<void>;
 } => {
+  const serviceRef = useRef(service);
   const navigate = useNavigate();
   const [entity, setEntity] = useState<FinancialEntity | null>(null);
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | undefined>();
 
+  useEffect(() => {
+    serviceRef.current = service;
+  }, [service]);
+
   const load = useCallback(async () => {
     setLoading(true);
     setErrorMessage(undefined);
     try {
-      const response = await service.getById(id);
+      const response = await serviceRef.current.getById(id);
       setEntity(response);
     } catch {
       setErrorMessage(errorMessageFallback);
     } finally {
       setLoading(false);
     }
-  }, [errorMessageFallback, id, service]);
+  }, [errorMessageFallback, id]);
 
   useEffect(() => {
     const timeoutId = window.setTimeout(() => {

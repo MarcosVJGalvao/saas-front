@@ -11,8 +11,9 @@ export const StudentEnrollmentSteps = ({
   value,
   uiExtras,
   actions,
+  referenceOptions,
 }: StudentEnrollmentStepsProps) => {
-  const sharedProps = { value, uiExtras, actions };
+  const sharedProps = { value, uiExtras, actions, referenceOptions };
   const stepContentByIndex = [
     <StudentStep key="student" {...sharedProps} />,
     <GuardiansStep key="guardians" {...sharedProps} />,

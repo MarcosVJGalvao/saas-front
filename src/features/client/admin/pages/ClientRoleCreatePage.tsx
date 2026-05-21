@@ -1,12 +1,14 @@
+import { useClientRoleCreatePage } from '@features/client/admin/hooks/useClientRoleCreatePage';
+import type { ClientRoleCreateFormValues } from '@features/client/admin/schemas/clientRoleCreateForm.schema';
+import { AppPaper } from '@shared/components/data-display/AppPaper';
 import { AppAlert } from '@shared/components/feedback/AppAlert';
 import { AppForm } from '@shared/components/form/AppForm';
 import { FormActions } from '@shared/components/form/FormActions';
+import { FormSelect } from '@shared/components/form/FormSelect';
 import { FormTextField } from '@shared/components/form/FormTextField';
-import { AppPaper } from '@shared/components/data-display/AppPaper';
 import { AppStack } from '@shared/components/layout/AppStack';
 import { PageHeader } from '@shared/components/layout/PageHeader';
-import { useClientRoleCreatePage } from '@features/client/admin/hooks/useClientRoleCreatePage';
-import type { ClientRoleCreateFormValues } from '@features/client/admin/schemas/clientRoleCreateForm.schema';
+import { activeInactiveStatusOptions } from '@shared/constants/selectOptions';
 
 const ClientRoleCreatePage = () => {
   const clientRoleCreatePage = useClientRoleCreatePage();
@@ -30,10 +32,10 @@ const ClientRoleCreatePage = () => {
           columnsByDevice={{ mobile: 1, tablet: 2, desktop: 2 }}
         >
           <FormTextField<ClientRoleCreateFormValues> name="name" label="Nome" />
-          <FormTextField<ClientRoleCreateFormValues>
+          <FormSelect<ClientRoleCreateFormValues>
             name="status"
             label="Status"
-            placeholder="active ou inactive"
+            options={activeInactiveStatusOptions}
           />
           <FormTextField<ClientRoleCreateFormValues>
             name="description"

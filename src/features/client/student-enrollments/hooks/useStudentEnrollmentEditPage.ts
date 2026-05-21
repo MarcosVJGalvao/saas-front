@@ -7,6 +7,7 @@ import {
   toStudentEnrollmentEditFormValues,
   toStudentEnrollmentEditPayload,
 } from '@features/client/student-enrollments/normalizers/studentEnrollmentForm.normalizer';
+import { useStudentEnrollmentReferenceOptions } from '@features/client/student-enrollments/hooks/useStudentEnrollmentReferenceOptions';
 import { studentEnrollmentService } from '@features/client/student-enrollments/services/service';
 import type { StudentEnrollment } from '@features/client/student-enrollments/types/studentEnrollment.types';
 import type { StudentEnrollmentEditFormValues } from '@features/client/student-enrollments/schemas/studentEnrollmentEditForm.schema';
@@ -33,6 +34,7 @@ const getLocationState = (value: unknown): StudentEnrollmentEditLocationState | 
 export const useStudentEnrollmentEditPage = (id: string) => {
   const navigate = useNavigate();
   const location = useLocation();
+  const referenceOptions = useStudentEnrollmentReferenceOptions();
   const locationState = getLocationState(location.state);
   const [enrollment, setEnrollment] = useState<StudentEnrollment | null>(
     locationState?.entity ?? null,
@@ -96,6 +98,7 @@ export const useStudentEnrollmentEditPage = (id: string) => {
 
   return {
     form,
+    referenceOptions,
     enrollment,
     loading,
     submitting,

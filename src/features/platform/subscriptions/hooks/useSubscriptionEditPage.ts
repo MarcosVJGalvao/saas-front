@@ -2,8 +2,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
 import { useAppForm } from '@shared/hooks/useAppForm';
 import { isRecord } from '@shared/utils/isRecord';
-import { plansService } from '@features/platform/plans/services/service';
-import type { Plan } from '@features/platform/plans/types/plans';
+import { usePlatformSubscriptionReferenceOptions } from '@features/platform/subscriptions/hooks/usePlatformSubscriptionReferenceOptions';
 import {
   toSubscriptionEditFormValues,
   toSubscriptionEditPayload,
@@ -49,10 +48,10 @@ export const useSubscriptionEditPage = (id: string) => {
   const [searchParams] = useSearchParams();
   const tenantId = searchParams.get('tenantId') ?? '';
   const locationState = getLocationState(location.state);
+  const referenceOptions = usePlatformSubscriptionReferenceOptions();
   const [subscription, setSubscription] = useState<Subscription | null>(
     locationState?.entity ?? null,
   );
-  const [plans, setPlans] = useState<Plan[]>([]);
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | undefined>();
@@ -60,11 +59,6 @@ export const useSubscriptionEditPage = (id: string) => {
     subscriptionEditFormSchema,
     initialFormValues,
   );
-
-  const fetchPlans = useCallback(async () => {
-    const response = await plansService.list({ page: 1, limit: 100 });
-    setPlans(response.data.filter((plan) => plan.isActive));
-  }, []);
 
   const fetchSubscription = useCallback(async () => {
     if (!tenantId) {
@@ -87,7 +81,7 @@ export const useSubscriptionEditPage = (id: string) => {
       setLoading(true);
       setErrorMessage(undefined);
       try {
-        await Promise.all([fetchPlans(), fetchSubscription()]);
+        await fetchSubscription();
       } catch {
         setErrorMessage('Não foi possível carregar a assinatura para edição.');
       } finally {
@@ -96,7 +90,7 @@ export const useSubscriptionEditPage = (id: string) => {
     };
 
     void loadPage();
-  }, [fetchPlans, fetchSubscription]);
+  }, [fetchSubscription]);
 
   useEffect(() => {
     if (!subscription) {
@@ -133,7 +127,7 @@ export const useSubscriptionEditPage = (id: string) => {
   return {
     form,
     subscription,
-    plans,
+    referenceOptions,
     tenantId,
     loading,
     submitting,

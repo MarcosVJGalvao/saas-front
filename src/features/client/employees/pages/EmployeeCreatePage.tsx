@@ -2,9 +2,11 @@ import { AppAlert } from '@shared/components/feedback/AppAlert';
 import { AppPaper } from '@shared/components/data-display/AppPaper';
 import { AppForm } from '@shared/components/form/AppForm';
 import { FormActions } from '@shared/components/form/FormActions';
+import { FormSelect } from '@shared/components/form/FormSelect';
 import { FormTextField } from '@shared/components/form/FormTextField';
 import { AppStack } from '@shared/components/layout/AppStack';
 import { PageHeader } from '@shared/components/layout/PageHeader';
+import { activeInactiveStatusOptions } from '@shared/constants/selectOptions';
 import { useEmployeeCreatePage } from '@features/client/employees/hooks/useEmployeeCreatePage';
 import type { EmployeeCreateFormValues } from '@features/client/employees/schemas/employeeCreateForm.schema';
 
@@ -48,10 +50,10 @@ const EmployeeCreatePage = () => {
             placeholder="Professor, coordenador ou administrativo"
           />
           <FormTextField<EmployeeCreateFormValues> name="department" label="Departamento" />
-          <FormTextField<EmployeeCreateFormValues>
+          <FormSelect<EmployeeCreateFormValues>
             name="status"
             label="Status"
-            placeholder="active ou inactive"
+            options={activeInactiveStatusOptions}
           />
           <FormActions
             secondaryAction={{

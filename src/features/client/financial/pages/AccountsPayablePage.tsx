@@ -1,13 +1,14 @@
 import { useNavigate } from 'react-router-dom';
-import { AppAlert } from '@shared/components/feedback/AppAlert';
-import { ConfirmDialog } from '@shared/components/feedback/ConfirmDialog';
 import { AppText } from '@shared/components/data-display/AppText';
 import { ListFilters } from '@shared/components/data-display/data/ListFilters';
 import { QueryDataTable } from '@shared/components/data-display/data/QueryDataTable';
+import { AppAlert } from '@shared/components/feedback/AppAlert';
+import { ConfirmDialog } from '@shared/components/feedback/ConfirmDialog';
 import { AppStack } from '@shared/components/layout/AppStack';
 import { PageHeader } from '@shared/components/layout/PageHeader';
-import { useClientPermission } from '@features/client/shared/hooks/useClientPermission';
+import { paymentMethodOptions } from '@shared/constants/selectOptions';
 import { useAccountsPayableListPage } from '@features/client/financial/hooks/useAccountsPayableListPage';
+import { useClientPermission } from '@features/client/shared/hooks/useClientPermission';
 
 const AccountsPayablePage = () => {
   const navigate = useNavigate();
@@ -25,6 +26,12 @@ const AccountsPayablePage = () => {
           void navigate('/client/financial/accounts-payable/new');
         }}
       />
+      {accountsPayablePage.actionErrorMessage ? (
+        <AppAlert severity="error">{accountsPayablePage.actionErrorMessage}</AppAlert>
+      ) : null}
+      {accountsPayablePage.referenceOptions.errorMessage ? (
+        <AppAlert severity="error">{accountsPayablePage.referenceOptions.errorMessage}</AppAlert>
+      ) : null}
       <ListFilters
         fields={[
           {
@@ -51,24 +58,27 @@ const AccountsPayablePage = () => {
             mobileOrder: 2,
           },
           {
-            type: 'text',
+            type: 'select',
             name: 'categoryId',
             label: 'Categoria',
-            placeholder: 'ID da categoria',
+            placeholder: 'Todas as categorias',
+            options: accountsPayablePage.referenceOptions.categoryOptions,
             mobileOrder: 3,
           },
           {
-            type: 'text',
+            type: 'select',
             name: 'costCenterId',
             label: 'Centro de custo',
-            placeholder: 'ID do centro',
+            placeholder: 'Todos os centros de custo',
+            options: accountsPayablePage.referenceOptions.costCenterOptions,
             mobileOrder: 4,
           },
           {
-            type: 'text',
+            type: 'select',
             name: 'paymentMethod',
             label: 'Método de pagamento',
-            placeholder: 'pix, cash, credit_card...',
+            placeholder: 'Todos os métodos',
+            options: paymentMethodOptions,
             mobileOrder: 5,
           },
           {
@@ -85,12 +95,11 @@ const AccountsPayablePage = () => {
         onApply={accountsPayablePage.applyFilters}
         onClear={accountsPayablePage.clearFilters}
         loading={
-          accountsPayablePage.financialRecordList.loading || accountsPayablePage.actionLoading
+          accountsPayablePage.financialRecordList.loading ||
+          accountsPayablePage.actionLoading ||
+          accountsPayablePage.referenceOptions.loading
         }
       />
-      {accountsPayablePage.actionErrorMessage ? (
-        <AppAlert severity="error">{accountsPayablePage.actionErrorMessage}</AppAlert>
-      ) : null}
       <QueryDataTable
         rows={accountsPayablePage.financialRecordList.rows}
         columns={accountsPayablePage.tableColumns}

@@ -5,9 +5,11 @@ import { AppAlert } from '@shared/components/feedback/AppAlert';
 import { ConfirmDialog } from '@shared/components/feedback/ConfirmDialog';
 import { AppForm } from '@shared/components/form/AppForm';
 import { FormActions } from '@shared/components/form/FormActions';
+import { FormSelect } from '@shared/components/form/FormSelect';
 import { FormTextField } from '@shared/components/form/FormTextField';
 import { AppStack } from '@shared/components/layout/AppStack';
 import { PageHeader } from '@shared/components/layout/PageHeader';
+import { reportCardAssessmentTypeOptions } from '@shared/constants/selectOptions';
 import { layoutSpacing } from '@theme/spacing';
 import { useReportCardEntriesPage } from '@features/client/report-cards/hooks/useReportCardEntriesPage';
 import type { ReportCardEntryFormValues } from '@features/client/report-cards/schemas/reportCardEntryFormSchema';
@@ -20,6 +22,9 @@ const ReportCardEntriesPage = () => {
       <PageHeader title="Lançamentos de boletim" subtitle="Gerencie lançamentos de notas." />
       {model.errorMessage ? <AppAlert severity="error">{model.errorMessage}</AppAlert> : null}
       {model.successMessage ? <AppAlert severity="success">{model.successMessage}</AppAlert> : null}
+      {model.referenceOptions.errorMessage ? (
+        <AppAlert severity="error">{model.referenceOptions.errorMessage}</AppAlert>
+      ) : null}
       <AppPaper sx={{ p: layoutSpacing.cardPadding, borderRadius: 2 }}>
         <AppStack spacing={2}>
           <AppText variant="h6">Novo lançamento individual</AppText>
@@ -29,25 +34,25 @@ const ReportCardEntriesPage = () => {
             useResponsiveGrid
             columnsByDevice={{ mobile: 1, tablet: 2, desktop: 2 }}
           >
-            <FormTextField<ReportCardEntryFormValues>
+            <FormSelect<ReportCardEntryFormValues>
               name="studentEnrollmentId"
               label="Matrícula"
-              placeholder="ID da matrícula"
+              options={model.referenceOptions.studentEnrollmentOptions}
             />
-            <FormTextField<ReportCardEntryFormValues>
+            <FormSelect<ReportCardEntryFormValues>
               name="subjectId"
               label="Disciplina"
-              placeholder="ID da disciplina"
+              options={model.referenceOptions.subjectOptions}
             />
-            <FormTextField<ReportCardEntryFormValues>
+            <FormSelect<ReportCardEntryFormValues>
               name="academicPeriodId"
               label="Período"
-              placeholder="ID do período"
+              options={model.referenceOptions.academicPeriodOptions}
             />
-            <FormTextField<ReportCardEntryFormValues>
+            <FormSelect<ReportCardEntryFormValues>
               name="assessmentType"
               label="Tipo de avaliação"
-              placeholder="regular, recovery, final ou other"
+              options={reportCardAssessmentTypeOptions}
             />
             <FormTextField<ReportCardEntryFormValues>
               name="gradeValue"
@@ -78,38 +83,43 @@ const ReportCardEntriesPage = () => {
           <ListFilters
             fields={[
               {
-                type: 'text',
+                type: 'select',
                 name: 'schoolClassId',
                 label: 'Turma',
-                placeholder: 'ID da turma',
+                placeholder: 'Selecione a turma',
+                options: model.referenceOptions.schoolClassOptions,
                 mobileOrder: 1,
               },
               {
-                type: 'text',
+                type: 'select',
                 name: 'subjectId',
                 label: 'Disciplina',
-                placeholder: 'ID da disciplina',
+                placeholder: 'Selecione a disciplina',
+                options: model.referenceOptions.subjectOptions,
                 mobileOrder: 2,
               },
               {
-                type: 'text',
+                type: 'select',
                 name: 'academicPeriodId',
                 label: 'Período',
-                placeholder: 'ID do período',
+                placeholder: 'Selecione o período',
+                options: model.referenceOptions.academicPeriodOptions,
                 mobileOrder: 3,
               },
               {
-                type: 'text',
+                type: 'select',
                 name: 'studentEnrollmentId',
                 label: 'Matrícula',
-                placeholder: 'ID da matrícula',
+                placeholder: 'Selecione a matrícula',
+                options: model.referenceOptions.studentEnrollmentOptions,
                 mobileOrder: 4,
               },
               {
-                type: 'text',
+                type: 'select',
                 name: 'assessmentType',
                 label: 'Tipo de avaliação',
-                placeholder: 'regular, recovery, final ou other',
+                placeholder: 'Selecione o tipo',
+                options: reportCardAssessmentTypeOptions,
                 mobileOrder: 5,
               },
               {
@@ -127,17 +137,19 @@ const ReportCardEntriesPage = () => {
                 mobileOrder: 7,
               },
               {
-                type: 'text',
+                type: 'select',
                 name: 'secondStudentEnrollmentId',
                 label: 'Matrícula 2',
-                placeholder: 'ID da segunda matrícula',
+                placeholder: 'Selecione a matrícula',
+                options: model.referenceOptions.studentEnrollmentOptions,
                 mobileOrder: 8,
               },
               {
-                type: 'text',
+                type: 'select',
                 name: 'secondAssessmentType',
                 label: 'Tipo de avaliação 2',
-                placeholder: 'regular, recovery, final ou other',
+                placeholder: 'Selecione o tipo',
+                options: reportCardAssessmentTypeOptions,
                 mobileOrder: 9,
               },
               {
@@ -155,17 +167,19 @@ const ReportCardEntriesPage = () => {
                 mobileOrder: 11,
               },
               {
-                type: 'text',
+                type: 'select',
                 name: 'thirdStudentEnrollmentId',
                 label: 'Matrícula 3',
-                placeholder: 'ID da terceira matrícula',
+                placeholder: 'Selecione a matrícula',
+                options: model.referenceOptions.studentEnrollmentOptions,
                 mobileOrder: 12,
               },
               {
-                type: 'text',
+                type: 'select',
                 name: 'thirdAssessmentType',
                 label: 'Tipo de avaliação 3',
-                placeholder: 'regular, recovery, final ou other',
+                placeholder: 'Selecione o tipo',
+                options: reportCardAssessmentTypeOptions,
                 mobileOrder: 13,
               },
               {
@@ -189,7 +203,7 @@ const ReportCardEntriesPage = () => {
               void model.createBulkEntry();
             }}
             onClear={model.clear}
-            loading={model.loading}
+            loading={model.loading || model.referenceOptions.loading}
             applyLabel="Cadastrar lote"
           />
         </AppStack>
@@ -210,10 +224,11 @@ const ReportCardEntriesPage = () => {
                 mobileOrder: 1,
               },
               {
-                type: 'text',
+                type: 'select',
                 name: 'updateAssessmentType',
                 label: 'Tipo de avaliação',
-                placeholder: 'regular, recovery, final ou other',
+                placeholder: 'Selecione o tipo',
+                options: reportCardAssessmentTypeOptions,
                 mobileOrder: 2,
               },
               {
@@ -251,10 +266,11 @@ const ReportCardEntriesPage = () => {
           <ListFilters
             fields={[
               {
-                type: 'text',
+                type: 'select',
                 name: 'schoolClassId',
                 label: 'Turma',
-                placeholder: 'ID da turma',
+                placeholder: 'Selecione a turma',
+                options: model.referenceOptions.schoolClassOptions,
                 mobileOrder: 1,
               },
               {
@@ -265,10 +281,11 @@ const ReportCardEntriesPage = () => {
                 mobileOrder: 2,
               },
               {
-                type: 'text',
+                type: 'select',
                 name: 'assessmentType',
                 label: 'Tipo de avaliação 1',
-                placeholder: 'regular, recovery, final ou other',
+                placeholder: 'Selecione o tipo',
+                options: reportCardAssessmentTypeOptions,
                 mobileOrder: 3,
               },
               {
@@ -293,10 +310,11 @@ const ReportCardEntriesPage = () => {
                 mobileOrder: 6,
               },
               {
-                type: 'text',
+                type: 'select',
                 name: 'secondAssessmentType',
                 label: 'Tipo de avaliação 2',
-                placeholder: 'regular, recovery, final ou other',
+                placeholder: 'Selecione o tipo',
+                options: reportCardAssessmentTypeOptions,
                 mobileOrder: 7,
               },
               {
@@ -321,10 +339,11 @@ const ReportCardEntriesPage = () => {
                 mobileOrder: 10,
               },
               {
-                type: 'text',
+                type: 'select',
                 name: 'thirdAssessmentType',
                 label: 'Tipo de avaliação 3',
-                placeholder: 'regular, recovery, final ou other',
+                placeholder: 'Selecione o tipo',
+                options: reportCardAssessmentTypeOptions,
                 mobileOrder: 11,
               },
               {
@@ -362,10 +381,11 @@ const ReportCardEntriesPage = () => {
           <ListFilters
             fields={[
               {
-                type: 'text',
+                type: 'select',
                 name: 'schoolClassId',
                 label: 'Turma',
-                placeholder: 'ID da turma',
+                placeholder: 'Selecione a turma',
+                options: model.referenceOptions.schoolClassOptions,
                 mobileOrder: 1,
               },
               {

@@ -7,6 +7,7 @@ import type {
   EnrollmentPerson,
   EnrollmentStudentInput,
 } from '@features/client/student-enrollments/types/studentEnrollment.types';
+import type { AppSelectOption } from '@shared/components/inputs/AppSelect';
 
 export type StudentEnrollmentOnboardingUiExtras = {
   selectedStudentId: string;
@@ -81,6 +82,13 @@ export type StudentEnrollmentStepProps = {
   value: StudentEnrollmentStepValues;
   uiExtras: StudentEnrollmentOnboardingUiExtras;
   actions: StudentEnrollmentOnboardingActions;
+  referenceOptions: {
+    academicYearOptions: AppSelectOption[];
+    schoolClassOptions: AppSelectOption[];
+    studentOptions: AppSelectOption[];
+    loading: boolean;
+    errorMessage: string | undefined;
+  };
 };
 
 export type StudentEnrollmentStepsProps = StudentEnrollmentStepProps & {

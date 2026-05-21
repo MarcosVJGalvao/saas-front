@@ -1,13 +1,14 @@
 import { useNavigate } from 'react-router-dom';
-import { AppAlert } from '@shared/components/feedback/AppAlert';
-import { ConfirmDialog } from '@shared/components/feedback/ConfirmDialog';
 import { AppText } from '@shared/components/data-display/AppText';
 import { ListFilters } from '@shared/components/data-display/data/ListFilters';
 import { QueryDataTable } from '@shared/components/data-display/data/QueryDataTable';
+import { AppAlert } from '@shared/components/feedback/AppAlert';
+import { ConfirmDialog } from '@shared/components/feedback/ConfirmDialog';
 import { AppStack } from '@shared/components/layout/AppStack';
 import { PageHeader } from '@shared/components/layout/PageHeader';
-import { useClientPermission } from '@features/client/shared/hooks/useClientPermission';
+import { paymentMethodOptions } from '@shared/constants/selectOptions';
 import { useAccountsReceivableListPage } from '@features/client/financial/hooks/useAccountsReceivableListPage';
+import { useClientPermission } from '@features/client/shared/hooks/useClientPermission';
 
 const AccountsReceivablePage = () => {
   const navigate = useNavigate();
@@ -25,6 +26,12 @@ const AccountsReceivablePage = () => {
           void navigate('/client/financial/accounts-receivable/new');
         }}
       />
+      {accountsReceivablePage.actionErrorMessage ? (
+        <AppAlert severity="error">{accountsReceivablePage.actionErrorMessage}</AppAlert>
+      ) : null}
+      {accountsReceivablePage.referenceOptions.errorMessage ? (
+        <AppAlert severity="error">{accountsReceivablePage.referenceOptions.errorMessage}</AppAlert>
+      ) : null}
       <ListFilters
         fields={[
           {
@@ -51,45 +58,51 @@ const AccountsReceivablePage = () => {
             mobileOrder: 2,
           },
           {
-            type: 'text',
+            type: 'select',
             name: 'categoryId',
             label: 'Categoria',
-            placeholder: 'ID da categoria',
+            placeholder: 'Todas as categorias',
+            options: accountsReceivablePage.referenceOptions.categoryOptions,
             mobileOrder: 3,
           },
           {
-            type: 'text',
+            type: 'select',
             name: 'costCenterId',
             label: 'Centro de custo',
-            placeholder: 'ID do centro',
+            placeholder: 'Todos os centros de custo',
+            options: accountsReceivablePage.referenceOptions.costCenterOptions,
             mobileOrder: 4,
           },
           {
-            type: 'text',
+            type: 'select',
             name: 'paymentMethod',
             label: 'Método de pagamento',
-            placeholder: 'pix, cash, credit_card...',
+            placeholder: 'Todos os métodos',
+            options: paymentMethodOptions,
             mobileOrder: 5,
           },
           {
-            type: 'text',
+            type: 'select',
             name: 'studentId',
             label: 'Aluno',
-            placeholder: 'ID do aluno',
+            placeholder: 'Todos os alunos',
+            options: accountsReceivablePage.referenceOptions.studentOptions,
             mobileOrder: 6,
           },
           {
-            type: 'text',
+            type: 'select',
             name: 'studentEnrollmentId',
             label: 'Matrícula',
-            placeholder: 'ID da matrícula',
+            placeholder: 'Todas as matrículas',
+            options: accountsReceivablePage.referenceOptions.studentEnrollmentOptions,
             mobileOrder: 7,
           },
           {
-            type: 'text',
+            type: 'select',
             name: 'schoolClassId',
             label: 'Turma',
-            placeholder: 'ID da turma',
+            placeholder: 'Todas as turmas',
+            options: accountsReceivablePage.referenceOptions.schoolClassOptions,
             mobileOrder: 8,
           },
           {
@@ -106,12 +119,11 @@ const AccountsReceivablePage = () => {
         onApply={accountsReceivablePage.applyFilters}
         onClear={accountsReceivablePage.clearFilters}
         loading={
-          accountsReceivablePage.financialRecordList.loading || accountsReceivablePage.actionLoading
+          accountsReceivablePage.financialRecordList.loading ||
+          accountsReceivablePage.actionLoading ||
+          accountsReceivablePage.referenceOptions.loading
         }
       />
-      {accountsReceivablePage.actionErrorMessage ? (
-        <AppAlert severity="error">{accountsReceivablePage.actionErrorMessage}</AppAlert>
-      ) : null}
       <QueryDataTable
         rows={accountsReceivablePage.financialRecordList.rows}
         columns={accountsReceivablePage.tableColumns}

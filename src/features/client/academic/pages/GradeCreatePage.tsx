@@ -1,13 +1,16 @@
-import { AppAlert } from '@shared/components/feedback/AppAlert';
+import { gradeCatalogConfig } from '@features/client/academic/constants/academicCatalogPageConfigs';
+import { useAcademicReferenceOptions } from '@features/client/academic/hooks/useAcademicReferenceOptions';
+import { useAcademicCatalogCreatePage } from '@features/client/academic/hooks/useAcademicCatalogCreatePage';
+import type { AcademicCatalogCreateFormValues } from '@features/client/academic/schemas/academicCatalogCreateForm.schema';
 import { AppPaper } from '@shared/components/data-display/AppPaper';
+import { AppAlert } from '@shared/components/feedback/AppAlert';
 import { AppForm } from '@shared/components/form/AppForm';
 import { FormActions } from '@shared/components/form/FormActions';
+import { FormSelect } from '@shared/components/form/FormSelect';
 import { FormTextField } from '@shared/components/form/FormTextField';
 import { AppStack } from '@shared/components/layout/AppStack';
 import { PageHeader } from '@shared/components/layout/PageHeader';
-import { gradeCatalogConfig } from '@features/client/academic/constants/academicCatalogPageConfigs';
-import { useAcademicCatalogCreatePage } from '@features/client/academic/hooks/useAcademicCatalogCreatePage';
-import type { AcademicCatalogCreateFormValues } from '@features/client/academic/schemas/academicCatalogCreateForm.schema';
+import { activeInactiveStatusOptions } from '@shared/constants/selectOptions';
 
 const GradeCreatePage = () => {
   const gradeCreatePage = useAcademicCatalogCreatePage({
@@ -15,6 +18,7 @@ const GradeCreatePage = () => {
     backPath: gradeCatalogConfig.routeBase,
     submitErrorMessage: gradeCatalogConfig.submitErrorMessage,
   });
+  const referenceOptions = useAcademicReferenceOptions({ includeEducationLevels: true });
 
   return (
     <AppStack spacing={2}>
@@ -27,6 +31,9 @@ const GradeCreatePage = () => {
       {gradeCreatePage.errorMessage ? (
         <AppAlert severity="error">{gradeCreatePage.errorMessage}</AppAlert>
       ) : null}
+      {referenceOptions.errorMessage ? (
+        <AppAlert severity="error">{referenceOptions.errorMessage}</AppAlert>
+      ) : null}
       <AppPaper sx={{ p: 3 }}>
         <AppForm
           form={gradeCreatePage.form}
@@ -36,15 +43,16 @@ const GradeCreatePage = () => {
         >
           <FormTextField<AcademicCatalogCreateFormValues> name="name" label="Nome" />
           <FormTextField<AcademicCatalogCreateFormValues> name="code" label="Código" />
-          <FormTextField<AcademicCatalogCreateFormValues>
+          <FormSelect<AcademicCatalogCreateFormValues>
             name="status"
             label="Status"
-            placeholder="active ou inactive"
+            options={activeInactiveStatusOptions}
           />
-          <FormTextField<AcademicCatalogCreateFormValues>
+          <FormSelect<AcademicCatalogCreateFormValues>
             name="educationLevelId"
             label="Nível de ensino"
-            placeholder="ID do nível de ensino"
+            options={referenceOptions.educationLevelOptions}
+            disabled={referenceOptions.loading}
           />
           <FormTextField<AcademicCatalogCreateFormValues>
             name="description"

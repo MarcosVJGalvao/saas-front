@@ -4,10 +4,15 @@ import { AppCircularProgress } from '@shared/components/data-display/AppCircular
 import { AppTextField } from '@shared/components/inputs/AppTextField';
 import { AppForm } from '@shared/components/form/AppForm';
 import { FormActions } from '@shared/components/form/FormActions';
+import { FormSelect } from '@shared/components/form/FormSelect';
 import { FormTextField } from '@shared/components/form/FormTextField';
 import { AppPaper } from '@shared/components/data-display/AppPaper';
 import { AppStack } from '@shared/components/layout/AppStack';
 import { PageHeader } from '@shared/components/layout/PageHeader';
+import {
+  financialCategoryTypeOptions,
+  financialEntityStatusOptions,
+} from '@features/client/financial/constants/financialFormOptions';
 import { useFinancialCategoryEditPage } from '@features/client/financial/hooks/useFinancialCategoryEditPage';
 import type { FinancialCategoryEditFormValues } from '@features/client/financial/schemas/financialCategoryEditForm.schema';
 
@@ -39,15 +44,15 @@ const FinancialCategoryEditPage = () => {
           columnsByDevice={{ mobile: 1, tablet: 2, desktop: 2 }}
         >
           <FormTextField<FinancialCategoryEditFormValues> name="code" label="Código" />
-          <FormTextField<FinancialCategoryEditFormValues>
+          <FormSelect<FinancialCategoryEditFormValues>
             name="type"
             label="Tipo"
-            placeholder="revenue ou expense"
+            options={financialCategoryTypeOptions}
           />
-          <FormTextField<FinancialCategoryEditFormValues>
+          <FormSelect<FinancialCategoryEditFormValues>
             name="status"
             label="Status"
-            placeholder="active ou inactive"
+            options={financialEntityStatusOptions}
           />
           <FormTextField<FinancialCategoryEditFormValues>
             name="description"

@@ -4,10 +4,12 @@ import { AppCircularProgress } from '@shared/components/data-display/AppCircular
 import { AppPaper } from '@shared/components/data-display/AppPaper';
 import { AppForm } from '@shared/components/form/AppForm';
 import { FormActions } from '@shared/components/form/FormActions';
+import { FormSelect } from '@shared/components/form/FormSelect';
 import { FormTextField } from '@shared/components/form/FormTextField';
 import { AppTextField } from '@shared/components/inputs/AppTextField';
 import { AppStack } from '@shared/components/layout/AppStack';
 import { PageHeader } from '@shared/components/layout/PageHeader';
+import { activeInactiveStatusOptions } from '@shared/constants/selectOptions';
 import { useEmployeeEditPage } from '@features/client/employees/hooks/useEmployeeEditPage';
 import type { EmployeeEditFormValues } from '@features/client/employees/schemas/employeeEditForm.schema';
 
@@ -57,10 +59,10 @@ const EmployeeEditPage = () => {
         >
           <FormTextField<EmployeeEditFormValues> name="jobTitle" label="Cargo" />
           <FormTextField<EmployeeEditFormValues> name="department" label="Departamento" />
-          <FormTextField<EmployeeEditFormValues>
+          <FormSelect<EmployeeEditFormValues>
             name="status"
             label="Status"
-            placeholder="active ou inactive"
+            options={activeInactiveStatusOptions}
           />
           <FormActions
             secondaryAction={{

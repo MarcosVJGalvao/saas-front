@@ -1,4 +1,5 @@
 import { AppText } from '@shared/components/data-display/AppText';
+import { AppAlert } from '@shared/components/feedback/AppAlert';
 import { ListFilters } from '@shared/components/data-display/data/ListFilters';
 import { QueryDataTable } from '@shared/components/data-display/data/QueryDataTable';
 import { AppStack } from '@shared/components/layout/AppStack';
@@ -14,20 +15,27 @@ const AttendanceSummariesPage = () => {
         title="Resumos de frequência"
         subtitle="Consulte presença e ausência consolidadas por aluno, turma e disciplina."
       />
+      {attendanceSummariesPage.referenceOptions.errorMessage ? (
+        <AppAlert severity="error">
+          {attendanceSummariesPage.referenceOptions.errorMessage}
+        </AppAlert>
+      ) : null}
       <ListFilters
         fields={[
           {
-            type: 'text',
+            type: 'select',
             name: 'schoolClassId',
             label: 'Turma',
-            placeholder: 'ID da turma',
+            placeholder: 'Todas as turmas',
+            options: attendanceSummariesPage.referenceOptions.schoolClassOptions,
             mobileOrder: 1,
           },
           {
-            type: 'text',
+            type: 'select',
             name: 'studentId',
             label: 'Aluno',
-            placeholder: 'ID do aluno',
+            placeholder: 'Todos os alunos',
+            options: attendanceSummariesPage.referenceOptions.studentOptions,
             mobileOrder: 2,
           },
           {
@@ -56,7 +64,10 @@ const AttendanceSummariesPage = () => {
         onChange={attendanceSummariesPage.onFilterChange}
         onApply={attendanceSummariesPage.applyFilters}
         onClear={attendanceSummariesPage.clearFilters}
-        loading={attendanceSummariesPage.attendanceSummariesList.loading}
+        loading={
+          attendanceSummariesPage.attendanceSummariesList.loading ||
+          attendanceSummariesPage.referenceOptions.loading
+        }
       />
       <QueryDataTable
         rows={attendanceSummariesPage.attendanceSummariesList.rows}

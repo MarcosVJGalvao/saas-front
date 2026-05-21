@@ -2,6 +2,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { studentEnrollmentService } from '@features/client/student-enrollments/services/service';
 import { useStudentEnrollmentOnboardingForm } from '@features/client/student-enrollments/hooks/useStudentEnrollmentOnboardingForm';
+import { useStudentEnrollmentReferenceOptions } from '@features/client/student-enrollments/hooks/useStudentEnrollmentReferenceOptions';
 import type { StudentEnrollmentSummaryData } from '@features/client/student-enrollments/types/studentEnrollmentOnboarding.types';
 
 const onboardingSteps = [
@@ -16,6 +17,7 @@ const onboardingSteps = [
 export const useStudentEnrollmentOnboardingPage = () => {
   const navigate = useNavigate();
   const onboardingForm = useStudentEnrollmentOnboardingForm();
+  const referenceOptions = useStudentEnrollmentReferenceOptions();
   const [committedSummary, setCommittedSummary] = useState<StudentEnrollmentSummaryData>(
     onboardingForm.summary,
   );
@@ -72,6 +74,7 @@ export const useStudentEnrollmentOnboardingPage = () => {
       value: onboardingForm.value,
       uiExtras: onboardingForm.uiExtras,
       actions: onboardingForm.actions,
+      referenceOptions,
     },
     handleNext,
     onCancel: () => navigate('/client/student-enrollments'),

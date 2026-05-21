@@ -1,16 +1,23 @@
-import { Controller } from 'react-hook-form';
+import { useSubscriptionCreatePage } from '@features/platform/subscriptions/hooks/useSubscriptionCreatePage';
+import type { SubscriptionCreateFormValues } from '@features/platform/subscriptions/schemas/subscriptionCreateForm.schema';
+import { AppCircularProgress } from '@shared/components/data-display/AppCircularProgress';
 import { AppPaper } from '@shared/components/data-display/AppPaper';
 import { AppAlert } from '@shared/components/feedback/AppAlert';
-import { AppCircularProgress } from '@shared/components/data-display/AppCircularProgress';
 import { AppForm } from '@shared/components/form/AppForm';
 import { FormActions } from '@shared/components/form/FormActions';
+import { FormDatePicker } from '@shared/components/form/FormDatePicker';
+import { FormSelect } from '@shared/components/form/FormSelect';
 import { FormTextField } from '@shared/components/form/FormTextField';
-import { AppSelect } from '@shared/components/inputs/AppSelect';
 import { AppStack } from '@shared/components/layout/AppStack';
 import { PageHeader } from '@shared/components/layout/PageHeader';
 import { subscriptionStatusLabelByValue } from '@shared/i18n/pt-BR/enums';
-import { useSubscriptionCreatePage } from '@features/platform/subscriptions/hooks/useSubscriptionCreatePage';
-import type { SubscriptionCreateFormValues } from '@features/platform/subscriptions/schemas/subscriptionCreateForm.schema';
+
+const subscriptionStatusOptions = Object.entries(subscriptionStatusLabelByValue).map(
+  ([value, label]) => ({
+    value,
+    label,
+  }),
+);
 
 const SubscriptionCreatePage = () => {
   const subscriptionCreatePage = useSubscriptionCreatePage();
@@ -30,7 +37,10 @@ const SubscriptionCreatePage = () => {
       {subscriptionCreatePage.errorMessage ? (
         <AppAlert severity="error">{subscriptionCreatePage.errorMessage}</AppAlert>
       ) : null}
-      {subscriptionCreatePage.plans.length === 0 ? (
+      {subscriptionCreatePage.referenceOptions.errorMessage ? (
+        <AppAlert severity="error">{subscriptionCreatePage.referenceOptions.errorMessage}</AppAlert>
+      ) : null}
+      {subscriptionCreatePage.referenceOptions.planOptions.length === 0 ? (
         <AppAlert severity="warning">Nenhum plano ativo disponível para assinatura.</AppAlert>
       ) : null}
       <AppPaper sx={{ p: 3 }}>
@@ -40,42 +50,31 @@ const SubscriptionCreatePage = () => {
           useResponsiveGrid
           columnsByDevice={{ mobile: 1, tablet: 2, desktop: 2 }}
         >
-          <FormTextField<SubscriptionCreateFormValues> name="tenantId" label="Tenant ID" />
-          <Controller
-            name="planId"
-            control={subscriptionCreatePage.form.control}
-            render={({ field }) => (
-              <AppSelect
-                {...field}
-                label="Plano"
-                options={subscriptionCreatePage.plans.map((plan) => ({
-                  value: plan.id,
-                  label: plan.name,
-                }))}
-              />
-            )}
+          <FormSelect<SubscriptionCreateFormValues>
+            name="tenantId"
+            label="Tenant"
+            options={subscriptionCreatePage.referenceOptions.tenantOptions}
+            disabled={subscriptionCreatePage.referenceOptions.loading}
           />
-          <Controller
+          <FormSelect<SubscriptionCreateFormValues>
+            name="planId"
+            label="Plano"
+            options={subscriptionCreatePage.referenceOptions.planOptions}
+            disabled={subscriptionCreatePage.referenceOptions.loading}
+          />
+          <FormSelect<SubscriptionCreateFormValues>
             name="status"
-            control={subscriptionCreatePage.form.control}
-            render={({ field }) => (
-              <AppSelect
-                {...field}
-                label="Status"
-                options={Object.entries(subscriptionStatusLabelByValue).map(([value, label]) => ({
-                  value,
-                  label,
-                }))}
-              />
-            )}
+            label="Status"
+            options={subscriptionStatusOptions}
           />
           <FormTextField<SubscriptionCreateFormValues>
             name="priceAtSubscription"
             label="Preço contratado"
           />
-          <FormTextField<SubscriptionCreateFormValues> name="startDate" label="Início" />
-          <FormTextField<SubscriptionCreateFormValues> name="renewalDate" label="Renovação" />
-          <FormTextField<SubscriptionCreateFormValues> name="trialEndsAt" label="Trial até" />
+          <FormDatePicker<SubscriptionCreateFormValues> name="startDate" label="Início" />
+          <FormDatePicker<SubscriptionCreateFormValues> name="endDate" label="Encerramento" />
+          <FormDatePicker<SubscriptionCreateFormValues> name="renewalDate" label="Renovação" />
+          <FormDatePicker<SubscriptionCreateFormValues> name="trialEndsAt" label="Trial até" />
           <FormTextField<SubscriptionCreateFormValues>
             name="blockedReason"
             label="Motivo do bloqueio"

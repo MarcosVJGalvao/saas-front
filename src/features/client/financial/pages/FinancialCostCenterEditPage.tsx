@@ -4,10 +4,12 @@ import { AppCircularProgress } from '@shared/components/data-display/AppCircular
 import { AppTextField } from '@shared/components/inputs/AppTextField';
 import { AppForm } from '@shared/components/form/AppForm';
 import { FormActions } from '@shared/components/form/FormActions';
+import { FormSelect } from '@shared/components/form/FormSelect';
 import { FormTextField } from '@shared/components/form/FormTextField';
 import { AppPaper } from '@shared/components/data-display/AppPaper';
 import { AppStack } from '@shared/components/layout/AppStack';
 import { PageHeader } from '@shared/components/layout/PageHeader';
+import { financialEntityStatusOptions } from '@features/client/financial/constants/financialFormOptions';
 import { useFinancialCostCenterEditPage } from '@features/client/financial/hooks/useFinancialCostCenterEditPage';
 import type { FinancialCostCenterEditFormValues } from '@features/client/financial/schemas/financialCostCenterEditForm.schema';
 
@@ -39,10 +41,10 @@ const FinancialCostCenterEditPage = () => {
           columnsByDevice={{ mobile: 1, tablet: 2, desktop: 2 }}
         >
           <FormTextField<FinancialCostCenterEditFormValues> name="code" label="Código" />
-          <FormTextField<FinancialCostCenterEditFormValues>
+          <FormSelect<FinancialCostCenterEditFormValues>
             name="status"
             label="Status"
-            placeholder="active ou inactive"
+            options={financialEntityStatusOptions}
           />
           <FormTextField<FinancialCostCenterEditFormValues>
             name="description"

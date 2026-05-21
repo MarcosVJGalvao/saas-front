@@ -1,12 +1,17 @@
-import { AppAlert } from '@shared/components/feedback/AppAlert';
+import {
+  schoolClassShiftOptions,
+  schoolClassStatusOptions,
+} from '@features/client/academic/constants/academicFormOptions';
+import { useSchoolClassCreatePage } from '@features/client/academic/hooks/useSchoolClassCreatePage';
+import type { SchoolClassCreateFormValues } from '@features/client/academic/schemas/schoolClassCreateForm.schema';
 import { AppPaper } from '@shared/components/data-display/AppPaper';
+import { AppAlert } from '@shared/components/feedback/AppAlert';
 import { AppForm } from '@shared/components/form/AppForm';
 import { FormActions } from '@shared/components/form/FormActions';
+import { FormSelect } from '@shared/components/form/FormSelect';
 import { FormTextField } from '@shared/components/form/FormTextField';
 import { AppStack } from '@shared/components/layout/AppStack';
 import { PageHeader } from '@shared/components/layout/PageHeader';
-import { useSchoolClassCreatePage } from '@features/client/academic/hooks/useSchoolClassCreatePage';
-import type { SchoolClassCreateFormValues } from '@features/client/academic/schemas/schoolClassCreateForm.schema';
 
 const SchoolClassCreatePage = () => {
   const schoolClassCreatePage = useSchoolClassCreatePage();
@@ -22,6 +27,9 @@ const SchoolClassCreatePage = () => {
       {schoolClassCreatePage.errorMessage ? (
         <AppAlert severity="error">{schoolClassCreatePage.errorMessage}</AppAlert>
       ) : null}
+      {schoolClassCreatePage.referenceOptions.errorMessage ? (
+        <AppAlert severity="error">{schoolClassCreatePage.referenceOptions.errorMessage}</AppAlert>
+      ) : null}
       <AppPaper sx={{ p: 3 }}>
         <AppForm
           form={schoolClassCreatePage.form}
@@ -31,35 +39,38 @@ const SchoolClassCreatePage = () => {
         >
           <FormTextField<SchoolClassCreateFormValues> name="name" label="Nome" />
           <FormTextField<SchoolClassCreateFormValues> name="code" label="Código" />
-          <FormTextField<SchoolClassCreateFormValues>
+          <FormSelect<SchoolClassCreateFormValues>
             name="status"
             label="Status"
-            placeholder="active, inactive ou cancelled"
+            options={schoolClassStatusOptions}
           />
-          <FormTextField<SchoolClassCreateFormValues>
+          <FormSelect<SchoolClassCreateFormValues>
             name="shift"
             label="Turno"
-            placeholder="morning, afternoon, evening ou full_time"
+            options={schoolClassShiftOptions}
           />
           <FormTextField<SchoolClassCreateFormValues>
             name="capacity"
             label="Capacidade"
             placeholder="Quantidade de vagas"
           />
-          <FormTextField<SchoolClassCreateFormValues>
+          <FormSelect<SchoolClassCreateFormValues>
             name="academicYearId"
             label="Ano letivo"
-            placeholder="ID do ano letivo"
+            options={schoolClassCreatePage.referenceOptions.academicYearOptions}
+            disabled={schoolClassCreatePage.referenceOptions.loading}
           />
-          <FormTextField<SchoolClassCreateFormValues>
+          <FormSelect<SchoolClassCreateFormValues>
             name="gradeId"
             label="Série"
-            placeholder="ID da série"
+            options={schoolClassCreatePage.referenceOptions.gradeOptions}
+            disabled={schoolClassCreatePage.referenceOptions.loading}
           />
-          <FormTextField<SchoolClassCreateFormValues>
+          <FormSelect<SchoolClassCreateFormValues>
             name="educationLevelId"
             label="Nível de ensino"
-            placeholder="ID do nível de ensino"
+            options={schoolClassCreatePage.referenceOptions.educationLevelOptions}
+            disabled={schoolClassCreatePage.referenceOptions.loading}
           />
           <FormTextField<SchoolClassCreateFormValues>
             name="description"

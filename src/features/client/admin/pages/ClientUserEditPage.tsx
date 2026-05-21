@@ -1,15 +1,17 @@
 import { useParams } from 'react-router-dom';
-import { AppAlert } from '@shared/components/feedback/AppAlert';
-import { AppCircularProgress } from '@shared/components/data-display/AppCircularProgress';
-import { AppTextField } from '@shared/components/inputs/AppTextField';
-import { AppForm } from '@shared/components/form/AppForm';
-import { FormActions } from '@shared/components/form/FormActions';
-import { FormTextField } from '@shared/components/form/FormTextField';
-import { AppPaper } from '@shared/components/data-display/AppPaper';
-import { AppStack } from '@shared/components/layout/AppStack';
-import { PageHeader } from '@shared/components/layout/PageHeader';
 import { useClientUserEditPage } from '@features/client/admin/hooks/useClientUserEditPage';
 import type { ClientUserEditFormValues } from '@features/client/admin/schemas/clientUserEditForm.schema';
+import { AppCircularProgress } from '@shared/components/data-display/AppCircularProgress';
+import { AppPaper } from '@shared/components/data-display/AppPaper';
+import { AppAlert } from '@shared/components/feedback/AppAlert';
+import { AppForm } from '@shared/components/form/AppForm';
+import { FormActions } from '@shared/components/form/FormActions';
+import { FormSelect } from '@shared/components/form/FormSelect';
+import { FormTextField } from '@shared/components/form/FormTextField';
+import { AppTextField } from '@shared/components/inputs/AppTextField';
+import { AppStack } from '@shared/components/layout/AppStack';
+import { PageHeader } from '@shared/components/layout/PageHeader';
+import { activeInactiveStatusOptions } from '@shared/constants/selectOptions';
 
 const ClientUserEditPage = () => {
   const { id } = useParams<{ id: string }>();
@@ -30,6 +32,9 @@ const ClientUserEditPage = () => {
       {clientUserEditPage.errorMessage ? (
         <AppAlert severity="error">{clientUserEditPage.errorMessage}</AppAlert>
       ) : null}
+      {clientUserEditPage.referenceOptions.errorMessage ? (
+        <AppAlert severity="error">{clientUserEditPage.referenceOptions.errorMessage}</AppAlert>
+      ) : null}
       <AppTextField
         label="Nome"
         value={clientUserEditPage.entity?.fullName ?? clientUserEditPage.entity?.name ?? ''}
@@ -43,15 +48,16 @@ const ClientUserEditPage = () => {
           columnsByDevice={{ mobile: 1, tablet: 2, desktop: 2 }}
         >
           <FormTextField<ClientUserEditFormValues> name="email" label="E-mail" />
-          <FormTextField<ClientUserEditFormValues>
+          <FormSelect<ClientUserEditFormValues>
             name="roleId"
             label="Perfil"
-            placeholder="ID do perfil"
+            options={clientUserEditPage.referenceOptions.roleOptions}
+            disabled={clientUserEditPage.referenceOptions.loading}
           />
-          <FormTextField<ClientUserEditFormValues>
+          <FormSelect<ClientUserEditFormValues>
             name="status"
             label="Status"
-            placeholder="active ou inactive"
+            options={activeInactiveStatusOptions}
           />
           <FormActions
             secondaryAction={{

@@ -10,6 +10,7 @@ import {
   type AccountsReceivableEditFormValues,
 } from '@features/client/financial/schemas/accountsReceivableEditForm.schema';
 import { accountsReceivableService } from '@features/client/financial/services/service';
+import { useFinancialReferenceOptions } from '@features/client/financial/hooks/useFinancialReferenceOptions';
 import type { FinancialRecord } from '@features/client/financial/types/financial.types';
 
 type AccountsReceivableEditLocationState = {
@@ -28,6 +29,7 @@ export const useAccountsReceivableEditPage = (id: string) => {
     ? location.state
     : undefined;
   const [entity, setEntity] = useState<FinancialRecord | null>(locationState?.entity ?? null);
+  const referenceOptions = useFinancialReferenceOptions({ includeStudents: true });
   const [loading, setLoading] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | undefined>();
@@ -89,6 +91,7 @@ export const useAccountsReceivableEditPage = (id: string) => {
   return {
     form,
     entity,
+    referenceOptions,
     loading,
     submitting,
     errorMessage,

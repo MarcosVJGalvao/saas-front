@@ -5,6 +5,7 @@ import {
   clientUserCreateFormSchema,
   type ClientUserCreateFormValues,
 } from '@features/client/admin/schemas/clientUserCreateForm.schema';
+import { useAdminReferenceOptions } from '@features/client/admin/hooks/useAdminReferenceOptions';
 import { clientUsersService } from '@features/client/admin/services/service';
 
 const initialValues: ClientUserCreateFormValues = {
@@ -16,10 +17,12 @@ const initialValues: ClientUserCreateFormValues = {
 
 export const useClientUserCreatePage = () => {
   const navigate = useNavigate();
+  const referenceOptions = useAdminReferenceOptions();
   const form = useAppForm<ClientUserCreateFormValues>(clientUserCreateFormSchema, initialValues);
 
   return {
     form,
+    referenceOptions,
     submitting: form.formState.isSubmitting,
     errorMessage: undefined,
     onBack: () => {

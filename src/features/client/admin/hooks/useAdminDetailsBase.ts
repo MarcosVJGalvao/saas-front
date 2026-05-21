@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import type {
   EntityDetailsPageData,
@@ -31,23 +31,28 @@ export const useAdminDetailsBase = <TItem extends ClientAdminEntity>({
   errorMessageFallback,
   fallbackSubtitle,
 }: UseAdminDetailsBaseParams<TItem>) => {
+  const serviceRef = useRef(service);
   const navigate = useNavigate();
   const [entity, setEntity] = useState<TItem | null>(null);
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | undefined>();
 
+  useEffect(() => {
+    serviceRef.current = service;
+  }, [service]);
+
   const fetchEntity = useCallback(async () => {
     setLoading(true);
     setErrorMessage(undefined);
     try {
-      const fetchedEntity = await service.getById(id);
+      const fetchedEntity = await serviceRef.current.getById(id);
       setEntity(fetchedEntity);
     } catch {
       setErrorMessage(errorMessageFallback);
     } finally {
       setLoading(false);
     }
-  }, [errorMessageFallback, id, service]);
+  }, [errorMessageFallback, id]);
 
   useEffect(() => {
     const timeoutId = window.setTimeout(() => {

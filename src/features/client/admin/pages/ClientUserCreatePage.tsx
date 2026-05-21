@@ -1,12 +1,14 @@
+import { useClientUserCreatePage } from '@features/client/admin/hooks/useClientUserCreatePage';
+import type { ClientUserCreateFormValues } from '@features/client/admin/schemas/clientUserCreateForm.schema';
+import { AppPaper } from '@shared/components/data-display/AppPaper';
 import { AppAlert } from '@shared/components/feedback/AppAlert';
 import { AppForm } from '@shared/components/form/AppForm';
 import { FormActions } from '@shared/components/form/FormActions';
+import { FormSelect } from '@shared/components/form/FormSelect';
 import { FormTextField } from '@shared/components/form/FormTextField';
-import { AppPaper } from '@shared/components/data-display/AppPaper';
 import { AppStack } from '@shared/components/layout/AppStack';
 import { PageHeader } from '@shared/components/layout/PageHeader';
-import { useClientUserCreatePage } from '@features/client/admin/hooks/useClientUserCreatePage';
-import type { ClientUserCreateFormValues } from '@features/client/admin/schemas/clientUserCreateForm.schema';
+import { activeInactiveStatusOptions } from '@shared/constants/selectOptions';
 
 const ClientUserCreatePage = () => {
   const clientUserCreatePage = useClientUserCreatePage();
@@ -22,6 +24,9 @@ const ClientUserCreatePage = () => {
       {clientUserCreatePage.errorMessage ? (
         <AppAlert severity="error">{clientUserCreatePage.errorMessage}</AppAlert>
       ) : null}
+      {clientUserCreatePage.referenceOptions.errorMessage ? (
+        <AppAlert severity="error">{clientUserCreatePage.referenceOptions.errorMessage}</AppAlert>
+      ) : null}
       <AppPaper sx={{ p: 3 }}>
         <AppForm
           form={clientUserCreatePage.form}
@@ -31,15 +36,16 @@ const ClientUserCreatePage = () => {
         >
           <FormTextField<ClientUserCreateFormValues> name="name" label="Nome" />
           <FormTextField<ClientUserCreateFormValues> name="email" label="E-mail" />
-          <FormTextField<ClientUserCreateFormValues>
+          <FormSelect<ClientUserCreateFormValues>
             name="roleId"
             label="Perfil"
-            placeholder="ID do perfil"
+            options={clientUserCreatePage.referenceOptions.roleOptions}
+            disabled={clientUserCreatePage.referenceOptions.loading}
           />
-          <FormTextField<ClientUserCreateFormValues>
+          <FormSelect<ClientUserCreateFormValues>
             name="status"
             label="Status"
-            placeholder="active ou inactive"
+            options={activeInactiveStatusOptions}
           />
           <FormActions
             secondaryAction={{

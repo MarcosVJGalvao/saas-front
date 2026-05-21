@@ -7,13 +7,16 @@ import {
   attendanceScheduleListColumns,
   attendanceScheduleMobileConfig,
 } from '@features/client/attendance/components/attendanceScheduleListColumns';
+import { useAttendanceReferenceOptions } from '@features/client/attendance/hooks/useAttendanceReferenceOptions';
 
 export const useAttendanceSchedulesPage = () => {
   const attendanceSchedulesList = useAttendanceSchedulesList();
   const filters = useAttendanceFilters();
+  const referenceOptions = useAttendanceReferenceOptions();
 
   return {
     attendanceSchedulesList,
+    referenceOptions,
     filterValues: filters.filterValues,
     onFilterChange: filters.onFilterChange,
     applyFilters: () => {

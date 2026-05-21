@@ -1,4 +1,5 @@
 import { useMemo, useState } from 'react';
+import { useAcademicReferenceOptions } from '@features/client/academic/hooks/useAcademicReferenceOptions';
 import {
   buildTeacherSubjectColumns,
   buildTeacherSubjectMobileConfig,
@@ -54,6 +55,10 @@ const buildQueryFromFilters = (
 
 export const useTeacherSubjectsListPage = () => {
   const teacherSubjectsList = useTeacherSubjectsList();
+  const referenceOptions = useAcademicReferenceOptions({
+    includeTeachers: true,
+    includeSubjects: true,
+  });
   const [filterValues, setFilterValues] = useState<TeacherSubjectFilterValues>(initialFilterValues);
   const [createValues, setCreateValues] = useState<TeacherSubjectCreateValues>(initialCreateValues);
   const [selectedTeacherSubjectId, setSelectedTeacherSubjectId] = useState<string | undefined>();
@@ -114,6 +119,7 @@ export const useTeacherSubjectsListPage = () => {
 
   return {
     teacherSubjectsList,
+    referenceOptions,
     filterValues,
     createValues,
     actionLoading,
