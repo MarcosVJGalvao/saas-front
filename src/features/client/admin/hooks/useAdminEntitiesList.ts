@@ -1,13 +1,13 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import type { PaginationMeta } from '@shared/types/pagination';
 import type {
   ClientAdminEntity,
   ClientAdminQueryParams,
 } from '@features/client/admin/types/admin.types';
 
-type AdminEntitiesListService = {
+type AdminEntitiesListService<TItem extends ClientAdminEntity> = {
   list: (params: ClientAdminQueryParams) => Promise<{
-    data: ClientAdminEntity[];
+    data: TItem[];
     meta: PaginationMeta;
   }>;
 };
@@ -21,21 +21,26 @@ const initialMeta: PaginationMeta = {
   hasPreviousPage: false,
 };
 
-export const useAdminEntitiesList = (
-  service: AdminEntitiesListService,
+export const useAdminEntitiesList = <TItem extends ClientAdminEntity>(
+  service: AdminEntitiesListService<TItem>,
   errorMessageFallback: string,
 ) => {
-  const [rows, setRows] = useState<ClientAdminEntity[]>([]);
+  const serviceRef = useRef(service);
+  const [rows, setRows] = useState<TItem[]>([]);
   const [meta, setMeta] = useState<PaginationMeta>(initialMeta);
   const [query, setQuery] = useState<ClientAdminQueryParams>({ page: 1, limit: 10 });
   const [loading, setLoading] = useState(false);
-  const [errorMessage, setErrorMessage] = useState<string | undefined>(undefined);
+  const [errorMessage, setErrorMessage] = useState<string | undefined>();
+
+  useEffect(() => {
+    serviceRef.current = service;
+  }, [service]);
 
   const load = useCallback(async () => {
     setLoading(true);
     setErrorMessage(undefined);
     try {
-      const response = await service.list(query);
+      const response = await serviceRef.current.list(query);
       setRows(response.data);
       setMeta(response.meta);
     } catch {
@@ -43,13 +48,12 @@ export const useAdminEntitiesList = (
     } finally {
       setLoading(false);
     }
-  }, [errorMessageFallback, query, service]);
+  }, [errorMessageFallback, query]);
 
   useEffect(() => {
     const timeoutId = window.setTimeout(() => {
       void load();
     }, 0);
-
     return () => window.clearTimeout(timeoutId);
   }, [load]);
 

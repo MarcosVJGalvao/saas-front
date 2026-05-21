@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { normalizePersonPayload } from '@features/client/people/normalizers/personFormNormalizer';
+import { normalizePersonPayload } from '@features/client/people/normalizers/personForm.normalizer';
 
 describe('personFormNormalizer', () => {
   it('normaliza documento e campos textuais', () => {

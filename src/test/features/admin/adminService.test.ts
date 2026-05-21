@@ -1,8 +1,5 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import {
-  clientRolesService,
-  clientUsersService,
-} from '@features/client/admin/services/adminServices';
+import { clientRolesService, clientUsersService } from '@features/client/admin/services/service';
 import { httpClient } from '@shared/services/httpClient';
 
 describe('admin services', () => {

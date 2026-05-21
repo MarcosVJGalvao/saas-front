@@ -13,7 +13,15 @@ interface SectionCardProps extends Pick<CardProps, 'sx' | 'className'> {
   footer?: ReactNode;
 }
 
-export const SectionCard = ({ title, subtitle, children, actions, footer, sx, className }: SectionCardProps) => (
+export const SectionCard = ({
+  title,
+  subtitle,
+  children,
+  actions,
+  footer,
+  sx,
+  className,
+}: SectionCardProps) => (
   <Card sx={sx} className={className}>
     {title !== undefined ? (
       <CardHeader title={title} subheader={subtitle} action={actions} />

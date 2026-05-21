@@ -8,6 +8,11 @@ export type EmployeeStatusValue = 'active' | 'inactive' | 'terminated';
 export type SchoolClassStatusValue = 'active' | 'inactive' | 'cancelled';
 export type SchoolClassShiftValue = 'morning' | 'afternoon' | 'evening' | 'full_time';
 export type AcademicYearStatusValue = 'scheduled' | 'active' | 'closed';
+export type ReportCardCalculationTypeValue = 'arithmetic' | 'weighted';
+export type ReportCardRecoveryStrategyValue = 'none' | 'replace_lowest' | 'replace_average';
+export type ReportCardFinalStatusStrategyValue =
+  | 'approval_or_recovery'
+  | 'approval_recovery_or_failure';
 export type GenderValue = 'male' | 'female' | 'other' | 'prefer_not_to_say';
 export type MaritalStatusValue = 'single' | 'married' | 'divorced' | 'widowed' | 'other';
 export type NationalityValue = 'brazilian' | 'foreign' | 'other';
@@ -124,6 +129,25 @@ export const academicYearStatusLabels: Record<AcademicYearStatusValue, string> =
   scheduled: 'Agendado',
   active: 'Ativo',
   closed: 'Encerrado',
+};
+
+export const reportCardCalculationTypeLabels: Record<ReportCardCalculationTypeValue, string> = {
+  arithmetic: 'Média aritmética',
+  weighted: 'Média ponderada',
+};
+
+export const reportCardRecoveryStrategyLabels: Record<ReportCardRecoveryStrategyValue, string> = {
+  none: 'Sem recuperação',
+  replace_lowest: 'Substitui a menor nota',
+  replace_average: 'Substitui a média',
+};
+
+export const reportCardFinalStatusStrategyLabels: Record<
+  ReportCardFinalStatusStrategyValue,
+  string
+> = {
+  approval_or_recovery: 'Aprovação ou recuperação',
+  approval_recovery_or_failure: 'Aprovação, recuperação ou reprovação',
 };
 
 export const genderLabels: Record<GenderValue, string> = {
@@ -269,6 +293,18 @@ export const translateEnrollmentStatus = (status: EnrollmentStatusValue): string
 
 export const translateAcademicYearStatus = (status: AcademicYearStatusValue): string =>
   academicYearStatusLabels[status];
+
+export const translateReportCardCalculationType = (
+  calculationType: ReportCardCalculationTypeValue,
+): string => reportCardCalculationTypeLabels[calculationType];
+
+export const translateReportCardRecoveryStrategy = (
+  recoveryStrategy: ReportCardRecoveryStrategyValue,
+): string => reportCardRecoveryStrategyLabels[recoveryStrategy];
+
+export const translateReportCardFinalStatusStrategy = (
+  finalStatusStrategy: ReportCardFinalStatusStrategyValue,
+): string => reportCardFinalStatusStrategyLabels[finalStatusStrategy];
 
 export const translateSchoolClassStatus = (status: SchoolClassStatusValue): string =>
   schoolClassStatusLabels[status];

@@ -1,11 +1,66 @@
 import type {
   AcademicYearStatusValue,
+  ActiveInactiveStatus,
+  ReportCardCalculationTypeValue,
+  ReportCardFinalStatusStrategyValue,
+  ReportCardRecoveryStrategyValue,
   SchoolClassShiftValue,
   SchoolClassStatusValue,
 } from '@shared/i18n/pt-BR/enums';
 import type { ClientBaseQueryParams } from '@features/client/shared/types/clientApi.types';
 
 export type AcademicYearStatus = AcademicYearStatusValue;
+export type AcademicPeriodStatus = ActiveInactiveStatus;
+
+export type AcademicPeriod = {
+  id: string;
+  name: string;
+  code?: string | undefined;
+  sequence?: number | undefined;
+  startDate?: string | undefined;
+  endDate?: string | undefined;
+  weight?: number | undefined;
+  isFinalPeriod?: boolean | number | undefined;
+  status?: AcademicPeriodStatus | undefined;
+};
+
+export type ReportCardPolicy = {
+  id?: string | undefined;
+  calculationType: ReportCardCalculationTypeValue;
+  passingGrade: number;
+  minimumAttendancePercentage: number;
+  recoveryStrategy: ReportCardRecoveryStrategyValue;
+  finalStatusStrategy: ReportCardFinalStatusStrategyValue;
+};
+
+export type AcademicYearPeriodInput = {
+  id?: string | undefined;
+  name: string;
+  code: string;
+  sequence: number;
+  startDate: string;
+  endDate: string;
+  weight?: number | undefined;
+  isFinalPeriod?: boolean | undefined;
+};
+
+export type AcademicYearReportCardPolicyInput = {
+  id?: string | undefined;
+  calculationType: ReportCardCalculationTypeValue;
+  passingGrade: number;
+  minimumAttendancePercentage: number;
+  recoveryStrategy: ReportCardRecoveryStrategyValue;
+  finalStatusStrategy: ReportCardFinalStatusStrategyValue;
+};
+
+export type AcademicYearUpsertPayload = {
+  name: string;
+  startDate: string;
+  endDate: string;
+  isClosed?: boolean | undefined;
+  academicPeriods: AcademicYearPeriodInput[];
+  reportCardPolicy: AcademicYearReportCardPolicyInput;
+};
 
 export type AcademicYear = {
   id: string;
@@ -14,6 +69,9 @@ export type AcademicYear = {
   status: AcademicYearStatus;
   startDate?: string | undefined;
   endDate?: string | undefined;
+  isClosed?: boolean | number | undefined;
+  academicPeriods?: AcademicPeriod[] | undefined;
+  reportCardPolicy?: ReportCardPolicy | null | undefined;
   description?: string | undefined;
   createdAt?: string | undefined;
   updatedAt?: string | undefined;

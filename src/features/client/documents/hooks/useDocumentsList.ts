@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from 'react';
-import { documentService } from '@features/client/documents/services/documentServices';
+import { documentsService } from '@features/client/documents/services/service';
 import type {
   GeneratedDocument,
   GeneratedDocumentQueryParams,
@@ -15,10 +15,14 @@ const initialMeta: PaginationMeta = {
   hasPreviousPage: false,
 };
 
-export const useDocumentsList = () => {
+export const useDocumentsList = (initialParams?: Partial<GeneratedDocumentQueryParams>) => {
   const [rows, setRows] = useState<GeneratedDocument[]>([]);
-  const [meta, setMeta] = useState<PaginationMeta>(initialMeta);
-  const [query, setQuery] = useState<GeneratedDocumentQueryParams>({ page: 1, limit: 10 });
+  const [pagination, setPagination] = useState<PaginationMeta>(initialMeta);
+  const [queryParams, setQueryParams] = useState<GeneratedDocumentQueryParams>({
+    page: 1,
+    limit: 10,
+    ...initialParams,
+  });
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | undefined>(undefined);
 
@@ -26,15 +30,15 @@ export const useDocumentsList = () => {
     setLoading(true);
     setErrorMessage(undefined);
     try {
-      const response = await documentService.list(query);
+      const response = await documentsService.list(queryParams);
       setRows(response.data);
-      setMeta(response.meta);
+      setPagination(response.meta);
     } catch {
       setErrorMessage('Erro ao carregar documentos.');
     } finally {
       setLoading(false);
     }
-  }, [query]);
+  }, [queryParams]);
 
   useEffect(() => {
     const timeoutId = window.setTimeout(() => {
@@ -44,17 +48,17 @@ export const useDocumentsList = () => {
     return () => window.clearTimeout(timeoutId);
   }, [load]);
 
-  const updateQuery = useCallback((patch: Partial<GeneratedDocumentQueryParams>) => {
-    setQuery((currentQuery) => ({ ...currentQuery, ...patch }));
+  const updateQueryParams = useCallback((patch: Partial<GeneratedDocumentQueryParams>) => {
+    setQueryParams((currentQuery) => ({ ...currentQuery, ...patch }));
   }, []);
 
   return {
     rows,
-    meta,
-    query,
+    pagination,
+    queryParams,
     loading,
     errorMessage,
-    updateQuery,
+    updateQueryParams,
     reload: load,
   };
 };

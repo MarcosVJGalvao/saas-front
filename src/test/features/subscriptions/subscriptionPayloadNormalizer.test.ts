@@ -1,17 +1,18 @@
 import { describe, expect, it } from 'vitest';
 
-import { normalizeSubscriptionPayload } from '@features/platform/subscriptions/normalizers/subscriptionPayloadNormalizer';
+import { toSubscriptionCreatePayload } from '@features/platform/subscriptions/normalizers/subscriptionForm.normalizer';
 
-describe('subscriptionPayloadNormalizer', () => {
+describe('subscriptionForm.normalizer', () => {
   it('normaliza payload de assinatura', () => {
     expect(
-      normalizeSubscriptionPayload({
+      toSubscriptionCreatePayload({
         tenantId: ' tenant-1 ',
         planId: ' plan-1 ',
         status: 'active',
         startDate: '25/09/2026',
-        endDate: '',
+        endDate: '30/09/2026',
         renewalDate: '2026-10-25',
+        trialEndsAt: '',
         priceAtSubscription: 'R$ 1.250,90',
         blockedReason: ' ',
       }),
@@ -20,7 +21,7 @@ describe('subscriptionPayloadNormalizer', () => {
       planId: 'plan-1',
       status: 'active',
       startDate: '2026-09-25',
-      endDate: undefined,
+      endDate: '2026-09-30',
       trialEndsAt: undefined,
       renewalDate: '2026-10-25',
       priceAtSubscription: '1250.90',

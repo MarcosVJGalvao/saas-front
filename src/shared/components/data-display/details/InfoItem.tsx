@@ -39,7 +39,12 @@ export const InfoItem = ({ label, value, noWrap = false }: InfoItemProps) => (
       }}
     >
       {value ?? (
-        <Typography component="span" variant="body2" color="text.disabled" sx={{ fontStyle: 'italic' }}>
+        <Typography
+          component="span"
+          variant="body2"
+          color="text.disabled"
+          sx={{ fontStyle: 'italic' }}
+        >
           Não informado
         </Typography>
       )}

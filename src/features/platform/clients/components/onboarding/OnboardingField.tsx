@@ -1,4 +1,6 @@
 import type { HTMLInputTypeAttribute, ReactNode } from 'react';
+import { AppMenuItem } from '@shared/components/inputs/AppMenuItem';
+import type { AppSelectOption } from '@shared/components/inputs/AppSelect';
 import { AppGrid } from '@shared/components/layout/AppGrid';
 import { AppTextField } from '@shared/components/inputs/AppTextField';
 
@@ -17,6 +19,7 @@ type OnboardingFieldProps = {
   helperText?: ReactNode;
   type?: HTMLInputTypeAttribute;
   select?: boolean;
+  options?: AppSelectOption[];
   children?: ReactNode;
 };
 
@@ -30,6 +33,7 @@ export const OnboardingField = ({
   helperText,
   type,
   select = false,
+  options,
   children,
 }: OnboardingFieldProps) => (
   <AppGrid size={gridSize ?? { xs: 12, md: 6 }}>
@@ -45,7 +49,11 @@ export const OnboardingField = ({
       onBlur={onBlur}
       helperText={helperText}
     >
-      {children}
+      {options?.map((option) => (
+        <AppMenuItem key={option.value} value={option.value}>
+          {option.label}
+        </AppMenuItem>
+      )) ?? children}
     </AppTextField>
   </AppGrid>
 );

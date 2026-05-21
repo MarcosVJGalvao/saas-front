@@ -48,9 +48,9 @@ export const AppForm = <TFieldValues extends FieldValues>({
             display: 'grid',
             gap: spacing,
             gridTemplateColumns: responsive({
-              mobile: `repeat(${columnsByDevice.mobile}, minmax(0, 1fr))`,
-              tablet: `repeat(${columnsByDevice.tablet ?? columnsByDevice.mobile}, minmax(0, 1fr))`,
-              desktop: `repeat(${columnsByDevice.desktop ?? columnsByDevice.tablet ?? columnsByDevice.mobile}, minmax(0, 1fr))`,
+              xs: `repeat(${columnsByDevice.mobile}, minmax(0, 1fr))`,
+              md: `repeat(${columnsByDevice.tablet ?? columnsByDevice.mobile}, minmax(0, 1fr))`,
+              lg: `repeat(${columnsByDevice.desktop ?? columnsByDevice.tablet ?? columnsByDevice.mobile}, minmax(0, 1fr))`,
             }),
           }}
         >

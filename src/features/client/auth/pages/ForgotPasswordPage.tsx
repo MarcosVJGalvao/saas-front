@@ -3,11 +3,11 @@ import { AppForm } from '@shared/components/form/AppForm';
 import { AppText } from '@shared/components/data-display/AppText';
 import { AppButton } from '@shared/components/inputs/AppButton';
 import { AppTextField } from '@shared/components/inputs/AppTextField';
-import { useForgotPasswordPageViewModel } from '@features/client/auth/hooks/useForgotPasswordPageViewModel';
+import { useForgotPasswordPage } from '@features/client/auth/hooks/useForgotPasswordPage';
 import { PlatformAuthPageLayout } from '@shared/components/layout/PlatformAuthPageLayout';
 
 const ForgotPasswordPage = () => {
-  const model = useForgotPasswordPageViewModel();
+  const model = useForgotPasswordPage();
 
   return (
     <PlatformAuthPageLayout>

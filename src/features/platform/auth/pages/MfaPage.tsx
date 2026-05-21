@@ -1,10 +1,10 @@
 import { Navigate } from 'react-router-dom';
 import { PlatformMfaForm } from '@features/platform/auth/components/PlatformMfaForm';
-import { usePlatformMfaPageViewModel } from '@features/platform/auth/hooks/usePlatformMfaPageViewModel';
+import { usePlatformMfaPage } from '@features/platform/auth/hooks/usePlatformMfaPage';
 import { PlatformAuthPageLayout } from '@shared/components/layout/PlatformAuthPageLayout';
 
 const PlatformMfaPage = () => {
-  const model = usePlatformMfaPageViewModel();
+  const model = usePlatformMfaPage();
 
   if (model.shouldRedirectToLogin) {
     return <Navigate to="/platform/login" replace />;

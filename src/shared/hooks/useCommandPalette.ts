@@ -1,77 +1,42 @@
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useState } from 'react';
 import type { NavigationItem } from '@shared/types/navigation';
 import { ADMIN_NAVIGATION_STORAGE_KEYS } from '@shared/types/adminNavigationStorage';
 
 const readFavorites = (): string[] => {
-  if (typeof window === 'undefined') {
-    return [];
-  }
-
-  const rawValue = window.localStorage.getItem(ADMIN_NAVIGATION_STORAGE_KEYS.commandFavorites);
-  if (rawValue === null) {
-    return [];
-  }
-
+  if (typeof window === 'undefined') return [];
+  const raw = window.localStorage.getItem(ADMIN_NAVIGATION_STORAGE_KEYS.commandFavorites);
+  if (raw === null) return [];
   try {
-    const parsedValue: unknown = JSON.parse(rawValue);
-    if (Array.isArray(parsedValue) && parsedValue.every((item) => typeof item === 'string')) {
-      return parsedValue;
-    }
-    return [];
+    const parsed: unknown = JSON.parse(raw);
+    return Array.isArray(parsed) && parsed.every((item) => typeof item === 'string') ? parsed : [];
   } catch {
     return [];
   }
 };
 
-const flattenItems = (items: NavigationItem[]): NavigationItem[] =>
-  items.flatMap((item) => [item, ...(item.children ?? [])]);
-
-export const useCommandPalette = (items: NavigationItem[]) => {
+export const useCommandPalette = (_items: NavigationItem[]) => {
   const [isOpen, setIsOpen] = useState(false);
-  const [query, setQuery] = useState('');
+  const [openKey, setOpenKey] = useState(0);
   const [favorites, setFavorites] = useState<string[]>(readFavorites);
 
-  const allItems = useMemo(() => flattenItems(items), [items]);
-  const filteredItems = useMemo(() => {
-    const normalizedQuery = query.trim().toLowerCase();
-    if (normalizedQuery.length === 0) {
-      return allItems;
-    }
-
-    return allItems.filter((item) => {
-      const searchableValues = [item.label, ...(item.keywords ?? [])].map((value) =>
-        value.toLowerCase(),
-      );
-      return searchableValues.some((value) => value.includes(normalizedQuery));
-    });
-  }, [allItems, query]);
-
   const toggleFavorite = useCallback((itemId: string) => {
-    setFavorites((previousState) => {
-      const nextState = previousState.includes(itemId)
-        ? previousState.filter((favoriteId) => favoriteId !== itemId)
-        : [...previousState, itemId];
+    setFavorites((prev) => {
+      const next = prev.includes(itemId) ? prev.filter((id) => id !== itemId) : [...prev, itemId];
       if (typeof window !== 'undefined') {
         window.localStorage.setItem(
           ADMIN_NAVIGATION_STORAGE_KEYS.commandFavorites,
-          JSON.stringify(nextState),
+          JSON.stringify(next),
         );
       }
-      return nextState;
+      return next;
     });
   }, []);
 
-  const open = useCallback(() => setIsOpen(true), []);
+  const open = useCallback(() => {
+    setOpenKey((prev) => prev + 1);
+    setIsOpen(true);
+  }, []);
   const close = useCallback(() => setIsOpen(false), []);
 
-  return {
-    isOpen,
-    query,
-    favorites,
-    filteredItems,
-    open,
-    close,
-    setQuery,
-    toggleFavorite,
-  };
+  return { isOpen, openKey, favorites, open, close, toggleFavorite };
 };

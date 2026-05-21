@@ -9,6 +9,7 @@ interface FormTextFieldProps<TFieldValues extends FieldValues> {
   placeholder?: string;
   disabled?: boolean;
   fullWidth?: boolean;
+  size?: 'small' | 'medium';
 }
 
 export const FormTextField = <TFieldValues extends FieldValues>({
@@ -18,6 +19,7 @@ export const FormTextField = <TFieldValues extends FieldValues>({
   placeholder,
   disabled = false,
   fullWidth = true,
+  size = 'medium',
 }: FormTextFieldProps<TFieldValues>) => {
   const form = useFormContext<TFieldValues>();
 
@@ -33,6 +35,7 @@ export const FormTextField = <TFieldValues extends FieldValues>({
           placeholder={placeholder}
           disabled={disabled}
           fullWidth={fullWidth}
+          size={size}
           error={fieldState.invalid}
           helperText={fieldState.error?.message}
         />

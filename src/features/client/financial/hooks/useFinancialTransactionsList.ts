@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
 import type { PaginationMeta } from '@shared/types/pagination';
-import { financialTransactionService } from '@features/client/financial/services/financialServices';
+import { financialTransactionsService } from '@features/client/financial/services/service';
 import type {
   FinancialTransaction,
   FinancialTransactionQueryParams,
@@ -26,7 +26,7 @@ export const useFinancialTransactionsList = () => {
     setLoading(true);
     setErrorMessage(undefined);
     try {
-      const response = await financialTransactionService.list(query);
+      const response = await financialTransactionsService.list(query);
       setRows(response.data);
       setMeta(response.meta);
     } catch {

@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from 'react';
-import { schoolClassService } from '@features/client/academic/services/academicServices';
+import { schoolClassService } from '@features/client/academic/services/service';
 import type {
   SchoolClass,
   SchoolClassQueryParams,
@@ -15,10 +15,14 @@ const initialMeta: PaginationMeta = {
   hasPreviousPage: false,
 };
 
-export const useSchoolClassesList = () => {
+export const useSchoolClassesList = (initialParams?: Partial<SchoolClassQueryParams>) => {
   const [rows, setRows] = useState<SchoolClass[]>([]);
   const [meta, setMeta] = useState<PaginationMeta>(initialMeta);
-  const [query, setQuery] = useState<SchoolClassQueryParams>({ page: 1, limit: 10 });
+  const [query, setQuery] = useState<SchoolClassQueryParams>({
+    page: 1,
+    limit: 10,
+    ...initialParams,
+  });
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | undefined>(undefined);
 

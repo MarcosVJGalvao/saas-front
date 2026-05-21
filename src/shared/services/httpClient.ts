@@ -1,7 +1,9 @@
 import axios from 'axios';
 import type { AxiosError, AxiosRequestConfig } from 'axios';
 import { ErrorHandler } from '@shared/errors/ErrorHandler';
+import { connectivityMessages } from '@shared/i18n/pt-BR/messages';
 import type { AppError } from '@shared/types/appError';
+import { ErrorDisplayMode, ErrorSeverity } from '@shared/types/appError';
 import {
   clearClientSessionStorage,
   clearPlatformSessionStorage,
@@ -251,6 +253,19 @@ httpClient.interceptors.response.use(
             refreshError instanceof Error ? refreshError : new Error('Falha ao atualizar sessao.'),
           );
         });
+    }
+
+    if (error.response === undefined) {
+      const connectionMessage =
+        typeof window !== 'undefined' && window.navigator.onLine === false
+          ? connectivityMessages.offlineActionRequired
+          : connectivityMessages.networkRequestFailed;
+      const networkError: AppError = {
+        message: connectionMessage,
+        severity: ErrorSeverity.MEDIUM,
+        displayMode: ErrorDisplayMode.SNACKBAR,
+      };
+      return Promise.reject(new Error(networkError.message, { cause: networkError }));
     }
 
     const normalizedError: AppError = ErrorHandler.fromHttp(status, error.response?.data);

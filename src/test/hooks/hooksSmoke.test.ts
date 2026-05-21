@@ -12,7 +12,14 @@ import { useDebounce } from '@shared/hooks/useDebounce/useDebounce';
 import { useDebouncedCallback } from '@shared/hooks/useDebounce/useDebouncedCallback';
 import { useError } from '@shared/hooks/useError/useError';
 import { useAppLayoutState } from '@shared/hooks/useAppLayoutState';
-import { CLIENT_HOME_MESSAGES } from '@features/client/home/hooks/useClientHomeData';
+import {
+  CLIENT_HOME_PAGE_MESSAGES,
+  useClientHomePage,
+} from '@features/client/home/hooks/useClientHomePage';
+import {
+  PLATFORM_HOME_PAGE_MESSAGES,
+  usePlatformHomePage,
+} from '@features/platform/home/hooks/usePlatformHomePage';
 
 describe('hooks smoke', () => {
   it('exports hooks not individually covered yet', () => {
@@ -22,6 +29,8 @@ describe('hooks smoke', () => {
     expect(usePlatformMfaFlow).toBeTypeOf('function');
     expect(usePlatformMfaSetupFlow).toBeTypeOf('function');
     expect(usePlatformProfile).toBeTypeOf('function');
+    expect(useClientHomePage).toBeTypeOf('function');
+    expect(usePlatformHomePage).toBeTypeOf('function');
     expect(useAsync).toBeTypeOf('function');
     expect(useAuth).toBeTypeOf('function');
     expect(useColorMode).toBeTypeOf('function');
@@ -29,6 +38,7 @@ describe('hooks smoke', () => {
     expect(useDebouncedCallback).toBeTypeOf('function');
     expect(useError).toBeTypeOf('function');
     expect(useAppLayoutState).toBeTypeOf('function');
-    expect(() => CLIENT_HOME_MESSAGES).not.toThrow();
+    expect(() => CLIENT_HOME_PAGE_MESSAGES).not.toThrow();
+    expect(() => PLATFORM_HOME_PAGE_MESSAGES).not.toThrow();
   });
 });

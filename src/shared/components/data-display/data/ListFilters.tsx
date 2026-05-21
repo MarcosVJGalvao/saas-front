@@ -41,7 +41,7 @@ type SelectFilterField = Extract<FilterField, { type: 'select' }>;
 type TextFilterField = Extract<FilterField, { type: 'text' }>;
 
 const createBaseFieldSx = (mobileOrder: number): SxProps<Theme> => ({
-  order: responsive<number | string>({ mobile: mobileOrder, tablet: 'unset' }),
+  order: responsive<number | string>({ xs: mobileOrder, md: 'unset' }),
 });
 
 const renderTextField = ({
@@ -56,7 +56,7 @@ const renderTextField = ({
     spacing={spacingScale.xxs}
     sx={{
       ...createBaseFieldSx(mobileOrder),
-      gridColumn: responsive({ mobile: 'auto', tablet: 'span 2' }),
+      gridColumn: responsive({ xs: 'auto', md: 'span 2' }),
     }}
   >
     <Typography variant="body2">{field.label}</Typography>
@@ -102,9 +102,11 @@ const renderSelectField = ({
       helperText={field.helperText}
       slotProps={{ select: { displayEmpty: true } }}
     >
-      <MenuItem value="">{field.placeholder ?? sharedComponentsI18n.filters.selectPlaceholder}</MenuItem>
+      <MenuItem value="">
+        {field.placeholder ?? sharedComponentsI18n.filters.selectPlaceholder}
+      </MenuItem>
       {field.options
-        .filter((option) => option.value.length > 0)
+        .filter((option) => String(option.value).length > 0)
         .map((option) => (
           <MenuItem key={option.value} value={option.value}>
             {option.label}
@@ -152,7 +154,7 @@ const renderFilterField = ({
       spacing={spacingScale.xxs}
       sx={{
         ...createBaseFieldSx(mobileOrder),
-        gridColumn: responsive({ mobile: 'auto', tablet: 'span 2' }),
+        gridColumn: responsive({ xs: 'auto', md: 'span 2' }),
         minWidth: 0,
       }}
     >
@@ -215,7 +217,9 @@ const FiltersHeader = ({
   subtitle,
   onToggleExpanded,
 }: FiltersHeaderProps) => {
-  const collapseLabel = expanded ? sharedComponentsI18n.filters.collapseLabel : sharedComponentsI18n.filters.expandLabel;
+  const collapseLabel = expanded
+    ? sharedComponentsI18n.filters.collapseLabel
+    : sharedComponentsI18n.filters.expandLabel;
   const collapseIcon = expanded ? (
     <KeyboardArrowUpIcon sx={{ fontSize: 18 }} />
   ) : (

@@ -19,6 +19,8 @@ interface StepperWizardProps {
   onBack: () => void;
   onCancel?: (() => void) | undefined;
   onNext: () => void;
+  onStepSelect?: ((stepIndex: number) => void) | undefined;
+  isStepSelectable?: ((stepIndex: number) => boolean) | undefined;
   isLastStep: boolean;
   nextLabel?: string | undefined;
   nextDisabled?: boolean | undefined;
@@ -40,6 +42,8 @@ export const StepperWizard = ({
   onBack,
   onCancel,
   onNext,
+  onStepSelect,
+  isStepSelectable,
   isLastStep,
   nextLabel,
   nextDisabled,
@@ -58,10 +62,18 @@ export const StepperWizard = ({
       {steps.map((label, index) => {
         const isActive = activeStep === index;
         const Icon = stepIcons[index % stepIcons.length] ?? PersonOutlineOutlinedIcon;
+        const canSelectStep = isStepSelectable
+          ? isStepSelectable(index)
+          : onStepSelect !== undefined;
 
         return (
           <Stack
             key={label}
+            onClick={() => {
+              if (canSelectStep && onStepSelect) {
+                onStepSelect(index);
+              }
+            }}
             sx={(theme) => ({
               flex: 1,
               alignItems: 'center',
@@ -71,6 +83,7 @@ export const StepperWizard = ({
               borderBottom: '2px solid',
               borderColor: isActive ? 'primary.main' : 'transparent',
               color: isActive ? 'primary.main' : 'text.secondary',
+              cursor: canSelectStep ? 'pointer' : 'default',
               transition: theme.transitions.create(['color', 'border-color'], {
                 duration: theme.transitions.duration.shorter,
               }),

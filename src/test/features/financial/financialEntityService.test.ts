@@ -3,11 +3,11 @@ import {
   accountsPayableService,
   accountsReceivableService,
   financialDashboardService,
-  financialCategoryService,
-  financialCostCenterService,
-  financialReportService,
-  financialTransactionService,
-} from '@features/client/financial/services/financialServices';
+  financialCategoriesService,
+  financialCostCentersService,
+  financialReportsService,
+  financialTransactionsService,
+} from '@features/client/financial/services/service';
 import { httpClient } from '@shared/services/httpClient';
 
 describe('financial entity services', () => {
@@ -30,7 +30,7 @@ describe('financial entity services', () => {
       },
     });
 
-    const response = await financialCategoryService.list({
+    const response = await financialCategoriesService.list({
       page: 1,
       limit: 10,
       type: 'revenue',
@@ -47,7 +47,7 @@ describe('financial entity services', () => {
       data: { id: 'cost-center-1', name: 'Administrativo', status: 'active' },
     });
 
-    const response = await financialCostCenterService.getById('cost-center-1');
+    const response = await financialCostCentersService.getById('cost-center-1');
 
     expect(getSpy).toHaveBeenCalledWith('/api/financial/cost-centers/cost-center-1');
     expect(response.name).toBe('Administrativo');
@@ -68,7 +68,7 @@ describe('financial entity services', () => {
       },
     });
 
-    const response = await financialTransactionService.list({
+    const response = await financialTransactionsService.list({
       page: 1,
       limit: 10,
       type: 'income',
@@ -85,7 +85,7 @@ describe('financial entity services', () => {
       data: { id: 'transaction-1', description: 'Mensalidade', type: 'income' },
     });
 
-    const response = await financialTransactionService.getById('transaction-1');
+    const response = await financialTransactionsService.getById('transaction-1');
 
     expect(getSpy).toHaveBeenCalledWith('/api/financial/transactions/transaction-1');
     expect(response.description).toBe('Mensalidade');
@@ -118,7 +118,7 @@ describe('financial entity services', () => {
       data: { id: 'payable-1', description: 'Fornecedor', status: 'paid' },
     });
 
-    const response = await accountsPayableService.pay('payable-1', {});
+    const response = await accountsPayableService.settle('payable-1', {});
 
     expect(postSpy).toHaveBeenCalledWith('/api/financial/accounts-payable/payable-1/pay', {});
     expect(response.status).toBe('paid');
@@ -129,7 +129,7 @@ describe('financial entity services', () => {
       data: { id: 'receivable-1', description: 'Mensalidade', status: 'received' },
     });
 
-    const response = await accountsReceivableService.receive('receivable-1', {});
+    const response = await accountsReceivableService.settle('receivable-1', {});
 
     expect(postSpy).toHaveBeenCalledWith(
       '/api/financial/accounts-receivable/receivable-1/receive',
@@ -156,7 +156,7 @@ describe('financial entity services', () => {
       data: { total: 1 },
     });
 
-    const response = await financialReportService.getCashFlow({ page: 1, limit: 10 });
+    const response = await financialReportsService.getCashFlow({ page: 1, limit: 10 });
 
     expect(getSpy).toHaveBeenCalledWith('/api/financial/reports/cash-flow', {
       params: { page: 1, limit: 10 },

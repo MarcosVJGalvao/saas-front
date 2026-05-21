@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import type { PaginationMeta } from '@shared/types/pagination';
 import type { ClientCrudService } from '@features/client/shared/types/clientApi.types';
 import type {
@@ -31,17 +31,22 @@ export const useFinancialEntitiesList = (
   service: FinancialEntitiesListService,
   errorMessageFallback: string,
 ) => {
+  const serviceRef = useRef(service);
   const [rows, setRows] = useState<FinancialEntity[]>([]);
   const [meta, setMeta] = useState<PaginationMeta>(initialMeta);
   const [query, setQuery] = useState<FinancialEntityQueryParams>({ page: 1, limit: 10 });
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | undefined>(undefined);
 
+  useEffect(() => {
+    serviceRef.current = service;
+  }, [service]);
+
   const load = useCallback(async () => {
     setLoading(true);
     setErrorMessage(undefined);
     try {
-      const response = await service.list(query);
+      const response = await serviceRef.current.list(query);
       setRows(response.data);
       setMeta(response.meta);
     } catch {
@@ -49,7 +54,7 @@ export const useFinancialEntitiesList = (
     } finally {
       setLoading(false);
     }
-  }, [errorMessageFallback, query, service]);
+  }, [errorMessageFallback, query]);
 
   useEffect(() => {
     const timeoutId = window.setTimeout(() => {

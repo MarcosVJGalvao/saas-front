@@ -5,6 +5,7 @@ import {
   errorMessageTranslations,
   GENERIC_ERROR_MESSAGE,
 } from '@shared/i18n/pt-BR/errors';
+import { connectivityMessages } from '@shared/i18n/pt-BR/messages';
 
 interface ApiErrorPayload {
   errorCode?: string;
@@ -25,7 +26,9 @@ export class ErrorHandler {
     if (error instanceof Error) {
       const severity = ErrorSeverity.MEDIUM;
       const displayMode = ErrorDisplayMode.SNACKBAR;
-      return { message: error.message, severity, displayMode };
+      const message =
+        error.message.length > 0 ? error.message : connectivityMessages.networkRequestFailed;
+      return { message, severity, displayMode };
     }
 
     return {

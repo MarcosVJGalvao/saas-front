@@ -16,6 +16,7 @@ import WbSunnyOutlinedIcon from '@mui/icons-material/WbSunnyOutlined';
 import { DENSITY_MODE, type DensityMode } from '@shared/types/density';
 import type { ThemeMode } from '@shared/types/themeMode';
 import { getUiColorTokens } from '@theme/uiColors';
+import { responsive } from '@theme/utils/responsive';
 import { appLayoutMessages } from '@app/layout/admin-navigation/messages';
 
 interface ProfileMenuProps {
@@ -58,8 +59,7 @@ export const ProfileMenu = ({
       slotProps={{
         paper: {
           sx: {
-            width: 300,
-            maxWidth: '94vw',
+            width: responsive({ xs: 'calc(100vw - 32px)', sm: '300px' }),
             borderRadius: 2.5,
             p: 1.75,
             mt: 0.75,

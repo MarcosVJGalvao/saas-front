@@ -5,29 +5,6 @@ type EmployeeDocumentType = EmployeePerson['documentType'];
 type EmployeeGender = NonNullable<EmployeePerson['gender']>;
 type EmployeeMaritalStatus = NonNullable<EmployeePerson['maritalStatus']>;
 
-export const onboardingDocumentTypeOptions: EmployeeDocumentType[] = [
-  'CPF',
-  'CNPJ',
-  'RG',
-  'PASSPORT',
-  'OTHER',
-];
-
-export const onboardingGenderOptions: EmployeeGender[] = [
-  'male',
-  'female',
-  'other',
-  'prefer_not_to_say',
-];
-
-export const onboardingMaritalStatusOptions: EmployeeMaritalStatus[] = [
-  'single',
-  'married',
-  'divorced',
-  'widowed',
-  'other',
-];
-
 export const toOnboardingDocumentType = (value: string): EmployeeDocumentType | undefined => {
   switch (value) {
     case 'CPF':

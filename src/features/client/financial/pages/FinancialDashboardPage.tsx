@@ -7,12 +7,52 @@ import { EmptyState } from '@shared/components/feedback/EmptyState';
 import { AppStack } from '@shared/components/layout/AppStack';
 import { PageHeader } from '@shared/components/layout/PageHeader';
 import { layoutSpacing } from '@theme/spacing';
-import { useFinancialDashboardPageViewModel } from '@features/client/financial/hooks/useFinancialDashboardPageViewModel';
+import AccountBalanceWalletOutlinedIcon from '@mui/icons-material/AccountBalanceWalletOutlined';
+import TrendingDownOutlinedIcon from '@mui/icons-material/TrendingDownOutlined';
+import TrendingUpOutlinedIcon from '@mui/icons-material/TrendingUpOutlined';
+import WarningAmberOutlinedIcon from '@mui/icons-material/WarningAmberOutlined';
+import { formatCurrency } from '@shared/formatters/currencyFormatter';
+import { useFinancialDashboardPage } from '@features/client/financial/hooks/useFinancialDashboardPage';
 
 const FinancialDashboardPage = () => {
-  const model = useFinancialDashboardPageViewModel();
+  const financialDashboardPage = useFinancialDashboardPage();
 
-  if (model.loading) {
+  const cards = [
+    {
+      key: 'receivable',
+      title: 'Total a receber',
+      value: formatCurrency(financialDashboardPage.summary?.totalReceivable ?? 0, 'BRL'),
+      delta: `${financialDashboardPage.summary?.openReceivables ?? 0} registros em aberto`,
+      icon: <TrendingUpOutlinedIcon fontSize="small" color="success" />,
+      color: 'success.main',
+    },
+    {
+      key: 'payable',
+      title: 'Total a pagar',
+      value: formatCurrency(financialDashboardPage.summary?.totalPayable ?? 0, 'BRL'),
+      delta: `${financialDashboardPage.summary?.openPayables ?? 0} obrigações em aberto`,
+      icon: <TrendingDownOutlinedIcon fontSize="small" color="warning" />,
+      color: 'warning.main',
+    },
+    {
+      key: 'received',
+      title: 'Recebido',
+      value: formatCurrency(financialDashboardPage.summary?.totalReceived ?? 0, 'BRL'),
+      delta: 'Baixas confirmadas',
+      icon: <AccountBalanceWalletOutlinedIcon fontSize="small" color="success" />,
+      color: 'success.main',
+    },
+    {
+      key: 'overdue',
+      title: 'Em atraso',
+      value: formatCurrency(financialDashboardPage.summary?.overdueAmount ?? 0, 'BRL'),
+      delta: 'Pendências financeiras',
+      icon: <WarningAmberOutlinedIcon fontSize="small" color="error" />,
+      color: 'error.main',
+    },
+  ];
+
+  if (financialDashboardPage.loading) {
     return (
       <AppStack spacing={2}>
         <PageHeader
@@ -24,7 +64,7 @@ const FinancialDashboardPage = () => {
     );
   }
 
-  if (model.errorMessage) {
+  if (financialDashboardPage.errorMessage) {
     return (
       <AppStack spacing={2}>
         <PageHeader
@@ -32,16 +72,16 @@ const FinancialDashboardPage = () => {
           subtitle="Acompanhe indicadores financeiros da escola."
         />
         <AppErrorState
-          message={model.errorMessage}
+          message={financialDashboardPage.errorMessage}
           onRetry={() => {
-            void model.reload();
+            void financialDashboardPage.reload();
           }}
         />
       </AppStack>
     );
   }
 
-  if (model.empty) {
+  if (financialDashboardPage.empty) {
     return (
       <AppStack spacing={2}>
         <PageHeader
@@ -62,7 +102,7 @@ const FinancialDashboardPage = () => {
         title="Dashboard financeiro"
         subtitle="Acompanhe indicadores, recortes e pendências financeiras da escola."
       />
-      <EntitySummaryCards cards={model.cards} />
+      <EntitySummaryCards cards={cards} />
       <AppPaper sx={{ p: layoutSpacing.cardPadding, borderRadius: 2 }}>
         <AppStack spacing={1}>
           <AppText variant="h6">Próximos recortes</AppText>

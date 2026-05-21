@@ -7,10 +7,11 @@ import { ListFilters } from '@shared/components/data-display/data/ListFilters';
 import { PageHeader } from '@shared/components/layout/PageHeader';
 import { QueryDataTable } from '@shared/components/data-display/data/QueryDataTable';
 import { layoutSpacing } from '@theme/spacing';
-import { useTeacherSubjectsListPageViewModel } from '@features/client/academic/hooks/useTeacherSubjectsListPageViewModel';
+import { activeInactiveStatusOptions } from '@shared/constants/selectOptions';
+import { useTeacherSubjectsListPage } from '@features/client/academic/hooks/useTeacherSubjectsListPage';
 
 const TeacherSubjectsPage = () => {
-  const model = useTeacherSubjectsListPageViewModel();
+  const teacherSubjectsPage = useTeacherSubjectsListPage();
 
   return (
     <AppStack spacing={2}>
@@ -18,11 +19,14 @@ const TeacherSubjectsPage = () => {
         title="Professor-disciplina"
         subtitle="Controle vínculos entre professores e disciplinas."
       />
-      {model.actionErrorMessage ? (
-        <AppAlert severity="error">{model.actionErrorMessage}</AppAlert>
+      {teacherSubjectsPage.actionErrorMessage ? (
+        <AppAlert severity="error">{teacherSubjectsPage.actionErrorMessage}</AppAlert>
       ) : null}
-      {model.actionSuccessMessage ? (
-        <AppAlert severity="success">{model.actionSuccessMessage}</AppAlert>
+      {teacherSubjectsPage.actionSuccessMessage ? (
+        <AppAlert severity="success">{teacherSubjectsPage.actionSuccessMessage}</AppAlert>
+      ) : null}
+      {teacherSubjectsPage.referenceOptions.errorMessage ? (
+        <AppAlert severity="error">{teacherSubjectsPage.referenceOptions.errorMessage}</AppAlert>
       ) : null}
       <AppPaper sx={{ p: layoutSpacing.cardPadding, borderRadius: 2 }}>
         <AppStack spacing={2}>
@@ -30,30 +34,34 @@ const TeacherSubjectsPage = () => {
           <ListFilters
             fields={[
               {
-                type: 'text',
+                type: 'select',
                 name: 'teacherId',
                 label: 'Professor',
-                placeholder: 'ID do professor',
+                placeholder: 'Selecione o professor',
+                options: teacherSubjectsPage.referenceOptions.teacherOptions,
                 mobileOrder: 1,
               },
               {
-                type: 'text',
+                type: 'select',
                 name: 'subjectId',
                 label: 'Disciplina',
-                placeholder: 'ID da disciplina',
+                placeholder: 'Selecione a disciplina',
+                options: teacherSubjectsPage.referenceOptions.subjectOptions,
                 mobileOrder: 2,
               },
             ]}
-            values={model.createValues}
-            onChange={model.onCreateChange}
+            values={teacherSubjectsPage.createValues}
+            onChange={teacherSubjectsPage.onCreateChange}
             onApply={() => {
-              void model.createTeacherSubject();
+              void teacherSubjectsPage.createTeacherSubject();
             }}
             onClear={() => {
-              model.onCreateChange('teacherId', '');
-              model.onCreateChange('subjectId', '');
+              teacherSubjectsPage.onCreateChange('teacherId', '');
+              teacherSubjectsPage.onCreateChange('subjectId', '');
             }}
-            loading={model.actionLoading}
+            loading={
+              teacherSubjectsPage.actionLoading || teacherSubjectsPage.referenceOptions.loading
+            }
             applyLabel="Criar vínculo"
           />
         </AppStack>
@@ -61,17 +69,19 @@ const TeacherSubjectsPage = () => {
       <ListFilters
         fields={[
           {
-            type: 'text',
+            type: 'select',
             name: 'teacherId',
             label: 'Professor',
-            placeholder: 'ID do professor',
+            placeholder: 'Todos os professores',
+            options: teacherSubjectsPage.referenceOptions.teacherOptions,
             mobileOrder: 1,
           },
           {
-            type: 'text',
+            type: 'select',
             name: 'subjectId',
             label: 'Disciplina',
-            placeholder: 'ID da disciplina',
+            placeholder: 'Todas as disciplinas',
+            options: teacherSubjectsPage.referenceOptions.subjectOptions,
             mobileOrder: 2,
           },
           {
@@ -79,34 +89,38 @@ const TeacherSubjectsPage = () => {
             name: 'status',
             label: 'Status',
             placeholder: 'Todos os status',
-            options: [
-              { value: '', label: 'Todos os status' },
-              { value: 'active', label: 'Ativo' },
-              { value: 'inactive', label: 'Inativo' },
-            ],
+            options: activeInactiveStatusOptions,
             mobileOrder: 3,
           },
         ]}
-        values={model.filterValues}
-        onChange={model.onFilterChange}
-        onApply={model.applyFilters}
-        onClear={model.clearFilters}
-        loading={model.list.loading || model.actionLoading}
+        values={teacherSubjectsPage.filterValues}
+        onChange={teacherSubjectsPage.onFilterChange}
+        onApply={teacherSubjectsPage.applyFilters}
+        onClear={teacherSubjectsPage.clearFilters}
+        loading={
+          teacherSubjectsPage.teacherSubjectsList.loading ||
+          teacherSubjectsPage.actionLoading ||
+          teacherSubjectsPage.referenceOptions.loading
+        }
       />
       <QueryDataTable
-        rows={model.list.rows}
-        columns={model.columns}
-        mobileConfig={model.mobileConfig}
-        meta={model.list.meta}
-        loading={model.list.loading}
-        errorMessage={model.list.errorMessage}
+        rows={teacherSubjectsPage.teacherSubjectsList.rows}
+        columns={teacherSubjectsPage.tableColumns}
+        mobileConfig={teacherSubjectsPage.mobileConfig}
+        meta={teacherSubjectsPage.teacherSubjectsList.meta}
+        loading={teacherSubjectsPage.teacherSubjectsList.loading}
+        errorMessage={teacherSubjectsPage.teacherSubjectsList.errorMessage}
         onRetry={() => {
-          void model.list.reload();
+          void teacherSubjectsPage.teacherSubjectsList.reload();
         }}
-        query={model.query}
-        onQueryChange={model.onQueryChange}
-        onPageChange={model.onPageChange}
-        onRowsPerPageChange={model.onLimitChange}
+        query={teacherSubjectsPage.teacherSubjectsList.query.search ?? ''}
+        onQueryChange={(search) =>
+          teacherSubjectsPage.teacherSubjectsList.updateQuery({ search, page: 1 })
+        }
+        onPageChange={(page) => teacherSubjectsPage.teacherSubjectsList.updateQuery({ page })}
+        onRowsPerPageChange={(limit) =>
+          teacherSubjectsPage.teacherSubjectsList.updateQuery({ limit, page: 1 })
+        }
         emptyTitle="Nenhum vínculo encontrado"
         emptyDescription="Vínculos entre professores e disciplinas aparecerão aqui."
         toolbarContent={
@@ -117,13 +131,13 @@ const TeacherSubjectsPage = () => {
         hideToolbar
       />
       <ConfirmDialog
-        open={model.deleteDialogOpen}
-        title={model.deleteDialogTitle}
-        description={model.deleteDialogDescription}
-        confirmLabel={model.deleteConfirmLabel}
-        onCancel={model.closeDeleteDialog}
+        open={teacherSubjectsPage.deleteDialog.open}
+        title={teacherSubjectsPage.deleteDialog.title}
+        description={teacherSubjectsPage.deleteDialog.description}
+        confirmLabel={teacherSubjectsPage.deleteDialog.confirmLabel}
+        onCancel={teacherSubjectsPage.deleteDialog.close}
         onConfirm={() => {
-          void model.confirmDelete();
+          void teacherSubjectsPage.deleteDialog.confirm();
         }}
       />
     </AppStack>

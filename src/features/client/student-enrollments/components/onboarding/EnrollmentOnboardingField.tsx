@@ -1,4 +1,6 @@
 import type { HTMLInputTypeAttribute, ReactNode } from 'react';
+import { AppMenuItem } from '@shared/components/inputs/AppMenuItem';
+import type { AppSelectOption } from '@shared/components/inputs/AppSelect';
 import { AppGrid } from '@shared/components/layout/AppGrid';
 import { AppTextField } from '@shared/components/inputs/AppTextField';
 
@@ -17,6 +19,7 @@ type EnrollmentOnboardingFieldProps = {
   type?: HTMLInputTypeAttribute | undefined;
   select?: boolean | undefined;
   multiline?: boolean | undefined;
+  options?: AppSelectOption[] | undefined;
   children?: ReactNode | undefined;
 };
 
@@ -30,6 +33,7 @@ export const EnrollmentOnboardingField = ({
   type,
   select = false,
   multiline = false,
+  options,
   children,
 }: EnrollmentOnboardingFieldProps) => (
   <AppGrid size={gridSize ?? { xs: 12, md: 6 }}>
@@ -46,7 +50,11 @@ export const EnrollmentOnboardingField = ({
       minRows={multiline ? 3 : undefined}
       onChange={(event) => onChange(event.target.value)}
     >
-      {children}
+      {options?.map((option) => (
+        <AppMenuItem key={option.value} value={option.value}>
+          {option.label}
+        </AppMenuItem>
+      )) ?? children}
     </AppTextField>
   </AppGrid>
 );

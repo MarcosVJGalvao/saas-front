@@ -4,7 +4,7 @@ export type FilterField =
       name: string;
       label: string;
       placeholder?: string;
-      options: Array<{ label: string; value: string }>;
+      options: Array<{ label: string; value: string | number }>;
       disabled?: boolean;
       error?: boolean;
       helperText?: string;

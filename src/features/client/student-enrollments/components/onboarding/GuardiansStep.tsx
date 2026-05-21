@@ -1,15 +1,18 @@
 import FamilyRestroomOutlinedIcon from '@mui/icons-material/FamilyRestroomOutlined';
-import { AppGrid } from '@shared/components/layout/AppGrid';
-import { AppMenuItem } from '@shared/components/inputs/AppMenuItem';
-import { AppStack } from '@shared/components/layout/AppStack';
 import { AppText } from '@shared/components/data-display/AppText';
+import { AppGrid } from '@shared/components/layout/AppGrid';
+import { AppStack } from '@shared/components/layout/AppStack';
+import {
+  documentTypeOptions,
+  guardianRelationshipTypeOptions,
+} from '@shared/constants/selectOptions';
+import { maskCnpj, maskCpf, maskPhone } from '@shared/masks/inputMasks';
 import { EnrollmentOnboardingField } from '@features/client/student-enrollments/components/onboarding/EnrollmentOnboardingField';
-import type { StudentEnrollmentStepProps } from '@features/client/student-enrollments/components/onboarding/studentEnrollmentOnboarding.types';
 import {
   toEnrollmentDocumentType,
   toGuardianRelationshipType,
 } from '@features/client/student-enrollments/normalizers/studentEnrollmentFieldNormalizers';
-import { maskCnpj, maskCpf, maskPhone } from '@shared/masks/inputMasks';
+import type { StudentEnrollmentStepProps } from '@features/client/student-enrollments/types/studentEnrollmentOnboarding.types';
 
 export const GuardiansStep = ({ value, uiExtras, actions }: StudentEnrollmentStepProps) => {
   const guardian = value.student?.legalGuardians[0];
@@ -33,15 +36,12 @@ export const GuardiansStep = ({ value, uiExtras, actions }: StudentEnrollmentSte
           value={guardian?.relationshipType ?? 'mother'}
           onChange={(nextValue) => {
             const relationshipType = toGuardianRelationshipType(nextValue);
-            if (relationshipType) actions.updateGuardianRelationshipType(relationshipType);
+            if (relationshipType) {
+              actions.updateGuardianRelationshipType(relationshipType);
+            }
           }}
-        >
-          <AppMenuItem value="mother">Mãe</AppMenuItem>
-          <AppMenuItem value="father">Pai</AppMenuItem>
-          <AppMenuItem value="legal_guardian">Responsável legal</AppMenuItem>
-          <AppMenuItem value="grandparent">Avô/avó</AppMenuItem>
-          <AppMenuItem value="other">Outro</AppMenuItem>
-        </EnrollmentOnboardingField>
+          options={guardianRelationshipTypeOptions}
+        />
         <EnrollmentOnboardingField
           label="Nome completo"
           value={person?.fullName ?? ''}
@@ -53,15 +53,12 @@ export const GuardiansStep = ({ value, uiExtras, actions }: StudentEnrollmentSte
           value={documentType}
           onChange={(nextValue) => {
             const nextDocumentType = toEnrollmentDocumentType(nextValue);
-            if (nextDocumentType) actions.updateGuardianDocumentType(nextDocumentType);
+            if (nextDocumentType) {
+              actions.updateGuardianDocumentType(nextDocumentType);
+            }
           }}
-        >
-          <AppMenuItem value="CPF">CPF</AppMenuItem>
-          <AppMenuItem value="CNPJ">CNPJ</AppMenuItem>
-          <AppMenuItem value="RG">RG</AppMenuItem>
-          <AppMenuItem value="PASSPORT">Passaporte</AppMenuItem>
-          <AppMenuItem value="OTHER">Outro</AppMenuItem>
-        </EnrollmentOnboardingField>
+          options={documentTypeOptions}
+        />
         <EnrollmentOnboardingField
           label="Documento"
           value={documentType === 'CPF' ? maskCpf(documentNumber) : maskCnpj(documentNumber)}

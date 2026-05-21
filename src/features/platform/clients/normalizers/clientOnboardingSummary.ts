@@ -1,5 +1,5 @@
 import type { CreateClientOnboardingRequest } from '@features/platform/clients/types/clients';
-import type { OnboardingSummaryData } from '@features/platform/clients/types/clientOnboarding';
+import type { ClientOnboardingSummaryData } from '@features/platform/clients/types/clientOnboarding';
 import { maskCnpj, maskCpf, maskPhone } from '@shared/masks/inputMasks';
 
 const buildSummaryLine = (label: string, fieldValue: string): string =>
@@ -7,7 +7,7 @@ const buildSummaryLine = (label: string, fieldValue: string): string =>
 
 export const buildClientOnboardingSummary = (
   value: CreateClientOnboardingRequest,
-): OnboardingSummaryData => ({
+): ClientOnboardingSummaryData => ({
   client: [
     buildSummaryLine('Nome', value.tradeName),
     buildSummaryLine(

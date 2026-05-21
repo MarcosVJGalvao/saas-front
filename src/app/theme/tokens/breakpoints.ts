@@ -1,23 +1,16 @@
-export type ResponsiveTier = 'mobile' | 'tablet' | 'desktop';
-
-export const breakpointValues = {
-  mobile: 0,
-  tablet: 900,
-  desktop: 1200,
-};
+declare module '@mui/material/styles' {
+  interface BreakpointOverrides {
+    xxl: true;
+  }
+}
 
 export const breakpoints = {
   values: {
-    xs: breakpointValues.mobile,
-    sm: 600,
-    md: breakpointValues.tablet,
-    lg: breakpointValues.desktop,
-    xl: 1536,
+    xs: 0,
+    sm: 480,
+    md: 768,
+    lg: 1024,
+    xl: 1280,
+    xxl: 1536,
   },
-};
-
-export const screenByDevice: Record<ResponsiveTier, string> = {
-  mobile: 'xs',
-  tablet: 'md',
-  desktop: 'lg',
 };

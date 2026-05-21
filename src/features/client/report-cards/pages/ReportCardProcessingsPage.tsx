@@ -6,10 +6,10 @@ import { AppAlert } from '@shared/components/feedback/AppAlert';
 import { AppStack } from '@shared/components/layout/AppStack';
 import { PageHeader } from '@shared/components/layout/PageHeader';
 import { layoutSpacing } from '@theme/spacing';
-import { useReportCardProcessingsPageViewModel } from '@features/client/report-cards/hooks/useReportCardProcessingsPageViewModel';
+import { useReportCardProcessingsPage } from '@features/client/report-cards/hooks/useReportCardProcessingsPage';
 
 const ReportCardProcessingsPage = () => {
-  const model = useReportCardProcessingsPageViewModel();
+  const model = useReportCardProcessingsPage();
   const isLoading = model.loadingAction !== undefined;
 
   return (
@@ -20,6 +20,9 @@ const ReportCardProcessingsPage = () => {
       />
       {model.errorMessage ? <AppAlert severity="error">{model.errorMessage}</AppAlert> : null}
       {model.successMessage ? <AppAlert severity="success">{model.successMessage}</AppAlert> : null}
+      {model.referenceOptions.errorMessage ? (
+        <AppAlert severity="error">{model.referenceOptions.errorMessage}</AppAlert>
+      ) : null}
       <AppPaper sx={{ p: layoutSpacing.cardPadding, borderRadius: 2 }}>
         <AppStack spacing={2}>
           <AppText variant="h6">Consulta e reenvio</AppText>
@@ -33,10 +36,11 @@ const ReportCardProcessingsPage = () => {
                 mobileOrder: 1,
               },
               {
-                type: 'text',
+                type: 'select',
                 name: 'studentEnrollmentId',
                 label: 'Matrícula',
-                placeholder: 'ID da matrícula para reenvio individual',
+                placeholder: 'Selecione a matrícula',
+                options: model.referenceOptions.studentEnrollmentOptions,
                 mobileOrder: 2,
               },
             ]}
@@ -46,7 +50,7 @@ const ReportCardProcessingsPage = () => {
               void model.loadProcessing();
             }}
             onClear={model.clear}
-            loading={isLoading}
+            loading={isLoading || model.referenceOptions.loading}
             applyLabel="Consultar"
           />
           <ActionButtons
@@ -84,17 +88,19 @@ const ReportCardProcessingsPage = () => {
           <ListFilters
             fields={[
               {
-                type: 'text',
+                type: 'select',
                 name: 'schoolClassId',
                 label: 'Turma',
-                placeholder: 'ID da turma',
+                placeholder: 'Selecione a turma',
+                options: model.referenceOptions.schoolClassOptions,
                 mobileOrder: 1,
               },
               {
-                type: 'text',
+                type: 'select',
                 name: 'academicPeriodId',
                 label: 'Período',
-                placeholder: 'ID do período',
+                placeholder: 'Selecione o período',
+                options: model.referenceOptions.academicPeriodOptions,
                 mobileOrder: 2,
               },
             ]}
@@ -104,7 +110,7 @@ const ReportCardProcessingsPage = () => {
               void model.finalizePeriod();
             }}
             onClear={model.clear}
-            loading={isLoading}
+            loading={isLoading || model.referenceOptions.loading}
             applyLabel="Finalizar período"
           />
           <ActionButtons

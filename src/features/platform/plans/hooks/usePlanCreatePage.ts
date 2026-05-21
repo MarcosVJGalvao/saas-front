@@ -1,10 +1,12 @@
-import { useCallback, useMemo, useState } from 'react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import type { CreatePlanRequest } from '@features/platform/plans/types/plans';
-import { usePlansMutations } from '@features/platform/plans/hooks/usePlansMutations';
-import { normalizePlanPayload } from '@features/platform/plans/normalizers/planPayloadNormalizer';
+import { useAppForm } from '@shared/hooks/useAppForm';
+import { toPlanCreatePayload } from '@features/platform/plans/normalizers/planForm.normalizer';
+import { planCreateFormSchema } from '@features/platform/plans/schemas/planCreateForm.schema';
+import type { PlanCreateFormValues } from '@features/platform/plans/schemas/planCreateForm.schema';
+import { plansService } from '@features/platform/plans/services/service';
 
-const initialValue: CreatePlanRequest = {
+const initialFormValues: PlanCreateFormValues = {
   name: '',
   description: '',
   price: '',
@@ -16,19 +18,30 @@ const initialValue: CreatePlanRequest = {
 
 export const usePlanCreatePage = () => {
   const navigate = useNavigate();
-  const mutations = usePlansMutations();
-  const [defaultValues] = useState<CreatePlanRequest>(initialValue);
-  const handleSubmit = useCallback(
-    async (payload: CreatePlanRequest) => {
-      const created = await mutations.create(normalizePlanPayload(payload));
-      if (created) {
-        void navigate(`/platform/plans/${created.id}`);
-      }
+  const form = useAppForm<PlanCreateFormValues>(planCreateFormSchema, initialFormValues);
+  const [submitting, setSubmitting] = useState(false);
+  const [errorMessage, setErrorMessage] = useState<string | undefined>();
+
+  const handleSubmit = async (values: PlanCreateFormValues): Promise<void> => {
+    setSubmitting(true);
+    setErrorMessage(undefined);
+    try {
+      const createdPlan = await plansService.create(toPlanCreatePayload(values));
+      void navigate(`/platform/plans/${createdPlan.id}`);
+    } catch {
+      setErrorMessage('Não foi possível cadastrar o plano.');
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
+  return {
+    form,
+    submitting,
+    errorMessage,
+    onSubmit: handleSubmit,
+    onBack: () => {
+      void navigate('/platform/plans');
     },
-    [mutations, navigate],
-  );
-  return useMemo(
-    () => ({ defaultValues, loading: mutations.loading, handleSubmit }),
-    [defaultValues, mutations.loading, handleSubmit],
-  );
+  };
 };

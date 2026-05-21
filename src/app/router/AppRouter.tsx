@@ -3,6 +3,7 @@ import Box from '@mui/material/Box';
 import CircularProgress from '@mui/material/CircularProgress';
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
 import { DomainProtectedRoute } from '@app/guards/DomainProtectedRoute';
+import { PwaFeedbackBridge } from '@app/pwa/components/PwaFeedbackBridge';
 import { SessionExpiredDialog } from '@shared/components/feedback/SessionExpiredDialog';
 import { AppLayout } from '@app/layout/admin-navigation/AppLayout';
 import { AUTH_DOMAIN } from '@shared/types/auth/auth';
@@ -104,38 +105,13 @@ const StudentsPage = lazy(() => import('@features/client/students/pages/Students
 const StudentCreatePage = lazy(() => import('@features/client/students/pages/StudentCreatePage'));
 const StudentDetailsPage = lazy(() => import('@features/client/students/pages/StudentDetailsPage'));
 const StudentEditPage = lazy(() => import('@features/client/students/pages/StudentEditPage'));
-const LegalGuardiansPage = lazy(() => import('@features/client/students/pages/LegalGuardiansPage'));
-const LegalGuardianCreatePage = lazy(
-  () => import('@features/client/students/pages/LegalGuardianCreatePage'),
-);
-const LegalGuardianDetailsPage = lazy(
-  () => import('@features/client/students/pages/LegalGuardianDetailsPage'),
-);
-const LegalGuardianEditPage = lazy(
-  () => import('@features/client/students/pages/LegalGuardianEditPage'),
-);
-const PeoplePage = lazy(() => import('@features/client/people/pages/PeoplePage'));
-const PersonFormPage = lazy(() => import('@features/client/people/pages/PersonFormPage'));
-const PersonDetailsPage = lazy(() => import('@features/client/people/pages/PersonDetailsPage'));
-const ContactsPage = lazy(() => import('@features/client/contacts/pages/ContactsPage'));
-const ContactFormPage = lazy(() => import('@features/client/contacts/pages/ContactFormPage'));
-const ContactDetailsPage = lazy(() => import('@features/client/contacts/pages/ContactDetailsPage'));
-const AddressesPage = lazy(() => import('@features/client/addresses/pages/AddressesPage'));
-const AddressFormPage = lazy(() => import('@features/client/addresses/pages/AddressFormPage'));
-const AddressDetailsPage = lazy(
-  () => import('@features/client/addresses/pages/AddressDetailsPage'),
-);
 const EmployeesPage = lazy(() => import('@features/client/employees/pages/EmployeesPage'));
-const EmployeeFormPage = lazy(() => import('@features/client/employees/pages/EmployeeFormPage'));
+const EmployeeCreatePage = lazy(
+  () => import('@features/client/employees/pages/EmployeeCreatePage'),
+);
+const EmployeeEditPage = lazy(() => import('@features/client/employees/pages/EmployeeEditPage'));
 const EmployeeDetailsPage = lazy(
   () => import('@features/client/employees/pages/EmployeeDetailsPage'),
-);
-const MedicalInfoPage = lazy(() => import('@features/client/medical-info/pages/MedicalInfoPage'));
-const MedicalInfoFormPage = lazy(
-  () => import('@features/client/medical-info/pages/MedicalInfoFormPage'),
-);
-const MedicalInfoDetailsPage = lazy(
-  () => import('@features/client/medical-info/pages/MedicalInfoDetailsPage'),
 );
 const AttendanceSchedulesPage = lazy(
   () => import('@features/client/attendance/pages/AttendanceSchedulesPage'),
@@ -152,9 +128,6 @@ const AttendanceSummariesPage = lazy(
 const DocumentsPage = lazy(() => import('@features/client/documents/pages/DocumentsPage'));
 const DocumentDetailsPage = lazy(
   () => import('@features/client/documents/pages/DocumentDetailsPage'),
-);
-const PersonDocumentsPage = lazy(
-  () => import('@features/client/person-documents/pages/PersonDocumentsPage'),
 );
 const FinancialDashboardPage = lazy(
   () => import('@features/client/financial/pages/FinancialDashboardPage'),
@@ -219,11 +192,17 @@ const FinancialReportsPage = lazy(
 const ReportCardAcademicPeriodsPage = lazy(
   () => import('@features/client/report-cards/pages/ReportCardAcademicPeriodsPage'),
 );
+const ReportCardAcademicPeriodCreatePage = lazy(
+  () => import('@features/client/report-cards/pages/ReportCardAcademicPeriodCreatePage'),
+);
 const ReportCardAcademicPeriodDetailsPage = lazy(
   () => import('@features/client/report-cards/pages/ReportCardAcademicPeriodDetailsPage'),
 );
 const ReportCardGradeSubjectsPage = lazy(
   () => import('@features/client/report-cards/pages/ReportCardGradeSubjectsPage'),
+);
+const ReportCardGradeSubjectCreatePage = lazy(
+  () => import('@features/client/report-cards/pages/ReportCardGradeSubjectCreatePage'),
 );
 const ReportCardGradeSubjectDetailsPage = lazy(
   () => import('@features/client/report-cards/pages/ReportCardGradeSubjectDetailsPage'),
@@ -720,134 +699,6 @@ export const AppRouter = () => {
             }
           />
           <Route
-            path="/client/legal-guardians"
-            element={
-              <ProtectedClientRoute>
-                <LegalGuardiansPage />
-              </ProtectedClientRoute>
-            }
-          />
-          <Route
-            path="/client/legal-guardians/new"
-            element={
-              <ProtectedClientRoute>
-                <LegalGuardianCreatePage />
-              </ProtectedClientRoute>
-            }
-          />
-          <Route
-            path="/client/legal-guardians/:id"
-            element={
-              <ProtectedClientRoute>
-                <LegalGuardianDetailsPage />
-              </ProtectedClientRoute>
-            }
-          />
-          <Route
-            path="/client/legal-guardians/:id/edit"
-            element={
-              <ProtectedClientRoute>
-                <LegalGuardianEditPage />
-              </ProtectedClientRoute>
-            }
-          />
-          <Route
-            path="/client/people"
-            element={
-              <ProtectedClientRoute>
-                <PeoplePage />
-              </ProtectedClientRoute>
-            }
-          />
-          <Route
-            path="/client/people/new"
-            element={
-              <ProtectedClientRoute>
-                <PersonFormPage />
-              </ProtectedClientRoute>
-            }
-          />
-          <Route
-            path="/client/people/:id"
-            element={
-              <ProtectedClientRoute>
-                <PersonDetailsPage />
-              </ProtectedClientRoute>
-            }
-          />
-          <Route
-            path="/client/people/:id/edit"
-            element={
-              <ProtectedClientRoute>
-                <PersonFormPage />
-              </ProtectedClientRoute>
-            }
-          />
-          <Route
-            path="/client/contacts"
-            element={
-              <ProtectedClientRoute>
-                <ContactsPage />
-              </ProtectedClientRoute>
-            }
-          />
-          <Route
-            path="/client/contacts/new"
-            element={
-              <ProtectedClientRoute>
-                <ContactFormPage />
-              </ProtectedClientRoute>
-            }
-          />
-          <Route
-            path="/client/contacts/:id"
-            element={
-              <ProtectedClientRoute>
-                <ContactDetailsPage />
-              </ProtectedClientRoute>
-            }
-          />
-          <Route
-            path="/client/contacts/:id/edit"
-            element={
-              <ProtectedClientRoute>
-                <ContactFormPage />
-              </ProtectedClientRoute>
-            }
-          />
-          <Route
-            path="/client/addresses"
-            element={
-              <ProtectedClientRoute>
-                <AddressesPage />
-              </ProtectedClientRoute>
-            }
-          />
-          <Route
-            path="/client/addresses/new"
-            element={
-              <ProtectedClientRoute>
-                <AddressFormPage />
-              </ProtectedClientRoute>
-            }
-          />
-          <Route
-            path="/client/addresses/:id"
-            element={
-              <ProtectedClientRoute>
-                <AddressDetailsPage />
-              </ProtectedClientRoute>
-            }
-          />
-          <Route
-            path="/client/addresses/:id/edit"
-            element={
-              <ProtectedClientRoute>
-                <AddressFormPage />
-              </ProtectedClientRoute>
-            }
-          />
-          <Route
             path="/client/employees"
             element={
               <ProtectedClientRoute>
@@ -859,7 +710,7 @@ export const AppRouter = () => {
             path="/client/employees/new"
             element={
               <ProtectedClientRoute>
-                <EmployeeFormPage />
+                <EmployeeCreatePage />
               </ProtectedClientRoute>
             }
           />
@@ -875,39 +726,7 @@ export const AppRouter = () => {
             path="/client/employees/:id/edit"
             element={
               <ProtectedClientRoute>
-                <EmployeeFormPage />
-              </ProtectedClientRoute>
-            }
-          />
-          <Route
-            path="/client/medical-info"
-            element={
-              <ProtectedClientRoute>
-                <MedicalInfoPage />
-              </ProtectedClientRoute>
-            }
-          />
-          <Route
-            path="/client/medical-info/new"
-            element={
-              <ProtectedClientRoute>
-                <MedicalInfoFormPage />
-              </ProtectedClientRoute>
-            }
-          />
-          <Route
-            path="/client/medical-info/:id"
-            element={
-              <ProtectedClientRoute>
-                <MedicalInfoDetailsPage />
-              </ProtectedClientRoute>
-            }
-          />
-          <Route
-            path="/client/medical-info/:id/edit"
-            element={
-              <ProtectedClientRoute>
-                <MedicalInfoFormPage />
+                <EmployeeEditPage />
               </ProtectedClientRoute>
             }
           />
@@ -956,14 +775,6 @@ export const AppRouter = () => {
             element={
               <ProtectedClientRoute>
                 <DocumentDetailsPage />
-              </ProtectedClientRoute>
-            }
-          />
-          <Route
-            path="/client/person-documents"
-            element={
-              <ProtectedClientRoute>
-                <PersonDocumentsPage />
               </ProtectedClientRoute>
             }
           />
@@ -1136,6 +947,14 @@ export const AppRouter = () => {
             }
           />
           <Route
+            path="/client/report-cards/academic-periods/new"
+            element={
+              <ProtectedClientRoute>
+                <ReportCardAcademicPeriodCreatePage />
+              </ProtectedClientRoute>
+            }
+          />
+          <Route
             path="/client/report-cards/academic-periods/:id"
             element={
               <ProtectedClientRoute>
@@ -1148,6 +967,14 @@ export const AppRouter = () => {
             element={
               <ProtectedClientRoute>
                 <ReportCardGradeSubjectsPage />
+              </ProtectedClientRoute>
+            }
+          />
+          <Route
+            path="/client/report-cards/grade-subjects/new"
+            element={
+              <ProtectedClientRoute>
+                <ReportCardGradeSubjectCreatePage />
               </ProtectedClientRoute>
             }
           />
@@ -1272,6 +1099,7 @@ export const AppRouter = () => {
         open={sessionExpiredModalOpen}
         onClose={handleCloseSessionExpiredModal}
       />
+      <PwaFeedbackBridge />
     </BrowserRouter>
   );
 };

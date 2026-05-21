@@ -9,7 +9,7 @@ import { AppStack } from '@shared/components/layout/AppStack';
 import { AppText } from '@shared/components/data-display/AppText';
 import { alphaColor } from '@theme/utils/alphaColor';
 import { fontSizes } from '@theme/fontSizes';
-import type { StudentEnrollmentSummaryData } from '@features/client/student-enrollments/types/studentEnrollment.types';
+import type { StudentEnrollmentSummaryData } from '@features/client/student-enrollments/types/studentEnrollmentOnboarding.types';
 
 interface StudentEnrollmentSummaryProps {
   summary: StudentEnrollmentSummaryData;

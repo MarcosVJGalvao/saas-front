@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { academicYearService } from '@features/client/academic/services/academicServices';
+import { academicYearService } from '@features/client/academic/services/service';
 import { httpClient } from '@shared/services/httpClient';
 
 describe('academicYearService', () => {

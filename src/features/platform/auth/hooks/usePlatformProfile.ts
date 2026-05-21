@@ -21,6 +21,8 @@ export const PLATFORM_PROFILE_MESSAGES: PlatformProfileMessages = {
   loadError: 'Não foi possível carregar os dados do usuário da plataforma.',
 };
 
+let cachedPlatformProfile: PlatformMeResponse | null = null;
+
 const normalizeStatus = (status: string): string =>
   status.toUpperCase() === 'ACTIVE' ? 'Ativo' : 'Inativo';
 
@@ -32,9 +34,9 @@ const normalizeProfile = (profile: PlatformMeResponse): PlatformMeResponse => ({
 export const usePlatformProfile = ({
   enabled,
 }: UsePlatformProfileParams): UsePlatformProfileState => {
-  const [loading, setLoading] = useState(enabled);
+  const [loading, setLoading] = useState(enabled && cachedPlatformProfile === null);
   const [errorMessage, setErrorMessage] = useState('');
-  const [profile, setProfile] = useState<PlatformMeResponse | null>(null);
+  const [profile, setProfile] = useState<PlatformMeResponse | null>(cachedPlatformProfile);
   const hasRequestedProfileRef = useRef(false);
 
   const fetchProfile = useCallback(async () => {
@@ -50,9 +52,12 @@ export const usePlatformProfile = ({
 
     try {
       const me = await platformAuthService.me();
-      setProfile(normalizeProfile(me));
+      const normalizedProfile = normalizeProfile(me);
+      cachedPlatformProfile = normalizedProfile;
+      setProfile(normalizedProfile);
     } catch {
       setProfile(null);
+      cachedPlatformProfile = null;
       setErrorMessage(PLATFORM_PROFILE_MESSAGES.loadError);
     } finally {
       setLoading(false);

@@ -6,33 +6,38 @@ import { ListFilters } from '@shared/components/data-display/data/ListFilters';
 import { AppStack } from '@shared/components/layout/AppStack';
 import { PageHeader } from '@shared/components/layout/PageHeader';
 import { layoutSpacing } from '@theme/spacing';
-import { useReportCardQueriesPageViewModel } from '@features/client/report-cards/hooks/useReportCardQueriesPageViewModel';
+import { useReportCardQueriesPage } from '@features/client/report-cards/hooks/useReportCardQueriesPage';
 
 const ReportCardQueriesPage = () => {
-  const model = useReportCardQueriesPageViewModel();
+  const model = useReportCardQueriesPage();
 
   return (
     <AppStack spacing={2}>
       <PageHeader title="Consultas de boletim" subtitle="Consulte boletins por aluno ou turma." />
       {model.errorMessage ? <AppAlert severity="error">{model.errorMessage}</AppAlert> : null}
       {model.successMessage ? <AppAlert severity="success">{model.successMessage}</AppAlert> : null}
+      {model.referenceOptions.errorMessage ? (
+        <AppAlert severity="error">{model.referenceOptions.errorMessage}</AppAlert>
+      ) : null}
       <AppPaper sx={{ p: layoutSpacing.cardPadding, borderRadius: 2 }}>
         <AppStack spacing={2}>
           <AppText variant="h6">Filtros de consulta</AppText>
           <ListFilters
             fields={[
               {
-                type: 'text',
+                type: 'select',
                 name: 'studentId',
                 label: 'Aluno',
-                placeholder: 'ID do aluno',
+                placeholder: 'Selecione o aluno',
+                options: model.referenceOptions.studentOptions,
                 mobileOrder: 1,
               },
               {
-                type: 'text',
+                type: 'select',
                 name: 'schoolClassId',
                 label: 'Turma',
-                placeholder: 'ID da turma',
+                placeholder: 'Selecione a turma',
+                options: model.referenceOptions.schoolClassOptions,
                 mobileOrder: 2,
               },
             ]}
@@ -42,7 +47,7 @@ const ReportCardQueriesPage = () => {
               void model.loadByStudent();
             }}
             onClear={model.clear}
-            loading={model.loadingMode !== undefined}
+            loading={model.loadingMode !== undefined || model.referenceOptions.loading}
             applyLabel="Consultar aluno"
           />
           <ActionButtons

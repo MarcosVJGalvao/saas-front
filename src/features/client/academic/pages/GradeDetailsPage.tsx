@@ -1,24 +1,41 @@
-import { AcademicCatalogDetailsPage } from '@features/client/academic/components/AcademicCatalogDetailsPage';
-import { gradeService } from '@features/client/academic/services/academicServices';
+import { useParams } from 'react-router-dom';
+import { EntityDetailsPage } from '@shared/components/data-display/details/EntityDetailsPage';
+import { AppStack } from '@shared/components/layout/AppStack';
+import { PageHeader } from '@shared/components/layout/PageHeader';
+import { gradeCatalogConfig } from '@features/client/academic/constants/academicCatalogPageConfigs';
+import { useAcademicCatalogDetailsPage } from '@features/client/academic/hooks/useAcademicCatalogDetailsPage';
 
-const GradeDetailsPage = () => (
-  <AcademicCatalogDetailsPage
-    service={gradeService}
-    backPath="/client/grades"
-    errorMessageFallback="Erro ao carregar série."
-    content={{
-      pageTitle: 'Detalhes da série',
-      pageSubtitle: 'Consulte os dados da série e o nível de ensino vinculado.',
-      loadingLabel: 'Carregando série...',
-      emptyTitle: 'Série não encontrada',
-      emptyMessage: 'Não encontramos a série solicitada.',
-      errorFallback: 'Erro ao carregar série.',
-      unauthorizedTitle: 'Acesso não autorizado',
-      unauthorizedMessage: 'Faça login novamente para consultar esta série.',
-      forbiddenTitle: 'Acesso negado',
-      forbiddenMessage: 'Você não possui permissão para consultar esta série.',
-    }}
-  />
-);
+const GradeDetailsPage = () => {
+  const { id } = useParams<{ id: string }>();
+  const gradeDetailsPage = useAcademicCatalogDetailsPage({
+    id: id ?? '',
+    service: gradeCatalogConfig.service,
+    backPath: gradeCatalogConfig.routeBase,
+    errorMessageFallback: gradeCatalogConfig.errorMessageFallback,
+  });
+
+  if (!id) {
+    return null;
+  }
+
+  return (
+    <AppStack spacing={2}>
+      <PageHeader
+        title={gradeCatalogConfig.detailsTitle}
+        subtitle={gradeCatalogConfig.detailsSubtitle}
+        actionLabel="Voltar"
+        onAction={gradeDetailsPage.onBack}
+      />
+      <EntityDetailsPage
+        viewState={gradeDetailsPage.viewState}
+        data={gradeDetailsPage.data}
+        errorMessage={gradeDetailsPage.errorMessage}
+        onRetry={() => {
+          void gradeDetailsPage.onRetry();
+        }}
+      />
+    </AppStack>
+  );
+};
 
 export default GradeDetailsPage;

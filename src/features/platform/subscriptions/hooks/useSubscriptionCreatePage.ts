@@ -1,39 +1,60 @@
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import type { Plan } from '@features/platform/plans/types/plans';
-import type { CreateSubscriptionRequest } from '@features/platform/subscriptions/types/subscriptions';
-import { plansService } from '@features/platform/plans/services/service';
-import { useSubscriptionsMutations } from '@features/platform/subscriptions/hooks/useSubscriptionsMutations';
-import { normalizeSubscriptionPayload } from '@features/platform/subscriptions/normalizers/subscriptionPayloadNormalizer';
+import { useAppForm } from '@shared/hooks/useAppForm';
+import { usePlatformSubscriptionReferenceOptions } from '@features/platform/subscriptions/hooks/usePlatformSubscriptionReferenceOptions';
+import { toSubscriptionCreatePayload } from '@features/platform/subscriptions/normalizers/subscriptionForm.normalizer';
+import { subscriptionCreateFormSchema } from '@features/platform/subscriptions/schemas/subscriptionCreateForm.schema';
+import type { SubscriptionCreateFormValues } from '@features/platform/subscriptions/schemas/subscriptionCreateForm.schema';
+import { subscriptionsService } from '@features/platform/subscriptions/services/service';
 
-const initialValue: CreateSubscriptionRequest = {
+const initialFormValues: SubscriptionCreateFormValues = {
   tenantId: '',
   planId: '',
   status: 'active',
+  startDate: '',
+  endDate: '',
+  trialEndsAt: '',
+  renewalDate: '',
   priceAtSubscription: '',
+  blockedReason: '',
 };
 
 export const useSubscriptionCreatePage = () => {
   const navigate = useNavigate();
-  const mutations = useSubscriptionsMutations();
-  const [defaultValues] = useState<CreateSubscriptionRequest>(initialValue);
-  const [plans, setPlans] = useState<Plan[]>([]);
-  useEffect(() => {
-    void plansService
-      .list({ page: 1, limit: 100 })
-      .then((response) => setPlans(response.data.filter((plan) => plan.isActive)));
-  }, []);
-  const handleSubmit = useCallback(
-    async (payload: CreateSubscriptionRequest) => {
-      const created = await mutations.create(normalizeSubscriptionPayload(payload));
-      if (created) {
-        void navigate(`/platform/subscriptions/${created.id}?tenantId=${created.tenantId}`);
-      }
+  const referenceOptions = usePlatformSubscriptionReferenceOptions();
+  const form = useAppForm<SubscriptionCreateFormValues>(
+    subscriptionCreateFormSchema,
+    initialFormValues,
+  );
+  const [submitting, setSubmitting] = useState(false);
+  const [errorMessage, setErrorMessage] = useState<string | undefined>();
+
+  const handleSubmit = async (values: SubscriptionCreateFormValues): Promise<void> => {
+    setSubmitting(true);
+    setErrorMessage(undefined);
+    try {
+      const createdSubscription = await subscriptionsService.create(
+        toSubscriptionCreatePayload(values),
+      );
+      void navigate(
+        `/platform/subscriptions/${createdSubscription.id}?tenantId=${createdSubscription.tenantId}`,
+      );
+    } catch {
+      setErrorMessage('Não foi possível cadastrar a assinatura.');
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
+  return {
+    form,
+    referenceOptions,
+    loadingPlans: referenceOptions.loading,
+    submitting,
+    errorMessage,
+    onSubmit: handleSubmit,
+    onBack: () => {
+      void navigate('/platform/subscriptions');
     },
-    [mutations, navigate],
-  );
-  return useMemo(
-    () => ({ defaultValues, plans, loading: mutations.loading, handleSubmit }),
-    [defaultValues, plans, mutations.loading, handleSubmit],
-  );
+  };
 };

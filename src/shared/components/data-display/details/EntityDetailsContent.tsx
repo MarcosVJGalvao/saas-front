@@ -78,10 +78,19 @@ export const EntityDetailsContent = ({
   loadingFallback,
   errorFallback,
 }: EntityDetailsContentProps) => {
-  const c = { ...DEFAULT_CONTENT, ...content } as typeof DEFAULT_CONTENT;
+  const mergedContent = {
+    loadingLabel: content.loadingLabel ?? DEFAULT_CONTENT.loadingLabel,
+    emptyTitle: content.emptyTitle ?? DEFAULT_CONTENT.emptyTitle,
+    emptyMessage: content.emptyMessage ?? DEFAULT_CONTENT.emptyMessage,
+    errorFallback: content.errorFallback ?? DEFAULT_CONTENT.errorFallback,
+    unauthorizedTitle: content.unauthorizedTitle ?? DEFAULT_CONTENT.unauthorizedTitle,
+    unauthorizedMessage: content.unauthorizedMessage ?? DEFAULT_CONTENT.unauthorizedMessage,
+    forbiddenTitle: content.forbiddenTitle ?? DEFAULT_CONTENT.forbiddenTitle,
+    forbiddenMessage: content.forbiddenMessage ?? DEFAULT_CONTENT.forbiddenMessage,
+  };
 
   if (viewState === 'loading') {
-    return <>{loadingFallback ?? <AppCircularProgress ariaLabel={c.loadingLabel} />}</>;
+    return <>{loadingFallback ?? <AppCircularProgress ariaLabel={mergedContent.loadingLabel} />}</>;
   }
 
   if (viewState === 'error') {
@@ -89,7 +98,7 @@ export const EntityDetailsContent = ({
       <>
         {errorFallback ?? (
           <AppStack spacing={1.5}>
-            <AppAlert severity="error">{errorMessage ?? c.errorFallback}</AppAlert>
+            <AppAlert severity="error">{errorMessage ?? mergedContent.errorFallback}</AppAlert>
             {onRetry ? <AppButton onClick={onRetry}>Tentar novamente</AppButton> : null}
           </AppStack>
         )}
@@ -98,21 +107,28 @@ export const EntityDetailsContent = ({
   }
 
   if (viewState === 'unauthorized') {
-    return <EmptyMessage title={c.unauthorizedTitle} message={c.unauthorizedMessage} />;
+    return (
+      <EmptyMessage
+        title={mergedContent.unauthorizedTitle}
+        message={mergedContent.unauthorizedMessage}
+      />
+    );
   }
 
   if (viewState === 'forbidden') {
-    return <EmptyMessage title={c.forbiddenTitle} message={c.forbiddenMessage} />;
+    return (
+      <EmptyMessage title={mergedContent.forbiddenTitle} message={mergedContent.forbiddenMessage} />
+    );
   }
 
   if (viewState === 'empty' || headerData === null) {
-    return <EmptyMessage title={c.emptyTitle} message={c.emptyMessage} />;
+    return <EmptyMessage title={mergedContent.emptyTitle} message={mergedContent.emptyMessage} />;
   }
 
   const selectedTab = tabs.find((tab) => tab.id === selectedTabId) ?? tabs[0];
 
   if (!selectedTab) {
-    return <EmptyMessage title={c.emptyTitle} message={c.emptyMessage} />;
+    return <EmptyMessage title={mergedContent.emptyTitle} message={mergedContent.emptyMessage} />;
   }
 
   const tabIndex = tabs.findIndex((tab) => tab.id === selectedTabId);

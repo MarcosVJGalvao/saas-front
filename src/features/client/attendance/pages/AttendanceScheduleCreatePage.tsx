@@ -1,15 +1,18 @@
+import { useAttendanceScheduleCreatePage } from '@features/client/attendance/hooks/useAttendanceScheduleCreatePage';
+import type { AttendanceScheduleCreateFormValues } from '@features/client/attendance/schemas/attendanceScheduleCreateForm.schema';
 import { AppPaper } from '@shared/components/data-display/AppPaper';
 import { AppAlert } from '@shared/components/feedback/AppAlert';
 import { AppForm } from '@shared/components/form/AppForm';
 import { FormActions } from '@shared/components/form/FormActions';
+import { FormDatePicker } from '@shared/components/form/FormDatePicker';
+import { FormSelect } from '@shared/components/form/FormSelect';
 import { FormTextField } from '@shared/components/form/FormTextField';
 import { AppStack } from '@shared/components/layout/AppStack';
 import { PageHeader } from '@shared/components/layout/PageHeader';
-import { useAttendanceScheduleFormPageViewModel } from '@features/client/attendance/hooks/useAttendanceScheduleFormPageViewModel';
-import type { AttendanceScheduleFormValues } from '@features/client/attendance/schemas/attendanceFormSchemas';
+import { attendanceWeekdayOptions } from '@shared/constants/selectOptions';
 
 const AttendanceScheduleCreatePage = () => {
-  const model = useAttendanceScheduleFormPageViewModel();
+  const attendanceScheduleCreatePage = useAttendanceScheduleCreatePage();
 
   return (
     <AppStack spacing={2}>
@@ -17,75 +20,83 @@ const AttendanceScheduleCreatePage = () => {
         title="Cadastrar horário"
         subtitle="Configure turma, disciplina, vínculo professor-disciplina e período do horário de frequência."
         actionLabel="Voltar"
-        onAction={model.onBack}
+        onAction={attendanceScheduleCreatePage.onBack}
       />
-      {model.errorMessage ? <AppAlert severity="error">{model.errorMessage}</AppAlert> : null}
+      {attendanceScheduleCreatePage.errorMessage ? (
+        <AppAlert severity="error">{attendanceScheduleCreatePage.errorMessage}</AppAlert>
+      ) : null}
+      {attendanceScheduleCreatePage.referenceOptions.errorMessage ? (
+        <AppAlert severity="error">
+          {attendanceScheduleCreatePage.referenceOptions.errorMessage}
+        </AppAlert>
+      ) : null}
       <AppPaper sx={{ p: 3 }}>
         <AppForm
-          form={model.form}
-          onSubmit={model.onSubmit}
+          form={attendanceScheduleCreatePage.form}
+          onSubmit={attendanceScheduleCreatePage.onSubmit}
           useResponsiveGrid
           columnsByDevice={{ mobile: 1, tablet: 2, desktop: 2 }}
         >
-          <FormTextField<AttendanceScheduleFormValues>
+          <FormSelect<AttendanceScheduleCreateFormValues>
             name="academicYearId"
             label="Ano letivo"
-            placeholder="ID do ano letivo"
+            options={attendanceScheduleCreatePage.referenceOptions.academicYearOptions}
+            disabled={attendanceScheduleCreatePage.referenceOptions.loading}
           />
-          <FormTextField<AttendanceScheduleFormValues>
+          <FormSelect<AttendanceScheduleCreateFormValues>
             name="schoolClassId"
             label="Turma"
-            placeholder="ID da turma"
+            options={attendanceScheduleCreatePage.referenceOptions.schoolClassOptions}
+            disabled={attendanceScheduleCreatePage.referenceOptions.loading}
           />
-          <FormTextField<AttendanceScheduleFormValues>
+          <FormSelect<AttendanceScheduleCreateFormValues>
             name="subjectId"
             label="Disciplina"
-            placeholder="ID da disciplina"
+            options={attendanceScheduleCreatePage.referenceOptions.subjectOptions}
+            disabled={attendanceScheduleCreatePage.referenceOptions.loading}
           />
-          <FormTextField<AttendanceScheduleFormValues>
+          <FormSelect<AttendanceScheduleCreateFormValues>
             name="teacherSubjectId"
             label="Professor-disciplina"
-            placeholder="ID do vínculo professor-disciplina"
+            options={attendanceScheduleCreatePage.referenceOptions.teacherSubjectOptions}
+            disabled={attendanceScheduleCreatePage.referenceOptions.loading}
           />
-          <FormTextField<AttendanceScheduleFormValues>
+          <FormSelect<AttendanceScheduleCreateFormValues>
             name="weekday"
             label="Dia da semana"
-            placeholder="Segunda-feira"
+            options={attendanceWeekdayOptions}
           />
-          <FormTextField<AttendanceScheduleFormValues>
+          <FormTextField<AttendanceScheduleCreateFormValues>
             name="startTime"
             label="Horário inicial"
             type="time"
           />
-          <FormTextField<AttendanceScheduleFormValues>
+          <FormTextField<AttendanceScheduleCreateFormValues>
             name="endTime"
             label="Horário final"
             type="time"
           />
-          <FormTextField<AttendanceScheduleFormValues>
+          <FormDatePicker<AttendanceScheduleCreateFormValues>
             name="startDate"
             label="Data inicial"
-            type="date"
           />
-          <FormTextField<AttendanceScheduleFormValues>
-            name="endDate"
-            label="Data final"
-            type="date"
-          />
+          <FormDatePicker<AttendanceScheduleCreateFormValues> name="endDate" label="Data final" />
           <FormActions
             secondaryAction={{
               type: 'back',
               label: 'Cancelar',
-              onClick: model.onBack,
-              disabled: model.submitting,
+              onClick: attendanceScheduleCreatePage.onBack,
+              disabled: attendanceScheduleCreatePage.submitting,
             }}
             primaryAction={{
               type: 'confirm',
               label: 'Cadastrar',
               onClick: () => {
-                void model.form.handleSubmit(model.onSubmit)();
+                void attendanceScheduleCreatePage.form.handleSubmit(
+                  attendanceScheduleCreatePage.onSubmit,
+                )();
               },
-              loading: model.submitting,
+              loading: attendanceScheduleCreatePage.submitting,
             }}
           />
         </AppForm>

@@ -1,29 +1,35 @@
-import { ReportCardCatalogDetailsPage } from '@features/client/report-cards/components/ReportCardCatalogDetailsPage';
-import { reportCardService } from '@features/client/report-cards/services/reportCardServices';
+import { useParams } from 'react-router-dom';
+import { EntityDetailsPage } from '@shared/components/data-display/details/EntityDetailsPage';
+import { AppStack } from '@shared/components/layout/AppStack';
+import { PageHeader } from '@shared/components/layout/PageHeader';
+import { useReportCardAcademicPeriodDetailsPage } from '@features/client/report-cards/hooks/useReportCardAcademicPeriodDetailsPage';
 
-const academicPeriodDetailsService = {
-  getById: (id: string) => reportCardService.getAcademicPeriodById(id),
+const ReportCardAcademicPeriodDetailsPage = () => {
+  const { id } = useParams<{ id: string }>();
+  const reportCardAcademicPeriodDetailsPage = useReportCardAcademicPeriodDetailsPage(id ?? '');
+
+  if (!id) {
+    return null;
+  }
+
+  return (
+    <AppStack spacing={2}>
+      <PageHeader
+        title="Detalhes do período"
+        subtitle="Consulte vigência, ano letivo e status do período do boletim."
+        actionLabel="Voltar"
+        onAction={reportCardAcademicPeriodDetailsPage.onBack}
+      />
+      <EntityDetailsPage
+        viewState={reportCardAcademicPeriodDetailsPage.viewState}
+        data={reportCardAcademicPeriodDetailsPage.data}
+        errorMessage={reportCardAcademicPeriodDetailsPage.errorMessage}
+        onRetry={() => {
+          void reportCardAcademicPeriodDetailsPage.onRetry();
+        }}
+      />
+    </AppStack>
+  );
 };
-
-const ReportCardAcademicPeriodDetailsPage = () => (
-  <ReportCardCatalogDetailsPage
-    mode="periods"
-    service={academicPeriodDetailsService}
-    backPath="/client/report-cards/academic-periods"
-    fallbackSubtitle="Período do boletim"
-    content={{
-      pageTitle: 'Detalhes do período',
-      pageSubtitle: 'Consulte vigência, ano letivo e status do período do boletim.',
-      loadingLabel: 'Carregando período do boletim...',
-      emptyTitle: 'Período não encontrado',
-      emptyMessage: 'Não encontramos dados para este período do boletim.',
-      errorFallback: 'Não foi possível carregar detalhes do período do boletim.',
-      unauthorizedTitle: 'Acesso não autenticado',
-      unauthorizedMessage: 'Entre novamente para consultar períodos do boletim.',
-      forbiddenTitle: 'Acesso sem permissão',
-      forbiddenMessage: 'Seu perfil não possui permissão para consultar períodos do boletim.',
-    }}
-  />
-);
 
 export default ReportCardAcademicPeriodDetailsPage;

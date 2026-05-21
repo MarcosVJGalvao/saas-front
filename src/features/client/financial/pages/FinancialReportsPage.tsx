@@ -6,10 +6,10 @@ import { AppAlert } from '@shared/components/feedback/AppAlert';
 import { AppStack } from '@shared/components/layout/AppStack';
 import { PageHeader } from '@shared/components/layout/PageHeader';
 import { layoutSpacing } from '@theme/spacing';
-import { useFinancialReportsPageViewModel } from '@features/client/financial/hooks/useFinancialReportsPageViewModel';
+import { useFinancialReportsPage } from '@features/client/financial/hooks/useFinancialReportsPage';
 
 const FinancialReportsPage = () => {
-  const model = useFinancialReportsPageViewModel();
+  const financialReportsPage = useFinancialReportsPage();
 
   return (
     <AppStack spacing={2}>
@@ -17,10 +17,14 @@ const FinancialReportsPage = () => {
         title="Relatórios financeiros"
         subtitle="Consulte fluxo de caixa, contas e inadimplência escolar."
       />
-      {model.errorMessage ? <AppAlert severity="error">{model.errorMessage}</AppAlert> : null}
-      {model.successMessage ? <AppAlert severity="success">{model.successMessage}</AppAlert> : null}
+      {financialReportsPage.errorMessage ? (
+        <AppAlert severity="error">{financialReportsPage.errorMessage}</AppAlert>
+      ) : null}
+      {financialReportsPage.successMessage ? (
+        <AppAlert severity="success">{financialReportsPage.successMessage}</AppAlert>
+      ) : null}
       <AppStack spacing={2}>
-        {model.reportOptions.map((report) => (
+        {financialReportsPage.reportOptions.map((report) => (
           <AppPaper key={report.key} sx={{ p: layoutSpacing.cardPadding, borderRadius: 2 }}>
             <AppStack spacing={1}>
               <AppStack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
@@ -34,11 +38,12 @@ const FinancialReportsPage = () => {
                 actions={[
                   {
                     type: 'custom',
-                    label: model.loadingKey === report.key ? 'Carregando...' : 'Carregar',
+                    label:
+                      financialReportsPage.loadingKey === report.key ? 'Carregando...' : 'Carregar',
                     onClick: () => {
-                      void model.requestReport(report.key);
+                      void financialReportsPage.requestReport(report.key);
                     },
-                    disabled: model.loadingKey !== undefined,
+                    disabled: financialReportsPage.loadingKey !== undefined,
                     variant: 'contained',
                   },
                 ]}

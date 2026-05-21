@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import type { Client, ClientsQueryParams } from '@features/platform/clients/types/clients';
 import type { PaginationMeta } from '@shared/types/pagination';
 import { clientsService } from '@features/platform/clients/services/service';
@@ -14,25 +14,28 @@ const defaultMeta: PaginationMeta = {
 
 export const useClientsList = (initialQuery?: ClientsQueryParams) => {
   const [rows, setRows] = useState<Client[]>([]);
-  const [meta, setMeta] = useState<PaginationMeta>(defaultMeta);
-  const [query, setQuery] = useState<ClientsQueryParams>({ page: 1, limit: 10, ...initialQuery });
+  const [pagination, setPagination] = useState<PaginationMeta>(defaultMeta);
+  const [queryParams, setQueryParams] = useState<ClientsQueryParams>({
+    page: 1,
+    limit: 10,
+    ...initialQuery,
+  });
   const [loading, setLoading] = useState(false);
-  const [errorMessage, setErrorMessage] = useState<string>();
+  const [errorMessage, setErrorMessage] = useState<string | undefined>();
 
   const fetchData = useCallback(async () => {
     setLoading(true);
     setErrorMessage(undefined);
     try {
-      const response = await clientsService.list(query);
+      const response = await clientsService.list(queryParams);
       setRows(response.data);
-      setMeta(response.meta ?? defaultMeta);
-    } catch (error) {
-      const message = error instanceof Error ? error.message : 'Erro ao carregar clientes.';
-      setErrorMessage(message);
+      setPagination(response.meta ?? defaultMeta);
+    } catch {
+      setErrorMessage('Não foi possível carregar os clientes.');
     } finally {
       setLoading(false);
     }
-  }, [query]);
+  }, [queryParams]);
 
   useEffect(() => {
     const timeoutId = window.setTimeout(() => {
@@ -41,16 +44,21 @@ export const useClientsList = (initialQuery?: ClientsQueryParams) => {
     return () => window.clearTimeout(timeoutId);
   }, [fetchData]);
 
-  const updateQuery = useCallback((patch: Partial<ClientsQueryParams>) => {
-    setQuery((previous) => ({ ...previous, ...patch }));
+  const updateQueryParams = useCallback((patch: Partial<ClientsQueryParams>) => {
+    setQueryParams((currentQueryParams) => ({ ...currentQueryParams, ...patch }));
   }, []);
 
-  const refresh = useCallback(async () => {
+  const reload = useCallback(async () => {
     await fetchData();
   }, [fetchData]);
 
-  return useMemo(
-    () => ({ rows, meta, query, loading, errorMessage, updateQuery, refresh }),
-    [rows, meta, query, loading, errorMessage, updateQuery, refresh],
-  );
+  return {
+    rows,
+    pagination,
+    queryParams,
+    loading,
+    errorMessage,
+    updateQueryParams,
+    reload,
+  };
 };

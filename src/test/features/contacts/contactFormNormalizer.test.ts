@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { normalizeContactPayload } from '@features/client/contacts/normalizers/contactFormNormalizer';
+import { normalizeContactPayload } from '@features/client/contacts/normalizers/contactForm.normalizer';
 
 describe('contactFormNormalizer', () => {
   it('mantém e-mail textual e limpa telefone', () => {

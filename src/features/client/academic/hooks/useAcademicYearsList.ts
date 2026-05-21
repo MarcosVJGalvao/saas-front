@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from 'react';
-import { academicYearService } from '@features/client/academic/services/academicServices';
+import { academicYearService } from '@features/client/academic/services/service';
 import type {
   AcademicYear,
   AcademicYearQueryParams,
@@ -15,10 +15,14 @@ const initialMeta: PaginationMeta = {
   hasPreviousPage: false,
 };
 
-export const useAcademicYearsList = () => {
+export const useAcademicYearsList = (initialParams?: Partial<AcademicYearQueryParams>) => {
   const [rows, setRows] = useState<AcademicYear[]>([]);
   const [meta, setMeta] = useState<PaginationMeta>(initialMeta);
-  const [query, setQuery] = useState<AcademicYearQueryParams>({ page: 1, limit: 10 });
+  const [query, setQuery] = useState<AcademicYearQueryParams>({
+    page: 1,
+    limit: 10,
+    ...initialParams,
+  });
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | undefined>(undefined);
 

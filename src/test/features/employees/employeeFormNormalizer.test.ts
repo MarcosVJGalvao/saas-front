@@ -1,9 +1,9 @@
 import { describe, expect, it } from 'vitest';
-import { normalizeEmployeePayload } from '@features/client/employees/normalizers/employeeFormNormalizer';
+import { toEmployeeCreatePayload } from '@features/client/employees/normalizers/employeeFormNormalizer';
 
 describe('employeeFormNormalizer', () => {
   it('usa pessoa existente quando personId está preenchido', () => {
-    const payload = normalizeEmployeePayload({
+    const payload = toEmployeeCreatePayload({
       personId: ' person-1 ',
       fullName: ' Ana ',
       documentNumber: '123.456.789-00',
@@ -22,7 +22,7 @@ describe('employeeFormNormalizer', () => {
   });
 
   it('normaliza pessoa inline quando personId não está preenchido', () => {
-    const payload = normalizeEmployeePayload({
+    const payload = toEmployeeCreatePayload({
       personId: '',
       fullName: ' Ana Silva ',
       documentNumber: '123.456.789-00',

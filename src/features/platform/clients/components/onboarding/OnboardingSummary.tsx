@@ -10,10 +10,10 @@ import { AppText } from '@shared/components/data-display/AppText';
 import { alphaColor } from '@theme/utils/alphaColor';
 import { memo } from 'react';
 import { fontSizes } from '@theme/fontSizes';
-import type { OnboardingSummaryData } from '@features/platform/clients/types/clientOnboarding';
+import type { ClientOnboardingSummaryData } from '@features/platform/clients/types/clientOnboarding';
 
 interface Props {
-  summary: OnboardingSummaryData;
+  summary: ClientOnboardingSummaryData;
   activeStep: number;
   maxCompletedStep: number;
   onStepSelect: (stepIndex: number) => void;
@@ -25,14 +25,14 @@ const stepLabels = [
   'Plano e Assinatura',
   'Usuário Administrador',
 ];
-const stepHints: OnboardingSummaryData = {
+const stepHints: ClientOnboardingSummaryData = {
   client: 'Informações principais do cliente.',
   tenant: 'Configuração do identificador do tenant.',
   plan: 'Seleção do plano e ciclo de cobrança.',
   admin: 'Dados do usuário administrador.',
 };
 
-const getSummaryTexts = (summary: OnboardingSummaryData): string[] => [
+const getSummaryTexts = (summary: ClientOnboardingSummaryData): string[] => [
   summary.client || stepHints.client,
   summary.tenant || stepHints.tenant,
   summary.plan || stepHints.plan,

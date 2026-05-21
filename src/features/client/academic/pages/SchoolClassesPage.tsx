@@ -4,13 +4,13 @@ import { ListFilters } from '@shared/components/data-display/data/ListFilters';
 import { QueryDataTable } from '@shared/components/data-display/data/QueryDataTable';
 import { AppStack } from '@shared/components/layout/AppStack';
 import { PageHeader } from '@shared/components/layout/PageHeader';
-import { useSchoolClassesListPageViewModel } from '@features/client/academic/hooks/useSchoolClassesListPageViewModel';
+import { useSchoolClassesListPage } from '@features/client/academic/hooks/useSchoolClassesListPage';
 import { useClientPermission } from '@features/client/shared/hooks/useClientPermission';
 
 const SchoolClassesPage = () => {
   const navigate = useNavigate();
   const permissions = useClientPermission();
-  const model = useSchoolClassesListPageViewModel();
+  const schoolClassesPage = useSchoolClassesListPage();
 
   return (
     <AppStack spacing={2}>
@@ -19,7 +19,9 @@ const SchoolClassesPage = () => {
         subtitle="Gerencie turmas, capacidade, turno, alunos e professores vinculados."
         actionLabel="Cadastrar"
         canShowAction={permissions.can('school-class:create')}
-        onAction={() => void navigate('/client/school-classes/new')}
+        onAction={() => {
+          void navigate('/client/school-classes/new');
+        }}
       />
       <ListFilters
         fields={[
@@ -65,26 +67,30 @@ const SchoolClassesPage = () => {
             mobileOrder: 4,
           },
         ]}
-        values={model.filterValues}
-        onChange={model.onFilterChange}
-        onApply={model.applyFilters}
-        onClear={model.clearFilters}
-        loading={model.list.loading}
+        values={schoolClassesPage.filterValues}
+        onChange={schoolClassesPage.onFilterChange}
+        onApply={schoolClassesPage.applyFilters}
+        onClear={schoolClassesPage.clearFilters}
+        loading={schoolClassesPage.schoolClassesList.loading}
       />
       <QueryDataTable
-        rows={model.list.rows}
-        columns={model.columns}
-        mobileConfig={model.mobileConfig}
-        meta={model.list.meta}
-        loading={model.list.loading}
-        errorMessage={model.list.errorMessage}
+        rows={schoolClassesPage.schoolClassesList.rows}
+        columns={schoolClassesPage.tableColumns}
+        mobileConfig={schoolClassesPage.mobileConfig}
+        meta={schoolClassesPage.schoolClassesList.meta}
+        loading={schoolClassesPage.schoolClassesList.loading}
+        errorMessage={schoolClassesPage.schoolClassesList.errorMessage}
         onRetry={() => {
-          void model.list.reload();
+          void schoolClassesPage.schoolClassesList.reload();
         }}
-        query={model.query}
-        onQueryChange={model.onQueryChange}
-        onPageChange={model.onPageChange}
-        onRowsPerPageChange={model.onLimitChange}
+        query={schoolClassesPage.schoolClassesList.query.search ?? ''}
+        onQueryChange={(search) =>
+          schoolClassesPage.schoolClassesList.updateQuery({ search, page: 1 })
+        }
+        onPageChange={(page) => schoolClassesPage.schoolClassesList.updateQuery({ page })}
+        onRowsPerPageChange={(limit) =>
+          schoolClassesPage.schoolClassesList.updateQuery({ limit, page: 1 })
+        }
         emptyTitle="Nenhuma turma encontrada"
         emptyDescription="Cadastre turmas para organizar alunos, horários e professores."
         toolbarContent={

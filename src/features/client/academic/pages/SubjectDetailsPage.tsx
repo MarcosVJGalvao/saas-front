@@ -1,24 +1,41 @@
-import { AcademicCatalogDetailsPage } from '@features/client/academic/components/AcademicCatalogDetailsPage';
-import { subjectService } from '@features/client/academic/services/academicServices';
+import { useParams } from 'react-router-dom';
+import { EntityDetailsPage } from '@shared/components/data-display/details/EntityDetailsPage';
+import { AppStack } from '@shared/components/layout/AppStack';
+import { PageHeader } from '@shared/components/layout/PageHeader';
+import { subjectCatalogConfig } from '@features/client/academic/constants/academicCatalogPageConfigs';
+import { useAcademicCatalogDetailsPage } from '@features/client/academic/hooks/useAcademicCatalogDetailsPage';
 
-const SubjectDetailsPage = () => (
-  <AcademicCatalogDetailsPage
-    service={subjectService}
-    backPath="/client/subjects"
-    errorMessageFallback="Erro ao carregar disciplina."
-    content={{
-      pageTitle: 'Detalhes da disciplina',
-      pageSubtitle: 'Consulte os dados da disciplina usada em turmas e boletins.',
-      loadingLabel: 'Carregando disciplina...',
-      emptyTitle: 'Disciplina não encontrada',
-      emptyMessage: 'Não encontramos a disciplina solicitada.',
-      errorFallback: 'Erro ao carregar disciplina.',
-      unauthorizedTitle: 'Acesso não autorizado',
-      unauthorizedMessage: 'Faça login novamente para consultar esta disciplina.',
-      forbiddenTitle: 'Acesso negado',
-      forbiddenMessage: 'Você não possui permissão para consultar esta disciplina.',
-    }}
-  />
-);
+const SubjectDetailsPage = () => {
+  const { id } = useParams<{ id: string }>();
+  const subjectDetailsPage = useAcademicCatalogDetailsPage({
+    id: id ?? '',
+    service: subjectCatalogConfig.service,
+    backPath: subjectCatalogConfig.routeBase,
+    errorMessageFallback: subjectCatalogConfig.errorMessageFallback,
+  });
+
+  if (!id) {
+    return null;
+  }
+
+  return (
+    <AppStack spacing={2}>
+      <PageHeader
+        title={subjectCatalogConfig.detailsTitle}
+        subtitle={subjectCatalogConfig.detailsSubtitle}
+        actionLabel="Voltar"
+        onAction={subjectDetailsPage.onBack}
+      />
+      <EntityDetailsPage
+        viewState={subjectDetailsPage.viewState}
+        data={subjectDetailsPage.data}
+        errorMessage={subjectDetailsPage.errorMessage}
+        onRetry={() => {
+          void subjectDetailsPage.onRetry();
+        }}
+      />
+    </AppStack>
+  );
+};
 
 export default SubjectDetailsPage;

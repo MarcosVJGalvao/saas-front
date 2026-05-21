@@ -1,56 +1,39 @@
-import { useMemo, useState } from 'react';
-import type { Dispatch, SetStateAction } from 'react';
-import { buildStudentEnrollmentSummary } from '@features/client/student-enrollments/normalizers/studentEnrollmentSummary';
+import { useState } from 'react';
+import { buildStudentEnrollmentSummary } from '@features/client/student-enrollments/normalizers/studentEnrollmentOnboardingSummary';
 import {
   initialStudentEnrollmentUiExtras,
   initialStudentEnrollmentValue,
-} from '@features/client/student-enrollments/normalizers/studentEnrollmentInitialState';
-import { toStudentEnrollmentPayload } from '@features/client/student-enrollments/normalizers/studentEnrollmentOnboardingNormalizer';
+  studentEnrollmentStateFactories,
+} from '@features/client/student-enrollments/normalizers/studentEnrollmentOnboardingInitialState';
+import { toStudentEnrollmentCreatePayload } from '@features/client/student-enrollments/normalizers/studentEnrollmentForm.normalizer';
+import { useStudentEnrollmentOnboardingActions } from '@features/client/student-enrollments/hooks/useStudentEnrollmentOnboardingActions';
+import type { CreateStudentEnrollmentRequest } from '@features/client/student-enrollments/types/studentEnrollment.types';
 import type {
-  CreateStudentEnrollmentRequest,
   StudentEnrollmentOnboardingUiExtras,
   StudentEnrollmentSummaryData,
-} from '@features/client/student-enrollments/types/studentEnrollment.types';
-import {
-  useStudentEnrollmentActions,
-  type StudentEnrollmentActions,
-} from '@features/client/student-enrollments/hooks/useStudentEnrollmentActions';
+} from '@features/client/student-enrollments/types/studentEnrollmentOnboarding.types';
 
-export type UseStudentEnrollmentOnboardingFormResult = {
-  activeStep: number;
-  setActiveStep: Dispatch<SetStateAction<number>>;
-  value: CreateStudentEnrollmentRequest;
-  uiExtras: StudentEnrollmentOnboardingUiExtras;
-  actions: StudentEnrollmentActions;
-  summary: StudentEnrollmentSummaryData;
-  payload: CreateStudentEnrollmentRequest;
-  isStudentStepComplete: boolean;
-  isGuardianStepComplete: boolean;
-  isAcademicStepComplete: boolean;
-};
-
-const hasStudentData = (
-  value: CreateStudentEnrollmentRequest,
-  uiExtras: StudentEnrollmentOnboardingUiExtras,
-): boolean =>
-  uiExtras.selectedStudentId.length > 0 ||
-  Boolean(value.student?.person.fullName && value.student.person.documentNumber);
-
-const hasGuardianData = (value: CreateStudentEnrollmentRequest): boolean =>
-  Boolean(value.student?.legalGuardians[0]?.person?.fullName);
-
-const hasAcademicData = (value: CreateStudentEnrollmentRequest): boolean =>
-  value.academic.academicYearId.length > 0 && value.academic.enrollmentDate.length > 0;
-
-export const useStudentEnrollmentOnboardingForm = (): UseStudentEnrollmentOnboardingFormResult => {
+export const useStudentEnrollmentOnboardingForm = () => {
   const [activeStep, setActiveStep] = useState(0);
   const [value, setValue] = useState<CreateStudentEnrollmentRequest>(initialStudentEnrollmentValue);
   const [uiExtras, setUiExtras] = useState<StudentEnrollmentOnboardingUiExtras>(
     initialStudentEnrollmentUiExtras,
   );
-  const actions = useStudentEnrollmentActions({ setValue, setUiExtras });
-  const payload = useMemo(() => toStudentEnrollmentPayload(value, uiExtras), [uiExtras, value]);
-  const summary = useMemo(() => buildStudentEnrollmentSummary(value), [value]);
+
+  const actions = useStudentEnrollmentOnboardingActions({
+    setValue,
+    setUiExtras,
+    stateFactories: studentEnrollmentStateFactories,
+  });
+
+  const payload = toStudentEnrollmentCreatePayload(value, uiExtras);
+  const summary: StudentEnrollmentSummaryData = buildStudentEnrollmentSummary(value);
+  const isStudentStepComplete =
+    uiExtras.selectedStudentId.length > 0 ||
+    Boolean(value.student?.person.fullName && value.student.person.documentNumber);
+  const isGuardianStepComplete = Boolean(value.student?.legalGuardians[0]?.person?.fullName);
+  const isAcademicStepComplete =
+    value.academic.academicYearId.length > 0 && value.academic.enrollmentDate.length > 0;
 
   return {
     activeStep,
@@ -60,8 +43,8 @@ export const useStudentEnrollmentOnboardingForm = (): UseStudentEnrollmentOnboar
     actions,
     summary,
     payload,
-    isStudentStepComplete: hasStudentData(value, uiExtras),
-    isGuardianStepComplete: hasGuardianData(value),
-    isAcademicStepComplete: hasAcademicData(value),
+    isStudentStepComplete,
+    isGuardianStepComplete,
+    isAcademicStepComplete,
   };
 };

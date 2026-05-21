@@ -1,7 +1,15 @@
 import type { ActiveInactiveStatus } from '@shared/i18n/pt-BR/enums';
-import type { ClientBaseQueryParams } from '@features/client/shared/types/clientApi.types';
+import type {
+  ClientApiRecord,
+  ClientBaseQueryParams,
+} from '@features/client/shared/types/clientApi.types';
 
 export type ClientAdminStatus = ActiveInactiveStatus;
+
+export type ClientUserRole = {
+  id: string;
+  name: string;
+};
 
 export type ClientUser = {
   id: string;
@@ -9,10 +17,7 @@ export type ClientUser = {
   fullName?: string | undefined;
   email?: string | undefined;
   status?: ClientAdminStatus | undefined;
-  role?: {
-    id: string;
-    name: string;
-  } | null;
+  role?: ClientUserRole | null;
   createdAt?: string | undefined;
   updatedAt?: string | undefined;
 };
@@ -33,4 +38,22 @@ export type ClientAdminQueryParams = ClientBaseQueryParams & {
   status?: ClientAdminStatus | undefined;
 };
 
-export type ClientAdminPayload = Record<string, unknown>;
+export type ClientUserCreatePayload = {
+  name: string;
+  fullName: string;
+  email?: string | undefined;
+  roleId?: string | undefined;
+  status: ClientAdminStatus;
+};
+
+export type ClientUserUpdatePayload = Partial<ClientUserCreatePayload>;
+
+export type ClientRoleCreatePayload = {
+  name: string;
+  description?: string | undefined;
+  status: ClientAdminStatus;
+};
+
+export type ClientRoleUpdatePayload = Partial<ClientRoleCreatePayload>;
+
+export type ClientAdminQuery = ClientBaseQueryParams & ClientApiRecord;

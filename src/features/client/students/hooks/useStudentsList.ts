@@ -1,57 +1,59 @@
 import { useCallback, useEffect, useState } from 'react';
-import { studentsService } from '@features/client/students/services/studentServices';
-import type { Student, StudentQueryParams } from '@features/client/students/types/student.types';
 import type { PaginationMeta } from '@shared/types/pagination';
+import { studentService } from '../services/service';
+import type { Student, StudentQueryParams } from '../types/student.types';
 
-const initialMeta: PaginationMeta = {
-  page: 1,
-  limit: 10,
-  total: 0,
-  totalPages: 0,
-  hasNextPage: false,
-  hasPreviousPage: false,
-};
-
-export const useStudentsList = () => {
+export const useStudentsList = (initialParams?: Partial<StudentQueryParams>) => {
   const [rows, setRows] = useState<Student[]>([]);
-  const [meta, setMeta] = useState<PaginationMeta>(initialMeta);
-  const [query, setQuery] = useState<StudentQueryParams>({ page: 1, limit: 10 });
+  const [pagination, setPagination] = useState<PaginationMeta>({
+    page: 1,
+    limit: 10,
+    total: 0,
+    totalPages: 0,
+    hasNextPage: false,
+    hasPreviousPage: false,
+  });
+  const [queryParams, setQueryParams] = useState<StudentQueryParams>({
+    page: 1,
+    limit: 10,
+    ...initialParams,
+  });
   const [loading, setLoading] = useState(false);
-  const [errorMessage, setErrorMessage] = useState<string | undefined>(undefined);
+  const [errorMessage, setErrorMessage] = useState<string | undefined>();
 
-  const load = useCallback(async () => {
+  const fetchStudents = useCallback(async () => {
     setLoading(true);
     setErrorMessage(undefined);
     try {
-      const response = await studentsService.list(query);
+      const response = await studentService.list(queryParams);
       setRows(response.data);
-      setMeta(response.meta);
+      setPagination(response.meta);
     } catch {
       setErrorMessage('Erro ao carregar alunos.');
     } finally {
       setLoading(false);
     }
-  }, [query]);
+  }, [queryParams]);
 
   useEffect(() => {
     const timeoutId = window.setTimeout(() => {
-      void load();
+      void fetchStudents();
     }, 0);
 
     return () => window.clearTimeout(timeoutId);
-  }, [load]);
+  }, [fetchStudents]);
 
-  const updateQuery = useCallback((patch: Partial<StudentQueryParams>) => {
-    setQuery((currentQuery) => ({ ...currentQuery, ...patch }));
+  const updateQueryParams = useCallback((patch: Partial<StudentQueryParams>) => {
+    setQueryParams((currentQueryParams) => ({ ...currentQueryParams, ...patch }));
   }, []);
 
   return {
     rows,
-    meta,
-    query,
+    pagination,
+    queryParams,
     loading,
     errorMessage,
-    updateQuery,
-    reload: load,
+    updateQueryParams,
+    reload: fetchStudents,
   };
 };

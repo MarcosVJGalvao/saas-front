@@ -1,16 +1,19 @@
+import { useAttendanceRecordCreatePage } from '@features/client/attendance/hooks/useAttendanceRecordCreatePage';
+import type { AttendanceRecordCreateFormValues } from '@features/client/attendance/schemas/attendanceRecordCreateForm.schema';
 import { AppPaper } from '@shared/components/data-display/AppPaper';
 import { AppText } from '@shared/components/data-display/AppText';
 import { AppAlert } from '@shared/components/feedback/AppAlert';
 import { AppForm } from '@shared/components/form/AppForm';
 import { FormActions } from '@shared/components/form/FormActions';
+import { FormDatePicker } from '@shared/components/form/FormDatePicker';
+import { FormSelect } from '@shared/components/form/FormSelect';
 import { FormTextField } from '@shared/components/form/FormTextField';
 import { AppStack } from '@shared/components/layout/AppStack';
 import { PageHeader } from '@shared/components/layout/PageHeader';
-import { useAttendanceRecordFormPageViewModel } from '@features/client/attendance/hooks/useAttendanceRecordFormPageViewModel';
-import type { AttendanceRecordFormValues } from '@features/client/attendance/schemas/attendanceFormSchemas';
+import { attendanceStatusOptions } from '@shared/constants/selectOptions';
 
 const AttendanceRecordsPage = () => {
-  const model = useAttendanceRecordFormPageViewModel();
+  const attendanceRecordCreatePage = useAttendanceRecordCreatePage();
 
   return (
     <AppStack spacing={2}>
@@ -22,38 +25,48 @@ const AttendanceRecordsPage = () => {
         Informe um horário configurado, a data da aula e a matrícula do aluno para registrar a
         frequência.
       </AppAlert>
-      {model.successMessage ? <AppAlert severity="success">{model.successMessage}</AppAlert> : null}
-      {model.errorMessage ? <AppAlert severity="error">{model.errorMessage}</AppAlert> : null}
+      {attendanceRecordCreatePage.successMessage ? (
+        <AppAlert severity="success">{attendanceRecordCreatePage.successMessage}</AppAlert>
+      ) : null}
+      {attendanceRecordCreatePage.errorMessage ? (
+        <AppAlert severity="error">{attendanceRecordCreatePage.errorMessage}</AppAlert>
+      ) : null}
+      {attendanceRecordCreatePage.referenceOptions.errorMessage ? (
+        <AppAlert severity="error">
+          {attendanceRecordCreatePage.referenceOptions.errorMessage}
+        </AppAlert>
+      ) : null}
       <AppPaper sx={{ p: 3 }}>
         <AppStack spacing={2}>
           <AppText variant="h6">Novo lançamento</AppText>
           <AppForm
-            form={model.form}
-            onSubmit={model.onSubmit}
+            form={attendanceRecordCreatePage.form}
+            onSubmit={attendanceRecordCreatePage.onSubmit}
             useResponsiveGrid
             columnsByDevice={{ mobile: 1, tablet: 2, desktop: 2 }}
           >
-            <FormTextField<AttendanceRecordFormValues>
+            <FormSelect<AttendanceRecordCreateFormValues>
               name="scheduleId"
               label="Horário"
-              placeholder="ID do horário"
+              options={attendanceRecordCreatePage.referenceOptions.scheduleOptions}
+              disabled={attendanceRecordCreatePage.referenceOptions.loading}
             />
-            <FormTextField<AttendanceRecordFormValues>
+            <FormDatePicker<AttendanceRecordCreateFormValues>
               name="attendanceDate"
               label="Data da aula"
-              type="date"
             />
-            <FormTextField<AttendanceRecordFormValues>
+            <FormSelect<AttendanceRecordCreateFormValues>
               name="studentEnrollmentId"
               label="Matrícula"
-              placeholder="ID da matrícula"
+              options={attendanceRecordCreatePage.referenceOptions.studentEnrollmentOptions}
+              disabled={attendanceRecordCreatePage.referenceOptions.loading}
             />
-            <FormTextField<AttendanceRecordFormValues>
+            <FormSelect<AttendanceRecordCreateFormValues>
               name="status"
               label="Status"
-              placeholder="present, absent ou justified"
+              options={attendanceStatusOptions}
             />
-            <FormTextField<AttendanceRecordFormValues>
+            <FormTextField<AttendanceRecordCreateFormValues>
               name="observations"
               label="Observações"
               placeholder="Observações opcionais"
@@ -63,9 +76,11 @@ const AttendanceRecordsPage = () => {
                 type: 'confirm',
                 label: 'Lançar frequência',
                 onClick: () => {
-                  void model.form.handleSubmit(model.onSubmit)();
+                  void attendanceRecordCreatePage.form.handleSubmit(
+                    attendanceRecordCreatePage.onSubmit,
+                  )();
                 },
-                loading: model.submitting,
+                loading: attendanceRecordCreatePage.submitting,
               }}
             />
           </AppForm>

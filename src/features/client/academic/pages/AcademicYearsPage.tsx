@@ -6,13 +6,13 @@ import { AppAlert } from '@shared/components/feedback/AppAlert';
 import { ConfirmDialog } from '@shared/components/feedback/ConfirmDialog';
 import { AppStack } from '@shared/components/layout/AppStack';
 import { PageHeader } from '@shared/components/layout/PageHeader';
-import { useAcademicYearsListPageViewModel } from '@features/client/academic/hooks/useAcademicYearsListPageViewModel';
+import { useAcademicYearsListPage } from '@features/client/academic/hooks/useAcademicYearsListPage';
 import { useClientPermission } from '@features/client/shared/hooks/useClientPermission';
 
 const AcademicYearsPage = () => {
   const navigate = useNavigate();
   const permissions = useClientPermission();
-  const model = useAcademicYearsListPageViewModel();
+  const academicYearsPage = useAcademicYearsListPage();
 
   return (
     <AppStack spacing={2}>
@@ -21,10 +21,12 @@ const AcademicYearsPage = () => {
         subtitle="Gerencie períodos, políticas de boletim e encerramento do ano letivo."
         actionLabel="Cadastrar"
         canShowAction={permissions.can('academic-year:create')}
-        onAction={() => void navigate('/client/academic-years/new')}
+        onAction={() => {
+          void navigate('/client/academic-years/new');
+        }}
       />
-      {model.actionErrorMessage ? (
-        <AppAlert severity="error">{model.actionErrorMessage}</AppAlert>
+      {academicYearsPage.actionErrorMessage ? (
+        <AppAlert severity="error">{academicYearsPage.actionErrorMessage}</AppAlert>
       ) : null}
       <ListFilters
         fields={[
@@ -56,26 +58,30 @@ const AcademicYearsPage = () => {
             mobileOrder: 3,
           },
         ]}
-        values={model.filterValues}
-        onChange={model.onFilterChange}
-        onApply={model.applyFilters}
-        onClear={model.clearFilters}
-        loading={model.list.loading || model.actionLoading}
+        values={academicYearsPage.filterValues}
+        onChange={academicYearsPage.onFilterChange}
+        onApply={academicYearsPage.applyFilters}
+        onClear={academicYearsPage.clearFilters}
+        loading={academicYearsPage.academicYearsList.loading || academicYearsPage.actionLoading}
       />
       <QueryDataTable
-        rows={model.list.rows}
-        columns={model.columns}
-        mobileConfig={model.mobileConfig}
-        meta={model.list.meta}
-        loading={model.list.loading}
-        errorMessage={model.list.errorMessage}
+        rows={academicYearsPage.academicYearsList.rows}
+        columns={academicYearsPage.tableColumns}
+        mobileConfig={academicYearsPage.mobileConfig}
+        meta={academicYearsPage.academicYearsList.meta}
+        loading={academicYearsPage.academicYearsList.loading}
+        errorMessage={academicYearsPage.academicYearsList.errorMessage}
         onRetry={() => {
-          void model.list.reload();
+          void academicYearsPage.academicYearsList.reload();
         }}
-        query={model.query}
-        onQueryChange={model.onQueryChange}
-        onPageChange={model.onPageChange}
-        onRowsPerPageChange={model.onLimitChange}
+        query={academicYearsPage.academicYearsList.query.search ?? ''}
+        onQueryChange={(search) =>
+          academicYearsPage.academicYearsList.updateQuery({ search, page: 1 })
+        }
+        onPageChange={(page) => academicYearsPage.academicYearsList.updateQuery({ page })}
+        onRowsPerPageChange={(limit) =>
+          academicYearsPage.academicYearsList.updateQuery({ limit, page: 1 })
+        }
         emptyTitle="Nenhum ano letivo encontrado"
         emptyDescription="Cadastre anos letivos para organizar matrículas e boletins."
         toolbarContent={
@@ -86,13 +92,13 @@ const AcademicYearsPage = () => {
         hideToolbar
       />
       <ConfirmDialog
-        open={model.actionDialogOpen}
-        title={model.actionDialogTitle}
-        description={model.actionDialogDescription}
-        confirmLabel={model.actionConfirmLabel}
-        onCancel={model.closeActionDialog}
+        open={academicYearsPage.actionDialog.open}
+        title={academicYearsPage.actionDialog.title}
+        description={academicYearsPage.actionDialog.description}
+        confirmLabel={academicYearsPage.actionDialog.confirmLabel}
+        onCancel={academicYearsPage.actionDialog.close}
         onConfirm={() => {
-          void model.confirmAction();
+          void academicYearsPage.actionDialog.confirm();
         }}
       />
     </AppStack>

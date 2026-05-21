@@ -11,7 +11,7 @@ interface AppSnackbarProps {
   message?: string | undefined;
   children?: ReactNode | undefined;
   severity?: SnackbarSeverity | undefined;
-  autoHideDuration?: number | undefined;
+  autoHideDuration?: number | null | undefined;
   onClose: () => void;
   onExited?: (() => void) | undefined;
   anchorOrigin?:

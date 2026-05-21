@@ -7,6 +7,7 @@ import { AppText } from '@shared/components/data-display/AppText';
 import { AppButton } from '@shared/components/inputs/AppButton';
 import { AppBox } from '@shared/components/layout/AppBox';
 import { AppStack } from '@shared/components/layout/AppStack';
+import { responsive } from '@theme/utils/responsive';
 
 export interface PageHeaderBreadcrumb {
   label: string;
@@ -55,46 +56,56 @@ export const PageHeader = ({
   onAction,
   sx,
 }: PageHeaderProps) => (
-  <AppStack spacing={1.5} sx={[{ mb: 3 }, ...(Array.isArray(sx) ? sx : sx ? [sx] : [])]}>
-    {breadcrumbs.length > 0 ? (
-      <Breadcrumbs aria-label="breadcrumb">
-        {breadcrumbs.map((breadcrumb, index) => {
-          const isLastItem = index === breadcrumbs.length - 1;
-          if (breadcrumb.href !== undefined && !isLastItem) {
+  <AppBox sx={sx}>
+    <AppStack spacing={1.5} sx={{ mb: 3 }}>
+      {breadcrumbs.length > 0 ? (
+        <Breadcrumbs aria-label="breadcrumb">
+          {breadcrumbs.map((breadcrumb, index) => {
+            const isLastItem = index === breadcrumbs.length - 1;
+            if (breadcrumb.href !== undefined && !isLastItem) {
+              return (
+                <Link
+                  key={`${breadcrumb.label}-${index}`}
+                  underline="hover"
+                  color="inherit"
+                  href={breadcrumb.href}
+                >
+                  {breadcrumb.label}
+                </Link>
+              );
+            }
             return (
-              <Link
-                key={`${breadcrumb.label}-${index}`}
-                underline="hover"
-                color="inherit"
-                href={breadcrumb.href}
-              >
+              <AppText key={`${breadcrumb.label}-${index}`} color="text.primary">
                 {breadcrumb.label}
-              </Link>
+              </AppText>
             );
-          }
-          return (
-            <AppText key={`${breadcrumb.label}-${index}`} color="text.primary">
-              {breadcrumb.label}
-            </AppText>
-          );
-        })}
-      </Breadcrumbs>
-    ) : null}
-    <AppBox sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 2 }}>
-      <AppBox>
-        <AppText variant="h5" sx={{ fontWeight: 700 }}>
-          {title}
-        </AppText>
-        {subtitle !== undefined ? (
-          <AppText variant="body2" color="text.secondary">
-            {subtitle}
+          })}
+        </Breadcrumbs>
+      ) : null}
+      <AppBox
+        sx={{
+          display: 'flex',
+          alignItems: responsive({ xs: 'flex-start', sm: 'center' }),
+          justifyContent: 'space-between',
+          flexDirection: responsive({ xs: 'column', sm: 'row' }),
+          gap: responsive({ xs: 1.5, sm: 2 }),
+        }}
+      >
+        <AppBox sx={{ minWidth: 0 }}>
+          <AppText variant="h5" sx={{ fontWeight: 700, wordBreak: 'break-word' }}>
+            {title}
           </AppText>
-        ) : null}
+          {subtitle !== undefined ? (
+            <AppText variant="body2" color="text.secondary">
+              {subtitle}
+            </AppText>
+          ) : null}
+        </AppBox>
+        <AppStack direction="row" spacing={1} sx={{ alignItems: 'center', flexShrink: 0 }}>
+          {actions}
+          {renderPrimaryAction({ actionIcon, actionLabel, canShowAction, onAction })}
+        </AppStack>
       </AppBox>
-      <AppStack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
-        {actions}
-        {renderPrimaryAction({ actionIcon, actionLabel, canShowAction, onAction })}
-      </AppStack>
-    </AppBox>
-  </AppStack>
+    </AppStack>
+  </AppBox>
 );

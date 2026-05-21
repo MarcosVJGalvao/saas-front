@@ -5,10 +5,10 @@ import { ConfirmDialog } from '@shared/components/feedback/ConfirmDialog';
 import { ListFilters } from '@shared/components/data-display/data/ListFilters';
 import { PageHeader } from '@shared/components/layout/PageHeader';
 import { QueryDataTable } from '@shared/components/data-display/data/QueryDataTable';
-import { useDocumentsListPageViewModel } from '@features/client/documents/hooks/useDocumentsListPageViewModel';
+import { useDocumentsListPage } from '@features/client/documents/hooks/useDocumentsListPage';
 
 const DocumentsPage = () => {
-  const model = useDocumentsListPageViewModel();
+  const documentsListPage = useDocumentsListPage();
 
   return (
     <AppStack spacing={2}>
@@ -16,8 +16,8 @@ const DocumentsPage = () => {
         title="Documentos gerados"
         subtitle="Consulte, baixe e remova documentos gerados pelo backend."
       />
-      {model.actionErrorMessage ? (
-        <AppAlert severity="error">{model.actionErrorMessage}</AppAlert>
+      {documentsListPage.actionErrorMessage ? (
+        <AppAlert severity="error">{documentsListPage.actionErrorMessage}</AppAlert>
       ) : null}
       <ListFilters
         fields={[
@@ -71,26 +71,26 @@ const DocumentsPage = () => {
             mobileOrder: 5,
           },
         ]}
-        values={model.filterValues}
-        onChange={model.onFilterChange}
-        onApply={model.applyFilters}
-        onClear={model.clearFilters}
-        loading={model.list.loading || model.actionLoading}
+        values={documentsListPage.filterValues}
+        onChange={documentsListPage.onFilterChange}
+        onApply={documentsListPage.onApplyFilters}
+        onClear={documentsListPage.onClearFilters}
+        loading={documentsListPage.documentsList.loading || documentsListPage.actionLoading}
       />
       <QueryDataTable
-        rows={model.list.rows}
-        columns={model.columns}
-        mobileConfig={model.mobileConfig}
-        meta={model.list.meta}
-        loading={model.list.loading}
-        errorMessage={model.list.errorMessage}
+        rows={documentsListPage.documentsList.rows}
+        columns={documentsListPage.tableColumns}
+        mobileConfig={documentsListPage.mobileConfig}
+        meta={documentsListPage.documentsList.pagination}
+        loading={documentsListPage.documentsList.loading}
+        errorMessage={documentsListPage.documentsList.errorMessage}
         onRetry={() => {
-          void model.list.reload();
+          void documentsListPage.documentsList.reload();
         }}
-        query={model.query}
-        onQueryChange={model.onQueryChange}
-        onPageChange={model.onPageChange}
-        onRowsPerPageChange={model.onLimitChange}
+        query={documentsListPage.documentsList.queryParams.search ?? ''}
+        onQueryChange={documentsListPage.onQueryChange}
+        onPageChange={documentsListPage.onPageChange}
+        onRowsPerPageChange={documentsListPage.onRowsPerPageChange}
         emptyTitle="Nenhum documento encontrado"
         emptyDescription="Os documentos gerados aparecerão aqui."
         toolbarContent={
@@ -101,13 +101,13 @@ const DocumentsPage = () => {
         hideToolbar
       />
       <ConfirmDialog
-        open={model.deleteDialogOpen}
-        title={model.deleteDialogTitle}
-        description={model.deleteDialogDescription}
-        confirmLabel={model.actionLoading ? 'Removendo...' : 'Remover'}
-        onCancel={model.closeDeleteDialog}
+        open={documentsListPage.deleteModal.open}
+        title={documentsListPage.deleteModal.title}
+        description={documentsListPage.deleteModal.description}
+        confirmLabel={documentsListPage.deleteModal.confirmLabel}
+        onCancel={documentsListPage.deleteModal.onClose}
         onConfirm={() => {
-          void model.confirmDelete();
+          void documentsListPage.deleteModal.onConfirm();
         }}
       />
     </AppStack>

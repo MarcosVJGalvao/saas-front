@@ -1,3 +1,4 @@
+import { useParams } from 'react-router-dom';
 import { EntityDetailsPage } from '@shared/components/data-display/details/EntityDetailsPage';
 import { AppPaper } from '@shared/components/data-display/AppPaper';
 import { AppText } from '@shared/components/data-display/AppText';
@@ -5,29 +6,41 @@ import { ListFilters } from '@shared/components/data-display/data/ListFilters';
 import { AppAlert } from '@shared/components/feedback/AppAlert';
 import { AppStack } from '@shared/components/layout/AppStack';
 import { layoutSpacing } from '@theme/spacing';
-import { useSchoolClassDetailsPageViewModel } from '@features/client/academic/hooks/useSchoolClassDetailsPageViewModel';
+import { PageHeader } from '@shared/components/layout/PageHeader';
+import { useSchoolClassDetailsPage } from '@features/client/academic/hooks/useSchoolClassDetailsPage';
 
 const SchoolClassDetailsPage = () => {
-  const model = useSchoolClassDetailsPageViewModel();
-  const actionDisabled = model.actionLoading !== undefined;
+  const { id } = useParams<{ id: string }>();
+  const schoolClassDetailsPage = useSchoolClassDetailsPage(id ?? '');
+  const actionDisabled = schoolClassDetailsPage.actionLoading !== undefined;
+
+  if (!id) {
+    return null;
+  }
 
   return (
     <AppStack spacing={2}>
-      <EntityDetailsPage
-        viewState={model.viewState}
-        content={model.content}
-        data={model.data}
-        errorMessage={model.errorMessage}
-        onBack={model.onBack}
-        onRetry={() => {
-          void model.onRetry();
+      <PageHeader
+        title="Detalhes da turma"
+        subtitle="Consulte dados acadêmicos, capacidade e resumo operacional da turma."
+        actionLabel="Voltar"
+        onAction={() => {
+          schoolClassDetailsPage.onBack();
         }}
       />
-      {model.actionErrorMessage ? (
-        <AppAlert severity="error">{model.actionErrorMessage}</AppAlert>
+      <EntityDetailsPage
+        viewState={schoolClassDetailsPage.viewState}
+        data={schoolClassDetailsPage.data}
+        errorMessage={schoolClassDetailsPage.errorMessage}
+        onRetry={() => {
+          void schoolClassDetailsPage.onRetry();
+        }}
+      />
+      {schoolClassDetailsPage.actionErrorMessage ? (
+        <AppAlert severity="error">{schoolClassDetailsPage.actionErrorMessage}</AppAlert>
       ) : null}
-      {model.actionSuccessMessage ? (
-        <AppAlert severity="success">{model.actionSuccessMessage}</AppAlert>
+      {schoolClassDetailsPage.actionSuccessMessage ? (
+        <AppAlert severity="success">{schoolClassDetailsPage.actionSuccessMessage}</AppAlert>
       ) : null}
       <AppPaper sx={{ p: layoutSpacing.cardPadding, borderRadius: 2 }}>
         <AppStack spacing={2}>
@@ -45,12 +58,16 @@ const SchoolClassDetailsPage = () => {
                 mobileOrder: 1,
               },
             ]}
-            values={model.actionValues}
-            onChange={model.onActionValueChange}
-            onApply={() => {
-              void model.assignStudents();
+            values={schoolClassDetailsPage.actionValues}
+            onChange={(name, value) => {
+              if (name === 'studentIds' && typeof value === 'string') {
+                schoolClassDetailsPage.onActionValueChange('studentIds', value);
+              }
             }}
-            onClear={model.clearActionValues}
+            onApply={() => {
+              void schoolClassDetailsPage.assignStudents();
+            }}
+            onClear={schoolClassDetailsPage.clearActionValues}
             loading={actionDisabled}
             applyLabel="Adicionar alunos"
           />
@@ -64,12 +81,16 @@ const SchoolClassDetailsPage = () => {
                 mobileOrder: 1,
               },
             ]}
-            values={model.actionValues}
-            onChange={model.onActionValueChange}
-            onApply={() => {
-              void model.removeStudents();
+            values={schoolClassDetailsPage.actionValues}
+            onChange={(name, value) => {
+              if (name === 'studentIds' && typeof value === 'string') {
+                schoolClassDetailsPage.onActionValueChange('studentIds', value);
+              }
             }}
-            onClear={model.clearActionValues}
+            onApply={() => {
+              void schoolClassDetailsPage.removeStudents();
+            }}
+            onClear={schoolClassDetailsPage.clearActionValues}
             loading={actionDisabled}
             applyLabel="Remover alunos"
           />
@@ -91,12 +112,16 @@ const SchoolClassDetailsPage = () => {
                 mobileOrder: 1,
               },
             ]}
-            values={model.actionValues}
-            onChange={model.onActionValueChange}
-            onApply={() => {
-              void model.assignTeacherSubjects();
+            values={schoolClassDetailsPage.actionValues}
+            onChange={(name, value) => {
+              if (name === 'teacherSubjectIds' && typeof value === 'string') {
+                schoolClassDetailsPage.onActionValueChange('teacherSubjectIds', value);
+              }
             }}
-            onClear={model.clearActionValues}
+            onApply={() => {
+              void schoolClassDetailsPage.assignTeacherSubjects();
+            }}
+            onClear={schoolClassDetailsPage.clearActionValues}
             loading={actionDisabled}
             applyLabel="Adicionar vínculos"
           />
@@ -110,12 +135,16 @@ const SchoolClassDetailsPage = () => {
                 mobileOrder: 1,
               },
             ]}
-            values={model.actionValues}
-            onChange={model.onActionValueChange}
-            onApply={() => {
-              void model.removeTeacherSubjects();
+            values={schoolClassDetailsPage.actionValues}
+            onChange={(name, value) => {
+              if (name === 'teacherSubjectIds' && typeof value === 'string') {
+                schoolClassDetailsPage.onActionValueChange('teacherSubjectIds', value);
+              }
             }}
-            onClear={model.clearActionValues}
+            onApply={() => {
+              void schoolClassDetailsPage.removeTeacherSubjects();
+            }}
+            onClear={schoolClassDetailsPage.clearActionValues}
             loading={actionDisabled}
             applyLabel="Remover vínculos"
           />

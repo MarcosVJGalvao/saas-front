@@ -86,7 +86,11 @@ export const DataTable = <TData,>({
   return (
     <TableContainer
       component={Paper}
-      sx={{ border: `1px solid ${theme.palette.divider}`, borderRadius: theme.spacing(1.5) }}
+      sx={{
+        border: `1px solid ${theme.palette.divider}`,
+        borderRadius: theme.spacing(1.5),
+        overflowX: 'auto',
+      }}
     >
       <Table>
         <TableHead>
@@ -100,6 +104,8 @@ export const DataTable = <TData,>({
                   color: theme.palette.text.secondary,
                   fontWeight: 600,
                   py: theme.spacing(2.25),
+                  width: column.width ?? (column.key === 'actions' ? 1 : undefined),
+                  whiteSpace: 'nowrap',
                 }}
               >
                 {column.header}
@@ -135,8 +141,8 @@ export const DataTable = <TData,>({
         count={meta.total}
         page={currentPage}
         rowsPerPage={meta.limit}
-        labelRowsPerPage={TABLE_ROWS_PER_PAGE_LABEL}
-        labelDisplayedRows={TABLE_DISPLAYED_ROWS_LABEL}
+        labelRowsPerPage={i18n.pagination.rowsPerPage}
+        labelDisplayedRows={i18n.pagination.rangeLabel}
         onPageChange={(_, page) => onPageChange(page + 1)}
         onRowsPerPageChange={(event) => onRowsPerPageChange(Number(event.target.value))}
         rowsPerPageOptions={ROWS_PER_PAGE_OPTIONS}

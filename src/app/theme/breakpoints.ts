@@ -1,1 +1,1 @@
-export { breakpointValues, breakpoints, screenByDevice } from '@theme/tokens/breakpoints';
+export { breakpoints } from '@theme/tokens/breakpoints';

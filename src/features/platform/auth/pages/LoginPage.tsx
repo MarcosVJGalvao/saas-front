@@ -1,10 +1,10 @@
 import { Navigate } from 'react-router-dom';
 import { PlatformLoginFormCard } from '@features/platform/auth/components/PlatformLoginFormCard';
-import { usePlatformLoginPageViewModel } from '@features/platform/auth/hooks/usePlatformLoginPageViewModel';
+import { usePlatformLoginPage } from '@features/platform/auth/hooks/usePlatformLoginPage';
 import { PlatformAuthPageLayout } from '@shared/components/layout/PlatformAuthPageLayout';
 
 const PlatformLoginPage = () => {
-  const model = usePlatformLoginPageViewModel();
+  const model = usePlatformLoginPage();
 
   if (model.isAuthenticated) {
     return <Navigate to="/platform/home" replace />;

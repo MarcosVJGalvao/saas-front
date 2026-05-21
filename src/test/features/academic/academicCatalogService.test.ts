@@ -3,7 +3,7 @@ import {
   educationLevelService,
   gradeService,
   subjectService,
-} from '@features/client/academic/services/academicServices';
+} from '@features/client/academic/services/service';
 import { httpClient } from '@shared/services/httpClient';
 
 describe('academic catalog services', () => {

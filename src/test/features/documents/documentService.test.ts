@@ -1,8 +1,8 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { documentService } from '@features/client/documents/services/documentServices';
+import { documentsService } from '@features/client/documents/services/service';
 import { httpClient } from '@shared/services/httpClient';
 
-describe('documentService', () => {
+describe('documentsService', () => {
   afterEach(() => {
     vi.restoreAllMocks();
   });
@@ -16,7 +16,7 @@ describe('documentService', () => {
       },
     });
 
-    const response = await documentService.download('document-1');
+    const response = await documentsService.download('document-1');
 
     expect(getSpy).toHaveBeenCalledWith('/api/documents/document-1/download', {
       responseType: 'blob',

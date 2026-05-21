@@ -18,6 +18,7 @@ export const CLIENT_PROFILE_MESSAGES = {
 };
 
 let inFlightClientProfileRequest: Promise<ClientMeResponse> | null = null;
+let cachedClientProfile: ClientMeResponse | null = null;
 
 const normalizeStatus = (status: string): string =>
   status.toUpperCase() === 'ACTIVE' ? 'Ativo' : 'Inativo';
@@ -29,9 +30,9 @@ const normalizeProfile = (profile: ClientMeResponse): ClientMeResponse => ({
 });
 
 export const useClientProfile = ({ enabled }: UseClientProfileParams): UseClientProfileState => {
-  const [loading, setLoading] = useState(enabled);
+  const [loading, setLoading] = useState(enabled && cachedClientProfile === null);
   const [errorMessage, setErrorMessage] = useState('');
-  const [profile, setProfile] = useState<ClientMeResponse | null>(null);
+  const [profile, setProfile] = useState<ClientMeResponse | null>(cachedClientProfile);
   const hasRequestedProfileRef = useRef(false);
 
   const fetchProfile = useCallback(async () => {
@@ -49,9 +50,12 @@ export const useClientProfile = ({ enabled }: UseClientProfileParams): UseClient
       const request = inFlightClientProfileRequest ?? clientAuthService.me();
       inFlightClientProfileRequest = request;
       const me = await request;
-      setProfile(normalizeProfile(me));
+      const normalizedProfile = normalizeProfile(me);
+      cachedClientProfile = normalizedProfile;
+      setProfile(normalizedProfile);
     } catch {
       setProfile(null);
+      cachedClientProfile = null;
       setErrorMessage(CLIENT_PROFILE_MESSAGES.loadError);
     } finally {
       inFlightClientProfileRequest = null;

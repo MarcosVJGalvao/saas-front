@@ -1,18 +1,22 @@
-import { AppAlert } from '@shared/components/feedback/AppAlert';
+import { useParams } from 'react-router-dom';
+import { useStudentEnrollmentEditPage } from '@features/client/student-enrollments/hooks/useStudentEnrollmentEditPage';
+import type { StudentEnrollmentEditFormValues } from '@features/client/student-enrollments/schemas/studentEnrollmentEditForm.schema';
 import { AppCard } from '@shared/components/data-display/AppCard';
 import { AppCircularProgress } from '@shared/components/data-display/AppCircularProgress';
+import { AppAlert } from '@shared/components/feedback/AppAlert';
 import { AppForm } from '@shared/components/form/AppForm';
-import { AppStack } from '@shared/components/layout/AppStack';
 import { FormActions } from '@shared/components/form/FormActions';
+import { FormDatePicker } from '@shared/components/form/FormDatePicker';
+import { FormSelect } from '@shared/components/form/FormSelect';
 import { FormTextField } from '@shared/components/form/FormTextField';
+import { AppStack } from '@shared/components/layout/AppStack';
 import { PageHeader } from '@shared/components/layout/PageHeader';
-import { useStudentEnrollmentEditPageViewModel } from '@features/client/student-enrollments/hooks/useStudentEnrollmentEditPageViewModel';
-import type { UpdateStudentEnrollmentFormValues } from '@features/client/student-enrollments/schemas/studentEnrollmentSchemas';
 
 const StudentEnrollmentEditPage = () => {
-  const model = useStudentEnrollmentEditPageViewModel();
+  const { id } = useParams<{ id: string }>();
+  const studentEnrollmentEditPage = useStudentEnrollmentEditPage(id ?? '');
 
-  if (model.loading) {
+  if (studentEnrollmentEditPage.loading) {
     return <AppCircularProgress ariaLabel="Carregando matrícula" />;
   }
 
@@ -21,49 +25,76 @@ const StudentEnrollmentEditPage = () => {
       <PageHeader
         title="Editar Matrícula"
         subtitle="Atualize dados acadêmicos e observações da matrícula."
+        actionLabel="Voltar"
+        onAction={() => {
+          studentEnrollmentEditPage.onBack();
+        }}
       />
-      {model.errorMessage ? <AppAlert severity="error">{model.errorMessage}</AppAlert> : null}
+      {studentEnrollmentEditPage.errorMessage ? (
+        <AppAlert severity="error">{studentEnrollmentEditPage.errorMessage}</AppAlert>
+      ) : null}
+      {studentEnrollmentEditPage.referenceOptions.errorMessage ? (
+        <AppAlert severity="error">
+          {studentEnrollmentEditPage.referenceOptions.errorMessage}
+        </AppAlert>
+      ) : null}
       <AppCard>
-        <AppForm form={model.form} onSubmit={model.onSubmit} useResponsiveGrid>
-          <FormTextField<UpdateStudentEnrollmentFormValues>
+        <AppForm
+          form={studentEnrollmentEditPage.form}
+          onSubmit={studentEnrollmentEditPage.onSubmit}
+          useResponsiveGrid
+        >
+          <FormSelect<StudentEnrollmentEditFormValues>
             name="academicYearId"
-            label="ID do ano letivo"
-            disabled={model.submitting}
+            label="Ano letivo"
+            options={studentEnrollmentEditPage.referenceOptions.academicYearOptions}
+            disabled={
+              studentEnrollmentEditPage.submitting ||
+              studentEnrollmentEditPage.referenceOptions.loading
+            }
           />
-          <FormTextField<UpdateStudentEnrollmentFormValues>
+          <FormSelect<StudentEnrollmentEditFormValues>
             name="schoolClassId"
-            label="ID da turma"
-            disabled={model.submitting}
+            label="Turma"
+            options={studentEnrollmentEditPage.referenceOptions.schoolClassOptions}
+            disabled={
+              studentEnrollmentEditPage.submitting ||
+              studentEnrollmentEditPage.referenceOptions.loading
+            }
           />
-          <FormTextField<UpdateStudentEnrollmentFormValues>
+          <FormDatePicker<StudentEnrollmentEditFormValues>
             name="enrollmentDate"
             label="Data da matrícula"
-            disabled={model.submitting}
+            disabled={studentEnrollmentEditPage.submitting}
           />
-          <FormTextField<UpdateStudentEnrollmentFormValues>
+          <FormTextField<StudentEnrollmentEditFormValues>
             name="enrollmentCode"
             label="Código da matrícula"
-            disabled={model.submitting}
+            disabled={studentEnrollmentEditPage.submitting}
           />
-          <FormTextField<UpdateStudentEnrollmentFormValues>
+          <FormTextField<StudentEnrollmentEditFormValues>
             name="observations"
             label="Observações"
-            disabled={model.submitting}
+            disabled={studentEnrollmentEditPage.submitting}
           />
           <FormActions
             secondaryAction={{
               type: 'cancel',
               label: 'Cancelar',
-              onClick: model.onCancel,
-              disabled: model.submitting,
+              onClick: () => {
+                studentEnrollmentEditPage.onBack();
+              },
+              disabled: studentEnrollmentEditPage.submitting,
             }}
             primaryAction={{
               type: 'confirm',
-              label: model.submitting ? 'Salvando...' : 'Salvar alterações',
+              label: studentEnrollmentEditPage.submitting ? 'Salvando...' : 'Salvar alterações',
               onClick: () => {
-                void model.form.handleSubmit(model.onSubmit)();
+                void studentEnrollmentEditPage.form.handleSubmit(
+                  studentEnrollmentEditPage.onSubmit,
+                )();
               },
-              disabled: model.submitting,
+              disabled: studentEnrollmentEditPage.submitting,
             }}
           />
         </AppForm>

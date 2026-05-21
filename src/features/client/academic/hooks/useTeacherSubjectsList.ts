@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from 'react';
-import { teacherSubjectService } from '@features/client/academic/services/academicServices';
+import { teacherSubjectService } from '@features/client/academic/services/service';
 import type {
   TeacherSubject,
   TeacherSubjectQueryParams,

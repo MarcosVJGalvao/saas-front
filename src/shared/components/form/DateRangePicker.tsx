@@ -33,7 +33,7 @@ export const DateRangePicker = ({
   startTextFieldSx,
   endTextFieldSx,
 }: DateRangePickerProps) => (
-  <Stack direction={responsive({ mobile: 'column', tablet: 'row' })} spacing={spacingScale.sm}>
+  <Stack direction={responsive({ xs: 'column', md: 'row' })} spacing={spacingScale.sm}>
     <AppDatePicker
       label={startLabel}
       value={startValue}

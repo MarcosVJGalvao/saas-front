@@ -1,42 +1,17 @@
 import { useNavigate } from 'react-router-dom';
 import { AppText } from '@shared/components/data-display/AppText';
+import { AppAlert } from '@shared/components/feedback/AppAlert';
 import { ListFilters } from '@shared/components/data-display/data/ListFilters';
 import { QueryDataTable } from '@shared/components/data-display/data/QueryDataTable';
 import { AppStack } from '@shared/components/layout/AppStack';
 import { PageHeader } from '@shared/components/layout/PageHeader';
-import {
-  attendanceSchedulesColumns,
-  attendanceSchedulesMobileConfig,
-} from '@features/client/attendance/components/attendanceSchedulesPresentation';
-import {
-  buildAttendanceQueryFromFilters,
-  useAttendanceFilters,
-} from '@features/client/attendance/hooks/useAttendanceFilters';
-import { useAttendanceSchedulesList } from '@features/client/attendance/hooks/useAttendanceSchedulesList';
 import { useClientPermission } from '@features/client/shared/hooks/useClientPermission';
+import { useAttendanceSchedulesPage } from '@features/client/attendance/hooks/useAttendanceSchedulesPage';
 
 const AttendanceSchedulesPage = () => {
   const navigate = useNavigate();
   const permissions = useClientPermission();
-  const list = useAttendanceSchedulesList();
-  const filters = useAttendanceFilters();
-
-  const applyFilters = (): void => {
-    list.updateQuery(buildAttendanceQueryFromFilters(filters.filterValues));
-  };
-
-  const clearFilters = (): void => {
-    filters.resetFilters();
-    list.updateQuery({
-      page: 1,
-      schoolClassId: undefined,
-      subjectId: undefined,
-      studentId: undefined,
-      status: undefined,
-      startDate: undefined,
-      endDate: undefined,
-    });
-  };
+  const attendanceSchedulesPage = useAttendanceSchedulesPage();
 
   return (
     <AppStack spacing={2}>
@@ -47,20 +22,27 @@ const AttendanceSchedulesPage = () => {
         canShowAction={permissions.can('attendance:create')}
         onAction={() => void navigate('/client/attendance/schedules/new')}
       />
+      {attendanceSchedulesPage.referenceOptions.errorMessage ? (
+        <AppAlert severity="error">
+          {attendanceSchedulesPage.referenceOptions.errorMessage}
+        </AppAlert>
+      ) : null}
       <ListFilters
         fields={[
           {
-            type: 'text',
+            type: 'select',
             name: 'schoolClassId',
             label: 'Turma',
-            placeholder: 'ID da turma',
+            placeholder: 'Todas as turmas',
+            options: attendanceSchedulesPage.referenceOptions.schoolClassOptions,
             mobileOrder: 1,
           },
           {
-            type: 'text',
+            type: 'select',
             name: 'subjectId',
             label: 'Disciplina',
-            placeholder: 'ID da disciplina',
+            placeholder: 'Todas as disciplinas',
+            options: attendanceSchedulesPage.referenceOptions.subjectOptions,
             mobileOrder: 2,
           },
           {
@@ -72,26 +54,35 @@ const AttendanceSchedulesPage = () => {
             mobileOrder: 3,
           },
         ]}
-        values={filters.filterValues}
-        onChange={filters.onFilterChange}
-        onApply={applyFilters}
-        onClear={clearFilters}
-        loading={list.loading}
+        values={attendanceSchedulesPage.filterValues}
+        onChange={attendanceSchedulesPage.onFilterChange}
+        onApply={attendanceSchedulesPage.applyFilters}
+        onClear={attendanceSchedulesPage.clearFilters}
+        loading={
+          attendanceSchedulesPage.attendanceSchedulesList.loading ||
+          attendanceSchedulesPage.referenceOptions.loading
+        }
       />
       <QueryDataTable
-        rows={list.rows}
-        columns={attendanceSchedulesColumns}
-        mobileConfig={attendanceSchedulesMobileConfig}
-        meta={list.meta}
-        loading={list.loading}
-        errorMessage={list.errorMessage}
+        rows={attendanceSchedulesPage.attendanceSchedulesList.rows}
+        columns={attendanceSchedulesPage.tableColumns}
+        mobileConfig={attendanceSchedulesPage.mobileConfig}
+        meta={attendanceSchedulesPage.attendanceSchedulesList.meta}
+        loading={attendanceSchedulesPage.attendanceSchedulesList.loading}
+        errorMessage={attendanceSchedulesPage.attendanceSchedulesList.errorMessage}
         onRetry={() => {
-          void list.reload();
+          void attendanceSchedulesPage.attendanceSchedulesList.reload();
         }}
-        query={list.query.search ?? ''}
-        onQueryChange={(search) => list.updateQuery({ search, page: 1 })}
-        onPageChange={(page) => list.updateQuery({ page })}
-        onRowsPerPageChange={(limit) => list.updateQuery({ limit, page: 1 })}
+        query={attendanceSchedulesPage.attendanceSchedulesList.query.search ?? ''}
+        onQueryChange={(search) =>
+          attendanceSchedulesPage.attendanceSchedulesList.updateQuery({ search, page: 1 })
+        }
+        onPageChange={(page) =>
+          attendanceSchedulesPage.attendanceSchedulesList.updateQuery({ page })
+        }
+        onRowsPerPageChange={(limit) =>
+          attendanceSchedulesPage.attendanceSchedulesList.updateQuery({ limit, page: 1 })
+        }
         emptyTitle="Nenhum horário encontrado"
         emptyDescription="Configure horários para liberar lançamentos de frequência."
         toolbarContent={

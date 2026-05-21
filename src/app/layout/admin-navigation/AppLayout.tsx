@@ -352,12 +352,11 @@ export const AppLayout = ({ children }: { children?: ReactNode }) => {
       />
 
       <CommandPalette
+        key={palette.openKey}
         isOpen={palette.isOpen}
-        query={palette.query}
         favorites={palette.favorites}
         items={navigationItems}
         onClose={palette.close}
-        onQueryChange={palette.setQuery}
         onToggleFavorite={palette.toggleFavorite}
       />
     </Box>

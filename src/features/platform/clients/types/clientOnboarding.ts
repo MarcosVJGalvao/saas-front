@@ -4,6 +4,7 @@ import type {
   Gender,
   MaritalStatus,
 } from '@features/platform/clients/types/clients';
+import type { Plan } from '@features/platform/plans/types/plans';
 
 export type ClientOnboardingUiExtras = {
   cep: string;
@@ -55,9 +56,17 @@ export type OnboardingStepData = {
   addressLoading: boolean;
 };
 
-export type OnboardingSummaryData = {
+export type ClientOnboardingSummaryData = {
   client: string;
   tenant: string;
   plan: string;
   admin: string;
+};
+
+export type ClientOnboardingStepProps = OnboardingStepData;
+
+export type ClientOnboardingStepsProps = OnboardingStepData & {
+  activeStep: number;
+  planOptions: Plan[];
+  plansLoading: boolean;
 };
