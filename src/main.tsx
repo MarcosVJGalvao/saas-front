@@ -1,6 +1,7 @@
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import { Analytics } from '@vercel/analytics/react';
+import { SpeedInsights } from '@vercel/speed-insights/react';
 import { AppProviders } from '@app/providers/AppProviders';
 import { AppRouter } from '@app/router/AppRouter';
 
@@ -15,6 +16,7 @@ createRoot(rootElement).render(
     <AppProviders>
       <AppRouter />
       <Analytics />
+      <SpeedInsights />
     </AppProviders>
   </StrictMode>,
 );
