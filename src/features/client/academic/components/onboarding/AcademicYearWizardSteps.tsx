@@ -1,8 +1,8 @@
 import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
 import AddOutlinedIcon from '@mui/icons-material/AddOutlined';
-import MenuItem from '@mui/material/MenuItem';
 import { Controller, useFieldArray, useFormContext } from 'react-hook-form';
 import { AppButton } from '@shared/components/inputs/AppButton';
+import { AppMenuItem } from '@shared/components/inputs/AppMenuItem';
 import { AppDatePicker } from '@shared/components/form/AppDatePicker';
 import { AppGrid } from '@shared/components/layout/AppGrid';
 import { AppPaper } from '@shared/components/data-display/AppPaper';
@@ -55,9 +55,9 @@ const SelectField = ({ name, label, options }: SelectFieldProps) => {
           helperText={fieldState.error?.message}
         >
           {options.map((option) => (
-            <MenuItem key={option.value} value={option.value}>
+            <AppMenuItem key={option.value} value={option.value}>
               {option.label}
-            </MenuItem>
+            </AppMenuItem>
           ))}
         </AppTextField>
       )}

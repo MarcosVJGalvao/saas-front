@@ -16,7 +16,7 @@
     "test:watch": "vitest",
     "test:coverage": "vitest run --coverage",
     "prepare": "husky",
-    "check:all": "npm run lint && npm run typecheck && npm run test && npm run build"
+    "check:all": "npm run compliance && npm run lint && npm run typecheck && npm run test && npm run build"
   },
   "lint-staged": {
     "*.{ts,tsx,js,jsx}": [
