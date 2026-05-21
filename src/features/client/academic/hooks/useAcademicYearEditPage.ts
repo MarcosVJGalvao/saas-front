@@ -47,12 +47,14 @@ export const useAcademicYearEditPage = (id: string, locationStateValue: unknown)
     hasLocationStateEntity && locationStateEntity
       ? normalizeAcademicYearInitialValues(locationStateEntity)
       : {
+          reportCardPolicyId: undefined,
           name: '',
           status: 'scheduled',
           startDate: '',
           endDate: '',
           academicPeriods: [
             {
+              academicPeriodId: undefined,
               name: '',
               code: '',
               sequence: '1',

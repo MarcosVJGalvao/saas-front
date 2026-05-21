@@ -34,6 +34,7 @@ export type ReportCardPolicy = {
 };
 
 export type AcademicYearPeriodInput = {
+  id?: string | undefined;
   name: string;
   code: string;
   sequence: number;
@@ -44,6 +45,7 @@ export type AcademicYearPeriodInput = {
 };
 
 export type AcademicYearReportCardPolicyInput = {
+  id?: string | undefined;
   calculationType: ReportCardCalculationTypeValue;
   passingGrade: number;
   minimumAttendancePercentage: number;

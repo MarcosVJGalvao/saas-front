@@ -26,6 +26,7 @@ const buildNumberStringSchema = (
 
 export const academicYearPeriodFormSchema = z
   .object({
+    academicPeriodId: z.string().trim().min(1).optional(),
     name: z
       .string()
       .trim()
@@ -61,6 +62,7 @@ export const academicYearPeriodFormSchema = z
 
 export const academicYearFormSchema = z
   .object({
+    reportCardPolicyId: z.string().trim().min(1).optional(),
     name: z
       .string()
       .trim()

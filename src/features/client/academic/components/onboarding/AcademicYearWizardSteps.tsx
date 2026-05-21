@@ -118,6 +118,7 @@ const PeriodsStep = () => {
   const academicPeriodsFieldArray = useFieldArray({
     control: form.control,
     name: 'academicPeriods',
+    keyName: 'fieldId',
   });
 
   return (
@@ -133,6 +134,7 @@ const PeriodsStep = () => {
           startIcon={<AddOutlinedIcon />}
           onClick={() => {
             academicPeriodsFieldArray.append({
+              academicPeriodId: undefined,
               name: '',
               code: '',
               sequence: String(academicPeriodsFieldArray.fields.length + 1),
@@ -148,7 +150,7 @@ const PeriodsStep = () => {
       </AppStack>
 
       {academicPeriodsFieldArray.fields.map((academicPeriodField, periodIndex) => (
-        <AppPaper key={academicPeriodField.id} sx={{ p: 2 }}>
+        <AppPaper key={academicPeriodField.fieldId} sx={{ p: 2 }}>
           <AppStack spacing={2}>
             <AppStack
               direction={{ xs: 'column', sm: 'row' }}

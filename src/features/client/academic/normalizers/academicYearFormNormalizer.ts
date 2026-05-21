@@ -18,6 +18,7 @@ const parseOptionalNumber = (value: string | undefined): number | undefined => {
 const parseRequiredNumber = (value: string): number => Number(value.trim().replace(',', '.'));
 
 const buildDefaultAcademicPeriod = (): AcademicYearFormValues['academicPeriods'][number] => ({
+  academicPeriodId: undefined,
   name: '',
   code: '',
   sequence: '1',
@@ -48,6 +49,7 @@ const normalizeAcademicPeriodFormValues = (
   }
 
   return availableAcademicPeriods.map((academicPeriod, periodIndex) => ({
+    academicPeriodId: academicPeriod.id,
     name: academicPeriod.name,
     code: academicPeriod.code ?? '',
     sequence: String(academicPeriod.sequence ?? periodIndex + 1),
@@ -64,6 +66,7 @@ const normalizeAcademicPeriodFormValues = (
 const toAcademicPeriodPayload = (
   academicPeriod: AcademicYearFormValues['academicPeriods'][number],
 ): AcademicYearPeriodInput => ({
+  id: optionalText(academicPeriod.academicPeriodId),
   name: academicPeriod.name.trim(),
   code: academicPeriod.code.trim(),
   sequence: Number(academicPeriod.sequence.trim()),
@@ -74,6 +77,7 @@ const toAcademicPeriodPayload = (
 });
 
 export const buildAcademicYearInitialValues = (): AcademicYearFormValues => ({
+  reportCardPolicyId: undefined,
   name: '',
   status: 'scheduled',
   startDate: '',
@@ -89,6 +93,7 @@ export const buildAcademicYearInitialValues = (): AcademicYearFormValues => ({
 export const normalizeAcademicYearInitialValues = (
   academicYear: AcademicYear,
 ): AcademicYearFormValues => ({
+  reportCardPolicyId: academicYear.reportCardPolicy?.id,
   name: academicYear.name,
   status: academicYear.status,
   startDate: academicYear.startDate ?? '',
@@ -113,6 +118,7 @@ export const normalizeAcademicYearPayload = (
   isClosed: values.status === 'closed',
   academicPeriods: values.academicPeriods.map(toAcademicPeriodPayload),
   reportCardPolicy: {
+    id: optionalText(values.reportCardPolicyId),
     calculationType: values.calculationType,
     passingGrade: parseRequiredNumber(values.passingGrade),
     minimumAttendancePercentage: parseRequiredNumber(values.minimumAttendancePercentage),

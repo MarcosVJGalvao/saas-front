@@ -5,13 +5,15 @@ import { normalizeSchoolClassPayload } from '@features/client/academic/normalize
 describe('academic form normalizers', () => {
   it('normaliza o payload do ano letivo conforme o dto', () => {
     const payload = normalizeAcademicYearPayload({
+      reportCardPolicyId: 'policy-1',
       name: ' Ano 2026 ',
       status: 'active',
       startDate: '2026-01-01',
       endDate: '2026-12-31',
       academicPeriods: [
         {
-          name: ' 1º período ',
+          academicPeriodId: 'period-1',
+          name: ' 1o periodo ',
           code: ' P1 ',
           sequence: '1',
           startDate: '2026-01-01',
@@ -20,7 +22,8 @@ describe('academic form normalizers', () => {
           isFinalPeriod: false,
         },
         {
-          name: ' 2º período ',
+          academicPeriodId: undefined,
+          name: ' 2o periodo ',
           code: ' P2 ',
           sequence: '2',
           startDate: '2026-07-01',
@@ -43,7 +46,8 @@ describe('academic form normalizers', () => {
       isClosed: false,
       academicPeriods: [
         {
-          name: '1º período',
+          id: 'period-1',
+          name: '1o periodo',
           code: 'P1',
           sequence: 1,
           startDate: '2026-01-01',
@@ -52,7 +56,8 @@ describe('academic form normalizers', () => {
           isFinalPeriod: false,
         },
         {
-          name: '2º período',
+          id: undefined,
+          name: '2o periodo',
           code: 'P2',
           sequence: 2,
           startDate: '2026-07-01',
@@ -62,6 +67,7 @@ describe('academic form normalizers', () => {
         },
       ],
       reportCardPolicy: {
+        id: 'policy-1',
         calculationType: 'weighted',
         passingGrade: 6,
         minimumAttendancePercentage: 75,
