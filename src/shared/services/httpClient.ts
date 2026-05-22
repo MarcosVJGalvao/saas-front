@@ -16,9 +16,6 @@ import {
 } from '@shared/services/authSessionStorage';
 import type { AuthSession } from '@shared/types/authSession';
 
-const configuredApiBaseUrl = import.meta.env.VITE_API_BASE_URL?.trim();
-const API_BASE_URL =
-  configuredApiBaseUrl !== undefined && configuredApiBaseUrl.length > 0 ? configuredApiBaseUrl : '';
 const CLIENT_REFRESH_PATH = '/api/auth/refresh';
 const PLATFORM_REFRESH_PATH = '/api/platform/auth/refresh';
 const CLIENT_API_BASE_PATH = '/api/client';
@@ -84,7 +81,7 @@ export const shouldSkipTokenRefreshForRequest = (requestUrl: string): boolean =>
   requestUrl.includes(PLATFORM_REFRESH_PATH);
 
 export const httpClient = axios.create({
-  baseURL: API_BASE_URL,
+  baseURL: '',
   timeout: 10000,
   headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
 });
