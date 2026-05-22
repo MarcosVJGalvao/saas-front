@@ -1,7 +1,7 @@
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
-import { format, parse } from 'date-fns';
+import { format, isValid, parse } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import type { SxProps, Theme } from '@mui/material/styles';
 
@@ -31,6 +31,11 @@ const toBackendDate = (date: Date | null): string | null => {
   if (date === null) {
     return null;
   }
+
+  if (!isValid(date)) {
+    return null;
+  }
+
   return format(date, BACKEND_DATE_FORMAT);
 };
 
@@ -38,7 +43,14 @@ const toDateObject = (value: string | null): Date | null => {
   if (value === null || value.length === 0) {
     return null;
   }
-  return parse(value, BACKEND_DATE_FORMAT, new Date());
+
+  const parsedDate = parse(value, BACKEND_DATE_FORMAT, new Date());
+
+  if (!isValid(parsedDate)) {
+    return null;
+  }
+
+  return parsedDate;
 };
 
 export const AppDatePicker = ({
@@ -61,9 +73,14 @@ export const AppDatePicker = ({
         label={label}
         value={parsedValue}
         disabled={disabled}
+        keepOpenDuringFieldFocus
         {...(minDate !== undefined ? { minDate } : {})}
         {...(maxDate !== undefined ? { maxDate } : {})}
-        onChange={(nextValue) => {
+        onChange={(nextValue, context) => {
+          if (context.validationError !== null) {
+            return;
+          }
+
           onChange(toBackendDate(nextValue));
         }}
         format={DISPLAY_DATE_FORMAT}
