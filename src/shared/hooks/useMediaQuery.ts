@@ -1,8 +1,11 @@
 import { useEffect, useState } from 'react';
 
+const sanitize = (query: string) => query.replace(/^@media\s?/, '');
+
 export const useMediaQuery = (query: string): boolean => {
+  const sanitizedQuery = sanitize(query);
   const [matches, setMatches] = useState<boolean>(() =>
-    typeof window !== 'undefined' ? window.matchMedia(query).matches : false,
+    typeof window !== 'undefined' ? window.matchMedia(sanitizedQuery).matches : false,
   );
 
   useEffect(() => {
@@ -10,7 +13,7 @@ export const useMediaQuery = (query: string): boolean => {
       return undefined;
     }
 
-    const mediaQueryList = window.matchMedia(query);
+    const mediaQueryList = window.matchMedia(sanitizedQuery);
     const listener = (event: MediaQueryListEvent) => {
       setMatches(event.matches);
     };
@@ -20,7 +23,7 @@ export const useMediaQuery = (query: string): boolean => {
     return () => {
       mediaQueryList.removeEventListener('change', listener);
     };
-  }, [query]);
+  }, [sanitizedQuery]);
 
   return matches;
 };
