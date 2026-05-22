@@ -30,7 +30,7 @@ export const normalizeSchoolClassInitialValues = (value: SchoolClass): SchoolCla
   code: value.code ?? '',
   status: value.status,
   shift: value.shift ?? 'morning',
-  capacity: value.capacity !== undefined ? String(value.capacity) : '',
+  capacity: value.maxCapacity !== undefined ? String(value.maxCapacity) : '',
   academicYearId: value.academicYear?.id ?? '',
   gradeId: value.grade?.id ?? '',
   educationLevelId: value.educationLevel?.id ?? '',

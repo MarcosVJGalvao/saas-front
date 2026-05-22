@@ -59,9 +59,11 @@ export const useTeacherSubjectsListPage = () => {
   const referenceOptions = useAcademicReferenceOptions({
     includeTeachers: true,
     includeSubjects: true,
+    teacherJobTitle: 'teacher',
   });
   const [filterValues, setFilterValues] = useState<TeacherSubjectFilterValues>(initialFilterValues);
   const [createValues, setCreateValues] = useState<TeacherSubjectCreateValues>(initialCreateValues);
+  const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [selectedTeacherSubjectId, setSelectedTeacherSubjectId] = useState<string | undefined>();
   const [actionLoading, setActionLoading] = useState(false);
   const feedback = useFeedback();
@@ -86,6 +88,7 @@ export const useTeacherSubjectsListPage = () => {
     try {
       await teacherSubjectService.create({ teacherId, subjectId });
       setCreateValues(initialCreateValues);
+      setIsCreateModalOpen(false);
       feedback.setSuccess('Vínculo professor-disciplina criado com sucesso.');
       await teacherSubjectsList.reload();
     } catch {
@@ -121,6 +124,7 @@ export const useTeacherSubjectsListPage = () => {
     feedback,
     filterValues,
     createValues,
+    isCreateModalOpen,
     actionLoading,
     onFilterChange: (filterKey: string, filterValue: unknown) => {
       const normalizedValue = typeof filterValue === 'string' ? filterValue : '';
@@ -133,6 +137,14 @@ export const useTeacherSubjectsListPage = () => {
       if (fieldName === 'teacherId' || fieldName === 'subjectId') {
         setCreateValues((currentValues) => ({ ...currentValues, [fieldName]: normalizedValue }));
       }
+    },
+    openCreateModal: () => {
+      feedback.clear();
+      setIsCreateModalOpen(true);
+    },
+    closeCreateModal: () => {
+      setIsCreateModalOpen(false);
+      setCreateValues(initialCreateValues);
     },
     applyFilters: () => {
       teacherSubjectsList.updateQuery(buildQueryFromFilters(filterValues));

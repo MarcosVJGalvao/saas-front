@@ -19,7 +19,7 @@ const getShift = (schoolClass: SchoolClass): string =>
 
 const getCapacity = (schoolClass: SchoolClass): string => {
   const currentStudents = schoolClass.currentStudents ?? 0;
-  const capacity = schoolClass.capacity ?? 0;
+  const capacity = schoolClass.maxCapacity ?? 0;
   return capacity > 0 ? `${currentStudents}/${capacity}` : String(currentStudents);
 };
 

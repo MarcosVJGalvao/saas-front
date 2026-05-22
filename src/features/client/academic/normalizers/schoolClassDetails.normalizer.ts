@@ -13,8 +13,34 @@ const formatShift = (value: SchoolClass['shift']): string =>
 
 const formatCapacity = (schoolClass: SchoolClass): string => {
   const currentStudents = schoolClass.currentStudents ?? 0;
-  const capacity = schoolClass.capacity ?? 0;
+  const capacity = schoolClass.maxCapacity ?? 0;
   return capacity > 0 ? `${currentStudents}/${capacity}` : String(currentStudents);
+};
+
+const formatTeacherSubjects = (schoolClass: SchoolClass): string => {
+  const teacherSubjects = schoolClass.teacherSubjects ?? [];
+
+  if (teacherSubjects.length === 0) {
+    return '-';
+  }
+
+  return teacherSubjects
+    .map((teacherSubjectBinding) => {
+      const teacherName = teacherSubjectBinding.teacherSubject.teacher?.fullName ?? 'Professor';
+      const subjectName = teacherSubjectBinding.teacherSubject.subject?.name ?? 'Disciplina';
+      return `${teacherName} - ${subjectName}`;
+    })
+    .join(', ');
+};
+
+const formatStudents = (schoolClass: SchoolClass): string => {
+  const students = schoolClass.students ?? [];
+
+  if (students.length === 0) {
+    return '-';
+  }
+
+  return students.map((student) => student.fullName).join(', ');
 };
 
 export const toSchoolClassDetailsData = (
@@ -44,7 +70,16 @@ export const toSchoolClassDetailsData = (
             { label: 'Capacidade', value: formatCapacity(schoolClass) },
             { label: 'Ano letivo', value: schoolClass.academicYear?.name ?? '-' },
             { label: 'Série', value: schoolClass.grade?.name ?? '-' },
-            { label: 'Nível de ensino', value: schoolClass.educationLevel?.name ?? '-' },
+            { label: 'Coordenador', value: schoolClass.coordinator?.fullName ?? '-' },
+            { label: 'Descrição', value: schoolClass.description ?? '-' },
+          ],
+        },
+        {
+          id: 'relationships',
+          title: 'Vínculos',
+          items: [
+            { label: 'Alunos da turma', value: formatStudents(schoolClass) },
+            { label: 'Professor-disciplina', value: formatTeacherSubjects(schoolClass) },
           ],
         },
         {
@@ -65,10 +100,13 @@ export const toSchoolClassDetailsData = (
           id: 'operation-summary',
           title: 'Resumo operacional',
           items: [
-            { label: 'Alunos vinculados', value: summary?.studentsTotal ?? '-' },
-            { label: 'Capacidade', value: summary?.capacity ?? schoolClass.capacity ?? '-' },
-            { label: 'Professor-disciplina', value: summary?.teacherSubjectsTotal ?? '-' },
-            { label: 'Horários de frequência', value: summary?.attendanceSchedulesTotal ?? '-' },
+            { label: 'Alunos matriculados', value: summary?.currentStudents ?? '-' },
+            {
+              label: 'Capacidade máxima',
+              value: summary?.maxCapacity ?? schoolClass.maxCapacity ?? '-',
+            },
+            { label: 'Vagas disponíveis', value: summary?.availableSlots ?? '-' },
+            { label: 'Disciplinas vinculadas', value: summary?.subjectsCount ?? '-' },
           ],
         },
       ],

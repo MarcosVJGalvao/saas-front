@@ -17,6 +17,14 @@ const periodStatusLabels: Record<'open' | 'closed' | 'active' | 'inactive', stri
 
 const formatDate = (value: string | undefined): string => (value ? formatIsoDate(value) : '-');
 
+const formatFinalPeriod = (value: boolean | number | undefined): string => {
+  if (value === undefined) {
+    return '-';
+  }
+
+  return value === true || value === 1 ? 'Sim' : 'Não';
+};
+
 export const toReportCardCatalogDetailsData = (
   mode: ReportCardCatalogDetailsMode,
   item: ReportCardCatalogEntity,
@@ -44,8 +52,36 @@ export const toReportCardCatalogDetailsData = (
                 { label: 'Código', value: period.code ?? '-' },
                 { label: 'Ano letivo', value: period.academicYear?.name ?? '-' },
                 { label: 'Status', value: period.status ? periodStatusLabels[period.status] : '-' },
+                {
+                  label: 'Unidade',
+                  value: period.sequence === undefined ? '-' : `${period.sequence}ª unidade`,
+                },
+                { label: 'Peso', value: period.weight ?? '-' },
+                { label: 'Período final', value: formatFinalPeriod(period.isFinalPeriod) },
                 { label: 'Início', value: formatDate(period.startDate) },
                 { label: 'Fim', value: formatDate(period.endDate) },
+              ],
+            },
+            {
+              id: 'academic-year',
+              title: 'Ano letivo vinculado',
+              items: [
+                { label: 'Ano letivo', value: period.academicYear?.name ?? '-' },
+                {
+                  label: 'Início do ano letivo',
+                  value: formatDate(period.academicYear?.startDate),
+                },
+                { label: 'Fim do ano letivo', value: formatDate(period.academicYear?.endDate) },
+                {
+                  label: 'Situação do ano letivo',
+                  value: period.academicYear?.status
+                    ? periodStatusLabels[period.academicYear.status]
+                    : '-',
+                },
+                {
+                  label: 'Ano letivo encerrado',
+                  value: formatFinalPeriod(period.academicYear?.isClosed),
+                },
               ],
             },
           ],

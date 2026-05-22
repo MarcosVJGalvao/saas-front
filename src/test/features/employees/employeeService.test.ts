@@ -29,6 +29,28 @@ describe('employeeService', () => {
     });
   });
 
+  it('lista funcionários filtrando por cargo quando informado', async () => {
+    const getSpy = vi.spyOn(httpClient, 'get').mockResolvedValueOnce({
+      data: {
+        data: [{ id: 'employee-1', jobTitle: 'teacher' }],
+        meta: {
+          page: 1,
+          limit: 10,
+          total: 1,
+          totalPages: 1,
+          hasNextPage: false,
+          hasPreviousPage: false,
+        },
+      },
+    });
+
+    await employeeService.list({ page: 1, limit: 10, jobTitle: 'teacher' });
+
+    expect(getSpy).toHaveBeenCalledWith('/api/employees', {
+      params: { page: 1, limit: 10, jobTitle: 'teacher', sortOrder: 'DESC' },
+    });
+  });
+
   it('cria funcionário no endpoint do guia', async () => {
     const postSpy = vi.spyOn(httpClient, 'post').mockResolvedValueOnce({
       data: { id: 'employee-1', jobTitle: 'Professor' },

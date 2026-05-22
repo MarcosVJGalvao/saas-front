@@ -90,7 +90,7 @@ describe('reference options expansion hooks', () => {
       data: [
         {
           id: 'teacher-1',
-          jobTitle: 'Professor',
+          jobTitle: 'teacher',
           person: { id: 'person-1', fullName: 'João' },
         },
       ],
@@ -98,11 +98,20 @@ describe('reference options expansion hooks', () => {
     });
 
     const { result } = renderHook(() =>
-      useAcademicReferenceOptions({ includeTeachers: true, includeSubjects: true }),
+      useAcademicReferenceOptions({
+        includeTeachers: true,
+        includeSubjects: true,
+        teacherJobTitle: 'teacher',
+      }),
     );
 
     await waitFor(() => expect(result.current.loading).toBe(false));
 
+    expect(employeeService.list).toHaveBeenCalledWith({
+      page: 1,
+      limit: 100,
+      jobTitle: 'teacher',
+    });
     expect(result.current.teacherOptions).toEqual([{ value: 'teacher-1', label: 'João' }]);
   });
 

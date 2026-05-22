@@ -15,7 +15,7 @@ import type {
   SchoolClass,
   TeacherSubject,
 } from '@features/client/academic/types/academic.types';
-import type { Employee } from '@features/client/employees/types/employee.types';
+import type { Employee, EmployeeJobTitle } from '@features/client/employees/types/employee.types';
 
 const REFERENCE_LIMIT = 100;
 const EMPTY_OPTION: AppSelectOption = { value: '', label: 'Não selecionar' };
@@ -53,6 +53,7 @@ export interface UseAcademicReferenceOptionsParams {
   includeSubjects?: boolean | undefined;
   includeTeacherSubjects?: boolean | undefined;
   includeTeachers?: boolean | undefined;
+  teacherJobTitle?: EmployeeJobTitle | undefined;
 }
 
 export interface UseAcademicReferenceOptionsResult {
@@ -73,6 +74,7 @@ export const useAcademicReferenceOptions = ({
   includeSubjects = false,
   includeTeacherSubjects = false,
   includeTeachers = false,
+  teacherJobTitle,
 }: UseAcademicReferenceOptionsParams = {}): UseAcademicReferenceOptionsResult => {
   const [academicYearOptions, setAcademicYearOptions] = useState<AppSelectOption[]>([]);
   const [gradeOptions, setGradeOptions] = useState<AppSelectOption[]>([]);
@@ -113,7 +115,7 @@ export const useAcademicReferenceOptions = ({
             ? subjectService.list({ page: 1, limit: REFERENCE_LIMIT })
             : Promise.resolve({ data: [], meta: undefined }),
           includeTeachers
-            ? employeeService.list({ page: 1, limit: REFERENCE_LIMIT })
+            ? employeeService.list({ page: 1, limit: REFERENCE_LIMIT, jobTitle: teacherJobTitle })
             : Promise.resolve({ data: [], meta: undefined }),
           includeTeacherSubjects
             ? teacherSubjectService.list({ page: 1, limit: REFERENCE_LIMIT })
@@ -163,6 +165,7 @@ export const useAcademicReferenceOptions = ({
     includeSubjects,
     includeTeacherSubjects,
     includeTeachers,
+    teacherJobTitle,
   ]);
 
   return {

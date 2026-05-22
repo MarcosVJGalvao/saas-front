@@ -32,7 +32,9 @@ const toCatalogOption = (item: AcademicCatalogItem): AppSelectOption => ({
 
 const toAcademicPeriodOption = (period: ReportCardAcademicPeriod): AppSelectOption => ({
   value: period.id,
-  label: period.code ? `${period.name} (${period.code})` : period.name,
+  label: period.code
+    ? `${period.name} (${period.code}) - ${period.academicYear?.name ?? 'Ano letivo'}`
+    : `${period.name} - ${period.academicYear?.name ?? 'Ano letivo'}`,
 });
 
 const toSchoolClassOption = (schoolClass: SchoolClass): AppSelectOption => ({

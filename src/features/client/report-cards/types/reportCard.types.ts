@@ -4,12 +4,19 @@ export type ReportCardAcademicPeriod = {
   id: string;
   name: string;
   code?: string | undefined;
+  sequence?: number | undefined;
   startDate?: string | undefined;
   endDate?: string | undefined;
+  weight?: number | undefined;
+  isFinalPeriod?: boolean | number | undefined;
   status?: 'open' | 'closed' | 'active' | 'inactive' | undefined;
   academicYear?: {
     id: string;
     name: string;
+    startDate?: string | undefined;
+    endDate?: string | undefined;
+    status?: 'open' | 'closed' | 'active' | 'inactive' | undefined;
+    isClosed?: boolean | number | undefined;
   } | null;
 };
 

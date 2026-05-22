@@ -35,13 +35,13 @@ describe('schoolClassService', () => {
 
   it('busca resumo da turma', async () => {
     const getSpy = vi.spyOn(httpClient, 'get').mockResolvedValueOnce({
-      data: { id: 'class-1', name: 'Turma A', studentsTotal: 20 },
+      data: { id: 'class-1', name: 'Turma A', currentStudents: 20, availableSlots: 10 },
     });
 
     const response = await schoolClassService.getSummary('class-1');
 
     expect(getSpy).toHaveBeenCalledWith('/api/school-classes/class-1/summary');
-    expect(response.studentsTotal).toBe(20);
+    expect(response.currentStudents).toBe(20);
   });
 
   it('vincula alunos e professores-disciplina', async () => {

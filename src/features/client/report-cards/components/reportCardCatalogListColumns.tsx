@@ -44,6 +44,14 @@ const getPeriod = (row: ReportCardCatalogEntity): string => {
   return `${start} até ${end}`;
 };
 
+const getAcademicPeriodSequence = (row: ReportCardCatalogEntity): string => {
+  if (!isAcademicPeriod(row)) {
+    return '-';
+  }
+
+  return row.sequence === undefined ? '-' : `${row.sequence}ª unidade`;
+};
+
 const getWorkload = (row: ReportCardCatalogEntity): string =>
   isGradeSubject(row) ? String(row.workload ?? '-') : '-';
 
@@ -62,6 +70,7 @@ export const buildReportCardCatalogColumns = (params: {
     ? [
         { key: 'name', header: 'Período', render: getName },
         { key: 'academicYear', header: 'Ano letivo', render: getAcademicYear },
+        { key: 'sequence', header: 'Unidade', render: getAcademicPeriodSequence },
         { key: 'period', header: 'Vigência', render: getPeriod },
         {
           key: 'actions',
@@ -94,12 +103,26 @@ export const buildReportCardCatalogMobileConfig = (params: {
     <AppStack spacing={1}>
       <AppStack spacing={0.5}>
         <AppText variant="body2" color="text.secondary" sx={{ fontWeight: 600 }}>
-          {params.mode === 'periods' ? 'Vigência' : 'Série'}
+          {params.mode === 'periods' ? 'Unidade' : 'Série'}
         </AppText>
         <AppText variant="body2" sx={{ fontWeight: 700 }}>
-          {params.mode === 'periods' ? getPeriod(row) : getGrade(row)}
+          {params.mode === 'periods' ? getAcademicPeriodSequence(row) : getGrade(row)}
         </AppText>
       </AppStack>
+      {params.mode === 'periods' ? (
+        <AppStack spacing={0.5}>
+          <AppText variant="body2" color="text.secondary" sx={{ fontWeight: 600 }}>
+            Vigência
+          </AppText>
+          <AppText variant="body2" sx={{ fontWeight: 700 }}>
+            {getPeriod(row)}
+          </AppText>
+        </AppStack>
+      ) : (
+        <AppText variant="body2" color="text.secondary">
+          Carga horária: {getWorkload(row)}
+        </AppText>
+      )}
     </AppStack>
   ),
 });

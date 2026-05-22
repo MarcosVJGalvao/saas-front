@@ -110,20 +110,53 @@ export type SchoolClass = {
   code?: string | undefined;
   status: SchoolClassStatus;
   shift?: SchoolClassShift | undefined;
-  capacity?: number | undefined;
+  maxCapacity?: number | undefined;
   currentStudents?: number | undefined;
   academicYear?: {
     id: string;
     name: string;
+    status?: AcademicYearStatus | undefined;
   } | null;
   grade?: {
     id: string;
     name: string;
+    status?: ActiveInactiveStatus | undefined;
   } | null;
   educationLevel?: {
     id: string;
     name: string;
   } | null;
+  coordinator?: {
+    id: string;
+    fullName: string;
+    jobTitle?: string | undefined;
+  } | null;
+  students?:
+    | {
+        id: string;
+        enrollmentId?: string | undefined;
+        registrationCode?: string | undefined;
+        fullName: string;
+      }[]
+    | undefined;
+  teacherSubjects?:
+    | {
+        id: string;
+        teacherSubject: {
+          id: string;
+          status?: ActiveInactiveStatus | undefined;
+          teacher?: {
+            id: string;
+            fullName: string;
+          } | null;
+          subject?: {
+            id: string;
+            name: string;
+            code?: string | undefined;
+          } | null;
+        };
+      }[]
+    | undefined;
   description?: string | undefined;
   createdAt?: string | undefined;
   updatedAt?: string | undefined;
@@ -140,10 +173,12 @@ export type SchoolClassQueryParams = ClientBaseQueryParams & {
 export type SchoolClassSummary = {
   id: string;
   name: string;
-  studentsTotal?: number | undefined;
-  capacity?: number | undefined;
-  teacherSubjectsTotal?: number | undefined;
-  attendanceSchedulesTotal?: number | undefined;
+  code?: string | undefined;
+  status?: SchoolClassStatus | undefined;
+  maxCapacity?: number | undefined;
+  currentStudents?: number | undefined;
+  availableSlots?: number | undefined;
+  subjectsCount?: number | undefined;
 };
 
 export type TeacherSubject = {
