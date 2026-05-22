@@ -3,7 +3,7 @@ import type { AppAutocompleteOption } from '@shared/components/form/AppAutocompl
 import { studentService } from '@features/client/students/services/service';
 import { teacherSubjectService } from '@features/client/academic/services/service';
 
-const LIMIT = 200;
+const LIMIT = 100;
 
 export const useSchoolClassBindingOptions = () => {
   const [studentOptions, setStudentOptions] = useState<AppAutocompleteOption[]>([]);
