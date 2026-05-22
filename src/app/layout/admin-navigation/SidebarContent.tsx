@@ -57,18 +57,19 @@ const SidebarMenuButton = ({
 
 const SidebarSectionHeader = ({ label, isCollapsed }: { label: string; isCollapsed: boolean }) =>
   isCollapsed ? (
-    <Divider sx={{ my: 0.5 }} />
+    <Divider sx={{ my: 1 }} />
   ) : (
     <Typography
       variant="caption"
       sx={{
         px: 1.5,
-        pt: 1.5,
-        pb: 0.25,
+        pt: 2,
+        pb: 0.5,
         color: 'text.disabled',
-        fontWeight: 700,
+        fontWeight: 600,
+        fontSize: '0.7rem',
+        letterSpacing: 0.6,
         textTransform: 'uppercase',
-        letterSpacing: 0.8,
         display: 'block',
       }}
     >
@@ -77,7 +78,20 @@ const SidebarSectionHeader = ({ label, isCollapsed }: { label: string; isCollaps
   );
 
 const selectedSx = {
-  '&.Mui-selected': { bgcolor: 'action.selected', color: 'primary.main' },
+  '&.Mui-selected': {
+    bgcolor: 'primary.main',
+    color: 'primary.contrastText',
+    '&:hover': { bgcolor: 'primary.dark' },
+  },
+  '&.Mui-selected .MuiListItemIcon-root': { color: 'primary.contrastText' },
+};
+
+const subSelectedSx = {
+  '&.Mui-selected': {
+    bgcolor: 'action.selected',
+    color: 'primary.main',
+    fontWeight: 600,
+  },
   '&.Mui-selected .MuiListItemIcon-root': { color: 'primary.main' },
 };
 
@@ -86,6 +100,7 @@ const sidebarPrimaryTextSx = {
   sx: {
     fontSize: '0.875rem',
     lineHeight: 1.2,
+    fontWeight: 500,
   },
 };
 
@@ -99,7 +114,14 @@ const SidebarLeafItems = ({
   submenuItemHeight: number;
   onItemClick: (href?: string) => void;
 }) => (
-  <>
+  <Box
+    sx={{
+      ml: 1.5,
+      pl: 1.25,
+      borderLeft: '1.5px solid',
+      borderColor: 'divider',
+    }}
+  >
     {child.children?.map((gc) => (
       <ListItemButton
         key={gc.id}
@@ -108,19 +130,21 @@ const SidebarLeafItems = ({
         sx={{
           borderRadius: 1.5,
           minHeight: submenuItemHeight - 12,
-          py: 0.125,
-          pl: 3.25,
+          py: 0.25,
+          pl: 1,
           pr: 1,
-          ...selectedSx,
+          ...subSelectedSx,
         }}
       >
-        <ListItemIcon sx={{ minWidth: 22, justifyContent: 'center' }}>
-          {gc.icon !== undefined ? <gc.icon sx={{ fontSize: 16 }} /> : null}
-        </ListItemIcon>
+        {gc.icon !== undefined ? (
+          <ListItemIcon sx={{ minWidth: 22, justifyContent: 'center' }}>
+            <gc.icon sx={{ fontSize: 15 }} />
+          </ListItemIcon>
+        ) : null}
         <ListItemText primary={gc.label} slotProps={{ primary: sidebarPrimaryTextSx }} />
       </ListItemButton>
     ))}
-  </>
+  </Box>
 );
 
 // Level 2 — sub-items (may have children)
@@ -153,10 +177,10 @@ const SidebarSubItem = ({
         sx={{
           borderRadius: 1.5,
           minHeight: submenuItemHeight - 8,
-          py: 0.25,
-          pl: 1.5,
+          py: 0.375,
+          pl: 1.25,
           pr: 1,
-          ...selectedSx,
+          ...subSelectedSx,
         }}
       >
         <ListItemIcon sx={{ minWidth: 26, justifyContent: 'center' }}>
@@ -165,9 +189,9 @@ const SidebarSubItem = ({
         <ListItemText primary={child.label} slotProps={{ primary: sidebarPrimaryTextSx }} />
         {child.hasChildren ? (
           child.isOpen ? (
-            <ExpandLessIcon sx={{ fontSize: 16 }} />
+            <ExpandLessIcon sx={{ fontSize: 15, color: 'text.disabled' }} />
           ) : (
-            <ExpandMoreIcon sx={{ fontSize: 16 }} />
+            <ExpandMoreIcon sx={{ fontSize: 15, color: 'text.disabled' }} />
           )
         ) : null}
       </ListItemButton>
@@ -225,16 +249,21 @@ const onSidebarItemClick = (
 
 const getExpandIndicatorIcon = (showExpandIcon: boolean, isOpen: boolean) => {
   if (!showExpandIcon) return null;
-  return isOpen ? <ExpandLessIcon /> : <ExpandMoreIcon />;
+  return isOpen ? (
+    <ExpandLessIcon sx={{ fontSize: 16, color: 'text.disabled' }} />
+  ) : (
+    <ExpandMoreIcon sx={{ fontSize: 16, color: 'text.disabled' }} />
+  );
 };
 
 const getSidebarMenuItemSx = (isCollapsed: boolean, sidebarItemHeight: number) => ({
-  borderRadius: 2,
+  borderRadius: 1.5,
   minHeight: sidebarItemHeight - 14,
   color: 'text.primary',
   justifyContent: isCollapsed ? 'center' : 'flex-start',
   px: isCollapsed ? 0 : 1,
-  py: 0.25,
+  py: 0.375,
+  transition: 'background-color 0.15s ease, color 0.15s ease',
   ...selectedSx,
 });
 
@@ -290,7 +319,7 @@ const SidebarMenuItem = ({
         {getExpandIndicatorIcon(showExpandIcon, item.isOpen)}
       </ListItemButton>
       {showChildren ? (
-        <List sx={{ px: 0.75, py: 0.125, mt: 0 }}>
+        <List sx={{ px: 0.5, py: 0.25, mt: 0 }}>
           <SidebarItemChildren
             item={item}
             submenuItemHeight={submenuItemHeight}
@@ -325,7 +354,7 @@ export const SidebarContent = memo(
           height: '100%',
           display: 'flex',
           flexDirection: 'column',
-          bgcolor: 'background.paper',
+          bgcolor: 'background.default',
         }}
       >
         <Box
