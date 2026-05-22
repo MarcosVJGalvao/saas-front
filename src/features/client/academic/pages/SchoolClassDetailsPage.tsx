@@ -1,18 +1,22 @@
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { BindingCard } from '@features/client/academic/components/BindingCard';
 import { ClassReportCardCard } from '@features/client/academic/components/ClassReportCardCard';
 import { PeriodClosureCard } from '@features/client/academic/components/PeriodClosureCard';
 import { EntityDetailsPage } from '@shared/components/data-display/details/EntityDetailsPage';
 import { AppAlert } from '@shared/components/feedback/AppAlert';
+import { AppButton } from '@shared/components/inputs/AppButton';
 import { AppStack } from '@shared/components/layout/AppStack';
 import { PageHeader } from '@shared/components/layout/PageHeader';
+import { useSchoolClassBindingOptions } from '@features/client/academic/hooks/useSchoolClassBindingOptions';
 import { useSchoolClassDetailsPage } from '@features/client/academic/hooks/useSchoolClassDetailsPage';
 import { useSchoolClassPeriodActions } from '@features/client/academic/hooks/useSchoolClassPeriodActions';
 
 const SchoolClassDetailsPage = () => {
   const { id } = useParams<{ id: string }>();
+  const navigate = useNavigate();
   const schoolClassDetailsPage = useSchoolClassDetailsPage(id ?? '');
   const periodActions = useSchoolClassPeriodActions(id ?? '');
+  const bindingOptions = useSchoolClassBindingOptions();
 
   if (!id) {
     return null;
@@ -27,6 +31,16 @@ const SchoolClassDetailsPage = () => {
         onAction={() => {
           schoolClassDetailsPage.onBack();
         }}
+        actions={
+          <AppButton
+            variant="outlined"
+            onClick={() => {
+              void navigate('/client/report-cards/entries');
+            }}
+          >
+            Lançar notas
+          </AppButton>
+        }
       />
       <EntityDetailsPage
         viewState={schoolClassDetailsPage.viewState}
@@ -44,9 +58,10 @@ const SchoolClassDetailsPage = () => {
       ) : null}
       <BindingCard
         title="Vínculos de alunos"
-        description="Informe um ou mais IDs de alunos separados por vírgula."
-        inputLabel="IDs dos alunos"
-        inputPlaceholder="id-aluno-1, id-aluno-2"
+        description="Selecione os alunos a vincular ou desvincular desta turma."
+        inputLabel="Alunos"
+        inputPlaceholder="Buscar alunos..."
+        options={bindingOptions.studentOptions}
         value={schoolClassDetailsPage.actionValues.studentIds}
         onChange={(value) => schoolClassDetailsPage.onActionValueChange('studentIds', value)}
         onAdd={() => {
@@ -59,12 +74,14 @@ const SchoolClassDetailsPage = () => {
         removeLabel="Remover alunos"
         isAddLoading={schoolClassDetailsPage.actionLoading === 'assign-students'}
         isRemoveLoading={schoolClassDetailsPage.actionLoading === 'remove-students'}
+        optionsLoading={bindingOptions.loading}
       />
       <BindingCard
         title="Vínculos professor-disciplina"
-        description="Informe um ou mais IDs de professor-disciplina separados por vírgula."
-        inputLabel="IDs de professor-disciplina"
-        inputPlaceholder="id-prof-disc-1, id-prof-disc-2"
+        description="Selecione os vínculos professor-disciplina a adicionar ou remover desta turma."
+        inputLabel="Professor-disciplina"
+        inputPlaceholder="Buscar professor-disciplina..."
+        options={bindingOptions.teacherSubjectOptions}
         value={schoolClassDetailsPage.actionValues.teacherSubjectIds}
         onChange={(value) => schoolClassDetailsPage.onActionValueChange('teacherSubjectIds', value)}
         onAdd={() => {
@@ -77,6 +94,7 @@ const SchoolClassDetailsPage = () => {
         removeLabel="Remover vínculos"
         isAddLoading={schoolClassDetailsPage.actionLoading === 'assign-teacher-subjects'}
         isRemoveLoading={schoolClassDetailsPage.actionLoading === 'remove-teacher-subjects'}
+        optionsLoading={bindingOptions.loading}
       />
       <PeriodClosureCard
         academicPeriodOptions={periodActions.academicPeriodOptions}

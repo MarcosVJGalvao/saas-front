@@ -6,7 +6,7 @@ import { ConfirmDialog } from '@shared/components/feedback/ConfirmDialog';
 import { ListFilters } from '@shared/components/data-display/data/ListFilters';
 import { PageHeader } from '@shared/components/layout/PageHeader';
 import { QueryDataTable } from '@shared/components/data-display/data/QueryDataTable';
-import { layoutSpacing } from '@theme/spacing';
+import { layoutSpacing, radiusScale } from '@theme/spacing';
 import { activeInactiveStatusOptions } from '@shared/constants/selectOptions';
 import { useTeacherSubjectsListPage } from '@features/client/academic/hooks/useTeacherSubjectsListPage';
 
@@ -19,16 +19,14 @@ const TeacherSubjectsPage = () => {
         title="Professor-disciplina"
         subtitle="Controle vínculos entre professores e disciplinas."
       />
-      {teacherSubjectsPage.actionErrorMessage ? (
-        <AppAlert severity="error">{teacherSubjectsPage.actionErrorMessage}</AppAlert>
-      ) : null}
-      {teacherSubjectsPage.actionSuccessMessage ? (
-        <AppAlert severity="success">{teacherSubjectsPage.actionSuccessMessage}</AppAlert>
-      ) : null}
       {teacherSubjectsPage.referenceOptions.errorMessage ? (
         <AppAlert severity="error">{teacherSubjectsPage.referenceOptions.errorMessage}</AppAlert>
+      ) : teacherSubjectsPage.feedback.message ? (
+        <AppAlert severity={teacherSubjectsPage.feedback.message.type}>
+          {teacherSubjectsPage.feedback.message.text}
+        </AppAlert>
       ) : null}
-      <AppPaper sx={{ p: layoutSpacing.cardPadding, borderRadius: 2 }}>
+      <AppPaper sx={{ p: layoutSpacing.cardPadding, borderRadius: radiusScale.md }}>
         <AppStack spacing={2}>
           <AppText variant="h6">Novo vínculo</AppText>
           <ListFilters

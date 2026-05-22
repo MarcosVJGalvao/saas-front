@@ -8,11 +8,10 @@ import Skeleton from '@mui/material/Skeleton';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import { alpha, useTheme } from '@mui/material/styles';
+import { Line, LineChart, ResponsiveContainer } from 'recharts';
+import type { MetricCardIconTone, MetricCardVariationType } from './MetricCard';
 
-export type MetricCardVariationType = 'positive' | 'neutral' | 'negative';
-export type MetricCardIconTone = 'primary' | 'warning' | 'error' | 'success';
-
-interface MetricCardProps {
+interface SparklineMetricCardProps {
   loading: boolean;
   title: string;
   value: string;
@@ -20,9 +19,10 @@ interface MetricCardProps {
   iconTone: MetricCardIconTone;
   variationText: string;
   variationType: MetricCardVariationType;
+  sparklineData: number[];
 }
 
-export const MetricCard = ({
+export const SparklineMetricCard = ({
   loading,
   title,
   value,
@@ -30,9 +30,18 @@ export const MetricCard = ({
   iconTone,
   variationText,
   variationType,
-}: MetricCardProps) => {
+  sparklineData,
+}: SparklineMetricCardProps) => {
   const theme = useTheme();
   const iconColor = theme.palette[iconTone].main;
+  const sparkColor =
+    variationType === 'positive'
+      ? theme.palette.success.main
+      : variationType === 'negative'
+        ? theme.palette.error.main
+        : theme.palette.text.secondary;
+
+  const sparkData = sparklineData.map((dataPoint) => ({ dataPoint }));
 
   return (
     <Paper
@@ -102,6 +111,23 @@ export const MetricCard = ({
             </Typography>
           </Stack>
         )}
+
+        {!loading && sparkData.length > 0 ? (
+          <Box sx={{ height: 40, mt: 0.5 }}>
+            <ResponsiveContainer width="100%" height={40}>
+              <LineChart data={sparkData}>
+                <Line
+                  type="monotone"
+                  dataKey="dataPoint"
+                  stroke={sparkColor}
+                  strokeWidth={2}
+                  dot={false}
+                  isAnimationActive={false}
+                />
+              </LineChart>
+            </ResponsiveContainer>
+          </Box>
+        ) : null}
       </Stack>
     </Paper>
   );

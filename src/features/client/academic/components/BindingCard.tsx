@@ -1,24 +1,27 @@
+import type { AppAutocompleteOption } from '@shared/components/form/AppAutocomplete';
+import { AppAutocompleteMultiple } from '@shared/components/form/AppAutocompleteMultiple';
 import { AppBox } from '@shared/components/layout/AppBox';
-import { AppButton } from '@shared/components/inputs/AppButton';
+import { AppLoadingButton } from '@shared/components/inputs/AppLoadingButton';
 import { AppPaper } from '@shared/components/data-display/AppPaper';
 import { AppStack } from '@shared/components/layout/AppStack';
 import { AppText } from '@shared/components/data-display/AppText';
-import { AppTextField } from '@shared/components/inputs/AppTextField';
-import { layoutSpacing } from '@theme/spacing';
+import { layoutSpacing, radiusScale } from '@theme/spacing';
 
 type BindingCardProps = {
   title: string;
   description: string;
   inputLabel: string;
   inputPlaceholder: string;
-  value: string;
-  onChange: (value: string) => void;
+  options: AppAutocompleteOption[];
+  value: AppAutocompleteOption[];
+  onChange: (value: AppAutocompleteOption[]) => void;
   onAdd: () => void;
   onRemove: () => void;
   addLabel: string;
   removeLabel: string;
   isAddLoading: boolean;
   isRemoveLoading: boolean;
+  optionsLoading?: boolean;
 };
 
 export const BindingCard = ({
@@ -26,6 +29,7 @@ export const BindingCard = ({
   description,
   inputLabel,
   inputPlaceholder,
+  options,
   value,
   onChange,
   onAdd,
@@ -34,11 +38,12 @@ export const BindingCard = ({
   removeLabel,
   isAddLoading,
   isRemoveLoading,
+  optionsLoading = false,
 }: BindingCardProps) => {
   const anyLoading = isAddLoading || isRemoveLoading;
 
   return (
-    <AppPaper sx={{ p: layoutSpacing.cardPadding, borderRadius: 2 }}>
+    <AppPaper sx={{ p: layoutSpacing.cardPadding, borderRadius: radiusScale.md }}>
       <AppStack spacing={2}>
         <AppBox>
           <AppText variant="subtitle1" sx={{ fontWeight: 600 }}>
@@ -48,31 +53,32 @@ export const BindingCard = ({
             {description}
           </AppText>
         </AppBox>
-        <AppTextField
+        <AppAutocompleteMultiple
           label={inputLabel}
           placeholder={inputPlaceholder}
+          options={options}
           value={value}
-          onChange={(changeEvent) => onChange(changeEvent.target.value)}
-          disabled={anyLoading}
-          size="small"
-          fullWidth
+          onChange={onChange}
+          disabled={anyLoading || optionsLoading}
         />
         <AppStack direction={{ xs: 'column', sm: 'row' }} spacing={1}>
-          <AppButton
+          <AppLoadingButton
             variant="contained"
             onClick={onAdd}
-            disabled={anyLoading || value.trim() === ''}
+            loading={isAddLoading}
+            disabled={anyLoading || value.length === 0}
           >
-            {isAddLoading ? 'Aguarde...' : addLabel}
-          </AppButton>
-          <AppButton
+            {addLabel}
+          </AppLoadingButton>
+          <AppLoadingButton
             variant="outlined"
             color="error"
             onClick={onRemove}
-            disabled={anyLoading || value.trim() === ''}
+            loading={isRemoveLoading}
+            disabled={anyLoading || value.length === 0}
           >
-            {isRemoveLoading ? 'Aguarde...' : removeLabel}
-          </AppButton>
+            {removeLabel}
+          </AppLoadingButton>
         </AppStack>
       </AppStack>
     </AppPaper>

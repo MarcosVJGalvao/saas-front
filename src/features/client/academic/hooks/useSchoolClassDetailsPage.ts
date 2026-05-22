@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import type { AppAutocompleteOption } from '@shared/components/form/AppAutocomplete';
 import type {
   EntityDetailsPageData,
   EntityDetailsViewState,
@@ -21,7 +22,10 @@ type SchoolClassDetailsPageState = {
   actionSuccessMessage: string | undefined;
   onBack: () => void;
   onRetry: () => Promise<void>;
-  onActionValueChange: (fieldName: 'studentIds' | 'teacherSubjectIds', nextValue: string) => void;
+  onActionValueChange: (
+    fieldName: 'studentIds' | 'teacherSubjectIds',
+    nextValue: AppAutocompleteOption[],
+  ) => void;
   clearActionValues: () => void;
   assignStudents: () => Promise<void>;
   removeStudents: () => Promise<void>;
@@ -30,8 +34,8 @@ type SchoolClassDetailsPageState = {
 };
 
 type SchoolClassActionValues = {
-  studentIds: string;
-  teacherSubjectIds: string;
+  studentIds: AppAutocompleteOption[];
+  teacherSubjectIds: AppAutocompleteOption[];
 };
 
 type SchoolClassActionKind =
@@ -41,20 +45,14 @@ type SchoolClassActionKind =
   | 'remove-teacher-subjects';
 
 const initialActionValues: SchoolClassActionValues = {
-  studentIds: '',
-  teacherSubjectIds: '',
+  studentIds: [],
+  teacherSubjectIds: [],
 };
 
 const emptyDetailsData: EntityDetailsPageData = {
   headerData: null,
   tabs: [],
 };
-
-const parseIds = (value: string): string[] =>
-  value
-    .split(',')
-    .map((item) => item.trim())
-    .filter((item) => item.length > 0);
 
 export const useSchoolClassDetailsPage = (id: string): SchoolClassDetailsPageState => {
   const navigate = useNavigate();
@@ -145,32 +143,35 @@ export const useSchoolClassDetailsPage = (id: string): SchoolClassDetailsPageSta
       void navigate('/client/school-classes');
     },
     onRetry: load,
-    onActionValueChange: (fieldName: 'studentIds' | 'teacherSubjectIds', nextValue: string) => {
+    onActionValueChange: (
+      fieldName: 'studentIds' | 'teacherSubjectIds',
+      nextValue: AppAutocompleteOption[],
+    ) => {
       setActionValues((currentValues) => ({ ...currentValues, [fieldName]: nextValue }));
     },
     clearActionValues: () => setActionValues(initialActionValues),
     assignStudents: () =>
       runAction(
         'assign-students',
-        parseIds(actionValues.studentIds),
+        actionValues.studentIds.map((autocompleteOption) => autocompleteOption.value),
         'Alunos vinculados com sucesso.',
       ),
     removeStudents: () =>
       runAction(
         'remove-students',
-        parseIds(actionValues.studentIds),
+        actionValues.studentIds.map((autocompleteOption) => autocompleteOption.value),
         'Alunos removidos com sucesso.',
       ),
     assignTeacherSubjects: () =>
       runAction(
         'assign-teacher-subjects',
-        parseIds(actionValues.teacherSubjectIds),
+        actionValues.teacherSubjectIds.map((autocompleteOption) => autocompleteOption.value),
         'Vínculos professor-disciplina adicionados com sucesso.',
       ),
     removeTeacherSubjects: () =>
       runAction(
         'remove-teacher-subjects',
-        parseIds(actionValues.teacherSubjectIds),
+        actionValues.teacherSubjectIds.map((autocompleteOption) => autocompleteOption.value),
         'Vínculos professor-disciplina removidos com sucesso.',
       ),
   };

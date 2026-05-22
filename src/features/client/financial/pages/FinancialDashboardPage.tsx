@@ -1,12 +1,11 @@
-import { AppPaper } from '@shared/components/data-display/AppPaper';
 import { AppSkeleton } from '@shared/components/data-display/AppSkeleton';
 import { AppText } from '@shared/components/data-display/AppText';
 import { EntitySummaryCards } from '@shared/components/data-display/EntitySummaryCards';
 import { AppErrorState } from '@shared/components/feedback/AppErrorState';
 import { EmptyState } from '@shared/components/feedback/EmptyState';
+import { ChartCard } from '@shared/components/charts/ChartCard';
 import { AppStack } from '@shared/components/layout/AppStack';
 import { PageHeader } from '@shared/components/layout/PageHeader';
-import { layoutSpacing } from '@theme/spacing';
 import AccountBalanceWalletOutlinedIcon from '@mui/icons-material/AccountBalanceWalletOutlined';
 import TrendingDownOutlinedIcon from '@mui/icons-material/TrendingDownOutlined';
 import TrendingUpOutlinedIcon from '@mui/icons-material/TrendingUpOutlined';
@@ -103,15 +102,14 @@ const FinancialDashboardPage = () => {
         subtitle="Acompanhe indicadores, recortes e pendências financeiras da escola."
       />
       <EntitySummaryCards cards={cards} />
-      <AppPaper sx={{ p: layoutSpacing.cardPadding, borderRadius: 2 }}>
-        <AppStack spacing={1}>
-          <AppText variant="h6">Próximos recortes</AppText>
-          <AppText color="text.secondary">
-            Em breve esta área exibirá evolução por período, comparação entre entradas e saídas e
-            recortes por turma.
-          </AppText>
-        </AppStack>
-      </AppPaper>
+      <ChartCard
+        title="Evolução financeira"
+        subtitle="Comparação entre entradas e saídas por período."
+      >
+        <AppText color="text.secondary" variant="body2">
+          Gráficos serão exibidos quando dados históricos estiverem disponíveis.
+        </AppText>
+      </ChartCard>
     </AppStack>
   );
 };

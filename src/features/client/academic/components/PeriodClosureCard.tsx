@@ -1,12 +1,12 @@
 import type { AppSelectOption } from '@shared/components/inputs/AppSelect';
 import { AppAlert } from '@shared/components/feedback/AppAlert';
 import { AppBox } from '@shared/components/layout/AppBox';
-import { AppButton } from '@shared/components/inputs/AppButton';
+import { AppLoadingButton } from '@shared/components/inputs/AppLoadingButton';
 import { AppPaper } from '@shared/components/data-display/AppPaper';
 import { AppSelect } from '@shared/components/inputs/AppSelect';
 import { AppStack } from '@shared/components/layout/AppStack';
 import { AppText } from '@shared/components/data-display/AppText';
-import { layoutSpacing } from '@theme/spacing';
+import { layoutSpacing, radiusScale } from '@theme/spacing';
 
 type PeriodClosureCardProps = {
   academicPeriodOptions: AppSelectOption[];
@@ -32,7 +32,7 @@ export const PeriodClosureCard = ({
   const anyLoading = isFinalizeLoading || isReopenLoading;
 
   return (
-    <AppPaper sx={{ p: layoutSpacing.cardPadding, borderRadius: 2 }}>
+    <AppPaper sx={{ p: layoutSpacing.cardPadding, borderRadius: radiusScale.md }}>
       <AppStack spacing={2}>
         <AppBox>
           <AppText variant="subtitle1" sx={{ fontWeight: 600 }}>
@@ -52,20 +52,22 @@ export const PeriodClosureCard = ({
           size="small"
         />
         <AppStack direction={{ xs: 'column', sm: 'row' }} spacing={1}>
-          <AppButton
+          <AppLoadingButton
             variant="contained"
             onClick={onFinalize}
+            loading={isFinalizeLoading}
             disabled={anyLoading || selectedPeriodId === ''}
           >
-            {isFinalizeLoading ? 'Finalizando...' : 'Finalizar período'}
-          </AppButton>
-          <AppButton
+            Finalizar período
+          </AppLoadingButton>
+          <AppLoadingButton
             variant="outlined"
             onClick={onReopen}
+            loading={isReopenLoading}
             disabled={anyLoading || selectedPeriodId === ''}
           >
-            {isReopenLoading ? 'Reabrindo...' : 'Reabrir período'}
-          </AppButton>
+            Reabrir período
+          </AppLoadingButton>
         </AppStack>
       </AppStack>
     </AppPaper>

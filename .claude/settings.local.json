@@ -15,7 +15,9 @@
       "PowerShell(Get-ChildItem -Path \"c:\\\\Users\\\\marco\\\\Projetos Pessoais\\\\plataform-saas-front\\\\src\\\\features\" -Directory | ForEach-Object { Write-Output $_.Name })",
       "Bash(xargs wc -l)",
       "Bash(cd /c/Users/marco/\"Projetos Pessoais\"/plataform-saas-front && find src -path \"*/theme/utils/*\" -type f)",
-      "Read(//c/c/Users/marco/Projetos Pessoais/**)"
+      "Read(//c/c/Users/marco/Projetos Pessoais/**)",
+      "Bash(npm install *)",
+      "Bash(node -e \"const m = require\\('c:/Users/marco/Projetos Pessoais/plataform-saas-front/node_modules/@mui/material/index.js'\\); console.log\\(Object.keys\\(m\\).filter\\(k => k.toLowerCase\\(\\).includes\\('load'\\)\\)\\)\")"
     ]
   }
 }

@@ -1,10 +1,10 @@
 import { AppAlert } from '@shared/components/feedback/AppAlert';
 import { AppBox } from '@shared/components/layout/AppBox';
-import { AppButton } from '@shared/components/inputs/AppButton';
+import { AppLoadingButton } from '@shared/components/inputs/AppLoadingButton';
 import { AppPaper } from '@shared/components/data-display/AppPaper';
 import { AppStack } from '@shared/components/layout/AppStack';
 import { AppText } from '@shared/components/data-display/AppText';
-import { layoutSpacing } from '@theme/spacing';
+import { layoutSpacing, radiusScale } from '@theme/spacing';
 
 type ReportCardQueryCardProps = {
   loading: boolean;
@@ -13,7 +13,7 @@ type ReportCardQueryCardProps = {
 };
 
 export const ReportCardQueryCard = ({ loading, message, onQuery }: ReportCardQueryCardProps) => (
-  <AppPaper sx={{ p: layoutSpacing.cardPadding, borderRadius: 2 }}>
+  <AppPaper sx={{ p: layoutSpacing.cardPadding, borderRadius: radiusScale.md }}>
     <AppStack spacing={2}>
       <AppBox>
         <AppText variant="subtitle1" sx={{ fontWeight: 600 }}>
@@ -24,14 +24,14 @@ export const ReportCardQueryCard = ({ loading, message, onQuery }: ReportCardQue
         </AppText>
       </AppBox>
       {message ? <AppAlert severity={message.type}>{message.text}</AppAlert> : null}
-      <AppButton
+      <AppLoadingButton
         variant="outlined"
         onClick={onQuery}
-        disabled={loading}
+        loading={loading}
         sx={{ alignSelf: 'flex-start' }}
       >
-        {loading ? 'Consultando...' : 'Ver boletim'}
-      </AppButton>
+        Ver boletim
+      </AppLoadingButton>
     </AppStack>
   </AppPaper>
 );

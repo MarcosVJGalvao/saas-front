@@ -26,11 +26,12 @@ const AccountsReceivablePage = () => {
           void navigate('/client/financial/accounts-receivable/new');
         }}
       />
-      {accountsReceivablePage.actionErrorMessage ? (
-        <AppAlert severity="error">{accountsReceivablePage.actionErrorMessage}</AppAlert>
-      ) : null}
-      {accountsReceivablePage.referenceOptions.errorMessage ? (
-        <AppAlert severity="error">{accountsReceivablePage.referenceOptions.errorMessage}</AppAlert>
+      {(accountsReceivablePage.actionErrorMessage ??
+      accountsReceivablePage.referenceOptions.errorMessage) ? (
+        <AppAlert severity="error">
+          {accountsReceivablePage.actionErrorMessage ??
+            accountsReceivablePage.referenceOptions.errorMessage}
+        </AppAlert>
       ) : null}
       <ListFilters
         fields={[

@@ -1,11 +1,11 @@
 import { useState } from 'react';
+import { useFeedback } from '@shared/hooks/useFeedback';
 import { useReportCardReferenceOptions } from '@features/client/report-cards/hooks/useReportCardReferenceOptions';
 import { reportCardService } from '@features/client/report-cards/services/service';
 
 type ProcessingAction = 'load' | 'resend' | 'resend-student';
-type ProcessingValues = Record<string, unknown>;
 
-const initialValues: ProcessingValues = {
+const initialValues = {
   processingId: '',
   studentEnrollmentId: '',
 };
@@ -16,35 +16,32 @@ export const useReportCardProcessingsPage = () => {
   const referenceOptions = useReportCardReferenceOptions({
     includeStudentEnrollments: true,
   });
-  const [values, setValues] = useState<ProcessingValues>(initialValues);
+  const feedback = useFeedback();
+  const [values, setValues] = useState(initialValues);
   const [loadingAction, setLoadingAction] = useState<ProcessingAction | undefined>(undefined);
-  const [errorMessage, setErrorMessage] = useState<string | undefined>(undefined);
-  const [successMessage, setSuccessMessage] = useState<string | undefined>(undefined);
 
   const onChange = (name: string, value: unknown): void => {
-    setValues((currentValues) => ({ ...currentValues, [name]: value ?? '' }));
+    setValues((cur) => ({ ...cur, [name]: value ?? '' }));
   };
 
   const clear = (): void => {
     setValues(initialValues);
-    setErrorMessage(undefined);
-    setSuccessMessage(undefined);
+    feedback.clear();
   };
 
   const loadProcessing = async (): Promise<void> => {
     const processingId = getStringValue(values.processingId);
     if (!processingId) {
-      setErrorMessage('Informe o processamento para consultar.');
+      feedback.setError('Informe o processamento para consultar.');
       return;
     }
     setLoadingAction('load');
-    setErrorMessage(undefined);
-    setSuccessMessage(undefined);
+    feedback.clear();
     try {
       await reportCardService.getProcessing(processingId);
-      setSuccessMessage('Processamento carregado com sucesso.');
+      feedback.setSuccess('Processamento carregado com sucesso.');
     } catch {
-      setErrorMessage('Não foi possível carregar o processamento.');
+      feedback.setError('Não foi possível carregar o processamento.');
     } finally {
       setLoadingAction(undefined);
     }
@@ -53,17 +50,16 @@ export const useReportCardProcessingsPage = () => {
   const resendFailed = async (): Promise<void> => {
     const processingId = getStringValue(values.processingId);
     if (!processingId) {
-      setErrorMessage('Informe o processamento para reenviar falhas.');
+      feedback.setError('Informe o processamento para reenviar falhas.');
       return;
     }
     setLoadingAction('resend');
-    setErrorMessage(undefined);
-    setSuccessMessage(undefined);
+    feedback.clear();
     try {
       await reportCardService.resendFailedProcessing(processingId);
-      setSuccessMessage('Reenvio de falhas solicitado com sucesso.');
+      feedback.setSuccess('Reenvio de falhas solicitado com sucesso.');
     } catch {
-      setErrorMessage('Não foi possível solicitar reenvio de falhas.');
+      feedback.setError('Não foi possível solicitar reenvio de falhas.');
     } finally {
       setLoadingAction(undefined);
     }
@@ -73,17 +69,16 @@ export const useReportCardProcessingsPage = () => {
     const processingId = getStringValue(values.processingId);
     const studentEnrollmentId = getStringValue(values.studentEnrollmentId);
     if (!processingId || !studentEnrollmentId) {
-      setErrorMessage('Informe o processamento e a matrícula para reenvio individual.');
+      feedback.setError('Informe o processamento e a matrícula para reenvio individual.');
       return;
     }
     setLoadingAction('resend-student');
-    setErrorMessage(undefined);
-    setSuccessMessage(undefined);
+    feedback.clear();
     try {
       await reportCardService.resendProcessingStudent(processingId, studentEnrollmentId);
-      setSuccessMessage('Reenvio individual solicitado com sucesso.');
+      feedback.setSuccess('Reenvio individual solicitado com sucesso.');
     } catch {
-      setErrorMessage('Não foi possível solicitar o reenvio individual.');
+      feedback.setError('Não foi possível solicitar o reenvio individual.');
     } finally {
       setLoadingAction(undefined);
     }
@@ -91,10 +86,9 @@ export const useReportCardProcessingsPage = () => {
 
   return {
     referenceOptions,
+    feedback,
     values,
     loadingAction,
-    errorMessage,
-    successMessage,
     onChange,
     clear,
     loadProcessing,

@@ -14,6 +14,15 @@ export const spacingScale = {
   xxl: 8,
 };
 
+export const radiusScale = {
+  none: 0,
+  sm: 1,
+  md: 2,
+  lg: 3,
+  xl: 4,
+  full: 999,
+};
+
 export const layoutSpacing = {
   appBarPaddingX: {
     xs: spacingScale.sm,

@@ -1,1 +1,7 @@
-export { layoutSpacing, spacing, spacingBaseUnit, spacingScale } from '@theme/tokens/spacing';
+export {
+  layoutSpacing,
+  radiusScale,
+  spacing,
+  spacingBaseUnit,
+  spacingScale,
+} from '@theme/tokens/spacing';

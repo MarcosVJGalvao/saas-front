@@ -1,4 +1,5 @@
 import { useMemo, useState } from 'react';
+import { useFeedback } from '@shared/hooks/useFeedback';
 import { useAcademicReferenceOptions } from '@features/client/academic/hooks/useAcademicReferenceOptions';
 import {
   buildTeacherSubjectColumns,
@@ -63,8 +64,7 @@ export const useTeacherSubjectsListPage = () => {
   const [createValues, setCreateValues] = useState<TeacherSubjectCreateValues>(initialCreateValues);
   const [selectedTeacherSubjectId, setSelectedTeacherSubjectId] = useState<string | undefined>();
   const [actionLoading, setActionLoading] = useState(false);
-  const [actionErrorMessage, setActionErrorMessage] = useState<string | undefined>();
-  const [actionSuccessMessage, setActionSuccessMessage] = useState<string | undefined>();
+  const feedback = useFeedback();
 
   const selectedTeacherSubject = useMemo(
     () => teacherSubjectsList.rows.find((row) => row.id === selectedTeacherSubjectId),
@@ -76,21 +76,20 @@ export const useTeacherSubjectsListPage = () => {
     const subjectId = createValues.subjectId.trim();
 
     if (!teacherId || !subjectId) {
-      setActionErrorMessage('Informe professor e disciplina para criar o vínculo.');
+      feedback.setError('Informe professor e disciplina para criar o vínculo.');
       return;
     }
 
     setActionLoading(true);
-    setActionErrorMessage(undefined);
-    setActionSuccessMessage(undefined);
+    feedback.clear();
 
     try {
       await teacherSubjectService.create({ teacherId, subjectId });
       setCreateValues(initialCreateValues);
-      setActionSuccessMessage('Vínculo professor-disciplina criado com sucesso.');
+      feedback.setSuccess('Vínculo professor-disciplina criado com sucesso.');
       await teacherSubjectsList.reload();
     } catch {
-      setActionErrorMessage('Não foi possível criar o vínculo professor-disciplina.');
+      feedback.setError('Não foi possível criar o vínculo professor-disciplina.');
     } finally {
       setActionLoading(false);
     }
@@ -102,16 +101,15 @@ export const useTeacherSubjectsListPage = () => {
     }
 
     setActionLoading(true);
-    setActionErrorMessage(undefined);
-    setActionSuccessMessage(undefined);
+    feedback.clear();
 
     try {
       await teacherSubjectService.remove(selectedTeacherSubjectId);
       setSelectedTeacherSubjectId(undefined);
-      setActionSuccessMessage('Vínculo professor-disciplina removido com sucesso.');
+      feedback.setSuccess('Vínculo professor-disciplina removido com sucesso.');
       await teacherSubjectsList.reload();
     } catch {
-      setActionErrorMessage('Não foi possível remover o vínculo professor-disciplina.');
+      feedback.setError('Não foi possível remover o vínculo professor-disciplina.');
     } finally {
       setActionLoading(false);
     }
@@ -120,11 +118,10 @@ export const useTeacherSubjectsListPage = () => {
   return {
     teacherSubjectsList,
     referenceOptions,
+    feedback,
     filterValues,
     createValues,
     actionLoading,
-    actionErrorMessage,
-    actionSuccessMessage,
     onFilterChange: (filterKey: string, filterValue: unknown) => {
       const normalizedValue = typeof filterValue === 'string' ? filterValue : '';
       if (filterKey === 'teacherId' || filterKey === 'subjectId' || filterKey === 'status') {

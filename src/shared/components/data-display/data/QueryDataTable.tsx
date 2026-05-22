@@ -1,5 +1,6 @@
 import type { ReactNode } from 'react';
 import TuneIcon from '@mui/icons-material/Tune';
+import Badge from '@mui/material/Badge';
 import Button from '@mui/material/Button';
 import Stack from '@mui/material/Stack';
 import type { PaginationMeta } from '@shared/types/pagination';
@@ -8,6 +9,8 @@ import { sharedComponentsI18n } from '@shared/i18n/pt-BR/components';
 import { DataList } from '@shared/components/data-display/data/DataList';
 import type { DataTableColumn } from '@shared/components/data-display/data/DataTable';
 import type { DataListMobileConfig } from '@shared/components/data-display/data/dataList.types';
+import { FilterChips } from '@shared/components/data-display/data/FilterChips';
+import type { FilterChipItem } from '@shared/components/data-display/data/FilterChips';
 import { FilterDrawer } from '@shared/components/data-display/data/FilterDrawer';
 import { SearchBar } from '@shared/components/data-display/data/SearchBar';
 
@@ -34,6 +37,9 @@ interface QueryDataTableProps<TData> {
   emptyDescription?: string | undefined;
   hideToolbar?: boolean | undefined;
   toolbarContent?: ReactNode | undefined;
+  metricsContent?: ReactNode | undefined;
+  activeFilterCount?: number | undefined;
+  filterChips?: FilterChipItem[] | undefined;
   mobileConfig?: DataListMobileConfig<TData> | undefined;
 }
 
@@ -42,12 +48,14 @@ const QueryDataTableToolbar = ({
   onQueryChange,
   queryDebounceInMilliseconds,
   showFilter,
+  activeFilterCount,
   onOpenFilter,
 }: {
   query: string;
   onQueryChange: (nextValue: string) => void;
   queryDebounceInMilliseconds: number;
   showFilter: boolean;
+  activeFilterCount?: number | undefined;
   onOpenFilter?: (() => void) | undefined;
 }) => (
   <Stack
@@ -61,14 +69,16 @@ const QueryDataTableToolbar = ({
       debounceInMilliseconds={queryDebounceInMilliseconds}
     />
     {showFilter ? (
-      <Button
-        variant="outlined"
-        startIcon={<TuneIcon />}
-        onClick={onOpenFilter}
-        sx={{ width: { xs: '100%', sm: 'auto' } }}
-      >
-        {sharedComponentsI18n.filters.filterButton}
-      </Button>
+      <Badge badgeContent={activeFilterCount ?? 0} color="primary">
+        <Button
+          variant={activeFilterCount ? 'contained' : 'outlined'}
+          startIcon={<TuneIcon />}
+          onClick={onOpenFilter}
+          sx={{ width: { xs: '100%', sm: 'auto' } }}
+        >
+          {sharedComponentsI18n.filters.filterButton}
+        </Button>
+      </Badge>
     ) : null}
   </Stack>
 );
@@ -172,11 +182,15 @@ export const QueryDataTable = <TData,>({
   emptyDescription = sharedComponentsI18n.dataList.emptyDescription,
   hideToolbar = false,
   toolbarContent,
+  metricsContent,
+  activeFilterCount,
+  filterChips,
   mobileConfig,
 }: QueryDataTableProps<TData>) => {
   const hasFilter = filterContent !== undefined;
   return (
     <Stack spacing={spacingScale.sm}>
+      {metricsContent}
       {toolbarContent}
       {!hideToolbar ? (
         <QueryDataTableToolbar
@@ -184,9 +198,11 @@ export const QueryDataTable = <TData,>({
           onQueryChange={onQueryChange}
           queryDebounceInMilliseconds={queryDebounceInMilliseconds}
           showFilter={hasFilter}
+          activeFilterCount={activeFilterCount}
           onOpenFilter={onOpenFilter}
         />
       ) : null}
+      {filterChips && filterChips.length > 0 ? <FilterChips chips={filterChips} /> : null}
 
       <QueryDataTableContent
         loading={loading}
