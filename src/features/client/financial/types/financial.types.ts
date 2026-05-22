@@ -112,6 +112,6 @@ export type FinancialDashboardSummary = {
   openPayables?: number | undefined;
 };
 
-export type FinancialDashboardQueryParams = ClientBaseQueryParams & {
+export type FinancialDashboardQueryParams = {
   academicYearId?: string | undefined;
 };

@@ -52,7 +52,30 @@ export type StudentEnrollmentSummary = {
   schoolClass?: {
     id: string;
     name: string;
+    code?: string | undefined;
   } | null;
+  financialSummary?: {
+    total?: number | undefined;
+    received?: number | undefined;
+    open?: number | undefined;
+    overdue?: number | undefined;
+  } | null;
+};
+
+export type StudentLegalGuardianLink = {
+  id: string;
+  relationshipType?: LegalGuardianRelationshipType | undefined;
+  isPrimary?: boolean | undefined;
+  isFinancialResponsible?: boolean | undefined;
+  legalGuardian?:
+    | {
+        id: string;
+        person?: StudentPerson | null | undefined;
+        contacts?: StudentContact[] | undefined;
+        addresses?: StudentAddress[] | undefined;
+      }
+    | null
+    | undefined;
 };
 
 export type Student = {
@@ -63,6 +86,7 @@ export type Student = {
   contacts?: StudentContact[] | undefined;
   addresses?: StudentAddress[] | undefined;
   enrollments?: StudentEnrollmentSummary[] | undefined;
+  legalGuardians?: StudentLegalGuardianLink[] | undefined;
   createdAt?: string | undefined;
   updatedAt?: string | undefined;
 };

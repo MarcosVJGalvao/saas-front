@@ -11,7 +11,7 @@ export const useFinancialDashboardPage = () => {
     setLoading(true);
     setErrorMessage(undefined);
     try {
-      const response = await financialDashboardService.getSummary({ page: 1, limit: 1 });
+      const response = await financialDashboardService.getSummary({});
       setSummary(response);
     } catch {
       setErrorMessage('Não foi possível carregar o dashboard financeiro.');

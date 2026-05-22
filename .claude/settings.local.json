@@ -1,0 +1,8 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(Get-ChildItem -Path \"C:\\\\Users\\\\marco\\\\Projetos Pessoais\\\\plataform-saas-front\\\\src\\\\features\\\\client\\\\students\" -Recurse -Directory)",
+      "Bash(npx tsc *)"
+    ]
+  }
+}

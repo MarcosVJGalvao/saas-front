@@ -1,12 +1,21 @@
 import { formatIsoDate } from '@shared/formatters';
-import { translateDocumentType, translateStudentStatus } from '@shared/i18n/pt-BR/enums';
+import {
+  translateDocumentType,
+  translateGuardianRelationshipType,
+  translateStudentStatus,
+} from '@shared/i18n/pt-BR/enums';
 import { maskCep, maskCnpj, maskCpf, maskPhone } from '@shared/masks/inputMasks';
 import { onlyDigits } from '@shared/parsers/stringParsers';
 import type {
   EntityDetailsPageData,
   EntityDetailsPageContent,
 } from '@shared/components/data-display/details/entityDetails.types';
-import type { Student, StudentAddress, StudentContact } from '../types/student.types';
+import type {
+  Student,
+  StudentAddress,
+  StudentContact,
+  StudentLegalGuardianLink,
+} from '../types/student.types';
 
 export const studentDetailsContent: EntityDetailsPageContent = {
   emptyTitle: 'Aluno não encontrado',
@@ -25,19 +34,75 @@ const formatStudentDocument = (student: Student): string => {
   return documentNumber;
 };
 
+const formatPersonDocument = (documentNumber: string | undefined): string => {
+  if (!documentNumber) return '-';
+  const digits = onlyDigits(documentNumber);
+  if (digits.length === 11) return maskCpf(digits);
+  if (digits.length === 14) return maskCnpj(digits);
+  return documentNumber;
+};
+
 const formatStudentContact = (contact: StudentContact): string => {
   if (contact.type === 'phone' || contact.type === 'whatsapp') return maskPhone(contact.value);
   return contact.value;
 };
 
 const formatStudentAddress = (address: StudentAddress): string => {
-  const street = address.street ?? '-';
-  const number = address.number ?? 's/n';
-  const city = address.city ?? '-';
-  const state = address.state ?? '-';
-  const zipCode = address.zipCode ? `CEP ${maskCep(address.zipCode)}` : 'CEP não informado';
-  return `${street}, ${number} - ${city}/${state} - ${zipCode}`;
+  const parts: string[] = [];
+  if (address.street) parts.push(`${address.street}, ${address.number ?? 's/n'}`);
+  if (address.complement) parts.push(address.complement);
+  if (address.neighborhood) parts.push(address.neighborhood);
+  const cityState =
+    address.city && address.state
+      ? `${address.city}/${address.state}`
+      : address.city ?? address.state;
+  if (cityState) parts.push(cityState);
+  if (address.zipCode) parts.push(`CEP ${maskCep(address.zipCode)}`);
+  return parts.join(' — ') || '-';
 };
+
+const formatCurrency = (value: number | undefined): string => {
+  if (value === undefined || value === null) return '-';
+  return new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(value);
+};
+
+const buildLegalGuardianSections = (legalGuardians: StudentLegalGuardianLink[]) =>
+  legalGuardians.map((link) => {
+    const guardian = link.legalGuardian;
+    const name = guardian?.person?.fullName ?? 'Responsável';
+    const relationshipLabel = link.relationshipType
+      ? translateGuardianRelationshipType(link.relationshipType)
+      : '-';
+
+    const contactItems =
+      guardian?.contacts && guardian.contacts.length > 0
+        ? guardian.contacts.map((c) => ({
+            label: c.type === 'email' ? 'E-mail' : 'Contato',
+            value: formatStudentContact(c),
+          }))
+        : [{ label: 'Contatos', value: 'Nenhum contato cadastrado.' }];
+
+    const addressItems =
+      guardian?.addresses && guardian.addresses.length > 0
+        ? guardian.addresses.map((a) => ({
+            label: a.neighborhood ?? 'Endereço',
+            value: formatStudentAddress(a),
+          }))
+        : [{ label: 'Endereços', value: 'Nenhum endereço cadastrado.' }];
+
+    return {
+      id: `guardian-${link.id}`,
+      title: name,
+      items: [
+        { label: 'Parentesco', value: relationshipLabel },
+        { label: 'Responsável principal', value: link.isPrimary ? 'Sim' : 'Não' },
+        { label: 'Resp. financeiro', value: link.isFinancialResponsible ? 'Sim' : 'Não' },
+        { label: 'Documento', value: formatPersonDocument(guardian?.person?.documentNumber) },
+        ...contactItems,
+        ...addressItems,
+      ],
+    };
+  });
 
 export const toStudentDetailsData = (
   student: Student,
@@ -61,7 +126,6 @@ export const toStudentDetailsData = (
           id: 'personal',
           title: 'Dados pessoais',
           items: [
-            { label: 'Nome', value: student.person?.fullName ?? '-' },
             { label: 'Código', value: student.registrationCode ?? '-' },
             { label: 'Status', value: translateStudentStatus(student.status) },
             {
@@ -119,23 +183,80 @@ export const toStudentDetailsData = (
       ],
     },
     {
+      id: 'guardians',
+      label: 'Responsáveis',
+      sections:
+        student.legalGuardians && student.legalGuardians.length > 0
+          ? buildLegalGuardianSections(student.legalGuardians)
+          : [
+              {
+                id: 'guardians-empty',
+                title: 'Responsáveis legais',
+                items: [{ label: 'Responsáveis', value: 'Nenhum responsável cadastrado.' }],
+              },
+            ],
+    },
+    {
       id: 'enrollments',
       label: 'Matrículas',
+      sections:
+        student.enrollments && student.enrollments.length > 0
+          ? student.enrollments.map((enrollment) => ({
+              id: `enrollment-${enrollment.id}`,
+              title: enrollment.enrollmentCode ?? 'Matrícula',
+              items: [
+                { label: 'Status', value: enrollment.status ?? '-' },
+                { label: 'Turma', value: enrollment.schoolClass?.name ?? '-' },
+                { label: 'Código da turma', value: enrollment.schoolClass?.code ?? '-' },
+                { label: 'Ano letivo', value: enrollment.academicYear?.name ?? '-' },
+                { label: 'Data de matrícula', value: formatDate(enrollment.enrollmentDate) },
+                ...(enrollment.financialSummary
+                  ? [
+                      {
+                        label: 'Total financeiro',
+                        value: formatCurrency(enrollment.financialSummary.total),
+                      },
+                      {
+                        label: 'Recebido',
+                        value: formatCurrency(enrollment.financialSummary.received),
+                      },
+                      {
+                        label: 'Em aberto',
+                        value: formatCurrency(enrollment.financialSummary.open),
+                      },
+                      {
+                        label: 'Inadimplente',
+                        value: formatCurrency(enrollment.financialSummary.overdue),
+                      },
+                    ]
+                  : []),
+              ],
+            }))
+          : [
+              {
+                id: 'enrollments-empty',
+                title: 'Matrículas vinculadas',
+                items: [{ label: 'Matrículas', value: 'Nenhuma matrícula vinculada.' }],
+              },
+            ],
+    },
+    {
+      id: 'documents',
+      label: 'Documentos',
       sections: [
         {
-          id: 'enrollments-list',
-          title: 'Matrículas vinculadas',
-          items:
-            student.enrollments && student.enrollments.length > 0
-              ? student.enrollments.map((enrollment) => ({
-                  label: enrollment.enrollmentCode ?? 'Matrícula',
-                  value:
-                    enrollment.schoolClass?.name ??
-                    enrollment.academicYear?.name ??
-                    enrollment.enrollmentDate ??
-                    '-',
-                }))
-              : [{ label: 'Matrículas', value: 'Nenhuma matrícula vinculada.' }],
+          id: 'documents-emit',
+          title: 'Documentos disponíveis',
+          items: [
+            {
+              label: 'Atestado de matrícula',
+              value: 'Comprova o vínculo ativo do aluno com a instituição',
+            },
+            {
+              label: 'Histórico escolar',
+              value: 'Registro completo do percurso acadêmico do aluno',
+            },
+          ],
         },
       ],
     },
@@ -143,13 +264,13 @@ export const toStudentDetailsData = (
   footerActions: [
     {
       id: 'download-enrollment-certificate',
-      label: downloading ? 'Baixando atestado...' : 'Baixar atestado',
+      label: downloading ? 'Gerando...' : 'Baixar atestado',
       onClick: onDownloadEnrollmentCertificate,
       disabled: downloading,
     },
     {
       id: 'download-school-history',
-      label: downloading ? 'Baixando histórico...' : 'Baixar histórico',
+      label: downloading ? 'Gerando...' : 'Baixar histórico',
       onClick: onDownloadSchoolHistory,
       disabled: downloading,
     },

@@ -50,67 +50,57 @@ export const EntityDetailsPage = ({
       {headerData ? (
         <Box
           sx={{
-            borderRadius: 3,
+            borderRadius: 2.5,
             border: `1px solid ${alpha(theme.palette.divider, 0.6)}`,
-            overflow: 'hidden',
             bgcolor: 'background.paper',
             boxShadow: theme.shadows[1],
+            px: { xs: 2.5, sm: 3 },
+            py: { xs: 2, sm: 2.5 },
+            display: 'flex',
+            alignItems: 'center',
+            gap: { xs: 2, sm: 2.5 },
           }}
         >
-          <Box
+          <AppAvatar
+            src={headerData.avatarUrl ?? undefined}
             sx={{
-              height: 72,
-              background: `linear-gradient(135deg, ${theme.palette.primary.main} 0%, ${theme.palette.primary.dark} 100%)`,
+              width: { xs: 52, sm: 60 },
+              height: { xs: 52, sm: 60 },
+              fontSize: { xs: '1.25rem', sm: '1.5rem' },
+              fontWeight: 700,
+              bgcolor: theme.palette.primary.main,
+              color: theme.palette.primary.contrastText,
+              flexShrink: 0,
+              boxShadow: theme.shadows[2],
             }}
-          />
+          >
+            {headerData.avatarFallback ?? headerData.title.slice(0, 1).toUpperCase()}
+          </AppAvatar>
 
-          <Box sx={{ px: { xs: 2.5, sm: 3.5 }, pb: { xs: 2.5, sm: 3 }, mt: '-40px' }}>
-            <Box
-              sx={{
-                display: 'inline-flex',
-                borderRadius: '50%',
-                border: `3px solid ${theme.palette.background.paper}`,
-                boxShadow: theme.shadows[3],
-                mb: 1.5,
-              }}
-            >
-              <AppAvatar
-                src={headerData.avatarUrl ?? undefined}
-                sx={{
-                  width: 80,
-                  height: 80,
-                  fontSize: '1.75rem',
-                  fontWeight: 700,
-                  bgcolor: theme.palette.primary.light,
-                  color: theme.palette.primary.contrastText,
-                }}
-              >
-                {headerData.avatarFallback ?? headerData.title.slice(0, 1).toUpperCase()}
-              </AppAvatar>
-            </Box>
-
+          <Box sx={{ minWidth: 0 }}>
             <AppStack
-              direction={{ xs: 'column', sm: 'row' }}
+              direction="row"
               spacing={1}
-              sx={{ alignItems: { sm: 'center' }, flexWrap: 'wrap' }}
+              sx={{ alignItems: 'center', flexWrap: 'wrap', mb: headerData.subtitle ? 0.25 : 0 }}
             >
-              <AppText variant="h5" sx={{ fontWeight: 700, lineHeight: 1.2 }}>
+              <AppText
+                variant="h6"
+                sx={{ fontWeight: 700, lineHeight: 1.25, fontSize: { xs: '1rem', sm: '1.125rem' } }}
+              >
                 {headerData.title}
               </AppText>
-
               {headerData.statusLabel ? (
                 <Chip
                   label={headerData.statusLabel}
                   size="small"
                   sx={{
-                    alignSelf: 'flex-start',
                     fontWeight: 600,
-                    fontSize: '0.72rem',
-                    height: 24,
+                    fontSize: '0.7rem',
+                    height: 22,
                     bgcolor:
                       headerData.statusColor === 'success'
-                        ? alpha(theme.palette.success.main, 0.14)
-                        : alpha(theme.palette.text.primary, 0.1),
+                        ? alpha(theme.palette.success.main, 0.12)
+                        : alpha(theme.palette.text.primary, 0.08),
                     color:
                       headerData.statusColor === 'success'
                         ? theme.palette.success.dark
@@ -121,9 +111,8 @@ export const EntityDetailsPage = ({
                 />
               ) : null}
             </AppStack>
-
             {headerData.subtitle ? (
-              <AppText variant="body2" color="text.secondary" sx={{ mt: 0.5 }}>
+              <AppText variant="body2" color="text.secondary" sx={{ lineHeight: 1.4 }}>
                 {headerData.subtitle}
               </AppText>
             ) : null}
