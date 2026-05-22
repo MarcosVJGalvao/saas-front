@@ -3,6 +3,7 @@ import { formatIsoDate } from '@shared/formatters';
 import { formatCurrency } from '@shared/formatters/currencyFormatter';
 import {
   activeInactiveStatusLabels,
+  billingCycleLabels,
   documentTypeLabels,
   subscriptionStatusLabelByValue,
 } from '@shared/i18n/pt-BR/enums';
@@ -29,7 +30,13 @@ const formatAddress = (client: Client): string =>
     ? `${client.addresses[0].street}, ${client.addresses[0].number} - ${client.addresses[0].city}/${client.addresses[0].state}`
     : 'Endereço não informado';
 
-const formatSubscriptionStatus = (status: string | null | undefined): string => {
+const formatSubscriptionStatus = (
+  status: Client['subscription'] extends infer Subscription
+    ? Subscription extends { status?: infer StatusValue }
+      ? StatusValue
+      : never
+    : never,
+): string => {
   if (!status) {
     return '-';
   }
@@ -41,19 +48,17 @@ const formatSubscriptionStatus = (status: string | null | undefined): string => 
   return status;
 };
 
-const formatBillingCycle = (billingCycle: string | null | undefined): string => {
-  if (billingCycle === 'monthly') {
-    return 'Mensal';
-  }
-  if (billingCycle === 'yearly') {
-    return 'Anual';
-  }
-  return billingCycle ?? '-';
-};
+const formatBillingCycle = (
+  billingCycle: Client['plan'] extends infer Plan
+    ? Plan extends { billingCycle?: infer BillingCycleValue }
+      ? BillingCycleValue
+      : never
+    : never,
+): string => (billingCycle ? billingCycleLabels[billingCycle] : '-');
 
 const resolveSubscriptionPrice = (client: Client): string => {
   const priceValue = client.subscription?.priceAtSubscription ?? client.plan?.price;
-  const currency = client.plan?.currency ?? 'BRL';
+  const currency = client.plan?.currency ?? client.tenant?.currency ?? 'BRL';
   return priceValue ? formatCurrency(priceValue, currency) : '-';
 };
 
@@ -89,10 +94,20 @@ export const toClientDetailsData = (client: Client): EntityDetailsPageData => ({
           items: [
             { label: 'Tenant', value: client.tenant?.name ?? '-' },
             { label: 'Slug do tenant', value: client.tenant?.slug ?? client.tenantSlug ?? '-' },
+            { label: 'Fuso horário', value: client.tenant?.timezone ?? '-' },
+            { label: 'Localidade', value: client.tenant?.locale ?? '-' },
             { label: 'Endereço principal', value: formatAddress(client) },
             {
               label: 'CEP',
               value: client.addresses?.[0]?.zipCode ? maskCep(client.addresses[0].zipCode) : '-',
+            },
+            {
+              label: 'Bairro',
+              value: client.addresses?.[0]?.neighborhood ?? '-',
+            },
+            {
+              label: 'País',
+              value: client.addresses?.[0]?.country ?? '-',
             },
           ],
         },
@@ -113,12 +128,20 @@ export const toClientDetailsData = (client: Client): EntityDetailsPageData => ({
               value: formatBillingCycle(client.plan?.billingCycle),
             },
             {
+              label: 'Descrição do plano',
+              value: client.plan?.description ?? '-',
+            },
+            {
               label: 'Status da assinatura',
               value: formatSubscriptionStatus(client.subscription?.status),
             },
             { label: 'Início', value: formatDate(client.subscription?.startDate) },
             { label: 'Renovação', value: formatDate(client.subscription?.renewalDate) },
             { label: 'Trial até', value: formatDate(client.subscription?.trialEndsAt) },
+            {
+              label: 'Encerramento',
+              value: formatDate(client.subscription?.endDate),
+            },
           ],
         },
       ],

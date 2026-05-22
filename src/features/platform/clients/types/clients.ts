@@ -14,11 +14,66 @@ export type ClientStatus = 'active' | 'inactive';
 
 export type DocumentType = 'CPF' | 'CNPJ' | 'RG' | 'PASSPORT' | 'OTHER';
 
+export type BillingCycle = 'monthly' | 'yearly';
+
+export type SubscriptionStatus = 'active' | 'canceled' | 'past_due' | 'trialing' | 'blocked';
+
 export type ContactType = 'email' | 'phone' | 'whatsapp' | 'linkedin' | 'other';
 
 export type Gender = 'male' | 'female' | 'other' | 'prefer_not_to_say';
 
 export type MaritalStatus = 'single' | 'married' | 'divorced' | 'widowed' | 'other';
+
+export type ClientPlan = AuditFields & {
+  name: string;
+  description?: string | null | undefined;
+  price?: string | null | undefined;
+  currency?: string | null | undefined;
+  billingCycle?: BillingCycle | null | undefined;
+  trialDays?: number | null | undefined;
+  isActive?: boolean | undefined;
+};
+
+export type ClientSubscription = AuditFields & {
+  tenantId: UUID;
+  planId: UUID;
+  status?: SubscriptionStatus | null | undefined;
+  startDate?: string | null | undefined;
+  endDate?: string | null | undefined;
+  trialEndsAt?: string | null | undefined;
+  canceledAt?: string | null | undefined;
+  cancelsAtPeriodEnd?: boolean | undefined;
+  cancelRequestedAt?: string | null | undefined;
+  renewalDate?: string | null | undefined;
+  priceAtSubscription?: string | null | undefined;
+  blockedAt?: string | null | undefined;
+  blockedReason?: string | null | undefined;
+  plan?: ClientPlan | null | undefined;
+};
+
+export type ClientAddressRecord = AuditFields & {
+  clientId: UUID;
+  street: string;
+  number: string;
+  complement?: string | null | undefined;
+  neighborhood: string;
+  city: string;
+  state: string;
+  zipCode: string;
+  country: string;
+};
+
+export type ClientTenant = AuditFields & {
+  clientId: UUID;
+  name: string;
+  slug?: string | null | undefined;
+  status: ClientStatus;
+  timezone?: string | null | undefined;
+  locale?: string | null | undefined;
+  currency?: string | null | undefined;
+  subscriptions?: ClientSubscription[] | undefined;
+  subscriptionPlanHistories?: unknown[] | undefined;
+};
 
 export type Client = AuditFields & {
   legalName: string;
@@ -36,51 +91,10 @@ export type Client = AuditFields & {
   planName?: string | null | undefined;
   planId?: string | null | undefined;
   subscriptionId?: string | null | undefined;
-  plan?: {
-    id: string;
-    name: string;
-    description?: string | null | undefined;
-    price?: string | null | undefined;
-    currency?: string | null | undefined;
-    billingCycle?: string | null | undefined;
-    trialDays?: number | null | undefined;
-    isActive?: boolean | undefined;
-  } | null;
-  subscription?: {
-    id: string;
-    status?: string | null | undefined;
-    startDate?: string | null | undefined;
-    endDate?: string | null | undefined;
-    trialEndsAt?: string | null | undefined;
-    renewalDate?: string | null | undefined;
-    priceAtSubscription?: string | null | undefined;
-  } | null;
-  addresses?: Array<{
-    id: string;
-    street: string;
-    number: string;
-    complement?: string | null | undefined;
-    neighborhood: string;
-    city: string;
-    state: string;
-    zipCode: string;
-    country: string;
-  }>;
-  tenant?: {
-    id: string;
-    name: string;
-    slug?: string | null | undefined;
-    timezone?: string | null | undefined;
-    locale?: string | null | undefined;
-    subscriptions?: Array<{
-      id: string;
-      status: string;
-      startDate?: string | null | undefined;
-      trialEndsAt?: string | null | undefined;
-      renewalDate?: string | null | undefined;
-      plan?: { id: string; name: string } | null;
-    }>;
-  } | null;
+  plan?: ClientPlan | null;
+  subscription?: ClientSubscription | null;
+  addresses?: ClientAddressRecord[] | undefined;
+  tenant?: ClientTenant | null;
 };
 
 export type CreateClientRequest = {
