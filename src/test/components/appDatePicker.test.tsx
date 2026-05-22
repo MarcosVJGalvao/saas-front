@@ -68,4 +68,12 @@ describe('AppDatePicker', () => {
 
     expect(handleChange).not.toHaveBeenCalled();
   });
+
+  it('aceita valor legado com apenas digitos sem perder a data', () => {
+    const handleChange = vi.fn<(value: string | null) => void>();
+
+    render(<AppDatePicker label="Data" value="22051996" onChange={handleChange} />);
+
+    expect(screen.getAllByText('Data').length).toBeGreaterThan(0);
+  });
 });

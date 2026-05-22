@@ -26,6 +26,8 @@ export interface AppDatePickerProps {
 
 const DISPLAY_DATE_FORMAT = 'dd/MM/yyyy';
 const BACKEND_DATE_FORMAT = 'yyyy-MM-dd';
+const COMPACT_BACKEND_DATE_FORMAT = 'yyyyMMdd';
+const DIGIT_DATE_FORMAT = 'ddMMyyyy';
 
 const toBackendDate = (date: Date | null): string | null => {
   if (date === null) {
@@ -44,13 +46,21 @@ const toDateObject = (value: string | null): Date | null => {
     return null;
   }
 
-  const parsedDate = parse(value, BACKEND_DATE_FORMAT, new Date());
+  const formats = [
+    BACKEND_DATE_FORMAT,
+    DISPLAY_DATE_FORMAT,
+    COMPACT_BACKEND_DATE_FORMAT,
+    DIGIT_DATE_FORMAT,
+  ];
 
-  if (!isValid(parsedDate)) {
-    return null;
+  for (const currentFormat of formats) {
+    const parsedDate = parse(value, currentFormat, new Date());
+
+    if (isValid(parsedDate)) {
+      return parsedDate;
+    }
   }
-
-  return parsedDate;
+  return null;
 };
 
 export const AppDatePicker = ({

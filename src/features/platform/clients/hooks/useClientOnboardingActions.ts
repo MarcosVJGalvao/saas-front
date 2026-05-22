@@ -141,7 +141,7 @@ export const useClientOnboardingActions = ({
             ...previousValue.employee,
             person: {
               ...previousValue.employee.person,
-              dateOfBirth: onlyDigits(nextValue) || undefined,
+              dateOfBirth: nextValue.trim() || undefined,
             },
           },
         }));
