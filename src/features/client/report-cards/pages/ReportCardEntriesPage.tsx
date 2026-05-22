@@ -9,14 +9,15 @@ import { FormTextField } from '@shared/components/form/FormTextField';
 import { PageHeader } from '@shared/components/layout/PageHeader';
 import { SectionCard } from '@shared/components/layout/SectionCard';
 import { reportCardAssessmentTypeOptions } from '@shared/constants/selectOptions';
-import { BulkEntryForm } from '@features/client/report-cards/components/BulkEntryForm';
-import { BulkRemoveForm } from '@features/client/report-cards/components/BulkRemoveForm';
-import { BulkUpdateForm } from '@features/client/report-cards/components/BulkUpdateForm';
+import { BulkEntryForm } from '@features/client/report-cards/components/bulk/BulkEntryForm';
+import { BulkRemoveForm } from '@features/client/report-cards/components/bulk/BulkRemoveForm';
+import { BulkUpdateForm } from '@features/client/report-cards/components/bulk/BulkUpdateForm';
 import { useReportCardEntriesPage } from '@features/client/report-cards/hooks/useReportCardEntriesPage';
 import type { ReportCardEntryFormValues } from '@features/client/report-cards/schemas/reportCardEntryFormSchema';
 
 const TABS = [
-  { label: 'Lançamento', value: 'entry' },
+  { label: 'Individual', value: 'entry' },
+  { label: 'Lançamento em lote', value: 'bulk-entry' },
   { label: 'Atualização em lote', value: 'update' },
   { label: 'Remoção em lote', value: 'remove' },
 ];
@@ -103,7 +104,7 @@ const ReportCardEntriesPage = () => {
         </SectionCard>
       ) : null}
 
-      {tab === 'entry' ? (
+      {tab === 'bulk-entry' ? (
         <SectionCard
           title="Lançamento em lote"
           subtitle="Cadastre notas para vários alunos de uma turma ao mesmo tempo."

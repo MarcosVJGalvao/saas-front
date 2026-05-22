@@ -1,5 +1,5 @@
 import Box from '@mui/material/Box';
-import Typography from '@mui/material/Typography';
+import { AppText } from '@shared/components/data-display/AppText';
 import type { ReactNode } from 'react';
 
 type InfoItemProps = {
@@ -10,7 +10,7 @@ type InfoItemProps = {
 
 export const InfoItem = ({ label, value, noWrap = false }: InfoItemProps) => (
   <Box sx={{ minWidth: 0 }}>
-    <Typography
+    <AppText
       variant="caption"
       color="text.disabled"
       sx={{
@@ -24,8 +24,8 @@ export const InfoItem = ({ label, value, noWrap = false }: InfoItemProps) => (
       }}
     >
       {label}
-    </Typography>
-    <Typography
+    </AppText>
+    <AppText
       component="div"
       variant="body2"
       color="text.primary"
@@ -39,15 +39,15 @@ export const InfoItem = ({ label, value, noWrap = false }: InfoItemProps) => (
       }}
     >
       {value ?? (
-        <Typography
+        <AppText
           component="span"
           variant="body2"
           color="text.disabled"
           sx={{ fontStyle: 'italic' }}
         >
           Não informado
-        </Typography>
+        </AppText>
       )}
-    </Typography>
+    </AppText>
   </Box>
 );
