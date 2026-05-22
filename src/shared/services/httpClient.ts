@@ -18,9 +18,7 @@ import type { AuthSession } from '@shared/types/authSession';
 
 const configuredApiBaseUrl = import.meta.env.VITE_API_BASE_URL?.trim();
 const API_BASE_URL =
-  configuredApiBaseUrl !== undefined && configuredApiBaseUrl.length > 0
-    ? configuredApiBaseUrl
-    : '/api';
+  configuredApiBaseUrl !== undefined && configuredApiBaseUrl.length > 0 ? configuredApiBaseUrl : '';
 const CLIENT_REFRESH_PATH = '/api/auth/refresh';
 const PLATFORM_REFRESH_PATH = '/api/platform/auth/refresh';
 const CLIENT_API_BASE_PATH = '/api/client';
