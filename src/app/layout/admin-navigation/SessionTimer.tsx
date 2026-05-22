@@ -29,7 +29,11 @@ export const SessionTimer = ({
   return (
     <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
       <AccessTimeOutlinedIcon fontSize="small" color="action" />
-      {!compact ? <Typography variant="body2">Sessão expira em:</Typography> : null}
+      {!compact ? (
+        <Typography variant="body2" sx={{ display: { xs: 'none', md: 'block' } }}>
+          Sessão expira em:
+        </Typography>
+      ) : null}
       <Typography variant="body2" sx={{ color: toneColor[timer.tone], fontWeight: 600 }}>
         {timer.label}
       </Typography>

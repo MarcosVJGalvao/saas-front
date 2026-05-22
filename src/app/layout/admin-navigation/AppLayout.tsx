@@ -267,6 +267,8 @@ export const AppLayout = ({ children }: { children?: ReactNode }) => {
           borderBottom: 1,
           borderColor: 'divider',
           bgcolor: 'background.paper',
+          overflow: 'hidden',
+          minWidth: 0,
         }}
       >
         <TopBar

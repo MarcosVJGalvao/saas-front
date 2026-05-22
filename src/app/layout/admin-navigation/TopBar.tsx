@@ -144,6 +144,8 @@ export const TopBar = ({
         minHeight: `${appBarHeight}px !important`,
         px: responsive({ xs: 2, lg: 3 }),
         gap: responsive({ xs: 1, md: 1.5, lg: 2 }),
+        flexWrap: 'nowrap',
+        overflow: 'hidden',
       }}
     >
       {isMobile ? (
@@ -214,11 +216,11 @@ export const TopBar = ({
       </Box>
       <Box
         sx={{
-          ml: 'auto',
           display: 'flex',
           alignItems: 'center',
           gap: responsive({ xs: 0.5, md: 1.5 }),
           flexShrink: 0,
+          minWidth: 0,
         }}
       >
         <Box sx={sessionTimerContainerSx}>
