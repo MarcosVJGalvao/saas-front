@@ -98,6 +98,8 @@ describe('admin navigation by domain', () => {
     expect(permissions).toContain('student:create');
     expect(permissions).toContain('student:update');
     expect(permissions).toContain('student:delete');
-    expect(permissions).toContain('attendance:write');
+    expect(permissions).toContain('attendance:create');
+    expect(permissions).toContain('attendance:update');
+    expect(permissions).toContain('attendance:delete');
   });
 });

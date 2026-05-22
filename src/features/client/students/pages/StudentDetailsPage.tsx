@@ -3,6 +3,7 @@ import { AppButton } from '@shared/components/inputs/AppButton';
 import { EntityDetailsPage } from '@shared/components/data-display/details/EntityDetailsPage';
 import { AppStack } from '@shared/components/layout/AppStack';
 import { PageHeader } from '@shared/components/layout/PageHeader';
+import { ReportCardQueryCard } from '@features/client/students/components/ReportCardQueryCard';
 import { useStudentDetailsPage } from '@features/client/students/hooks/useStudentDetailsPage';
 
 const StudentDetailsPage = () => {
@@ -45,6 +46,15 @@ const StudentDetailsPage = () => {
           void studentDetailsPage.onRetry();
         }}
       />
+      {studentDetailsPage.entity ? (
+        <ReportCardQueryCard
+          loading={studentDetailsPage.reportCardLoading}
+          message={studentDetailsPage.reportCardMessage}
+          onQuery={() => {
+            void studentDetailsPage.loadReportCard();
+          }}
+        />
+      ) : null}
     </AppStack>
   );
 };

@@ -5,6 +5,7 @@ import type {
   EntityDetailsPageData,
   EntityDetailsViewState,
 } from '@shared/components/data-display/details/entityDetails.types';
+import { reportCardService } from '@features/client/report-cards/services/service';
 import {
   studentDetailsContent,
   toStudentDetailsData,
@@ -18,6 +19,10 @@ export const useStudentDetailsPage = (id: string) => {
   const [viewState, setViewState] = useState<EntityDetailsViewState>('loading');
   const [errorMessage, setErrorMessage] = useState<string | undefined>();
   const [downloading, setDownloading] = useState(false);
+  const [reportCardLoading, setReportCardLoading] = useState(false);
+  const [reportCardMessage, setReportCardMessage] = useState<
+    { type: 'success' | 'error'; text: string } | undefined
+  >();
 
   const fetchStudent = useCallback(async () => {
     setViewState('loading');
@@ -62,6 +67,22 @@ export const useStudentDetailsPage = (id: string) => {
     })();
   }, [id, student]);
 
+  const loadReportCard = useCallback(async (): Promise<void> => {
+    setReportCardLoading(true);
+    setReportCardMessage(undefined);
+    try {
+      await reportCardService.getStudentReportCard(id, { page: 1, limit: 10 });
+      setReportCardMessage({ type: 'success', text: 'Boletim do aluno carregado com sucesso.' });
+    } catch {
+      setReportCardMessage({
+        type: 'error',
+        text: 'Não foi possível carregar o boletim do aluno.',
+      });
+    } finally {
+      setReportCardLoading(false);
+    }
+  }, [id]);
+
   useEffect(() => {
     const timeoutId = window.setTimeout(() => {
       void fetchStudent();
@@ -84,5 +105,8 @@ export const useStudentDetailsPage = (id: string) => {
     entity: student,
     onBack: () => navigate('/client/students'),
     onRetry: fetchStudent,
+    reportCardLoading,
+    reportCardMessage,
+    loadReportCard,
   };
 };

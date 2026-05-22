@@ -55,7 +55,7 @@ const formatStudentAddress = (address: StudentAddress): string => {
   const cityState =
     address.city && address.state
       ? `${address.city}/${address.state}`
-      : address.city ?? address.state;
+      : (address.city ?? address.state);
   if (cityState) parts.push(cityState);
   if (address.zipCode) parts.push(`CEP ${maskCep(address.zipCode)}`);
   return parts.join(' — ') || '-';
@@ -76,17 +76,17 @@ const buildLegalGuardianSections = (legalGuardians: StudentLegalGuardianLink[]) 
 
     const contactItems =
       guardian?.contacts && guardian.contacts.length > 0
-        ? guardian.contacts.map((c) => ({
-            label: c.type === 'email' ? 'E-mail' : 'Contato',
-            value: formatStudentContact(c),
+        ? guardian.contacts.map((contact) => ({
+            label: contact.type === 'email' ? 'E-mail' : 'Contato',
+            value: formatStudentContact(contact),
           }))
         : [{ label: 'Contatos', value: 'Nenhum contato cadastrado.' }];
 
     const addressItems =
       guardian?.addresses && guardian.addresses.length > 0
-        ? guardian.addresses.map((a) => ({
-            label: a.neighborhood ?? 'Endereço',
-            value: formatStudentAddress(a),
+        ? guardian.addresses.map((address) => ({
+            label: address.neighborhood ?? 'Endereço',
+            value: formatStudentAddress(address),
           }))
         : [{ label: 'Endereços', value: 'Nenhum endereço cadastrado.' }];
 

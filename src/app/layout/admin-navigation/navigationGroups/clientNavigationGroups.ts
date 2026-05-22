@@ -26,7 +26,6 @@ import ReceiptLongOutlinedIcon from '@mui/icons-material/ReceiptLongOutlined';
 import RequestQuoteOutlinedIcon from '@mui/icons-material/RequestQuoteOutlined';
 import ScheduleOutlinedIcon from '@mui/icons-material/ScheduleOutlined';
 import SchoolOutlinedIcon from '@mui/icons-material/SchoolOutlined';
-import SearchOutlinedIcon from '@mui/icons-material/SearchOutlined';
 import SummarizeOutlinedIcon from '@mui/icons-material/SummarizeOutlined';
 import SyncOutlinedIcon from '@mui/icons-material/SyncOutlined';
 import type { NavigationGroup } from '@app/layout/admin-navigation/navigationBuilder';
@@ -122,13 +121,6 @@ export const clientNavigationGroups: NavigationGroup[] = [
             href: '/report-cards/grade-subjects',
             permission: 'report-card:read',
             icon: AccountTreeOutlinedIcon,
-          },
-          {
-            id: 'report-card-queries',
-            label: 'Consultas',
-            href: '/report-cards/queries',
-            permission: 'report-card:read',
-            icon: SearchOutlinedIcon,
           },
           {
             id: 'report-card-processings',

@@ -54,12 +54,16 @@ export const toReportCardCatalogDetailsData = (
     };
   }
 
-  if ('subject' in item || 'grade' in item) {
+  if ('subjects' in item || 'grade' in item) {
     const gradeSubject: ReportCardGradeSubject = item;
+    const subjectNames =
+      gradeSubject.subjects && gradeSubject.subjects.length > 0
+        ? gradeSubject.subjects.map((subject) => subject.name).join(', ')
+        : '-';
 
     return {
       headerData: {
-        title: gradeSubject.subject?.name ?? 'Matriz curricular',
+        title: subjectNames !== '-' ? subjectNames : 'Matriz curricular',
         subtitle: gradeSubject.academicYear?.name ?? 'Matriz curricular',
         avatarFallback: 'M',
       },
@@ -72,7 +76,7 @@ export const toReportCardCatalogDetailsData = (
               id: 'main',
               title: 'Dados da matriz',
               items: [
-                { label: 'Disciplina', value: gradeSubject.subject?.name ?? '-' },
+                { label: 'Disciplinas', value: subjectNames },
                 { label: 'Série', value: gradeSubject.grade?.name ?? '-' },
                 { label: 'Ano letivo', value: gradeSubject.academicYear?.name ?? '-' },
                 {

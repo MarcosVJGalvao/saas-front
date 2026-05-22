@@ -60,7 +60,9 @@ describe('report card services', () => {
   it('lista matriz curricular pelo endpoint correto', async () => {
     const getSpy = vi.spyOn(httpClient, 'get').mockResolvedValueOnce({
       data: {
-        data: [{ id: 'matrix-1', workload: 80, subject: { id: 'subject-1', name: 'Matemática' } }],
+        data: [
+          { id: 'matrix-1', workload: 80, subjects: [{ id: 'subject-1', name: 'Matemática' }] },
+        ],
         meta: {
           page: 1,
           limit: 10,
@@ -77,7 +79,7 @@ describe('report card services', () => {
     expect(getSpy).toHaveBeenCalledWith('/api/report-cards/grade-subjects', {
       params: { page: 1, limit: 10 },
     });
-    expect(response.data[0]?.subject?.name).toBe('Matemática');
+    expect(response.data[0]?.subjects?.[0]?.name).toBe('Matemática');
   });
 
   it('cria matriz curricular pelo endpoint correto', async () => {
@@ -94,13 +96,17 @@ describe('report card services', () => {
 
   it('busca vínculo da matriz pelo endpoint correto', async () => {
     const getSpy = vi.spyOn(httpClient, 'get').mockResolvedValueOnce({
-      data: { id: 'matrix-1', workload: 80, subject: { id: 'subject-1', name: 'Matemática' } },
+      data: {
+        id: 'matrix-1',
+        workload: 80,
+        subjects: [{ id: 'subject-1', name: 'Matemática' }],
+      },
     });
 
     const response = await reportCardService.getGradeSubjectById('matrix-1');
 
     expect(getSpy).toHaveBeenCalledWith('/api/report-cards/grade-subjects/matrix-1');
-    expect(response.subject?.name).toBe('Matemática');
+    expect(response.subjects?.[0]?.name).toBe('Matemática');
   });
 
   it('cria lançamentos em lote pelo endpoint correto', async () => {

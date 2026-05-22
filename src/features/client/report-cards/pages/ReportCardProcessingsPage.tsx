@@ -16,7 +16,7 @@ const ReportCardProcessingsPage = () => {
     <AppStack spacing={2}>
       <PageHeader
         title="Processamentos"
-        subtitle="Acompanhe processamentos de boletim, reenvie falhas e controle fechamento."
+        subtitle="Acompanhe processamentos de boletim e reenvie falhas."
       />
       {model.errorMessage ? <AppAlert severity="error">{model.errorMessage}</AppAlert> : null}
       {model.successMessage ? <AppAlert severity="success">{model.successMessage}</AppAlert> : null}
@@ -74,54 +74,6 @@ const ReportCardProcessingsPage = () => {
                     : 'Reenviar matrícula',
                 onClick: () => {
                   void model.resendStudent();
-                },
-                disabled: isLoading,
-                variant: 'outlined',
-              },
-            ]}
-          />
-        </AppStack>
-      </AppPaper>
-      <AppPaper sx={{ p: layoutSpacing.cardPadding, borderRadius: 2 }}>
-        <AppStack spacing={2}>
-          <AppText variant="h6">Fechamento de período</AppText>
-          <ListFilters
-            fields={[
-              {
-                type: 'select',
-                name: 'schoolClassId',
-                label: 'Turma',
-                placeholder: 'Selecione a turma',
-                options: model.referenceOptions.schoolClassOptions,
-                mobileOrder: 1,
-              },
-              {
-                type: 'select',
-                name: 'academicPeriodId',
-                label: 'Período',
-                placeholder: 'Selecione o período',
-                options: model.referenceOptions.academicPeriodOptions,
-                mobileOrder: 2,
-              },
-            ]}
-            values={model.values}
-            onChange={model.onChange}
-            onApply={() => {
-              void model.finalizePeriod();
-            }}
-            onClear={model.clear}
-            loading={isLoading || model.referenceOptions.loading}
-            applyLabel="Finalizar período"
-          />
-          <ActionButtons
-            fullWidthOnMobile={false}
-            align="flex-start"
-            actions={[
-              {
-                type: 'custom',
-                label: model.loadingAction === 'reopen' ? 'Reabrindo...' : 'Reabrir período',
-                onClick: () => {
-                  void model.reopenPeriod();
                 },
                 disabled: isLoading,
                 variant: 'outlined',

@@ -2,22 +2,18 @@ import { useState } from 'react';
 import { useReportCardReferenceOptions } from '@features/client/report-cards/hooks/useReportCardReferenceOptions';
 import { reportCardService } from '@features/client/report-cards/services/service';
 
-type ProcessingAction = 'load' | 'resend' | 'resend-student' | 'finalize' | 'reopen';
+type ProcessingAction = 'load' | 'resend' | 'resend-student';
 type ProcessingValues = Record<string, unknown>;
 
 const initialValues: ProcessingValues = {
   processingId: '',
   studentEnrollmentId: '',
-  schoolClassId: '',
-  academicPeriodId: '',
 };
 
 const getStringValue = (value: unknown): string => (typeof value === 'string' ? value.trim() : '');
 
 export const useReportCardProcessingsPage = () => {
   const referenceOptions = useReportCardReferenceOptions({
-    includeAcademicPeriods: true,
-    includeSchoolClasses: true,
     includeStudentEnrollments: true,
   });
   const [values, setValues] = useState<ProcessingValues>(initialValues);
@@ -93,46 +89,6 @@ export const useReportCardProcessingsPage = () => {
     }
   };
 
-  const finalizePeriod = async (): Promise<void> => {
-    const schoolClassId = getStringValue(values.schoolClassId);
-    const academicPeriodId = getStringValue(values.academicPeriodId);
-    if (!schoolClassId || !academicPeriodId) {
-      setErrorMessage('Informe turma e período para finalizar.');
-      return;
-    }
-    setLoadingAction('finalize');
-    setErrorMessage(undefined);
-    setSuccessMessage(undefined);
-    try {
-      await reportCardService.finalizePeriod(schoolClassId, academicPeriodId);
-      setSuccessMessage('Período finalizado com sucesso.');
-    } catch {
-      setErrorMessage('Não foi possível finalizar o período.');
-    } finally {
-      setLoadingAction(undefined);
-    }
-  };
-
-  const reopenPeriod = async (): Promise<void> => {
-    const schoolClassId = getStringValue(values.schoolClassId);
-    const academicPeriodId = getStringValue(values.academicPeriodId);
-    if (!schoolClassId || !academicPeriodId) {
-      setErrorMessage('Informe turma e período para reabrir.');
-      return;
-    }
-    setLoadingAction('reopen');
-    setErrorMessage(undefined);
-    setSuccessMessage(undefined);
-    try {
-      await reportCardService.reopenPeriod(schoolClassId, academicPeriodId);
-      setSuccessMessage('Período reaberto com sucesso.');
-    } catch {
-      setErrorMessage('Não foi possível reabrir o período.');
-    } finally {
-      setLoadingAction(undefined);
-    }
-  };
-
   return {
     referenceOptions,
     values,
@@ -144,7 +100,5 @@ export const useReportCardProcessingsPage = () => {
     loadProcessing,
     resendFailed,
     resendStudent,
-    finalizePeriod,
-    reopenPeriod,
   };
 };

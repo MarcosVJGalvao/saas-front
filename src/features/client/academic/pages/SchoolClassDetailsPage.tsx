@@ -1,14 +1,18 @@
 import { useParams } from 'react-router-dom';
 import { BindingCard } from '@features/client/academic/components/BindingCard';
+import { ClassReportCardCard } from '@features/client/academic/components/ClassReportCardCard';
+import { PeriodClosureCard } from '@features/client/academic/components/PeriodClosureCard';
 import { EntityDetailsPage } from '@shared/components/data-display/details/EntityDetailsPage';
 import { AppAlert } from '@shared/components/feedback/AppAlert';
 import { AppStack } from '@shared/components/layout/AppStack';
 import { PageHeader } from '@shared/components/layout/PageHeader';
 import { useSchoolClassDetailsPage } from '@features/client/academic/hooks/useSchoolClassDetailsPage';
+import { useSchoolClassPeriodActions } from '@features/client/academic/hooks/useSchoolClassPeriodActions';
 
 const SchoolClassDetailsPage = () => {
   const { id } = useParams<{ id: string }>();
   const schoolClassDetailsPage = useSchoolClassDetailsPage(id ?? '');
+  const periodActions = useSchoolClassPeriodActions(id ?? '');
 
   if (!id) {
     return null;
@@ -73,6 +77,27 @@ const SchoolClassDetailsPage = () => {
         removeLabel="Remover vínculos"
         isAddLoading={schoolClassDetailsPage.actionLoading === 'assign-teacher-subjects'}
         isRemoveLoading={schoolClassDetailsPage.actionLoading === 'remove-teacher-subjects'}
+      />
+      <PeriodClosureCard
+        academicPeriodOptions={periodActions.academicPeriodOptions}
+        selectedPeriodId={periodActions.selectedPeriodId}
+        onPeriodChange={periodActions.onPeriodChange}
+        onFinalize={() => {
+          void periodActions.finalizePeriod();
+        }}
+        onReopen={() => {
+          void periodActions.reopenPeriod();
+        }}
+        isFinalizeLoading={periodActions.isFinalizeLoading}
+        isReopenLoading={periodActions.isReopenLoading}
+        message={periodActions.periodMessage}
+      />
+      <ClassReportCardCard
+        loading={periodActions.reportCardLoading}
+        message={periodActions.reportCardMessage}
+        onQuery={() => {
+          void periodActions.loadClassReportCard();
+        }}
       />
     </AppStack>
   );
