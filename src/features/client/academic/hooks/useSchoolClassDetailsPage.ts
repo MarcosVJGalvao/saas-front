@@ -11,6 +11,24 @@ import type {
   SchoolClassSummary,
 } from '@features/client/academic/types/academic.types';
 
+type SchoolClassDetailsPageState = {
+  data: EntityDetailsPageData;
+  viewState: EntityDetailsViewState;
+  actionValues: SchoolClassActionValues;
+  actionLoading: SchoolClassActionKind | undefined;
+  errorMessage: string | undefined;
+  actionErrorMessage: string | undefined;
+  actionSuccessMessage: string | undefined;
+  onBack: () => void;
+  onRetry: () => Promise<void>;
+  onActionValueChange: (fieldName: 'studentIds' | 'teacherSubjectIds', nextValue: string) => void;
+  clearActionValues: () => void;
+  assignStudents: () => Promise<void>;
+  removeStudents: () => Promise<void>;
+  assignTeacherSubjects: () => Promise<void>;
+  removeTeacherSubjects: () => Promise<void>;
+};
+
 type SchoolClassActionValues = {
   studentIds: string;
   teacherSubjectIds: string;
@@ -38,7 +56,7 @@ const parseIds = (value: string): string[] =>
     .map((item) => item.trim())
     .filter((item) => item.length > 0);
 
-export const useSchoolClassDetailsPage = (id: string) => {
+export const useSchoolClassDetailsPage = (id: string): SchoolClassDetailsPageState => {
   const navigate = useNavigate();
   const [schoolClass, setSchoolClass] = useState<SchoolClass | null>(null);
   const [summary, setSummary] = useState<SchoolClassSummary | null>(null);

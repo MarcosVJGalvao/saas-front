@@ -15,7 +15,7 @@ const StudentDetailsPage = () => {
   return (
     <AppStack spacing={2}>
       <PageHeader
-        title={studentDetailsPage.entity?.person?.fullName ?? 'Detalhes do aluno'}
+        title="Detalhes do aluno"
         subtitle="Consulte dados cadastrais, contatos, endereços e matrículas do aluno."
         actions={
           studentDetailsPage.entity ? (

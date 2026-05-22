@@ -22,10 +22,12 @@ export type ReportCardGradeSubject = {
     id: string;
     name: string;
   } | null;
-  subject?: {
-    id: string;
-    name: string;
-  } | null;
+  subjects?:
+    | {
+        id: string;
+        name: string;
+      }[]
+    | null;
   academicYear?: {
     id: string;
     name: string;

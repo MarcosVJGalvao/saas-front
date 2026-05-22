@@ -20,11 +20,15 @@ const isAcademicPeriod = (row: ReportCardCatalogEntity): row is ReportCardAcadem
   'startDate' in row || 'endDate' in row;
 
 const isGradeSubject = (row: ReportCardCatalogEntity): row is ReportCardGradeSubject =>
-  'subject' in row || 'grade' in row;
+  'subjects' in row || 'grade' in row;
 
 const getName = (row: ReportCardCatalogEntity): string => {
   if (isAcademicPeriod(row)) return row.name;
-  if (isGradeSubject(row)) return row.subject?.name ?? '-';
+  if (isGradeSubject(row)) {
+    const subjects = row.subjects;
+    if (!subjects || subjects.length === 0) return '-';
+    return subjects.map((subject) => subject.name).join(', ');
+  }
   return '-';
 };
 

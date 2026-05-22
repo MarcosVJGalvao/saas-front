@@ -2,7 +2,9 @@
   "permissions": {
     "allow": [
       "Bash(Get-ChildItem -Path \"C:\\\\Users\\\\marco\\\\Projetos Pessoais\\\\plataform-saas-front\\\\src\\\\features\\\\client\\\\students\" -Recurse -Directory)",
-      "Bash(npx tsc *)"
+      "Bash(npx tsc *)",
+      "Bash(Get-ChildItem -Path \"c:\\\\Users\\\\marco\\\\Projetos Pessoais\\\\plataform-saas-front\\\\src\\\\features\\\\client\" -Recurse -Directory)",
+      "Bash(Select-Object FullName)"
     ]
   }
 }
