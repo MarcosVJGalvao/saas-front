@@ -143,10 +143,10 @@ describe('financial entity services', () => {
       data: { totalReceivable: 1000, totalPayable: 450 },
     });
 
-    const response = await financialDashboardService.getSummary({ page: 1, limit: 1 });
+    const response = await financialDashboardService.getSummary({});
 
     expect(getSpy).toHaveBeenCalledWith('/api/financial/dashboard/summary', {
-      params: { page: 1, limit: 1 },
+      params: {},
     });
     expect(response.totalReceivable).toBe(1000);
   });
