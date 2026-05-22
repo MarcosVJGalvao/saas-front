@@ -4,6 +4,7 @@ import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { format, isValid, parse } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import type { SxProps, Theme } from '@mui/material/styles';
+import { useState } from 'react';
 
 export interface AppDatePickerProps {
   label: string;
@@ -77,16 +78,30 @@ export const AppDatePicker = ({
   textFieldSlotProps,
 }: AppDatePickerProps) => {
   const parsedValue = toDateObject(value);
+  const [draftState, setDraftState] = useState<{
+    sourceValue: string | null;
+    pickerValue: Date | null;
+  }>({
+    sourceValue: value,
+    pickerValue: parsedValue,
+  });
+  const pickerValue = draftState.sourceValue === value ? draftState.pickerValue : parsedValue;
+
   return (
     <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={ptBR}>
       <DatePicker
         label={label}
-        value={parsedValue}
+        value={pickerValue}
         disabled={disabled}
         keepOpenDuringFieldFocus
         {...(minDate !== undefined ? { minDate } : {})}
         {...(maxDate !== undefined ? { maxDate } : {})}
         onChange={(nextValue, context) => {
+          setDraftState({
+            sourceValue: value,
+            pickerValue: nextValue,
+          });
+
           if (context.validationError !== null) {
             return;
           }
