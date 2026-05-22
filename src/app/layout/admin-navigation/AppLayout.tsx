@@ -23,6 +23,7 @@ import { useThemePreference } from '@shared/hooks/useThemePreference';
 import { densityMetrics } from '@shared/types/density';
 import type { NavigationItem } from '@shared/types/navigation';
 import { getUiColorTokens } from '@theme/uiColors';
+import { responsive } from '@theme/utils/responsive';
 import { CommandPalette } from '@app/layout/admin-navigation/CommandPalette';
 import { brandByDomain } from '@app/layout/admin-navigation/config';
 import { appLayoutNotifications } from '@app/layout/admin-navigation/messages';
@@ -144,7 +145,7 @@ export const AppLayout = ({ children }: { children?: ReactNode }) => {
   const { density, setDensity } = useDensityPreference();
   const { theme, setTheme } = useThemePreference();
   const { isCollapsed, toggleSidebar, setIsCollapsed } = useSidebarState();
-  const isMobile = useMediaQuery('(max-width:1023px)');
+  const isMobile = useMediaQuery(themeObj.breakpoints.down('lg'));
   const { domain, navigationItems } = useSidebarNavigation(authDomain, {
     platformPermissions: resolvePermissions(platformProfile, platformProfileError),
     clientPermissions: resolvePermissions(clientProfile, clientProfileError),
@@ -293,7 +294,7 @@ export const AppLayout = ({ children }: { children?: ReactNode }) => {
           height: '100vh',
           overflowY: 'auto',
           pt: `${appBarHeight + 24}px`,
-          px: { xs: 2, lg: 3 },
+          px: responsive({ xs: 2, lg: 3 }),
           pb: 3,
           animation: 'page-enter 220ms ease-out both',
         }}

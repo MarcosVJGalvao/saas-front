@@ -13,8 +13,10 @@ import NotificationsOutlinedIcon from '@mui/icons-material/NotificationsOutlined
 import SearchOutlinedIcon from '@mui/icons-material/SearchOutlined';
 import { getUiColorTokens } from '@theme/uiColors';
 import { fontSizes } from '@theme/fontSizes';
+import { responsive } from '@theme/utils/responsive';
 import { appLayoutMessages } from '@app/layout/admin-navigation/messages';
 import { SessionTimer } from '@app/layout/admin-navigation/SessionTimer';
+import { useMediaQuery } from '@shared/hooks/useMediaQuery';
 
 interface TopBarProps {
   appBarHeight: number;
@@ -39,6 +41,16 @@ const getSearchContainerSx = (isMobile: boolean) => ({
   minWidth: 0,
 });
 
+const getSearchButtonMaxWidth = (shouldCompactTopBar: boolean) =>
+  shouldCompactTopBar
+    ? responsive({ xs: '42px', sm: '220px', md: '220px', lg: '240px' })
+    : responsive({ xs: '42px', sm: '220px', md: '260px', lg: '340px' });
+
+const getSearchButtonMinWidth = (shouldCompactTopBar: boolean) =>
+  shouldCompactTopBar
+    ? responsive({ xs: '42px', sm: '120px' })
+    : responsive({ xs: '42px', sm: '180px' });
+
 const TopBarSearchLabel = () => (
   <Box
     component="span"
@@ -54,8 +66,8 @@ const TopBarSearchLabel = () => (
   </Box>
 );
 
-const TopBarSearchShortcut = ({ isMobile }: { isMobile: boolean }) =>
-  !isMobile ? (
+const TopBarSearchShortcut = ({ hideShortcut }: { hideShortcut: boolean }) =>
+  !hideShortcut ? (
     <Box
       sx={{
         px: 0.75,
@@ -81,15 +93,15 @@ const sessionTimerContainerSx = {
 };
 
 const TopBarUserInfo = ({
-  isMobile,
+  hideUserInfo,
   userName,
   userRole,
 }: {
-  isMobile: boolean;
+  hideUserInfo: boolean;
   userName: string;
   userRole: string;
 }) =>
-  !isMobile ? (
+  !hideUserInfo ? (
     <Box
       sx={{
         display: 'flex',
@@ -120,13 +132,18 @@ export const TopBar = ({
 }: TopBarProps) => {
   const themeObj = useTheme();
   const uiColors = getUiColorTokens(themeObj.palette.mode);
+  const isCompactDesktop = useMediaQuery(themeObj.breakpoints.down('xl'));
+  const shouldCompactTopBar = isMobile || isCompactDesktop;
+  const searchButtonMaxWidth = getSearchButtonMaxWidth(shouldCompactTopBar);
+  const searchButtonMinWidth = getSearchButtonMinWidth(shouldCompactTopBar);
+  const profileButtonPaddingX = shouldCompactTopBar ? 0.5 : 1.25;
 
   return (
     <Toolbar
       sx={{
         minHeight: `${appBarHeight}px !important`,
-        px: { xs: 2, lg: 3 },
-        gap: { xs: 1, md: 1.5, lg: 2 },
+        px: responsive({ xs: 2, lg: 3 }),
+        gap: responsive({ xs: 1, md: 1.5, lg: 2 }),
       }}
     >
       {isMobile ? (
@@ -138,9 +155,9 @@ export const TopBar = ({
         variant="h6"
         sx={{
           fontWeight: 600,
-          fontSize: { xs: '1.125rem', lg: '1.25rem' },
-          minWidth: { xs: 0, sm: 120, md: 140 },
-          maxWidth: { xs: 76, sm: 160, lg: 220 },
+          fontSize: responsive({ xs: '1.125rem', lg: '1.25rem' }),
+          minWidth: responsive({ xs: 0, sm: 120, md: 140 }),
+          maxWidth: responsive({ xs: 76, sm: 160, lg: 220 }),
           overflow: 'hidden',
           textOverflow: 'ellipsis',
           whiteSpace: 'nowrap',
@@ -154,22 +171,25 @@ export const TopBar = ({
           onClick={onOpenCommandPalette}
           startIcon={<SearchOutlinedIcon />}
           sx={{
-            width: { xs: 42, sm: '100%' },
-            maxWidth: { xs: 42, sm: 220, md: 260, lg: 340 },
-            minWidth: { xs: 42, sm: 180 },
-            justifyContent: { xs: 'center', sm: isMobile ? 'flex-start' : 'space-between' },
+            width: responsive({ xs: '42px', sm: '100%' }),
+            maxWidth: searchButtonMaxWidth,
+            minWidth: searchButtonMinWidth,
+            justifyContent: responsive({
+              xs: 'center',
+              sm: isMobile ? 'flex-start' : 'space-between',
+            }),
             textTransform: 'none',
             border: 1,
             borderColor: 'divider',
             borderRadius: 1.5,
-            px: { xs: 0, sm: 1.25 },
+            px: responsive({ xs: 0, sm: 1.25 }),
             py: 0.25,
             height: 38,
             minHeight: 38,
             color: 'text.secondary',
             '& .MuiButton-startIcon': {
-              mr: { xs: 0, sm: 0.75 },
-              ml: { xs: 0 },
+              mr: responsive({ xs: 0, sm: 0.75 }),
+              ml: responsive({ xs: 0 }),
             },
             overflow: 'hidden',
             whiteSpace: 'nowrap',
@@ -179,7 +199,7 @@ export const TopBar = ({
           <Box
             component="span"
             sx={{
-              display: { xs: 'none', sm: 'flex' },
+              display: responsive({ xs: 'none', sm: 'flex' }),
               alignItems: 'center',
               justifyContent: 'space-between',
               flex: 1,
@@ -188,7 +208,7 @@ export const TopBar = ({
             }}
           >
             <TopBarSearchLabel />
-            <TopBarSearchShortcut isMobile={isMobile} />
+            <TopBarSearchShortcut hideShortcut={shouldCompactTopBar} />
           </Box>
         </Button>
       </Box>
@@ -197,7 +217,7 @@ export const TopBar = ({
           ml: 'auto',
           display: 'flex',
           alignItems: 'center',
-          gap: { xs: 0.5, md: 1.5 },
+          gap: responsive({ xs: 0.5, md: 1.5 }),
           flexShrink: 0,
         }}
       >
@@ -205,7 +225,7 @@ export const TopBar = ({
           <SessionTimer
             expiresIn={sessionExpiresIn ?? '1h'}
             accessToken={sessionAccessToken}
-            compact={isMobile}
+            compact={shouldCompactTopBar}
             onExpired={onSessionExpired}
           />
         </Box>
@@ -219,7 +239,12 @@ export const TopBar = ({
         </IconButton>
         <Button
           onClick={onOpenProfileMenu}
-          sx={{ textTransform: 'none', color: 'text.primary' }}
+          sx={{
+            textTransform: 'none',
+            color: 'text.primary',
+            minWidth: 0,
+            px: profileButtonPaddingX,
+          }}
           endIcon={<ExpandMoreIcon />}
         >
           <Avatar
@@ -235,7 +260,11 @@ export const TopBar = ({
           >
             {userInitials}
           </Avatar>
-          <TopBarUserInfo isMobile={isMobile} userName={userName} userRole={userRole} />
+          <TopBarUserInfo
+            hideUserInfo={shouldCompactTopBar}
+            userName={userName}
+            userRole={userRole}
+          />
         </Button>
       </Box>
     </Toolbar>
