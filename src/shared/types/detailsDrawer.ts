@@ -39,4 +39,6 @@ export type DetailsFooterAction = {
   icon?: ReactNode | undefined;
   color?: 'primary' | 'error' | 'inherit' | undefined;
   disabled?: boolean | undefined;
+  /** Se informado, a ação só é exibida quando o tab com este id estiver selecionado. */
+  tabId?: string | undefined;
 };

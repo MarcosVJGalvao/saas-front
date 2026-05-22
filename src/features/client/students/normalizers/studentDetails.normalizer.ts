@@ -267,12 +267,14 @@ export const toStudentDetailsData = (
       label: downloading ? 'Gerando...' : 'Baixar atestado',
       onClick: onDownloadEnrollmentCertificate,
       disabled: downloading,
+      tabId: 'documents',
     },
     {
       id: 'download-school-history',
       label: downloading ? 'Gerando...' : 'Baixar histórico',
       onClick: onDownloadSchoolHistory,
       disabled: downloading,
+      tabId: 'documents',
     },
   ],
 });

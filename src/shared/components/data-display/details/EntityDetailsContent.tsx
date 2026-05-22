@@ -176,22 +176,27 @@ export const EntityDetailsContent = ({
         ))}
       </AppStack>
 
-      {footerActions.length > 0 ? (
-        <AppStack direction={{ xs: 'column', sm: 'row' }} spacing={1}>
-          {footerActions.map((action) => (
-            <AppButton
-              key={action.id}
-              variant="outlined"
-              color={action.color ?? 'primary'}
-              startIcon={action.icon}
-              disabled={action.disabled}
-              onClick={action.onClick}
-            >
-              {action.label}
-            </AppButton>
-          ))}
-        </AppStack>
-      ) : null}
+      {(() => {
+        const visibleActions = footerActions.filter(
+          (action) => action.tabId === undefined || action.tabId === selectedTabId,
+        );
+        return visibleActions.length > 0 ? (
+          <AppStack direction={{ xs: 'column', sm: 'row' }} spacing={1}>
+            {visibleActions.map((action) => (
+              <AppButton
+                key={action.id}
+                variant="outlined"
+                color={action.color ?? 'primary'}
+                startIcon={action.icon}
+                disabled={action.disabled}
+                onClick={action.onClick}
+              >
+                {action.label}
+              </AppButton>
+            ))}
+          </AppStack>
+        ) : null;
+      })()}
     </AppStack>
   );
 };
