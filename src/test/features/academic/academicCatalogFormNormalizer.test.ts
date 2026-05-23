@@ -51,7 +51,7 @@ describe('academic catalog form normalizer', () => {
     });
   });
 
-  it('normaliza payload de série sem enviar status', () => {
+  it('normaliza payload de série sem enviar status nem code', () => {
     const values = academicCatalogCreateFormSchema.parse({
       name: ' 1ª Série ',
       code: ' 1-EM ',
@@ -62,7 +62,6 @@ describe('academic catalog form normalizer', () => {
 
     expect(toGradeCreatePayload(values)).toEqual({
       name: '1ª Série',
-      code: '1-EM',
       description: 'Ensino médio',
       educationLevelId: 'level-1',
     });

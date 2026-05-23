@@ -43,7 +43,6 @@ const GradeCreatePage = () => {
           columnsByDevice={{ mobile: 1, tablet: 2, desktop: 2 }}
         >
           <FormTextField<AcademicCatalogCreateFormValues> name="name" label="Nome" />
-          <FormTextField<AcademicCatalogCreateFormValues> name="code" label="Código" />
           <FormSelect<AcademicCatalogCreateFormValues>
             name="educationLevelId"
             label="Nível de ensino"
