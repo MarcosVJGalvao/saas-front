@@ -32,6 +32,7 @@ export const MetricCard = ({
   variationType,
 }: MetricCardProps) => {
   const theme = useTheme();
+  const isDarkMode = theme.palette.mode === 'dark';
   const iconColor = theme.palette[iconTone].main;
 
   return (
@@ -42,7 +43,10 @@ export const MetricCard = ({
         p: theme.spacing(2),
         borderRadius: theme.spacing(1.5),
         bgcolor: theme.palette.background.paper,
-        boxShadow: `0 ${theme.spacing(0.5)} ${theme.spacing(2)} ${theme.palette.divider}`,
+        border: `1px solid ${alpha(theme.palette.divider, isDarkMode ? 0.9 : 1)}`,
+        boxShadow: isDarkMode
+          ? `0 ${theme.spacing(1)} ${theme.spacing(4)} ${alpha('#000000', 0.26)}`
+          : `0 ${theme.spacing(0.5)} ${theme.spacing(2)} ${alpha('#0F172A', 0.08)}`,
         minHeight: theme.spacing(16),
       }}
     >
@@ -56,11 +60,12 @@ export const MetricCard = ({
                 width: 44,
                 height: 44,
                 borderRadius: theme.spacing(1.5),
-                bgcolor: alpha(iconColor, 0.12),
+                bgcolor: alpha(iconColor, isDarkMode ? 0.16 : 0.12),
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
                 color: iconColor,
+                border: `1px solid ${alpha(iconColor, isDarkMode ? 0.12 : 0.08)}`,
               }}
             >
               {icon}

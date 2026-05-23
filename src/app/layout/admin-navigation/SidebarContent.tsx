@@ -7,6 +7,7 @@ import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import Typography from '@mui/material/Typography';
+import { alpha, type SxProps, type Theme } from '@mui/material/styles';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import CloseIcon from '@mui/icons-material/Close';
 import ExpandLessIcon from '@mui/icons-material/ExpandLess';
@@ -77,22 +78,40 @@ const SidebarSectionHeader = ({ label, isCollapsed }: { label: string; isCollaps
     </Typography>
   );
 
-const selectedSx = {
+const selectedSx: SxProps<Theme> = {
   '&.Mui-selected': {
-    bgcolor: 'primary.main',
+    bgcolor: (theme) =>
+      theme.palette.mode === 'dark'
+        ? alpha(theme.palette.primary.main, 0.18)
+        : theme.palette.primary.main,
     color: 'primary.contrastText',
-    '&:hover': { bgcolor: 'primary.dark' },
+    '&:hover': {
+      bgcolor: (theme) =>
+        theme.palette.mode === 'dark'
+          ? alpha(theme.palette.primary.main, 0.24)
+          : theme.palette.primary.dark,
+    },
   },
-  '&.Mui-selected .MuiListItemIcon-root': { color: 'primary.contrastText' },
+  '&.Mui-selected .MuiListItemIcon-root': {
+    color: (theme) =>
+      theme.palette.mode === 'dark'
+        ? theme.palette.primary.light
+        : theme.palette.primary.contrastText,
+  },
 };
 
-const subSelectedSx = {
+const subSelectedSx: SxProps<Theme> = {
   '&.Mui-selected': {
-    bgcolor: 'action.selected',
-    color: 'primary.main',
+    bgcolor: (theme) =>
+      theme.palette.mode === 'dark' ? alpha(theme.palette.primary.main, 0.12) : 'action.selected',
+    color: (theme) =>
+      theme.palette.mode === 'dark' ? theme.palette.primary.light : theme.palette.primary.main,
     fontWeight: 600,
   },
-  '&.Mui-selected .MuiListItemIcon-root': { color: 'primary.main' },
+  '&.Mui-selected .MuiListItemIcon-root': {
+    color: (theme) =>
+      theme.palette.mode === 'dark' ? theme.palette.primary.light : theme.palette.primary.main,
+  },
 };
 
 const sidebarPrimaryTextSx = {
@@ -354,7 +373,9 @@ export const SidebarContent = memo(
           height: '100%',
           display: 'flex',
           flexDirection: 'column',
-          bgcolor: 'background.default',
+          bgcolor: 'background.paper',
+          borderRight: 1,
+          borderColor: 'divider',
         }}
       >
         <Box
@@ -365,6 +386,8 @@ export const SidebarContent = memo(
             alignItems: 'center',
             justifyContent: 'space-between',
             height: sidebarHeaderHeight,
+            borderBottom: 1,
+            borderColor: 'divider',
           }}
         >
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
@@ -382,7 +405,6 @@ export const SidebarContent = memo(
             closeMobile={closeMobile}
           />
         </Box>
-        <Divider />
         <List
           sx={{
             p: 0.75,

@@ -6,7 +6,7 @@ import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
-import { useTheme } from '@mui/material/styles';
+import { alpha, useTheme } from '@mui/material/styles';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import MenuIcon from '@mui/icons-material/Menu';
 import NotificationsOutlinedIcon from '@mui/icons-material/NotificationsOutlined';
@@ -132,6 +132,7 @@ export const TopBar = ({
 }: TopBarProps) => {
   const themeObj = useTheme();
   const uiColors = getUiColorTokens(themeObj.palette.mode);
+  const isDarkMode = themeObj.palette.mode === 'dark';
   const isCompactDesktop = useMediaQuery(themeObj.breakpoints.down('xl'));
   const shouldCompactTopBar = isMobile || isCompactDesktop;
   const searchButtonMaxWidth = getSearchButtonMaxWidth(shouldCompactTopBar);
@@ -146,10 +147,20 @@ export const TopBar = ({
         gap: responsive({ xs: 1, md: 1.5, lg: 2 }),
         flexWrap: 'nowrap',
         overflow: 'hidden',
+        bgcolor: isDarkMode ? alpha(themeObj.palette.background.paper, 0.92) : 'background.paper',
+        backdropFilter: isDarkMode ? 'blur(18px)' : 'none',
       }}
     >
       {isMobile ? (
-        <IconButton aria-label={appLayoutMessages.openMenuAriaLabel} onClick={onOpenMobileMenu}>
+        <IconButton
+          aria-label={appLayoutMessages.openMenuAriaLabel}
+          onClick={onOpenMobileMenu}
+          sx={{
+            border: 1,
+            borderColor: isDarkMode ? alpha(themeObj.palette.common.white, 0.08) : 'divider',
+            bgcolor: isDarkMode ? alpha(themeObj.palette.common.white, 0.03) : 'transparent',
+          }}
+        >
           <MenuIcon />
         </IconButton>
       ) : null}
@@ -194,9 +205,14 @@ export const TopBar = ({
             height: 38,
             minHeight: 38,
             color: 'text.secondary',
+            bgcolor: isDarkMode ? alpha(themeObj.palette.common.white, 0.03) : 'transparent',
             '& .MuiButton-startIcon': {
               mr: responsive({ xs: 0, sm: 0.75 }),
               ml: responsive({ xs: 0 }),
+            },
+            '&:hover': {
+              borderColor: 'primary.main',
+              bgcolor: isDarkMode ? alpha(themeObj.palette.primary.main, 0.08) : undefined,
             },
             overflow: 'hidden',
             whiteSpace: 'nowrap',
@@ -239,6 +255,11 @@ export const TopBar = ({
         <IconButton
           onClick={onOpenNotificationsMenu}
           aria-label={appLayoutMessages.notificationsAriaLabel}
+          sx={{
+            border: 1,
+            borderColor: isDarkMode ? alpha(themeObj.palette.common.white, 0.08) : 'divider',
+            bgcolor: isDarkMode ? alpha(themeObj.palette.common.white, 0.03) : 'transparent',
+          }}
         >
           <Badge color="primary" variant="dot">
             <NotificationsOutlinedIcon />
@@ -251,6 +272,11 @@ export const TopBar = ({
             color: 'text.primary',
             minWidth: 0,
             px: profileButtonPaddingX,
+            borderRadius: 2,
+            bgcolor: isDarkMode ? alpha(themeObj.palette.common.white, 0.03) : 'transparent',
+            '&:hover': {
+              bgcolor: isDarkMode ? alpha(themeObj.palette.primary.main, 0.08) : undefined,
+            },
           }}
           endIcon={<ExpandMoreIcon />}
         >

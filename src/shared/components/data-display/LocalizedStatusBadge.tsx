@@ -10,6 +10,7 @@ interface LocalizedStatusBadgeProps {
 
 export const LocalizedStatusBadge = ({ label, tone }: LocalizedStatusBadgeProps) => {
   const theme = useTheme();
+  const isDarkMode = theme.palette.mode === 'dark';
 
   return (
     <StatusChip
@@ -18,14 +19,23 @@ export const LocalizedStatusBadge = ({ label, tone }: LocalizedStatusBadgeProps)
       sx={{
         bgcolor:
           tone === 'active'
-            ? alpha(theme.palette.success.main, 0.16)
-            : alpha(theme.palette.text.primary, 0.12),
-        color: tone === 'active' ? theme.palette.success.dark : theme.palette.text.secondary,
+            ? alpha(theme.palette.success.main, isDarkMode ? 0.18 : 0.16)
+            : alpha(theme.palette.text.primary, isDarkMode ? 0.08 : 0.12),
+        color:
+          tone === 'active'
+            ? isDarkMode
+              ? theme.palette.success.light
+              : theme.palette.success.dark
+            : theme.palette.text.secondary,
         fontWeight: 600,
-        border: 'none',
-        borderRadius: 1,
+        border: `1px solid ${
+          tone === 'active'
+            ? alpha(theme.palette.success.main, isDarkMode ? 0.2 : 0.14)
+            : alpha(theme.palette.common.white, isDarkMode ? 0.08 : 0)
+        }`,
+        borderRadius: 1.25,
         '& .MuiChip-label': {
-          px: 1,
+          px: 1.1,
         },
       }}
     />

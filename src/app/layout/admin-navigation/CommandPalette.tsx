@@ -18,6 +18,7 @@ import Tab from '@mui/material/Tab';
 import Tabs from '@mui/material/Tabs';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
+import { alpha } from '@mui/material/styles';
 import { memo, useCallback, useRef, useState, type ReactNode } from 'react';
 import { responsive } from '@theme/utils/responsive';
 import { useCommandPaletteView } from '@shared/hooks/useCommandPaletteView';
@@ -365,10 +366,18 @@ export const CommandPalette = ({
             height: responsive({ xs: '88vh', md: '80vh', lg: '74vh' }),
             borderRadius: 2.5,
             bgcolor: 'background.paper',
+            border: (theme) =>
+              `1px solid ${alpha(
+                theme.palette.common.white,
+                theme.palette.mode === 'dark' ? 0.08 : 0,
+              )}`,
             overflow: 'hidden',
             display: 'flex',
             flexDirection: 'column',
-            boxShadow: (theme) => theme.shadows[24],
+            boxShadow: (theme) =>
+              theme.palette.mode === 'dark'
+                ? `0 32px 72px ${alpha('#000000', 0.52)}`
+                : theme.shadows[24],
           },
         },
       }}
@@ -378,6 +387,8 @@ export const CommandPalette = ({
           px: 2.5,
           pt: 2,
           pb: 1.5,
+          bgcolor: (theme) =>
+            theme.palette.mode === 'dark' ? alpha(theme.palette.common.white, 0.02) : 'transparent',
           '& .MuiOutlinedInput-root': {
             '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
               borderColor: 'primary.main',
@@ -403,7 +414,15 @@ export const CommandPalette = ({
           }}
           sx={{
             width: '100%',
-            '& .MuiOutlinedInput-root': { height: 48, fontSize: '1rem', borderRadius: 1.5 },
+            '& .MuiOutlinedInput-root': {
+              height: 48,
+              fontSize: '1rem',
+              borderRadius: 1.5,
+              bgcolor: (theme) =>
+                theme.palette.mode === 'dark'
+                  ? alpha(theme.palette.common.white, 0.03)
+                  : theme.palette.background.paper,
+            },
           }}
         />
       </Box>
