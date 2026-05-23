@@ -6,6 +6,7 @@ import {
 } from '@features/client/home/hooks/useClientHomePage';
 import { useAuth } from '@shared/hooks/useAuth/useAuth';
 import { useClientProfile } from '@features/client/auth/hooks/useClientProfile';
+import { useSidebarNavigation } from '@shared/hooks/useSidebarNavigation';
 
 vi.mock('@shared/hooks/useAuth/useAuth', () => ({
   useAuth: vi.fn(),
@@ -13,6 +14,10 @@ vi.mock('@shared/hooks/useAuth/useAuth', () => ({
 
 vi.mock('@features/client/auth/hooks/useClientProfile', () => ({
   useClientProfile: vi.fn(),
+}));
+
+vi.mock('@shared/hooks/useSidebarNavigation', () => ({
+  useSidebarNavigation: vi.fn(),
 }));
 
 describe('useClientHomePage', () => {
@@ -57,11 +62,39 @@ describe('useClientHomePage', () => {
       refetch,
     });
 
+    vi.mocked(useSidebarNavigation).mockReturnValue({
+      domain: 'client',
+      navigationItems: [
+        {
+          id: 'client-students',
+          label: 'Alunos',
+          href: '/client/students',
+          permission: 'student:read',
+        },
+        {
+          id: 'client-documents',
+          label: 'Documentos',
+          href: '/client/documents',
+          permission: 'documents:read',
+        },
+      ],
+    });
+
     const { result } = renderHook(() => useClientHomePage());
 
     expect(result.current.profile?.email).toBe('user@test.com');
     expect(result.current.errorMessage).toBe('');
     expect(result.current.messages).toEqual(CLIENT_HOME_PAGE_MESSAGES);
     expect(result.current.onRetry).toBe(refetch);
+    expect(result.current.quickLinks).toEqual([
+      expect.objectContaining({
+        id: 'students',
+        to: '/client/students',
+      }),
+      expect.objectContaining({
+        id: 'documents',
+        to: '/client/documents',
+      }),
+    ]);
   });
 });

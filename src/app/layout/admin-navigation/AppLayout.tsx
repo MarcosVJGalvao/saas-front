@@ -9,9 +9,10 @@ import DescriptionOutlinedIcon from '@mui/icons-material/DescriptionOutlined';
 import PersonOutlineOutlinedIcon from '@mui/icons-material/PersonOutlineOutlined';
 import SchoolOutlinedIcon from '@mui/icons-material/SchoolOutlined';
 import WarningAmberOutlinedIcon from '@mui/icons-material/WarningAmberOutlined';
-import { Outlet, useLocation } from 'react-router-dom';
+import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { useAppLayoutState, buildUserInitials } from '@shared/hooks/useAppLayoutState';
 import { useAuth } from '@shared/hooks/useAuth/useAuth';
+import { resolveProfilePathByDomain } from '@shared/utils/profileRoutes';
 import { useAppLayoutSessionGate } from '@app/layout/admin-navigation/useAppLayoutSessionGate';
 import { useClientProfile } from '@features/client/auth/hooks/useClientProfile';
 import { usePlatformProfile } from '@features/platform/auth/hooks/usePlatformProfile';
@@ -132,6 +133,7 @@ const resolveUserDisplay = (
     : resolvePlatformUserDisplay(platformProfile);
 
 export const AppLayout = ({ children }: { children?: ReactNode }) => {
+  const navigate = useNavigate();
   const location = useLocation();
   const themeObj = useTheme();
   const uiColors = getUiColorTokens(themeObj.palette.mode);
@@ -203,6 +205,10 @@ export const AppLayout = ({ children }: { children?: ReactNode }) => {
   const shouldRenderDesktopSidebar = !isMobile;
   const shouldRenderMobileDrawer = isMobile;
   const layoutContent = children ?? <Outlet />;
+  const handleOpenProfilePage = () => {
+    closeProfileMenu();
+    void navigate(resolveProfilePathByDomain(domain));
+  };
 
   if (sessionGate.blockingLabel !== null) {
     return (
@@ -344,6 +350,7 @@ export const AppLayout = ({ children }: { children?: ReactNode }) => {
         anchorEl={profileAnchor}
         open={profileAnchor !== null}
         onClose={closeProfileMenu}
+        onProfile={handleOpenProfilePage}
         userName={userName}
         userInitials={userInitials}
         userEmail={userEmail}

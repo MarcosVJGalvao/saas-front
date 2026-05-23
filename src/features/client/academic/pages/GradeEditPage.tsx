@@ -2,6 +2,7 @@ import { useParams } from 'react-router-dom';
 import { gradeCatalogConfig } from '@features/client/academic/constants/academicCatalogPageConfigs';
 import { useAcademicReferenceOptions } from '@features/client/academic/hooks/useAcademicReferenceOptions';
 import { useAcademicCatalogEditPage } from '@features/client/academic/hooks/useAcademicCatalogEditPage';
+import { toGradeEditPayload } from '@features/client/academic/normalizers/academicCatalogFormNormalizer';
 import type { AcademicCatalogEditFormValues } from '@features/client/academic/schemas/academicCatalogEditForm.schema';
 import { AppCircularProgress } from '@shared/components/data-display/AppCircularProgress';
 import { AppPaper } from '@shared/components/data-display/AppPaper';
@@ -12,7 +13,6 @@ import { FormSelect } from '@shared/components/form/FormSelect';
 import { FormTextField } from '@shared/components/form/FormTextField';
 import { AppStack } from '@shared/components/layout/AppStack';
 import { PageHeader } from '@shared/components/layout/PageHeader';
-import { activeInactiveStatusOptions } from '@shared/constants/selectOptions';
 
 const GradeEditPage = () => {
   const { id } = useParams<{ id: string }>();
@@ -22,6 +22,7 @@ const GradeEditPage = () => {
     backPath: gradeCatalogConfig.routeBase,
     loadErrorMessage: gradeCatalogConfig.loadErrorMessage,
     submitErrorMessage: gradeCatalogConfig.submitErrorMessage,
+    buildPayload: toGradeEditPayload,
   });
   const referenceOptions = useAcademicReferenceOptions({ includeEducationLevels: true });
 
@@ -55,12 +56,6 @@ const GradeEditPage = () => {
           columnsByDevice={{ mobile: 1, tablet: 2, desktop: 2 }}
         >
           <FormTextField<AcademicCatalogEditFormValues> name="name" label="Nome" />
-          <FormTextField<AcademicCatalogEditFormValues> name="code" label="Código" />
-          <FormSelect<AcademicCatalogEditFormValues>
-            name="status"
-            label="Status"
-            options={activeInactiveStatusOptions}
-          />
           <FormSelect<AcademicCatalogEditFormValues>
             name="educationLevelId"
             label="Nível de ensino"

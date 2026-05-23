@@ -57,6 +57,36 @@ export const toGradeCreatePayload = (
   educationLevelId: optionalText(values.educationLevelId),
 });
 
+export const toSubjectCreatePayload = (
+  values: AcademicCatalogCreateFormValues,
+): Record<string, unknown> => ({
+  name: values.name.trim(),
+  code: optionalText(values.code),
+  description: optionalText(values.description),
+});
+
+export const toEducationLevelEditPayload = (
+  values: AcademicCatalogEditFormValues,
+): Record<string, unknown> => ({
+  name: values.name.trim(),
+  description: optionalText(values.description),
+});
+
+export const toGradeEditPayload = (
+  values: AcademicCatalogEditFormValues,
+): Record<string, unknown> => ({
+  name: values.name.trim(),
+  description: optionalText(values.description),
+  educationLevelId: optionalText(values.educationLevelId),
+});
+
+export const toSubjectEditPayload = (
+  values: AcademicCatalogEditFormValues,
+): Record<string, unknown> => ({
+  name: values.name.trim(),
+  description: optionalText(values.description),
+});
+
 export const toAcademicCatalogEditPayload = (
   values: AcademicCatalogEditFormValues,
 ): Record<string, unknown> => toAcademicCatalogPayload(values);

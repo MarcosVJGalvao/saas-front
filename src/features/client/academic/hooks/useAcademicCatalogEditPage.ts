@@ -25,6 +25,7 @@ type UseAcademicCatalogEditPageParams = {
   backPath: string;
   loadErrorMessage: string;
   submitErrorMessage: string;
+  buildPayload?: (values: AcademicCatalogEditFormValues) => Record<string, unknown>;
 };
 
 const isAcademicCatalogItem = (value: unknown): value is AcademicCatalogItem =>
@@ -44,6 +45,7 @@ export const useAcademicCatalogEditPage = ({
   backPath,
   loadErrorMessage,
   submitErrorMessage,
+  buildPayload = toAcademicCatalogEditPayload,
 }: UseAcademicCatalogEditPageParams) => {
   const serviceRef = useRef(service);
   const navigate = useNavigate();
@@ -101,7 +103,7 @@ export const useAcademicCatalogEditPage = ({
     setSubmitting(true);
     setErrorMessage(undefined);
     try {
-      await serviceRef.current.update(id, toAcademicCatalogEditPayload(values));
+      await serviceRef.current.update(id, buildPayload(values));
       void navigate(`${backPath}/${id}`);
     } catch {
       setErrorMessage(submitErrorMessage);

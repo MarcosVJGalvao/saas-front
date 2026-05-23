@@ -23,6 +23,7 @@ interface ProfileMenuProps {
   anchorEl: HTMLElement | null;
   open: boolean;
   onClose: () => void;
+  onProfile: () => void;
   userName: string;
   userInitials: string;
   userEmail: string;
@@ -37,6 +38,7 @@ export const ProfileMenu = ({
   anchorEl,
   open,
   onClose,
+  onProfile,
   userName,
   userInitials,
   userEmail,
@@ -95,7 +97,10 @@ export const ProfileMenu = ({
 
       <Divider sx={{ mb: 1.25, borderColor: uiColors.menuDivider }} />
 
-      <MenuItem sx={{ borderRadius: 2, mb: 1.25, gap: 1.25, minHeight: 38, px: 0.5 }}>
+      <MenuItem
+        onClick={onProfile}
+        sx={{ borderRadius: 2, mb: 1.25, gap: 1.25, minHeight: 38, px: 0.5 }}
+      >
         <PersonOutlineOutlinedIcon fontSize="small" />
         {appLayoutMessages.profile}
       </MenuItem>
