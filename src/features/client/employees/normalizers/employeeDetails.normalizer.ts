@@ -1,4 +1,5 @@
 import { formatIsoDate } from '@shared/formatters';
+import { createOptionalLocalizedStatusBadge } from '@shared/components/data-display/statusBadge.utils';
 import { employeeStatusLabels } from '@shared/i18n/pt-BR/enums';
 import { maskCnpj, maskCpf } from '@shared/masks/inputMasks';
 import { onlyDigits } from '@shared/parsers/stringParsers';
@@ -23,6 +24,12 @@ const formatEmployeeDocument = (employee: Employee): string => {
   return documentNumber;
 };
 
+const renderEmployeeStatus = (status: Employee['status'] | undefined) =>
+  createOptionalLocalizedStatusBadge(
+    status ? employeeStatusLabels[status] : undefined,
+    status === 'active' ? 'active' : 'neutral',
+  );
+
 export const toEmployeeDetailsData = (employee: Employee): EntityDetailsPageData => ({
   headerData: {
     title: employee.person?.fullName ?? employee.jobTitle,
@@ -42,10 +49,7 @@ export const toEmployeeDetailsData = (employee: Employee): EntityDetailsPageData
           items: [
             { label: 'Cargo', value: employee.jobTitle },
             { label: 'Departamento', value: employee.department ?? '-' },
-            {
-              label: 'Status',
-              value: employee.status ? employeeStatusLabels[employee.status] : '-',
-            },
+            { label: 'Status', value: renderEmployeeStatus(employee.status) },
           ],
         },
         {

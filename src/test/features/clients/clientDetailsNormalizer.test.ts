@@ -1,3 +1,5 @@
+import { createElement, Fragment } from 'react';
+import { render, screen } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
 import { toClientDetailsData } from '@features/platform/clients/normalizers/clientDetails.normalizer';
 import type { Client } from '@features/platform/clients/types/clients';
@@ -138,13 +140,39 @@ describe('clientDetails.normalizer', () => {
             },
           },
         ],
-        subscriptionPlanHistories: [],
+        subscriptionPlanHistories: [
+          {
+            id: 'history-1',
+            createdAt: '2026-05-22T23:43:57.900Z',
+            updatedAt: '2026-05-22T23:43:57.900Z',
+            tenantId: 'ae413d3b-7e9e-4ee2-afa6-886fd772e3aa',
+            subscriptionId: '3d28e49b-50b2-4a8f-b527-4f48f5ace2d8',
+            fromPlanId: 'plan-starter',
+            toPlanId: 'c9c2ec7a-e12d-424c-9e6c-35ab1ea8e3eb',
+            changedAt: '2026-05-22T23:43:58.000Z',
+            fromPlan: {
+              id: 'plan-starter',
+              name: 'Starter',
+            },
+            toPlan: {
+              id: 'c9c2ec7a-e12d-424c-9e6c-35ab1ea8e3eb',
+              name: 'Premium',
+            },
+          },
+        ],
       },
     };
 
     const details = toClientDetailsData(client);
+    const generalSection = details.tabs[0]?.sections[0];
     const organizationSection = details.tabs[0]?.sections[1];
-    const planSection = details.tabs[1]?.sections[0];
+    const subscriptionSection = details.tabs[1]?.sections[0];
+    const planSection = details.tabs[1]?.sections[1];
+    const historySection = details.tabs[1]?.sections[2];
+    const clientStatusItem = generalSection?.items?.find((item) => item.label === 'Status');
+    const subscriptionStatusItem = subscriptionSection?.items?.find(
+      (item) => item.label === 'Status da assinatura',
+    );
 
     expect(details.headerData?.title).toBe('Escola Doutrina Infantil LTDA');
     expect(organizationSection?.items).toEqual(
@@ -163,8 +191,15 @@ describe('clientDetails.normalizer', () => {
         { label: 'Preço vigente', value: 'R$\u00A0299,90' },
         { label: 'Ciclo', value: 'Mensal' },
         { label: 'Descrição do plano', value: 'Plano completo ilimitado' },
-        { label: 'Status da assinatura', value: 'Em trial' },
       ]),
     );
+    expect(historySection?.items).toEqual(
+      expect.arrayContaining([{ label: '1. 22/05/2026', value: 'Starter -> Premium' }]),
+    );
+
+    render(createElement(Fragment, null, clientStatusItem?.value, subscriptionStatusItem?.value));
+
+    expect(screen.getByText('Ativo')).toBeInTheDocument();
+    expect(screen.getByText('Em trial')).toBeInTheDocument();
   });
 });

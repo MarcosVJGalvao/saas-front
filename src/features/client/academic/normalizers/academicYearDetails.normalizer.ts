@@ -1,4 +1,5 @@
 import type { EntityDetailsPageData } from '@shared/components/data-display/details/entityDetails.types';
+import { createOptionalLocalizedStatusBadge } from '@shared/components/data-display/statusBadge.utils';
 import { formatIsoDate } from '@shared/formatters';
 import {
   translateAcademicYearStatus,
@@ -28,6 +29,18 @@ const formatBoolean = (value: boolean | number | undefined): string => {
   return '-';
 };
 
+const renderAcademicYearStatus = (status: AcademicYear['status']) =>
+  createOptionalLocalizedStatusBadge(
+    translateAcademicYearStatus(status),
+    status === 'active' ? 'active' : 'neutral',
+  );
+
+const renderAcademicPeriodStatus = (status: AcademicPeriod['status']) =>
+  createOptionalLocalizedStatusBadge(
+    status ? translateActiveInactiveStatus(status) : undefined,
+    status === 'active' ? 'active' : 'neutral',
+  );
+
 const buildAcademicPeriodSection = (academicPeriod: AcademicPeriod): DetailSection => ({
   id: `period-${academicPeriod.id}`,
   title: academicPeriod.name,
@@ -38,10 +51,7 @@ const buildAcademicPeriodSection = (academicPeriod: AcademicPeriod): DetailSecti
     { label: 'Término', value: formatDate(academicPeriod.endDate) },
     { label: 'Peso', value: formatNumber(academicPeriod.weight) },
     { label: 'Período final', value: formatBoolean(academicPeriod.isFinalPeriod) },
-    {
-      label: 'Status',
-      value: academicPeriod.status ? translateActiveInactiveStatus(academicPeriod.status) : '-',
-    },
+    { label: 'Status', value: renderAcademicPeriodStatus(academicPeriod.status) },
   ],
 });
 
@@ -107,7 +117,7 @@ export const toAcademicYearDetailsData = (academicYear: AcademicYear): EntityDet
           title: 'Dados do ano letivo',
           items: [
             { label: 'Nome', value: academicYear.name },
-            { label: 'Status', value: translateAcademicYearStatus(academicYear.status) },
+            { label: 'Status', value: renderAcademicYearStatus(academicYear.status) },
             { label: 'Início', value: formatDate(academicYear.startDate) },
             { label: 'Término', value: formatDate(academicYear.endDate) },
             { label: 'Encerrado', value: formatBoolean(academicYear.isClosed) },

@@ -5,6 +5,7 @@ import {
   buildClientListColumns,
   buildClientListMobileConfig,
   buildClientSummaryCards,
+  resolveClientPlanName,
 } from '@features/platform/clients/components/clientListColumns';
 import { clientsService } from '@features/platform/clients/services/service';
 import { useClientsList } from '@features/platform/clients/hooks/useClientsList';
@@ -45,7 +46,9 @@ export const useClientsListPage = () => {
       total: clientsList.pagination.total,
       activeCount: clientsList.rows.filter((client) => client.status === 'active').length,
       inactiveCount: clientsList.rows.filter((client) => client.status === 'inactive').length,
-      onboardingCount: clientsList.rows.filter((client) => !client.planId).length,
+      onboardingCount: clientsList.rows.filter(
+        (client) => resolveClientPlanName(client) === 'Sem plano',
+      ).length,
     }),
     tableColumns: buildClientListColumns({
       onDetails: (client) => {

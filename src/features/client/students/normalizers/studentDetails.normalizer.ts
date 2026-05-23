@@ -1,6 +1,8 @@
 import { formatIsoDate } from '@shared/formatters';
 import {
+  enrollmentStatusLabels,
   translateDocumentType,
+  translateEnrollmentStatus,
   translateGuardianRelationshipType,
   translateStudentStatus,
 } from '@shared/i18n/pt-BR/enums';
@@ -10,6 +12,7 @@ import type {
   EntityDetailsPageData,
   EntityDetailsPageContent,
 } from '@shared/components/data-display/details/entityDetails.types';
+import { createOptionalLocalizedStatusBadge } from '@shared/components/data-display/statusBadge.utils';
 import type {
   Student,
   StudentAddress,
@@ -104,6 +107,22 @@ const buildLegalGuardianSections = (legalGuardians: StudentLegalGuardianLink[]) 
     };
   });
 
+const renderStudentStatus = (status: Student['status']) =>
+  createOptionalLocalizedStatusBadge(
+    translateStudentStatus(status),
+    status === 'active' ? 'active' : 'neutral',
+  );
+
+const isEnrollmentStatusValue = (value: string): value is keyof typeof enrollmentStatusLabels =>
+  value in enrollmentStatusLabels;
+
+const renderEnrollmentStatus = (status: string | undefined) =>
+  createOptionalLocalizedStatusBadge(
+    status && isEnrollmentStatusValue(status) ? translateEnrollmentStatus(status) : status,
+    status === 'active' ? 'active' : 'neutral',
+    status ?? '-',
+  );
+
 export const toStudentDetailsData = (
   student: Student,
   downloading: boolean,
@@ -127,7 +146,7 @@ export const toStudentDetailsData = (
           title: 'Dados pessoais',
           items: [
             { label: 'Código', value: student.registrationCode ?? '-' },
-            { label: 'Status', value: translateStudentStatus(student.status) },
+            { label: 'Status', value: renderStudentStatus(student.status) },
             {
               label: 'Tipo de documento',
               value: student.person?.documentType
@@ -205,7 +224,7 @@ export const toStudentDetailsData = (
               id: `enrollment-${enrollment.id}`,
               title: enrollment.enrollmentCode ?? 'Matrícula',
               items: [
-                { label: 'Status', value: enrollment.status ?? '-' },
+                { label: 'Status', value: renderEnrollmentStatus(enrollment.status) },
                 { label: 'Turma', value: enrollment.schoolClass?.name ?? '-' },
                 { label: 'Código da turma', value: enrollment.schoolClass?.code ?? '-' },
                 { label: 'Ano letivo', value: enrollment.academicYear?.name ?? '-' },

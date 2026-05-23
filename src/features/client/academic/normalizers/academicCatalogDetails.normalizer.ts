@@ -1,9 +1,16 @@
 import type { EntityDetailsPageData } from '@shared/components/data-display/details/entityDetails.types';
+import { createOptionalLocalizedStatusBadge } from '@shared/components/data-display/statusBadge.utils';
 import { formatIsoDate } from '@shared/formatters';
 import { translateActiveInactiveStatus } from '@shared/i18n/pt-BR/enums';
 import type { AcademicCatalogItem } from '@features/client/academic/types/academic.types';
 
 const formatDate = (value: string | undefined): string => (value ? formatIsoDate(value) : '-');
+
+const renderAcademicCatalogStatus = (status: AcademicCatalogItem['status']) =>
+  createOptionalLocalizedStatusBadge(
+    status ? translateActiveInactiveStatus(status) : undefined,
+    status === 'active' ? 'active' : 'neutral',
+  );
 
 export const toAcademicCatalogDetailsData = (item: AcademicCatalogItem): EntityDetailsPageData => ({
   headerData: {
@@ -24,10 +31,7 @@ export const toAcademicCatalogDetailsData = (item: AcademicCatalogItem): EntityD
           items: [
             { label: 'Nome', value: item.name },
             { label: 'Código', value: item.code ?? '-' },
-            {
-              label: 'Status',
-              value: item.status ? translateActiveInactiveStatus(item.status) : '-',
-            },
+            { label: 'Status', value: renderAcademicCatalogStatus(item.status) },
             { label: 'Nível de ensino', value: item.educationLevel?.name ?? '-' },
             { label: 'Descrição', value: item.description ?? '-' },
           ],

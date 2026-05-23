@@ -1,5 +1,6 @@
 import { formatIsoDate } from '@shared/formatters';
 import { formatCurrency } from '@shared/formatters/currencyFormatter';
+import { createOptionalLocalizedStatusBadge } from '@shared/components/data-display/statusBadge.utils';
 import {
   translateFinancialOriginType,
   translateFinancialRecordStatus,
@@ -13,6 +14,12 @@ const getDescription = (transaction: FinancialTransaction): string =>
 const getAmount = (transaction: FinancialTransaction): string =>
   transaction.amount === undefined ? '-' : formatCurrency(transaction.amount, 'BRL');
 const getDate = (value: string | undefined): string => (value ? formatIsoDate(value) : '-');
+
+const renderTransactionStatus = (status: FinancialTransaction['status'] | undefined) =>
+  createOptionalLocalizedStatusBadge(
+    status ? translateFinancialRecordStatus(status) : undefined,
+    status === 'paid' || status === 'received' ? 'active' : 'neutral',
+  );
 
 export const toFinancialTransactionHeaderData = (
   transaction: FinancialTransaction,
@@ -45,7 +52,7 @@ export const toFinancialTransactionDetailsTabs = (
           },
           {
             label: 'Status',
-            value: transaction.status ? translateFinancialRecordStatus(transaction.status) : '-',
+            value: renderTransactionStatus(transaction.status),
           },
           { label: 'Valor', value: getAmount(transaction) },
           { label: 'Data da transação', value: getDate(transaction.transactionDate) },

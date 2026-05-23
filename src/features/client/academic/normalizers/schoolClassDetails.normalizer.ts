@@ -1,4 +1,5 @@
 import type { EntityDetailsPageData } from '@shared/components/data-display/details/entityDetails.types';
+import { createOptionalLocalizedStatusBadge } from '@shared/components/data-display/statusBadge.utils';
 import { formatIsoDate } from '@shared/formatters';
 import { translateSchoolClassShift, translateSchoolClassStatus } from '@shared/i18n/pt-BR/enums';
 import type {
@@ -43,6 +44,12 @@ const formatStudents = (schoolClass: SchoolClass): string => {
   return students.map((student) => student.fullName).join(', ');
 };
 
+const renderSchoolClassStatus = (status: SchoolClass['status']) =>
+  createOptionalLocalizedStatusBadge(
+    translateSchoolClassStatus(status),
+    status === 'active' ? 'active' : 'neutral',
+  );
+
 export const toSchoolClassDetailsData = (
   schoolClass: SchoolClass,
   summary: SchoolClassSummary | null,
@@ -65,7 +72,7 @@ export const toSchoolClassDetailsData = (
           items: [
             { label: 'Nome', value: schoolClass.name },
             { label: 'Código', value: schoolClass.code ?? '-' },
-            { label: 'Status', value: translateSchoolClassStatus(schoolClass.status) },
+            { label: 'Status', value: renderSchoolClassStatus(schoolClass.status) },
             { label: 'Turno', value: formatShift(schoolClass.shift) },
             { label: 'Capacidade', value: formatCapacity(schoolClass) },
             { label: 'Ano letivo', value: schoolClass.academicYear?.name ?? '-' },

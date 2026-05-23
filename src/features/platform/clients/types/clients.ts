@@ -72,7 +72,17 @@ export type ClientTenant = AuditFields & {
   locale?: string | null | undefined;
   currency?: string | null | undefined;
   subscriptions?: ClientSubscription[] | undefined;
-  subscriptionPlanHistories?: unknown[] | undefined;
+  subscriptionPlanHistories?: ClientSubscriptionPlanHistory[] | undefined;
+};
+
+export type ClientSubscriptionPlanHistory = AuditFields & {
+  tenantId: UUID;
+  subscriptionId: UUID;
+  fromPlanId?: UUID | null | undefined;
+  toPlanId: UUID;
+  changedAt: string;
+  fromPlan?: Pick<ClientPlan, 'id' | 'name'> | null | undefined;
+  toPlan?: Pick<ClientPlan, 'id' | 'name'> | null | undefined;
 };
 
 export type Client = AuditFields & {

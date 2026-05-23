@@ -3,6 +3,7 @@ import type {
   EntityDetailsPageData,
   EntityDetailsViewState,
 } from '@shared/components/data-display/details/entityDetails.types';
+import { createLocalizedStatusBadge } from '@shared/components/data-display/statusBadge.utils';
 import type { StudentEnrollment } from '@features/client/student-enrollments/types/studentEnrollment.types';
 import type { DetailsFooterAction } from '@shared/types/detailsDrawer';
 
@@ -27,6 +28,10 @@ export const toStudentEnrollmentDetailsData = (
   footerActions: ReadonlyArray<DetailsFooterAction>,
 ): EntityDetailsPageData => {
   const studentName = enrollment.student?.person?.fullName ?? 'Matrícula';
+  const enrollmentStatusBadge = createLocalizedStatusBadge(
+    translateEnrollmentStatus(enrollment.status),
+    enrollment.status === 'active' ? 'active' : 'neutral',
+  );
 
   return {
     headerData: {
@@ -46,7 +51,7 @@ export const toStudentEnrollmentDetailsData = (
             title: 'Dados da matrícula',
             items: [
               { label: 'Código', value: enrollment.enrollmentCode ?? '-' },
-              { label: 'Status', value: translateEnrollmentStatus(enrollment.status) },
+              { label: 'Status', value: enrollmentStatusBadge },
               { label: 'Data da matrícula', value: enrollment.enrollmentDate },
               { label: 'Observações', value: enrollment.observations ?? '-' },
             ],

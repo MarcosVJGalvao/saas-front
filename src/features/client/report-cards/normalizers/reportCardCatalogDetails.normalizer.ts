@@ -1,4 +1,5 @@
 import type { EntityDetailsPageData } from '@shared/components/data-display/details/entityDetails.types';
+import { createOptionalLocalizedStatusBadge } from '@shared/components/data-display/statusBadge.utils';
 import { formatIsoDate } from '@shared/formatters';
 import type {
   ReportCardAcademicPeriod,
@@ -24,6 +25,12 @@ const formatFinalPeriod = (value: boolean | number | undefined): string => {
 
   return value === true || value === 1 ? 'Sim' : 'Não';
 };
+
+const renderPeriodStatus = (status: ReportCardAcademicPeriod['status'] | undefined) =>
+  createOptionalLocalizedStatusBadge(
+    status ? periodStatusLabels[status] : undefined,
+    status === 'active' ? 'active' : 'neutral',
+  );
 
 export const toReportCardCatalogDetailsData = (
   mode: ReportCardCatalogDetailsMode,
@@ -51,7 +58,7 @@ export const toReportCardCatalogDetailsData = (
                 { label: 'Nome', value: period.name },
                 { label: 'Código', value: period.code ?? '-' },
                 { label: 'Ano letivo', value: period.academicYear?.name ?? '-' },
-                { label: 'Status', value: period.status ? periodStatusLabels[period.status] : '-' },
+                { label: 'Status', value: renderPeriodStatus(period.status) },
                 {
                   label: 'Unidade',
                   value: period.sequence === undefined ? '-' : `${period.sequence}ª unidade`,

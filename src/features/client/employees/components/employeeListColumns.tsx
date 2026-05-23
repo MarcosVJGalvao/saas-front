@@ -1,3 +1,4 @@
+import { createOptionalLocalizedStatusBadge } from '@shared/components/data-display/statusBadge.utils';
 import { RowActionsMenu } from '@shared/components/data-display/data/RowActionsMenu';
 import type { DataListMobileConfig } from '@shared/components/data-display/data/dataList.types';
 import type { DataTableColumn } from '@shared/components/data-display/data/DataTable';
@@ -29,6 +30,12 @@ const formatEmployeeDocument = (employee: Employee): string => {
 
 const formatEmployeeName = (employee: Employee): string => employee.person?.fullName ?? '-';
 
+const renderEmployeeStatus = (employee: Employee) =>
+  createOptionalLocalizedStatusBadge(
+    employee.status ? employeeStatusLabels[employee.status] : undefined,
+    employee.status === 'active' ? 'active' : 'neutral',
+  );
+
 export const buildEmployeeColumns = (
   actions: EmployeeColumnActions,
 ): DataTableColumn<Employee>[] => [
@@ -43,7 +50,7 @@ export const buildEmployeeColumns = (
   {
     key: 'status',
     header: 'Status',
-    render: (employee) => (employee.status ? employeeStatusLabels[employee.status] : '-'),
+    render: renderEmployeeStatus,
   },
   {
     key: 'actions',
@@ -65,6 +72,7 @@ export const buildEmployeeMobileConfig = (
 ): DataListMobileConfig<Employee> => ({
   renderTitle: formatEmployeeName,
   renderSubtitle: (employee) => employee.jobTitle,
+  renderStatus: renderEmployeeStatus,
   renderDetails: formatEmployeeDocument,
   renderActions: (employee) => (
     <RowActionsMenu

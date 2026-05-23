@@ -1,4 +1,5 @@
 import { formatIsoDate } from '@shared/formatters';
+import { createOptionalLocalizedStatusBadge } from '@shared/components/data-display/statusBadge.utils';
 import { translateActiveInactiveStatus } from '@shared/i18n/pt-BR/enums';
 import type { EntityDetailsPageData } from '@shared/components/data-display/details/entityDetails.types';
 import type {
@@ -18,6 +19,12 @@ const getTitle = (entity: ClientAdminEntity): string =>
 
 const getSubtitle = (entity: ClientAdminEntity, fallbackSubtitle: string): string =>
   hasEmail(entity) ? (entity.email ?? fallbackSubtitle) : fallbackSubtitle;
+
+const renderEntityStatus = (status: ClientAdminEntity['status']) =>
+  createOptionalLocalizedStatusBadge(
+    status ? translateActiveInactiveStatus(status) : undefined,
+    status === 'active' ? 'active' : 'neutral',
+  );
 
 export const toAdminDetailsData = (
   entity: ClientAdminEntity,
@@ -43,19 +50,13 @@ export const toAdminDetailsData = (
                 { label: 'Nome', value: getTitle(entity) },
                 { label: 'E-mail', value: entity.email ?? '-' },
                 { label: 'Perfil', value: entity.role?.name ?? '-' },
-                {
-                  label: 'Status',
-                  value: entity.status ? translateActiveInactiveStatus(entity.status) : '-',
-                },
+                { label: 'Status', value: renderEntityStatus(entity.status) },
               ]
             : [
                 { label: 'Nome', value: entity.name },
                 { label: 'Descrição', value: entity.description ?? '-' },
                 { label: 'Permissões', value: String(entity.permissionsCount ?? 0) },
-                {
-                  label: 'Status',
-                  value: entity.status ? translateActiveInactiveStatus(entity.status) : '-',
-                },
+                { label: 'Status', value: renderEntityStatus(entity.status) },
               ],
         },
         {

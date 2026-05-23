@@ -1,6 +1,7 @@
 import { formatIsoDate } from '@shared/formatters';
 import { formatCurrency } from '@shared/formatters/currencyFormatter';
 import { translateFinancialRecordStatus } from '@shared/i18n/pt-BR/enums';
+import { createLocalizedStatusBadge } from '@shared/components/data-display/statusBadge.utils';
 import type { DetailsHeaderData, DetailTab } from '@shared/types/detailsDrawer';
 import type { FinancialRecord } from '@features/client/financial/types/financial.types';
 
@@ -11,6 +12,12 @@ const getAmount = (record: FinancialRecord): string =>
 const toDate = (value: string | undefined): string => (value ? formatIsoDate(value) : '-');
 const getSettlementDate = (record: FinancialRecord): string =>
   toDate(record.paymentDate ?? record.receivedDate);
+
+const renderFinancialRecordStatus = (status: FinancialRecord['status']) =>
+  createLocalizedStatusBadge(
+    translateFinancialRecordStatus(status),
+    status === 'paid' || status === 'received' ? 'active' : 'neutral',
+  );
 
 export const toFinancialRecordHeaderData = (
   record: FinancialRecord,
@@ -33,7 +40,7 @@ export const toFinancialRecordDetailsTabs = (record: FinancialRecord): DetailTab
         title: 'Dados financeiros',
         items: [
           { label: 'Descrição', value: getDescription(record) },
-          { label: 'Status', value: translateFinancialRecordStatus(record.status) },
+          { label: 'Status', value: renderFinancialRecordStatus(record.status) },
           { label: 'Valor', value: getAmount(record) },
           { label: 'Vencimento', value: toDate(record.dueDate) },
           { label: 'Data de baixa', value: getSettlementDate(record) },

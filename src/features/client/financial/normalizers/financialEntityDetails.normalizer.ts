@@ -1,4 +1,5 @@
 import { formatIsoDate } from '@shared/formatters';
+import { createOptionalLocalizedStatusBadge } from '@shared/components/data-display/statusBadge.utils';
 import {
   translateFinancialCategoryType,
   translateFinancialEntityStatus,
@@ -15,6 +16,12 @@ const toTypeLabel = (entity: FinancialEntity): string =>
   hasFinancialType(entity) ? translateFinancialCategoryType(entity.type) : '-';
 
 const toDate = (value: string | undefined): string => (value ? formatIsoDate(value) : '-');
+
+const renderFinancialEntityStatus = (status: FinancialEntity['status'] | undefined) =>
+  createOptionalLocalizedStatusBadge(
+    status ? translateFinancialEntityStatus(status) : undefined,
+    status === 'active' ? 'active' : 'neutral',
+  );
 
 export const toFinancialEntityHeaderData = (
   entity: FinancialEntity,
@@ -42,10 +49,7 @@ export const toFinancialEntityDetailsTabs = (
           { label: 'Nome', value: entity.name },
           { label: 'Código', value: entity.code ?? '-' },
           ...(includeType ? [{ label: 'Tipo', value: toTypeLabel(entity) }] : []),
-          {
-            label: 'Status',
-            value: entity.status ? translateFinancialEntityStatus(entity.status) : '-',
-          },
+          { label: 'Status', value: renderFinancialEntityStatus(entity.status) },
           { label: 'Descrição', value: entity.description ?? '-' },
         ],
       },

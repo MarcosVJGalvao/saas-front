@@ -3,6 +3,7 @@ import TrendingUpRoundedIcon from '@mui/icons-material/TrendingUpRounded';
 import PeopleOutlineRoundedIcon from '@mui/icons-material/PeopleOutlineRounded';
 import PauseCircleOutlineRoundedIcon from '@mui/icons-material/PauseCircleOutlineRounded';
 import BusinessRoundedIcon from '@mui/icons-material/BusinessRounded';
+import { LocalizedStatusBadge } from '@shared/components/data-display/LocalizedStatusBadge';
 import { RowActionsMenu } from '@shared/components/data-display/data/RowActionsMenu';
 import type { DataListMobileConfig } from '@shared/components/data-display/data/dataList.types';
 import type { DataTableColumn } from '@shared/components/data-display/data/DataTable';
@@ -17,6 +18,18 @@ export interface ClientListColumnActions {
   onEdit: (client: Client) => void;
   onDelete: (client: Client) => void;
 }
+
+export const resolveClientPlanName = (client: Client): string => {
+  const subscriptionPlanName = client.tenant?.subscriptions?.[0]?.plan?.name;
+  return subscriptionPlanName ?? client.plan?.name ?? client.planName ?? 'Sem plano';
+};
+
+const renderClientStatus = (client: Client) => (
+  <LocalizedStatusBadge
+    label={activeInactiveStatusLabels[client.status]}
+    tone={client.status === 'active' ? 'active' : 'neutral'}
+  />
+);
 
 const formatClientDocument = (client: Client): string => {
   const digits = onlyDigits(client.documentNumber);
@@ -89,11 +102,11 @@ export const buildClientListColumns = (
   { key: 'tradeName', header: 'Nome fantasia', render: (client) => client.tradeName },
   { key: 'legalName', header: 'Razão social', render: (client) => client.legalName },
   { key: 'documentNumber', header: 'Documento', render: formatClientDocument },
-  { key: 'email', header: 'E-mail', render: (client) => client.email },
+  { key: 'plan', header: 'Plano', render: resolveClientPlanName },
   {
     key: 'status',
     header: 'Status',
-    render: (client) => activeInactiveStatusLabels[client.status],
+    render: renderClientStatus,
   },
   {
     key: 'actions',
@@ -108,6 +121,7 @@ export const buildClientListMobileConfig = (
 ): DataListMobileConfig<Client> => ({
   renderTitle: (client) => client.tradeName,
   renderSubtitle: (client) => client.legalName,
+  renderStatus: renderClientStatus,
   renderDetails: formatClientDocument,
   renderActions: (client) => buildActions(client, actions),
 });

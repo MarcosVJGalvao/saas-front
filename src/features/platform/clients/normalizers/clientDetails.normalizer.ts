@@ -1,4 +1,8 @@
 import type { EntityDetailsPageData } from '@shared/components/data-display/details/entityDetails.types';
+import {
+  createLocalizedStatusBadge,
+  createOptionalLocalizedStatusBadge,
+} from '@shared/components/data-display/statusBadge.utils';
 import { formatIsoDate } from '@shared/formatters';
 import { formatCurrency } from '@shared/formatters/currencyFormatter';
 import {
@@ -62,6 +66,51 @@ const resolveSubscriptionPrice = (client: Client): string => {
   return priceValue ? formatCurrency(priceValue, currency) : '-';
 };
 
+const resolveCurrentSubscription = (client: Client) =>
+  client.subscription ?? client.tenant?.subscriptions?.[0] ?? null;
+
+const resolveCurrentPlan = (client: Client) =>
+  resolveCurrentSubscription(client)?.plan ?? client.plan ?? null;
+
+const renderClientStatus = (status: Client['status']) =>
+  createLocalizedStatusBadge(
+    activeInactiveStatusLabels[status],
+    status === 'active' ? 'active' : 'neutral',
+  );
+
+const renderSubscriptionStatus = (
+  status: ReturnType<typeof resolveCurrentSubscription> extends infer Subscription
+    ? Subscription extends { status?: infer StatusValue }
+      ? StatusValue
+      : never
+    : never,
+) => {
+  const label = formatSubscriptionStatus(status);
+
+  return createOptionalLocalizedStatusBadge(
+    label === '-' ? undefined : label,
+    status === 'active' ? 'active' : 'neutral',
+  );
+};
+
+const buildSubscriptionHistoryItems = (client: Client) => {
+  const historyRows = client.tenant?.subscriptionPlanHistories ?? [];
+
+  if (historyRows.length === 0) {
+    return [{ label: 'Histórico', value: 'Nenhuma mudança de plano registrada.' }];
+  }
+
+  return historyRows.map((historyRow, historyIndex) => {
+    const fromPlanName = historyRow.fromPlan?.name ?? historyRow.fromPlanId ?? 'Plano inicial';
+    const toPlanName = historyRow.toPlan?.name ?? historyRow.toPlanId;
+
+    return {
+      label: `${historyIndex + 1}. ${formatDate(historyRow.changedAt)}`,
+      value: `${fromPlanName} -> ${toPlanName}`,
+    };
+  });
+};
+
 export const toClientDetailsData = (client: Client): EntityDetailsPageData => ({
   headerData: {
     title: client.tradeName,
@@ -83,7 +132,7 @@ export const toClientDetailsData = (client: Client): EntityDetailsPageData => ({
             { label: 'Razão social', value: client.legalName },
             { label: 'Documento', value: formatClientDocument(client) },
             { label: 'Tipo de documento', value: documentTypeLabels[client.documentType] },
-            { label: 'Status', value: activeInactiveStatusLabels[client.status] },
+            { label: 'Status', value: renderClientStatus(client.status) },
             { label: 'E-mail principal', value: client.email },
             { label: 'Telefone principal', value: maskPhone(client.phone) },
           ],
@@ -118,31 +167,48 @@ export const toClientDetailsData = (client: Client): EntityDetailsPageData => ({
       label: 'Plano',
       sections: [
         {
-          id: 'plan',
-          title: 'Plano e assinatura',
+          id: 'subscription-current',
+          title: 'Assinatura atual',
           items: [
-            { label: 'Plano', value: client.plan?.name ?? client.planName ?? '-' },
+            {
+              label: 'Status da assinatura',
+              value: renderSubscriptionStatus(resolveCurrentSubscription(client)?.status),
+            },
+            { label: 'Início', value: formatDate(resolveCurrentSubscription(client)?.startDate) },
+            {
+              label: 'Renovação',
+              value: formatDate(resolveCurrentSubscription(client)?.renewalDate),
+            },
+            {
+              label: 'Trial até',
+              value: formatDate(resolveCurrentSubscription(client)?.trialEndsAt),
+            },
+            {
+              label: 'Encerramento',
+              value: formatDate(resolveCurrentSubscription(client)?.endDate),
+            },
+          ],
+        },
+        {
+          id: 'plan',
+          title: 'Plano contratado',
+          items: [
+            { label: 'Plano', value: resolveCurrentPlan(client)?.name ?? client.planName ?? '-' },
             { label: 'Preço vigente', value: resolveSubscriptionPrice(client) },
             {
               label: 'Ciclo',
-              value: formatBillingCycle(client.plan?.billingCycle),
+              value: formatBillingCycle(resolveCurrentPlan(client)?.billingCycle),
             },
             {
               label: 'Descrição do plano',
-              value: client.plan?.description ?? '-',
-            },
-            {
-              label: 'Status da assinatura',
-              value: formatSubscriptionStatus(client.subscription?.status),
-            },
-            { label: 'Início', value: formatDate(client.subscription?.startDate) },
-            { label: 'Renovação', value: formatDate(client.subscription?.renewalDate) },
-            { label: 'Trial até', value: formatDate(client.subscription?.trialEndsAt) },
-            {
-              label: 'Encerramento',
-              value: formatDate(client.subscription?.endDate),
+              value: resolveCurrentPlan(client)?.description ?? '-',
             },
           ],
+        },
+        {
+          id: 'plan-history',
+          title: 'Histórico de planos',
+          items: buildSubscriptionHistoryItems(client),
         },
       ],
     },
