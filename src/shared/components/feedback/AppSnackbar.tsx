@@ -20,6 +20,7 @@ interface AppSnackbarProps {
   snackbarSx?: SxProps<Theme> | undefined;
   alertSx?: SxProps<Theme> | undefined;
   transitionDuration?: { enter: number; exit: number } | undefined;
+  hideCloseAction?: boolean | undefined;
 }
 
 const snackbarPresets: Record<
@@ -80,6 +81,7 @@ export const AppSnackbar = ({
   snackbarSx,
   alertSx,
   transitionDuration,
+  hideCloseAction = false,
 }: AppSnackbarProps) => {
   const preset = snackbarPresets[severity];
 
@@ -95,7 +97,12 @@ export const AppSnackbar = ({
         transition: { timeout: transitionDuration ?? preset.transitionDuration, onExited },
       }}
     >
-      <Alert variant="filled" severity={severity} onClose={onClose} sx={alertSx ?? preset.alertSx}>
+      <Alert
+        variant="filled"
+        severity={severity}
+        onClose={hideCloseAction ? undefined : onClose}
+        sx={alertSx ?? preset.alertSx}
+      >
         {children ?? message}
       </Alert>
     </Snackbar>

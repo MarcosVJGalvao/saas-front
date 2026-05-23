@@ -54,8 +54,11 @@ const SnackbarBody = ({
           width: 36,
           height: 36,
           borderRadius: '50%',
-          bgcolor: theme.palette.common.white,
-          color: theme.palette.info.main,
+          bgcolor:
+            theme.palette.mode === 'dark'
+              ? alpha(theme.palette.info.light, 0.16)
+              : alpha(theme.palette.common.white, 0.92),
+          color: theme.palette.mode === 'dark' ? theme.palette.info.light : theme.palette.info.dark,
           flexShrink: 0,
         })}
       >
@@ -74,9 +77,19 @@ const SnackbarBody = ({
             label={emphasis}
             sx={(theme) => ({
               alignSelf: 'flex-start',
-              bgcolor: theme.palette.info.dark,
-              color: theme.palette.common.white,
+              bgcolor:
+                theme.palette.mode === 'dark'
+                  ? alpha(theme.palette.info.light, 0.14)
+                  : alpha(theme.palette.common.white, 0.18),
+              color:
+                theme.palette.mode === 'dark' ? theme.palette.info.light : theme.palette.info.dark,
               fontWeight: 600,
+              border: `1px solid ${alpha(
+                theme.palette.mode === 'dark'
+                  ? theme.palette.info.light
+                  : theme.palette.common.white,
+                theme.palette.mode === 'dark' ? 0.2 : 0.28,
+              )}`,
             })}
           />
         ) : null}
@@ -120,6 +133,7 @@ export const PwaFeedbackBridge = () => {
         severity="warning"
         autoHideDuration={null}
         onClose={() => undefined}
+        hideCloseAction
         anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
       >
         <SnackbarBody
@@ -162,6 +176,7 @@ export const PwaFeedbackBridge = () => {
         severity="info"
         autoHideDuration={null}
         onClose={() => undefined}
+        hideCloseAction
         anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
         snackbarSx={{
           width: responsive({ xs: 'calc(100% - 24px)', sm: 'auto' }),
@@ -177,7 +192,20 @@ export const PwaFeedbackBridge = () => {
           py: 1.5,
           alignItems: 'stretch',
           boxShadow: theme.shadows[8],
-          background: `linear-gradient(135deg, ${theme.palette.info.main} 0%, ${theme.palette.primary.main} 100%)`,
+          color:
+            theme.palette.mode === 'dark' ? theme.palette.text.primary : theme.palette.common.white,
+          background:
+            theme.palette.mode === 'dark'
+              ? `linear-gradient(
+                  135deg,
+                  ${alpha(theme.palette.background.paper, 0.98)} 0%,
+                  ${alpha(theme.palette.info.dark, 0.88)} 100%
+                )`
+              : `linear-gradient(135deg, ${theme.palette.info.main} 0%, ${theme.palette.primary.main} 100%)`,
+          border: `1px solid ${alpha(
+            theme.palette.mode === 'dark' ? theme.palette.info.light : theme.palette.common.white,
+            theme.palette.mode === 'dark' ? 0.18 : 0.12,
+          )}`,
           '& .MuiAlert-icon': { display: 'none' },
           '& .MuiAlert-message': { width: '100%', p: 0 },
           '& .MuiAlert-action': { display: 'none' },
@@ -200,11 +228,26 @@ export const PwaFeedbackBridge = () => {
                 px: 1.5,
                 py: 0.75,
                 borderRadius: 2,
-                bgcolor: theme.palette.common.white,
-                color: theme.palette.info.dark,
+                bgcolor:
+                  theme.palette.mode === 'dark'
+                    ? alpha(theme.palette.info.light, 0.14)
+                    : theme.palette.common.white,
+                color:
+                  theme.palette.mode === 'dark'
+                    ? theme.palette.info.light
+                    : theme.palette.info.dark,
                 boxShadow: theme.shadows[2],
+                border: `1px solid ${alpha(
+                  theme.palette.mode === 'dark'
+                    ? theme.palette.info.light
+                    : theme.palette.common.white,
+                  theme.palette.mode === 'dark' ? 0.22 : 0.2,
+                )}`,
                 '&:hover': {
-                  bgcolor: theme.palette.grey[100],
+                  bgcolor:
+                    theme.palette.mode === 'dark'
+                      ? alpha(theme.palette.info.light, 0.22)
+                      : theme.palette.grey[100],
                 },
               })}
             >
