@@ -13,15 +13,15 @@ const lightColors: PaletteOptions = {
 };
 
 const darkColors: PaletteOptions = {
-  primary: { main: '#7DB3FF', light: '#A9CBFF', dark: '#4D8FEA', contrastText: '#081526' },
-  secondary: { main: '#4ED9B4', light: '#7CE8CA', dark: '#1FA284', contrastText: '#052119' },
-  error: { main: '#FF6B6B', light: '#FF9A9A', dark: '#D64545', contrastText: '#2C0E0E' },
-  warning: { main: '#FFB74D', light: '#FFCC80', dark: '#F57C00', contrastText: '#2D1A05' },
-  info: { main: '#4FC3F7', light: '#81D4FA', dark: '#0288D1', contrastText: '#062232' },
-  success: { main: '#81C784', light: '#A5D6A7', dark: '#388E3C', contrastText: '#0E2410' },
-  background: { default: '#0B1220', paper: '#131D31' },
-  text: { primary: '#E5EAF3', secondary: '#A9B4C7', disabled: '#64748B' },
-  divider: '#2B3A55',
+  primary: { main: '#4F8CFF', light: '#78A7FF', dark: '#346DDA', contrastText: '#F7FAFF' },
+  secondary: { main: '#6C7DFF', light: '#8E99FF', dark: '#5361DB', contrastText: '#F7F8FF' },
+  error: { main: '#E77777', light: '#F2A0A0', dark: '#C85A5A', contrastText: '#FFF7F7' },
+  warning: { main: '#D3A65E', light: '#E3BF84', dark: '#B08543', contrastText: '#FFF9F0' },
+  info: { main: '#5C90F5', light: '#82AAFF', dark: '#4473D7', contrastText: '#F8FAFF' },
+  success: { main: '#6FB38D', light: '#92CAAA', dark: '#51896C', contrastText: '#F6FCF8' },
+  background: { default: '#151515', paper: '#202020' },
+  text: { primary: '#F5F5F5', secondary: '#B5B5B5', disabled: '#7B7B7B' },
+  divider: '#313131',
 };
 
 export const getColorTokensByMode = (mode: PaletteMode): PaletteOptions =>

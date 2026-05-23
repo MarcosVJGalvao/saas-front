@@ -36,7 +36,10 @@ const HomePage = () => (
       alignItems: 'center',
       px: responsive({ xs: 2, md: 4, lg: 8 }),
       py: responsive({ xs: 4, md: 6, lg: 8 }),
-      backgroundImage: `linear-gradient(135deg, ${theme.palette.background.default} 0%, ${theme.palette.background.paper} 100%)`,
+      backgroundImage:
+        theme.palette.mode === 'dark'
+          ? `radial-gradient(circle at top left, rgba(79,140,255,0.16) 0%, rgba(79,140,255,0) 24%), linear-gradient(135deg, ${theme.palette.background.default} 0%, ${theme.palette.background.paper} 100%)`
+          : `linear-gradient(135deg, ${theme.palette.background.default} 0%, ${theme.palette.background.paper} 100%)`,
     })}
   >
     <AppStack
@@ -84,7 +87,10 @@ const HomePage = () => (
               border: `1px solid ${theme.palette.divider}`,
               borderRadius: 2,
               p: responsive({ xs: 3, lg: 4 }),
-              boxShadow: theme.shadows[2],
+              boxShadow:
+                theme.palette.mode === 'dark'
+                  ? '0 24px 48px rgba(0, 0, 0, 0.24)'
+                  : theme.shadows[2],
             })}
           >
             <AppStack spacing={2}>

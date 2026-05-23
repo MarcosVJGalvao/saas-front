@@ -79,7 +79,7 @@ const SnackbarBody = ({
               alignSelf: 'flex-start',
               bgcolor:
                 theme.palette.mode === 'dark'
-                  ? alpha(theme.palette.info.light, 0.14)
+                  ? alpha(theme.palette.info.light, 0.12)
                   : alpha(theme.palette.common.white, 0.18),
               color:
                 theme.palette.mode === 'dark' ? theme.palette.info.light : theme.palette.info.dark,
@@ -96,7 +96,14 @@ const SnackbarBody = ({
       </Box>
     </Box>
     {children ? (
-      <Divider sx={(theme) => ({ borderColor: alpha(theme.palette.common.white, 0.18) })} />
+      <Divider
+        sx={(theme) => ({
+          borderColor:
+            theme.palette.mode === 'dark'
+              ? alpha(theme.palette.common.white, 0.08)
+              : alpha(theme.palette.common.white, 0.18),
+        })}
+      />
     ) : null}
     {children}
   </Box>
@@ -199,7 +206,7 @@ export const PwaFeedbackBridge = () => {
               ? `linear-gradient(
                   135deg,
                   ${alpha(theme.palette.background.paper, 0.98)} 0%,
-                  ${alpha(theme.palette.info.dark, 0.88)} 100%
+                  ${alpha(theme.palette.primary.dark, 0.82)} 100%
                 )`
               : `linear-gradient(135deg, ${theme.palette.info.main} 0%, ${theme.palette.primary.main} 100%)`,
           border: `1px solid ${alpha(
