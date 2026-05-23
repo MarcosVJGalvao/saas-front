@@ -37,7 +37,7 @@ interface TopBarProps {
 const getSearchContainerSx = (isMobile: boolean) => ({
   display: 'flex',
   justifyContent: 'flex-start',
-  flex: isMobile ? 1 : '1 1 auto',
+  flex: isMobile ? '0 0 auto' : '1 1 auto',
   minWidth: 0,
 });
 
@@ -156,10 +156,14 @@ export const TopBar = ({
       <Typography
         variant="h6"
         sx={{
+          flex: 1,
           fontWeight: 600,
           fontSize: responsive({ xs: '1.125rem', lg: '1.25rem' }),
-          minWidth: responsive({ xs: 0, sm: 120, md: 140 }),
-          maxWidth: responsive({ xs: 76, sm: 160, lg: 220 }),
+          minWidth: 0,
+          maxWidth: responsive({
+            xs: isMobile ? 'none' : '160px',
+            lg: isMobile ? 'none' : '220px',
+          }),
           overflow: 'hidden',
           textOverflow: 'ellipsis',
           whiteSpace: 'nowrap',
@@ -176,6 +180,7 @@ export const TopBar = ({
             width: responsive({ xs: '42px', sm: '100%' }),
             maxWidth: searchButtonMaxWidth,
             minWidth: searchButtonMinWidth,
+            flexShrink: 0,
             justifyContent: responsive({
               xs: 'center',
               sm: isMobile ? 'flex-start' : 'space-between',

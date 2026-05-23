@@ -8,15 +8,18 @@ import { usePwaUpdate } from '@app/pwa/hooks/usePwaUpdate';
 const updateServiceWorkerMock = vi.fn<(reloadPage?: boolean) => Promise<void>>(() =>
   Promise.resolve(),
 );
+let serviceWorkerRegistrationMock: ServiceWorkerRegistration | undefined;
 
 vi.mock('@app/pwa/registerServiceWorker', () => ({
   registerServiceWorker: ({
     onNeedRefresh,
+    onRegistered,
   }: {
     onNeedRefresh: () => void;
     onRegistered: (registration: ServiceWorkerRegistration | undefined) => void;
   }) => {
     Reflect.set(window, '__triggerPwaRefresh', onNeedRefresh);
+    onRegistered(serviceWorkerRegistrationMock);
     return { updateServiceWorker: updateServiceWorkerMock };
   },
 }));
@@ -52,6 +55,7 @@ describe('PwaProvider', () => {
     setNavigatorOnLine(true);
     installMatchMediaMock();
     updateServiceWorkerMock.mockClear();
+    serviceWorkerRegistrationMock = undefined;
   });
 
   it('atualiza o status de conectividade', () => {
@@ -87,6 +91,27 @@ describe('PwaProvider', () => {
     });
 
     expect(updateServiceWorkerMock).toHaveBeenCalledWith(true);
+  });
+
+  it('expõe mensagem amigável quando a atualização falha', async () => {
+    updateServiceWorkerMock.mockImplementationOnce(() => Promise.reject(new Error('falhou')));
+
+    const { result } = renderHook(() => usePwaUpdate(), { wrapper });
+    const triggerRefresh = Reflect.get(window, '__triggerPwaRefresh');
+
+    act(() => {
+      if (typeof triggerRefresh === 'function') {
+        triggerRefresh();
+      }
+    });
+
+    await act(async () => {
+      await result.current.applyUpdate();
+    });
+
+    expect(result.current.updateErrorMessage).toBe(
+      'Não foi possível aplicar a atualização agora. Tente novamente em alguns instantes.',
+    );
   });
 
   it('captura evento de instalação quando disponível', () => {

@@ -24,6 +24,7 @@ vi.mock('@app/pwa/hooks/usePwaUpdate', () => ({
     applyUpdate: vi.fn(),
     isUpdateAvailable: true,
     isUpdating: false,
+    updateErrorMessage: null,
   }),
 }));
 
@@ -38,5 +39,10 @@ describe('PwaFeedbackBridge', () => {
     expect(screen.getByText('Sem conexão com a internet')).toBeInTheDocument();
     expect(screen.getByText('Instale o aplicativo')).toBeInTheDocument();
     expect(screen.getByText('Nova versão disponível')).toBeInTheDocument();
+    expect(
+      screen.getByText(
+        'A aplicação será recarregada automaticamente quando a nova versão for aplicada.',
+      ),
+    ).toBeInTheDocument();
   });
 });

@@ -22,6 +22,9 @@ export const pwaMessages = {
   dismissAction: 'Agora não',
   updateTitle: 'Nova versão disponível',
   updateDescription: 'Atualize o aplicativo para usar a versão mais recente.',
+  updateHint: 'A aplicação será recarregada automaticamente quando a nova versão for aplicada.',
   updateAction: 'Atualizar agora',
+  updateRetryAction: 'Tentar novamente',
   updatingAction: 'Atualizando...',
+  updateError: 'Não foi possível aplicar a atualização agora. Tente novamente em alguns instantes.',
 };

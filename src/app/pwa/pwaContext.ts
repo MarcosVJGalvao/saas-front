@@ -9,6 +9,7 @@ export interface PwaContextValue {
   isOnline: boolean;
   isUpdateAvailable: boolean;
   isUpdating: boolean;
+  updateErrorMessage: string | null;
   dismissInstallPrompt: () => void;
   installApp: () => Promise<boolean>;
   applyUpdate: () => Promise<void>;

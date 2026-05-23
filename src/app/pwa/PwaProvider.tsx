@@ -3,6 +3,7 @@ import { pwaPushBridge } from '@app/pwa/push/pushSupport';
 import { PwaContext, type PwaContextValue } from '@app/pwa/pwaContext';
 import { registerServiceWorker } from '@app/pwa/registerServiceWorker';
 import type { BeforeInstallPromptEvent } from '@app/pwa/types';
+import { pwaMessages } from '@shared/i18n/pt-BR/messages';
 
 const INSTALL_DISMISS_STORAGE_KEY = 'app:pwa-install-dismissed';
 
@@ -77,6 +78,29 @@ const clearInstallDismissed = (): void => {
 const isBeforeInstallPromptEvent = (event: Event): event is BeforeInstallPromptEvent =>
   'prompt' in event && typeof event.prompt === 'function' && 'userChoice' in event;
 
+const waitForControllerChange = (): Promise<void> =>
+  new Promise((resolve) => {
+    let hasResolved = false;
+
+    const finalize = () => {
+      if (hasResolved) {
+        return;
+      }
+
+      hasResolved = true;
+      window.removeEventListener('controllerchange', handleControllerChange);
+      resolve();
+    };
+
+    const handleControllerChange = () => {
+      finalize();
+      window.location.reload();
+    };
+
+    window.addEventListener('controllerchange', handleControllerChange, { once: true });
+    window.setTimeout(finalize, 4000);
+  });
+
 export const PwaProvider = ({ children }: { children: ReactNode }) => {
   const [deferredPrompt, setDeferredPrompt] = useState<BeforeInstallPromptEvent | null>(null);
   const [isInstalled, setIsInstalled] = useState(isStandaloneDisplayMode);
@@ -85,7 +109,9 @@ export const PwaProvider = ({ children }: { children: ReactNode }) => {
   const [lastConnectionChangeAt, setLastConnectionChangeAt] = useState<number | null>(null);
   const [isUpdateAvailable, setIsUpdateAvailable] = useState(false);
   const [isUpdating, setIsUpdating] = useState(false);
+  const [updateErrorMessage, setUpdateErrorMessage] = useState<string | null>(null);
   const updateServiceWorkerRef = useRef<((reloadPage?: boolean) => Promise<void>) | null>(null);
+  const serviceWorkerRegistrationRef = useRef<ServiceWorkerRegistration | null>(null);
 
   useEffect(() => {
     const handleBeforeInstallPrompt = (event: Event) => {
@@ -153,8 +179,11 @@ export const PwaProvider = ({ children }: { children: ReactNode }) => {
     const { updateServiceWorker } = registerServiceWorker({
       onNeedRefresh: () => {
         setIsUpdateAvailable(true);
+        setUpdateErrorMessage(null);
       },
-      onRegistered: (_registration) => undefined,
+      onRegistered: (registration) => {
+        serviceWorkerRegistrationRef.current = registration ?? null;
+      },
     });
 
     updateServiceWorkerRef.current = updateServiceWorker;
@@ -169,6 +198,7 @@ export const PwaProvider = ({ children }: { children: ReactNode }) => {
       isOnline,
       isUpdateAvailable,
       isUpdating,
+      updateErrorMessage,
       dismissInstallPrompt: () => {
         writeInstallDismissed();
         setInstallDismissed(true);
@@ -191,14 +221,47 @@ export const PwaProvider = ({ children }: { children: ReactNode }) => {
         return false;
       },
       applyUpdate: async () => {
-        const updateServiceWorker = updateServiceWorkerRef.current;
-        if (updateServiceWorker === null) {
+        if (isUpdating) {
           return;
         }
 
+        const updateServiceWorker = updateServiceWorkerRef.current;
         setIsUpdating(true);
+        setUpdateErrorMessage(null);
+
         try {
-          await updateServiceWorker(true);
+          if (updateServiceWorker !== null) {
+            await updateServiceWorker(true);
+            setIsUpdateAvailable(false);
+            return;
+          }
+
+          const registration = serviceWorkerRegistrationRef.current;
+          if (registration !== null) {
+            await registration.update();
+
+            const waitingServiceWorker = registration.waiting;
+            if (waitingServiceWorker !== null) {
+              waitingServiceWorker.postMessage({ type: 'SKIP_WAITING' });
+              setIsUpdateAvailable(false);
+              await waitForControllerChange();
+              return;
+            }
+          }
+
+          setUpdateErrorMessage(pwaMessages.updateError);
+        } catch {
+          const registration = serviceWorkerRegistrationRef.current;
+          const waitingServiceWorker = registration?.waiting ?? null;
+
+          if (waitingServiceWorker !== null) {
+            waitingServiceWorker.postMessage({ type: 'SKIP_WAITING' });
+            setIsUpdateAvailable(false);
+            await waitForControllerChange();
+            return;
+          }
+
+          setUpdateErrorMessage(pwaMessages.updateError);
         } finally {
           setIsUpdating(false);
         }
@@ -213,6 +276,7 @@ export const PwaProvider = ({ children }: { children: ReactNode }) => {
       isOnline,
       isUpdateAvailable,
       isUpdating,
+      updateErrorMessage,
       lastConnectionChangeAt,
     ],
   );

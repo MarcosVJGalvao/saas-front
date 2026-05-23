@@ -1,12 +1,17 @@
 import DownloadOutlinedIcon from '@mui/icons-material/DownloadOutlined';
+import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import SystemUpdateOutlinedIcon from '@mui/icons-material/SystemUpdateOutlined';
 import Box from '@mui/material/Box';
+import Chip from '@mui/material/Chip';
+import Divider from '@mui/material/Divider';
 import Typography from '@mui/material/Typography';
+import { alpha } from '@mui/material/styles';
 import { useMemo, useState, type ReactNode } from 'react';
 import { useLocation } from 'react-router-dom';
 import { useNetworkStatus } from '@app/pwa/hooks/useNetworkStatus';
 import { usePwaInstall } from '@app/pwa/hooks/usePwaInstall';
 import { usePwaUpdate } from '@app/pwa/hooks/usePwaUpdate';
+import { responsive } from '@app/theme/utils/responsive';
 import { AppSnackbar } from '@shared/components/feedback/AppSnackbar';
 import { AppButton } from '@shared/components/inputs/AppButton';
 import { connectivityMessages, pwaMessages } from '@shared/i18n/pt-BR/messages';
@@ -31,19 +36,55 @@ const ActionRow = ({ children }: { children: ReactNode }) => (
 const SnackbarBody = ({
   title,
   description,
+  emphasis,
   children,
 }: {
   title: string;
   description: string;
+  emphasis?: string | undefined;
   children?: ReactNode | undefined;
 }) => (
-  <Box sx={{ display: 'flex', flexDirection: 'column', gap: 0.5 }}>
-    <Typography component="span" sx={{ fontWeight: 700 }}>
-      {title}
-    </Typography>
-    <Typography component="span" sx={{ fontSize: '0.875rem' }}>
-      {description}
-    </Typography>
+  <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
+    <Box sx={{ display: 'flex', alignItems: 'flex-start', gap: 1.25 }}>
+      <Box
+        sx={(theme) => ({
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          width: 36,
+          height: 36,
+          borderRadius: '50%',
+          bgcolor: theme.palette.common.white,
+          color: theme.palette.info.main,
+          flexShrink: 0,
+        })}
+      >
+        <InfoOutlinedIcon fontSize="small" />
+      </Box>
+      <Box sx={{ display: 'flex', flexDirection: 'column', gap: 0.5 }}>
+        <Typography component="span" sx={{ fontWeight: 700, lineHeight: 1.2 }}>
+          {title}
+        </Typography>
+        <Typography component="span" sx={{ fontSize: '0.875rem', lineHeight: 1.45 }}>
+          {description}
+        </Typography>
+        {emphasis ? (
+          <Chip
+            size="small"
+            label={emphasis}
+            sx={(theme) => ({
+              alignSelf: 'flex-start',
+              bgcolor: theme.palette.info.dark,
+              color: theme.palette.common.white,
+              fontWeight: 600,
+            })}
+          />
+        ) : null}
+      </Box>
+    </Box>
+    {children ? (
+      <Divider sx={(theme) => ({ borderColor: alpha(theme.palette.common.white, 0.18) })} />
+    ) : null}
     {children}
   </Box>
 );
@@ -58,7 +99,7 @@ export const PwaFeedbackBridge = () => {
     isInstalled,
     isIosInstallAvailable,
   } = usePwaInstall();
-  const { applyUpdate, isUpdateAvailable, isUpdating } = usePwaUpdate();
+  const { applyUpdate, isUpdateAvailable, isUpdating, updateErrorMessage } = usePwaUpdate();
 
   const canShowInstallPrompt = useMemo(
     () =>
@@ -122,18 +163,59 @@ export const PwaFeedbackBridge = () => {
         autoHideDuration={null}
         onClose={() => undefined}
         anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+        snackbarSx={{
+          width: responsive({ xs: 'calc(100% - 24px)', sm: 'auto' }),
+          right: responsive({ xs: '12px', sm: '24px' }),
+          left: responsive({ xs: '12px', sm: 'auto' }),
+          bottom: responsive({ xs: '12px', sm: '24px' }),
+        }}
+        alertSx={(theme) => ({
+          width: '100%',
+          maxWidth: 420,
+          borderRadius: 3,
+          px: 2,
+          py: 1.5,
+          alignItems: 'stretch',
+          boxShadow: theme.shadows[8],
+          background: `linear-gradient(135deg, ${theme.palette.info.main} 0%, ${theme.palette.primary.main} 100%)`,
+          '& .MuiAlert-icon': { display: 'none' },
+          '& .MuiAlert-message': { width: '100%', p: 0 },
+          '& .MuiAlert-action': { display: 'none' },
+        })}
       >
-        <SnackbarBody title={pwaMessages.updateTitle} description={pwaMessages.updateDescription}>
+        <SnackbarBody
+          title={pwaMessages.updateTitle}
+          description={pwaMessages.updateDescription}
+          emphasis={pwaMessages.updateHint}
+        >
           <ActionRow>
             <AppButton
               size="small"
               startIcon={<SystemUpdateOutlinedIcon />}
               onClick={() => void applyUpdate()}
               disabled={isUpdating}
+              aria-label={isUpdating ? pwaMessages.updatingAction : pwaMessages.updateAction}
+              sx={(theme) => ({
+                minWidth: 0,
+                px: 1.5,
+                py: 0.75,
+                borderRadius: 2,
+                bgcolor: theme.palette.common.white,
+                color: theme.palette.info.dark,
+                boxShadow: theme.shadows[2],
+                '&:hover': {
+                  bgcolor: theme.palette.grey[100],
+                },
+              })}
             >
               {isUpdating ? pwaMessages.updatingAction : pwaMessages.updateAction}
             </AppButton>
           </ActionRow>
+          {updateErrorMessage ? (
+            <Typography component="span" sx={{ fontSize: '0.8125rem', lineHeight: 1.4 }}>
+              {updateErrorMessage}
+            </Typography>
+          ) : null}
         </SnackbarBody>
       </AppSnackbar>
     </>
