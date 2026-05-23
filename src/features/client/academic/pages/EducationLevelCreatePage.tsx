@@ -1,21 +1,21 @@
 import { educationLevelCatalogConfig } from '@features/client/academic/constants/academicCatalogPageConfigs';
 import { useAcademicCatalogCreatePage } from '@features/client/academic/hooks/useAcademicCatalogCreatePage';
+import { toEducationLevelCreatePayload } from '@features/client/academic/normalizers/academicCatalogFormNormalizer';
 import type { AcademicCatalogCreateFormValues } from '@features/client/academic/schemas/academicCatalogCreateForm.schema';
 import { AppPaper } from '@shared/components/data-display/AppPaper';
 import { AppAlert } from '@shared/components/feedback/AppAlert';
 import { AppForm } from '@shared/components/form/AppForm';
 import { FormActions } from '@shared/components/form/FormActions';
-import { FormSelect } from '@shared/components/form/FormSelect';
 import { FormTextField } from '@shared/components/form/FormTextField';
 import { AppStack } from '@shared/components/layout/AppStack';
 import { PageHeader } from '@shared/components/layout/PageHeader';
-import { activeInactiveStatusOptions } from '@shared/constants/selectOptions';
 
 const EducationLevelCreatePage = () => {
   const educationLevelCreatePage = useAcademicCatalogCreatePage({
     service: educationLevelCatalogConfig.service,
     backPath: educationLevelCatalogConfig.routeBase,
     submitErrorMessage: educationLevelCatalogConfig.submitErrorMessage,
+    buildPayload: toEducationLevelCreatePayload,
   });
 
   return (
@@ -37,12 +37,6 @@ const EducationLevelCreatePage = () => {
           columnsByDevice={{ mobile: 1, tablet: 2, desktop: 2 }}
         >
           <FormTextField<AcademicCatalogCreateFormValues> name="name" label="Nome" />
-          <FormTextField<AcademicCatalogCreateFormValues> name="code" label="Código" />
-          <FormSelect<AcademicCatalogCreateFormValues>
-            name="status"
-            label="Status"
-            options={activeInactiveStatusOptions}
-          />
           <FormTextField<AcademicCatalogCreateFormValues>
             name="description"
             label="Descrição"

@@ -10,7 +10,6 @@ import { FormSelect } from '@shared/components/form/FormSelect';
 import { FormTextField } from '@shared/components/form/FormTextField';
 import { AppStack } from '@shared/components/layout/AppStack';
 import { PageHeader } from '@shared/components/layout/PageHeader';
-import { activeInactiveStatusOptions } from '@shared/constants/selectOptions';
 
 const GradeCreatePage = () => {
   const gradeCreatePage = useAcademicCatalogCreatePage({
@@ -43,11 +42,6 @@ const GradeCreatePage = () => {
         >
           <FormTextField<AcademicCatalogCreateFormValues> name="name" label="Nome" />
           <FormTextField<AcademicCatalogCreateFormValues> name="code" label="Código" />
-          <FormSelect<AcademicCatalogCreateFormValues>
-            name="status"
-            label="Status"
-            options={activeInactiveStatusOptions}
-          />
           <FormSelect<AcademicCatalogCreateFormValues>
             name="educationLevelId"
             label="Nível de ensino"

@@ -42,6 +42,13 @@ export const toAcademicCatalogCreatePayload = (
   values: AcademicCatalogCreateFormValues,
 ): Record<string, unknown> => toAcademicCatalogPayload(values);
 
+export const toEducationLevelCreatePayload = (
+  values: AcademicCatalogCreateFormValues,
+): Record<string, unknown> => ({
+  name: values.name.trim(),
+  description: optionalText(values.description),
+});
+
 export const toAcademicCatalogEditPayload = (
   values: AcademicCatalogEditFormValues,
 ): Record<string, unknown> => toAcademicCatalogPayload(values);

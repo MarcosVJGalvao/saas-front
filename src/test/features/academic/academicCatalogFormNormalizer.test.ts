@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest';
 import {
   buildAcademicCatalogInitialValues,
   toAcademicCatalogCreatePayload,
+  toEducationLevelCreatePayload,
 } from '@features/client/academic/normalizers/academicCatalogFormNormalizer';
 import { academicCatalogCreateFormSchema } from '@features/client/academic/schemas/academicCatalogCreateForm.schema';
 
@@ -31,6 +32,21 @@ describe('academic catalog form normalizer', () => {
       status: 'active',
       description: undefined,
       educationLevelId: 'level-1',
+    });
+  });
+
+  it('normaliza payload de nível de ensino sem campos inexistentes', () => {
+    const values = academicCatalogCreateFormSchema.parse({
+      name: ' Ensino Fundamental ',
+      code: ' EF ',
+      status: 'active',
+      description: ' Base comum ',
+      educationLevelId: '',
+    });
+
+    expect(toEducationLevelCreatePayload(values)).toEqual({
+      name: 'Ensino Fundamental',
+      description: 'Base comum',
     });
   });
 });

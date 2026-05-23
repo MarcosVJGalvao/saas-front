@@ -17,12 +17,14 @@ type UseAcademicCatalogCreatePageParams = {
   service: AcademicCatalogCreateService;
   backPath: string;
   submitErrorMessage: string;
+  buildPayload?: (values: AcademicCatalogCreateFormValues) => Record<string, unknown>;
 };
 
 export const useAcademicCatalogCreatePage = ({
   service,
   backPath,
   submitErrorMessage,
+  buildPayload = toAcademicCatalogCreatePayload,
 }: UseAcademicCatalogCreatePageParams) => {
   const navigate = useNavigate();
   const [submitting, setSubmitting] = useState(false);
@@ -36,7 +38,7 @@ export const useAcademicCatalogCreatePage = ({
     setSubmitting(true);
     setErrorMessage(undefined);
     try {
-      await service.create(toAcademicCatalogCreatePayload(values));
+      await service.create(buildPayload(values));
       void navigate(backPath);
     } catch {
       setErrorMessage(submitErrorMessage);
