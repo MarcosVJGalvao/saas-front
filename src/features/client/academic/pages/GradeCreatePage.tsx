@@ -1,6 +1,7 @@
 import { gradeCatalogConfig } from '@features/client/academic/constants/academicCatalogPageConfigs';
 import { useAcademicReferenceOptions } from '@features/client/academic/hooks/useAcademicReferenceOptions';
 import { useAcademicCatalogCreatePage } from '@features/client/academic/hooks/useAcademicCatalogCreatePage';
+import { toGradeCreatePayload } from '@features/client/academic/normalizers/academicCatalogFormNormalizer';
 import type { AcademicCatalogCreateFormValues } from '@features/client/academic/schemas/academicCatalogCreateForm.schema';
 import { AppPaper } from '@shared/components/data-display/AppPaper';
 import { AppAlert } from '@shared/components/feedback/AppAlert';
@@ -16,6 +17,7 @@ const GradeCreatePage = () => {
     service: gradeCatalogConfig.service,
     backPath: gradeCatalogConfig.routeBase,
     submitErrorMessage: gradeCatalogConfig.submitErrorMessage,
+    buildPayload: toGradeCreatePayload,
   });
   const referenceOptions = useAcademicReferenceOptions({ includeEducationLevels: true });
 

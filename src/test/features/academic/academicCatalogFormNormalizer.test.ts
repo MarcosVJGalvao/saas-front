@@ -3,6 +3,7 @@ import {
   buildAcademicCatalogInitialValues,
   toAcademicCatalogCreatePayload,
   toEducationLevelCreatePayload,
+  toGradeCreatePayload,
 } from '@features/client/academic/normalizers/academicCatalogFormNormalizer';
 import { academicCatalogCreateFormSchema } from '@features/client/academic/schemas/academicCatalogCreateForm.schema';
 
@@ -47,6 +48,23 @@ describe('academic catalog form normalizer', () => {
     expect(toEducationLevelCreatePayload(values)).toEqual({
       name: 'Ensino Fundamental',
       description: 'Base comum',
+    });
+  });
+
+  it('normaliza payload de série sem enviar status', () => {
+    const values = academicCatalogCreateFormSchema.parse({
+      name: ' 1ª Série ',
+      code: ' 1-EM ',
+      status: 'active',
+      description: ' Ensino médio ',
+      educationLevelId: ' level-1 ',
+    });
+
+    expect(toGradeCreatePayload(values)).toEqual({
+      name: '1ª Série',
+      code: '1-EM',
+      description: 'Ensino médio',
+      educationLevelId: 'level-1',
     });
   });
 });
