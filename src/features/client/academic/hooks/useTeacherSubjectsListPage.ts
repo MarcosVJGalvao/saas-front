@@ -34,6 +34,13 @@ const initialCreateValues: TeacherSubjectCreateValues = {
   subjectId: '',
 };
 
+const blurActiveElement = (): void => {
+  const activeElement = document.activeElement;
+  if (activeElement instanceof HTMLElement) {
+    activeElement.blur();
+  }
+};
+
 const isActiveInactiveStatus = (value: string): value is 'active' | 'inactive' =>
   value === 'active' || value === 'inactive';
 
@@ -59,7 +66,7 @@ export const useTeacherSubjectsListPage = () => {
   const referenceOptions = useAcademicReferenceOptions({
     includeTeachers: true,
     includeSubjects: true,
-    teacherJobTitle: 'teacher',
+    employeeJobTitle: 'teacher',
   });
   const [filterValues, setFilterValues] = useState<TeacherSubjectFilterValues>(initialFilterValues);
   const [createValues, setCreateValues] = useState<TeacherSubjectCreateValues>(initialCreateValues);
@@ -140,6 +147,7 @@ export const useTeacherSubjectsListPage = () => {
     },
     openCreateModal: () => {
       feedback.clear();
+      blurActiveElement();
       setIsCreateModalOpen(true);
     },
     closeCreateModal: () => {
@@ -162,6 +170,7 @@ export const useTeacherSubjectsListPage = () => {
     tableColumns: buildTeacherSubjectColumns({
       actions: {
         onDelete: (item: TeacherSubject) => {
+          blurActiveElement();
           setSelectedTeacherSubjectId(item.id);
         },
       },
@@ -169,6 +178,7 @@ export const useTeacherSubjectsListPage = () => {
     mobileConfig: buildTeacherSubjectMobileConfig({
       actions: {
         onDelete: (item: TeacherSubject) => {
+          blurActiveElement();
           setSelectedTeacherSubjectId(item.id);
         },
       },

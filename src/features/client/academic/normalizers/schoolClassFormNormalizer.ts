@@ -1,5 +1,10 @@
-import type { SchoolClassFormValues } from '@features/client/academic/schemas/schoolClassFormSchema';
-import type { SchoolClass } from '@features/client/academic/types/academic.types';
+import type { SchoolClassCreateFormValues } from '@features/client/academic/schemas/schoolClassCreateForm.schema';
+import type { SchoolClassEditFormValues } from '@features/client/academic/schemas/schoolClassEditForm.schema';
+import type {
+  SchoolClass,
+  SchoolClassCreateRequest,
+  SchoolClassUpdateRequest,
+} from '@features/client/academic/types/academic.types';
 
 const optionalText = (value: string | undefined): string | undefined => {
   const trimmedValue = value?.trim() ?? '';
@@ -8,12 +13,26 @@ const optionalText = (value: string | undefined): string | undefined => {
 
 const optionalNumber = (value: string | undefined): number | undefined => {
   const trimmedValue = value?.trim() ?? '';
-  if (!trimmedValue) return undefined;
+  if (trimmedValue.length === 0) {
+    return undefined;
+  }
+
   const parsedValue = Number(trimmedValue);
   return Number.isFinite(parsedValue) ? parsedValue : undefined;
 };
 
-export const buildSchoolClassInitialValues = (): SchoolClassFormValues => ({
+export const buildSchoolClassCreateInitialValues = (): SchoolClassCreateFormValues => ({
+  name: '',
+  code: '',
+  shift: 'morning',
+  maxCapacity: 0,
+  academicYearId: '',
+  gradeId: '',
+  coordinatorId: '',
+  description: '',
+});
+
+export const buildSchoolClassEditInitialValues = (): SchoolClassEditFormValues => ({
   name: '',
   code: '',
   status: 'active',
@@ -25,7 +44,9 @@ export const buildSchoolClassInitialValues = (): SchoolClassFormValues => ({
   description: '',
 });
 
-export const normalizeSchoolClassInitialValues = (value: SchoolClass): SchoolClassFormValues => ({
+export const normalizeSchoolClassEditInitialValues = (
+  value: SchoolClass,
+): SchoolClassEditFormValues => ({
   name: value.name,
   code: value.code ?? '',
   status: value.status,
@@ -37,9 +58,22 @@ export const normalizeSchoolClassInitialValues = (value: SchoolClass): SchoolCla
   description: value.description ?? '',
 });
 
-export const normalizeSchoolClassPayload = (
-  values: SchoolClassFormValues,
-): Record<string, unknown> => ({
+export const normalizeSchoolClassCreatePayload = (
+  values: SchoolClassCreateFormValues,
+): SchoolClassCreateRequest => ({
+  name: values.name.trim(),
+  code: optionalText(values.code),
+  description: optionalText(values.description),
+  academicYearId: values.academicYearId.trim(),
+  gradeId: values.gradeId.trim(),
+  coordinatorId: values.coordinatorId.trim(),
+  shift: values.shift,
+  maxCapacity: values.maxCapacity,
+});
+
+export const normalizeSchoolClassEditPayload = (
+  values: SchoolClassEditFormValues,
+): SchoolClassUpdateRequest => ({
   name: values.name.trim(),
   code: optionalText(values.code),
   status: values.status,

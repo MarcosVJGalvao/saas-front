@@ -1,23 +1,24 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useAppForm } from '@shared/hooks/useAppForm';
+import { useAcademicReferenceOptions } from '@features/client/academic/hooks/useAcademicReferenceOptions';
 import {
-  buildSchoolClassInitialValues,
-  normalizeSchoolClassPayload,
+  buildSchoolClassCreateInitialValues,
+  normalizeSchoolClassCreatePayload,
 } from '@features/client/academic/normalizers/schoolClassFormNormalizer';
 import { schoolClassCreateFormSchema } from '@features/client/academic/schemas/schoolClassCreateForm.schema';
 import type { SchoolClassCreateFormValues } from '@features/client/academic/schemas/schoolClassCreateForm.schema';
 import { schoolClassService } from '@features/client/academic/services/service';
-import { useAcademicReferenceOptions } from '@features/client/academic/hooks/useAcademicReferenceOptions';
+import { useAppForm } from '@shared/hooks/useAppForm';
 
 export const useSchoolClassCreatePage = () => {
   const navigate = useNavigate();
   const referenceOptions = useAcademicReferenceOptions({
-    includeEducationLevels: true,
+    includeTeachers: true,
+    employeeJobTitle: 'coordinator',
   });
   const form = useAppForm<SchoolClassCreateFormValues>(
     schoolClassCreateFormSchema,
-    buildSchoolClassInitialValues(),
+    buildSchoolClassCreateInitialValues(),
   );
   const [submitting, setSubmitting] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | undefined>();
@@ -26,7 +27,7 @@ export const useSchoolClassCreatePage = () => {
     setSubmitting(true);
     setErrorMessage(undefined);
     try {
-      await schoolClassService.create(normalizeSchoolClassPayload(values));
+      await schoolClassService.create(normalizeSchoolClassCreatePayload(values));
       void navigate('/client/school-classes');
     } catch {
       setErrorMessage('Não foi possível salvar a turma.');

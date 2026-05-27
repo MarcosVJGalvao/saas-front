@@ -49,11 +49,16 @@ const installMatchMediaMock = () => {
   });
 };
 
+const replacePathname = (pathname: string) => {
+  window.history.replaceState({}, '', pathname);
+};
+
 describe('PwaProvider', () => {
   beforeEach(() => {
     window.localStorage.clear();
     setNavigatorOnLine(true);
     installMatchMediaMock();
+    replacePathname('/');
     updateServiceWorkerMock.mockClear();
     serviceWorkerRegistrationMock = undefined;
   });
@@ -136,5 +141,32 @@ describe('PwaProvider', () => {
     });
 
     expect(result.current.isInstallAvailable).toBe(true);
+  });
+
+  it('não intercepta instalação fora das rotas com CTA de PWA', () => {
+    replacePathname('/client/school-classes');
+    const { result } = renderHook(() => usePwaInstall(), { wrapper });
+    const installEvent = new Event('beforeinstallprompt');
+    const preventDefault = vi.fn();
+
+    Object.defineProperty(installEvent, 'prompt', {
+      configurable: true,
+      value: () => Promise.resolve(),
+    });
+    Object.defineProperty(installEvent, 'userChoice', {
+      configurable: true,
+      value: Promise.resolve({ outcome: 'dismissed', platform: 'web' }),
+    });
+    Object.defineProperty(installEvent, 'preventDefault', {
+      configurable: true,
+      value: preventDefault,
+    });
+
+    act(() => {
+      window.dispatchEvent(installEvent);
+    });
+
+    expect(preventDefault).not.toHaveBeenCalled();
+    expect(result.current.isInstallAvailable).toBe(false);
   });
 });

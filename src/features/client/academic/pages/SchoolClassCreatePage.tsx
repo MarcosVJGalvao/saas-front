@@ -1,4 +1,3 @@
-import { schoolClassShiftOptions, schoolClassStatusOptions } from '@shared/constants/selectOptions';
 import { useSchoolClassCreatePage } from '@features/client/academic/hooks/useSchoolClassCreatePage';
 import type { SchoolClassCreateFormValues } from '@features/client/academic/schemas/schoolClassCreateForm.schema';
 import { AppPaper } from '@shared/components/data-display/AppPaper';
@@ -9,6 +8,7 @@ import { FormSelect } from '@shared/components/form/FormSelect';
 import { FormTextField } from '@shared/components/form/FormTextField';
 import { AppStack } from '@shared/components/layout/AppStack';
 import { PageHeader } from '@shared/components/layout/PageHeader';
+import { schoolClassShiftOptions } from '@shared/constants/selectOptions';
 
 const SchoolClassCreatePage = () => {
   const schoolClassCreatePage = useSchoolClassCreatePage();
@@ -17,7 +17,7 @@ const SchoolClassCreatePage = () => {
     <AppStack spacing={2}>
       <PageHeader
         title="Cadastrar turma"
-        subtitle="Defina ano letivo, série, turno, capacidade e status da turma."
+        subtitle="Defina os dados essenciais da turma para o cadastro."
         actionLabel="Voltar"
         onAction={schoolClassCreatePage.onBack}
       />
@@ -37,19 +37,15 @@ const SchoolClassCreatePage = () => {
           <FormTextField<SchoolClassCreateFormValues> name="name" label="Nome" />
           <FormTextField<SchoolClassCreateFormValues> name="code" label="Código" />
           <FormSelect<SchoolClassCreateFormValues>
-            name="status"
-            label="Status"
-            options={schoolClassStatusOptions}
-          />
-          <FormSelect<SchoolClassCreateFormValues>
             name="shift"
             label="Turno"
             options={schoolClassShiftOptions}
           />
           <FormTextField<SchoolClassCreateFormValues>
-            name="capacity"
+            name="maxCapacity"
             label="Capacidade"
             placeholder="Quantidade de vagas"
+            type="number"
           />
           <FormSelect<SchoolClassCreateFormValues>
             name="academicYearId"
@@ -64,9 +60,9 @@ const SchoolClassCreatePage = () => {
             disabled={schoolClassCreatePage.referenceOptions.loading}
           />
           <FormSelect<SchoolClassCreateFormValues>
-            name="educationLevelId"
-            label="Nível de ensino"
-            options={schoolClassCreatePage.referenceOptions.educationLevelOptions}
+            name="coordinatorId"
+            label="Coordenador"
+            options={schoolClassCreatePage.referenceOptions.teacherOptions}
             disabled={schoolClassCreatePage.referenceOptions.loading}
           />
           <FormTextField<SchoolClassCreateFormValues>

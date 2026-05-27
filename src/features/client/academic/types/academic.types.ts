@@ -170,6 +170,30 @@ export type SchoolClassQueryParams = ClientBaseQueryParams & {
   gradeId?: string | undefined;
 };
 
+export type SchoolClassCreateRequest = {
+  name: string;
+  code?: string | undefined;
+  description?: string | undefined;
+  academicYearId: string;
+  gradeId: string;
+  coordinatorId: string;
+  shift: SchoolClassShift;
+  maxCapacity: number;
+};
+
+export type SchoolClassUpdateRequest = {
+  name?: string | undefined;
+  code?: string | undefined;
+  description?: string | undefined;
+  academicYearId?: string | undefined;
+  gradeId?: string | undefined;
+  coordinatorId?: string | undefined;
+  shift?: SchoolClassShift | undefined;
+  maxCapacity?: number | undefined;
+  status?: SchoolClassStatus | undefined;
+  educationLevelId?: string | undefined;
+};
+
 export type SchoolClassSummary = {
   id: string;
   name: string;

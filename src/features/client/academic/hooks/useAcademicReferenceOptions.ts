@@ -53,7 +53,7 @@ export interface UseAcademicReferenceOptionsParams {
   includeSubjects?: boolean | undefined;
   includeTeacherSubjects?: boolean | undefined;
   includeTeachers?: boolean | undefined;
-  teacherJobTitle?: EmployeeJobTitle | undefined;
+  employeeJobTitle?: EmployeeJobTitle | undefined;
 }
 
 export interface UseAcademicReferenceOptionsResult {
@@ -74,7 +74,7 @@ export const useAcademicReferenceOptions = ({
   includeSubjects = false,
   includeTeacherSubjects = false,
   includeTeachers = false,
-  teacherJobTitle,
+  employeeJobTitle,
 }: UseAcademicReferenceOptionsParams = {}): UseAcademicReferenceOptionsResult => {
   const [academicYearOptions, setAcademicYearOptions] = useState<AppSelectOption[]>([]);
   const [gradeOptions, setGradeOptions] = useState<AppSelectOption[]>([]);
@@ -115,7 +115,7 @@ export const useAcademicReferenceOptions = ({
             ? subjectService.list({ page: 1, limit: REFERENCE_LIMIT })
             : Promise.resolve({ data: [], meta: undefined }),
           includeTeachers
-            ? employeeService.list({ page: 1, limit: REFERENCE_LIMIT, jobTitle: teacherJobTitle })
+            ? employeeService.list({ page: 1, limit: REFERENCE_LIMIT, jobTitle: employeeJobTitle })
             : Promise.resolve({ data: [], meta: undefined }),
           includeTeacherSubjects
             ? teacherSubjectService.list({ page: 1, limit: REFERENCE_LIMIT })
@@ -165,7 +165,7 @@ export const useAcademicReferenceOptions = ({
     includeSubjects,
     includeTeacherSubjects,
     includeTeachers,
-    teacherJobTitle,
+    employeeJobTitle,
   ]);
 
   return {

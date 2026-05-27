@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { normalizeAcademicYearPayload } from '@features/client/academic/normalizers/academicYearFormNormalizer';
-import { normalizeSchoolClassPayload } from '@features/client/academic/normalizers/schoolClassFormNormalizer';
+import { normalizeSchoolClassCreatePayload } from '@features/client/academic/normalizers/schoolClassFormNormalizer';
 
 describe('academic form normalizers', () => {
   it('normaliza o payload do ano letivo conforme o dto', () => {
@@ -77,29 +77,27 @@ describe('academic form normalizers', () => {
     });
   });
 
-  it('normaliza o payload da turma', () => {
-    const payload = normalizeSchoolClassPayload({
+  it('normaliza o payload de criação da turma', () => {
+    const payload = normalizeSchoolClassCreatePayload({
       name: ' Turma A ',
       code: '',
-      status: 'active',
       shift: 'morning',
-      capacity: '35',
+      maxCapacity: 35,
       academicYearId: ' year-1 ',
       gradeId: ' grade-1 ',
-      educationLevelId: '',
+      coordinatorId: ' coordinator-1 ',
       description: ' Sala 1 ',
     });
 
     expect(payload).toEqual({
       name: 'Turma A',
       code: undefined,
-      status: 'active',
-      shift: 'morning',
-      maxCapacity: 35,
+      description: 'Sala 1',
       academicYearId: 'year-1',
       gradeId: 'grade-1',
-      educationLevelId: undefined,
-      description: 'Sala 1',
+      coordinatorId: 'coordinator-1',
+      shift: 'morning',
+      maxCapacity: 35,
     });
   });
 });

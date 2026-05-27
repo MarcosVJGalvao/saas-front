@@ -7,6 +7,9 @@ import { pwaMessages } from '@shared/i18n/pt-BR/messages';
 
 const INSTALL_DISMISS_STORAGE_KEY = 'app:pwa-install-dismissed';
 
+const shouldCaptureInstallPromptForPath = (pathname: string): boolean =>
+  pathname === '/' || pathname === '/platform/login' || pathname === '/client/login';
+
 const isBrowser = () => typeof window !== 'undefined';
 
 const getStandaloneNavigatorFlag = (): boolean => {
@@ -116,6 +119,10 @@ export const PwaProvider = ({ children }: { children: ReactNode }) => {
   useEffect(() => {
     const handleBeforeInstallPrompt = (event: Event) => {
       if (!isBeforeInstallPromptEvent(event)) {
+        return;
+      }
+
+      if (!shouldCaptureInstallPromptForPath(window.location.pathname)) {
         return;
       }
 

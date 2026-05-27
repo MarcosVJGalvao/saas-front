@@ -7,8 +7,10 @@ import type {
   AcademicYearUpsertPayload,
   AcademicYearQueryParams,
   SchoolClass,
+  SchoolClassCreateRequest,
   SchoolClassQueryParams,
   SchoolClassSummary,
+  SchoolClassUpdateRequest,
   TeacherSubject,
   TeacherSubjectQueryParams,
 } from '@features/client/academic/types/academic.types';
@@ -44,9 +46,9 @@ export type TeacherSubjectDeleteResponse = void;
 export type SchoolClassListParams = SchoolClassQueryParams;
 export type SchoolClassListResponse = PaginatedResponse<SchoolClass>;
 export type SchoolClassDetailsResponse = SchoolClass;
-export type SchoolClassCreatePayload = ClientApiRecord;
+export type SchoolClassCreatePayload = SchoolClassCreateRequest;
 export type SchoolClassCreateResponse = SchoolClass;
-export type SchoolClassUpdatePayload = ClientApiRecord;
+export type SchoolClassUpdatePayload = SchoolClassUpdateRequest;
 export type SchoolClassUpdateResponse = SchoolClass;
 export type SchoolClassDeleteResponse = void;
 export type SchoolClassSummaryResponse = SchoolClassSummary;

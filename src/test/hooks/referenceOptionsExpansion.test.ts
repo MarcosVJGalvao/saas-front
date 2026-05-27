@@ -101,7 +101,7 @@ describe('reference options expansion hooks', () => {
       useAcademicReferenceOptions({
         includeTeachers: true,
         includeSubjects: true,
-        teacherJobTitle: 'teacher',
+        employeeJobTitle: 'teacher',
       }),
     );
 

@@ -1,15 +1,16 @@
 import { useCallback, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useAppForm } from '@shared/hooks/useAppForm';
+import { useAcademicReferenceOptions } from '@features/client/academic/hooks/useAcademicReferenceOptions';
 import {
-  normalizeSchoolClassInitialValues,
-  normalizeSchoolClassPayload,
+  buildSchoolClassEditInitialValues,
+  normalizeSchoolClassEditInitialValues,
+  normalizeSchoolClassEditPayload,
 } from '@features/client/academic/normalizers/schoolClassFormNormalizer';
 import { schoolClassEditFormSchema } from '@features/client/academic/schemas/schoolClassEditForm.schema';
 import type { SchoolClassEditFormValues } from '@features/client/academic/schemas/schoolClassEditForm.schema';
 import { schoolClassService } from '@features/client/academic/services/service';
-import { useAcademicReferenceOptions } from '@features/client/academic/hooks/useAcademicReferenceOptions';
 import type { SchoolClass } from '@features/client/academic/types/academic.types';
+import { useAppForm } from '@shared/hooks/useAppForm';
 
 type SchoolClassEditLocationState = {
   entity?: SchoolClass;
@@ -32,30 +33,22 @@ export const useSchoolClassEditPage = (id: string, locationStateValue: unknown) 
   const form = useAppForm<SchoolClassEditFormValues>(
     schoolClassEditFormSchema,
     locationState?.entity
-      ? normalizeSchoolClassInitialValues(locationState.entity)
-      : {
-          name: '',
-          code: '',
-          status: 'active',
-          shift: 'morning',
-          capacity: '',
-          academicYearId: '',
-          gradeId: '',
-          educationLevelId: '',
-          description: '',
-        },
+      ? normalizeSchoolClassEditInitialValues(locationState.entity)
+      : buildSchoolClassEditInitialValues(),
   );
 
   const load = useCallback(async () => {
     if (locationState?.entity) {
-      form.reset(normalizeSchoolClassInitialValues(locationState.entity));
+      form.reset(normalizeSchoolClassEditInitialValues(locationState.entity));
       return;
     }
+
     setLoading(true);
     setErrorMessage(undefined);
+
     try {
       const response = await schoolClassService.getById(id);
-      form.reset(normalizeSchoolClassInitialValues(response));
+      form.reset(normalizeSchoolClassEditInitialValues(response));
     } catch {
       setErrorMessage('Não foi possível carregar a turma.');
     } finally {
@@ -67,14 +60,16 @@ export const useSchoolClassEditPage = (id: string, locationStateValue: unknown) 
     const timeoutId = window.setTimeout(() => {
       void load();
     }, 0);
+
     return () => window.clearTimeout(timeoutId);
   }, [load]);
 
   const handleSubmit = async (values: SchoolClassEditFormValues): Promise<void> => {
     setSubmitting(true);
     setErrorMessage(undefined);
+
     try {
-      await schoolClassService.update(id, normalizeSchoolClassPayload(values));
+      await schoolClassService.update(id, normalizeSchoolClassEditPayload(values));
       void navigate('/client/school-classes');
     } catch {
       setErrorMessage('Não foi possível salvar a turma.');
