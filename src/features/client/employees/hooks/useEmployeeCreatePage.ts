@@ -2,6 +2,7 @@ import { useCallback, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAddressAutoFill } from '@shared/hooks/useAddressAutoFill/useAddressAutoFill';
 import { useAppForm } from '@shared/hooks/useAppForm';
+import { onlyDigits } from '@shared/parsers/stringParsers';
 import {
   createEmployeeInitialValues,
   toEmployeeCreatePayload,
@@ -54,8 +55,14 @@ export const useEmployeeCreatePage = () => {
     }
   };
 
-  const handleSearchCep = useCallback(async (): Promise<void> => {
-    await addressAutoFill.resolveByCep(form.getValues('zipCode'));
+  const handleResolveAddressByCep = useCallback(async (): Promise<void> => {
+    const zipCode = form.getValues('zipCode');
+
+    if (onlyDigits(zipCode).length !== 8) {
+      return;
+    }
+
+    await addressAutoFill.resolveByCep(zipCode);
   }, [addressAutoFill, form]);
 
   return {
@@ -64,7 +71,7 @@ export const useEmployeeCreatePage = () => {
     errorMessage,
     addressLookupLoading: addressAutoFill.loading,
     onSubmit: handleSubmit,
-    onSearchCep: handleSearchCep,
+    onResolveAddressByCep: handleResolveAddressByCep,
     onBack: () => {
       void navigate('/client/employees');
     },

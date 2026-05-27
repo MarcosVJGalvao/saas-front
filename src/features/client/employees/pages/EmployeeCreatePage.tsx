@@ -33,8 +33,8 @@ const EmployeeCreatePage = () => {
           <EmployeeCreateFormFields
             form={employeeCreatePage.form}
             addressLookupLoading={employeeCreatePage.addressLookupLoading}
-            onSearchCep={() => {
-              void employeeCreatePage.onSearchCep();
+            onResolveAddressByCep={() => {
+              void employeeCreatePage.onResolveAddressByCep();
             }}
           />
           <FormActions

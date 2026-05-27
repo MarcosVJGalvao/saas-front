@@ -1,10 +1,8 @@
 import { Controller } from 'react-hook-form';
 import type { UseFormReturn } from 'react-hook-form';
-import { AppCircularProgress } from '@shared/components/data-display/AppCircularProgress';
 import { AppText } from '@shared/components/data-display/AppText';
 import { FormSelect } from '@shared/components/form/FormSelect';
 import { FormTextField } from '@shared/components/form/FormTextField';
-import { AppButton } from '@shared/components/inputs/AppButton';
 import type { AppSelectOption } from '@shared/components/inputs/AppSelect';
 import { AppTextField } from '@shared/components/inputs/AppTextField';
 import { AppBox } from '@shared/components/layout/AppBox';
@@ -20,7 +18,7 @@ import type { EmployeeCreateFormValues } from '@features/client/employees/schema
 interface EmployeeCreateFormFieldsProps {
   form: UseFormReturn<EmployeeCreateFormValues>;
   addressLookupLoading: boolean;
-  onSearchCep: () => void;
+  onResolveAddressByCep: () => void;
 }
 
 const employeeCreationModeOptions: AppSelectOption[] = [
@@ -46,7 +44,7 @@ const getMaskedDocument = (
 export const EmployeeCreateFormFields = ({
   form,
   addressLookupLoading,
-  onSearchCep,
+  onResolveAddressByCep,
 }: EmployeeCreateFormFieldsProps) => {
   const creationMode = form.watch('creationMode');
   const documentType = form.watch('documentType');
@@ -129,20 +127,6 @@ export const EmployeeCreateFormFields = ({
           <SectionCard
             title="Endereço"
             subtitle="Digite o CEP para preencher automaticamente e ajuste os campos se necessário."
-            actions={
-              <AppButton
-                variant="outlined"
-                onClick={onSearchCep}
-                disabled={addressLookupLoading}
-                startIcon={
-                  addressLookupLoading ? (
-                    <AppCircularProgress size={16} ariaLabel="Buscando CEP" sx={{ py: 0 }} />
-                  ) : undefined
-                }
-              >
-                Buscar CEP
-              </AppButton>
-            }
           >
             <AppBox
               sx={{
@@ -161,6 +145,8 @@ export const EmployeeCreateFormFields = ({
                     onChange={(event) => {
                       field.onChange(event.target.value);
                     }}
+                    onBlur={onResolveAddressByCep}
+                    disabled={addressLookupLoading}
                     error={fieldState.invalid}
                     helperText={fieldState.error?.message}
                   />
