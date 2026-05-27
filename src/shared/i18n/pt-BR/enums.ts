@@ -4,6 +4,17 @@ export type DocumentTypeValue = 'CPF' | 'CNPJ' | 'RG' | 'PASSPORT' | 'OTHER';
 export type SubscriptionStatusValue = 'active' | 'canceled' | 'past_due' | 'trialing' | 'blocked';
 export type EnrollmentStatusValue = 'active' | 'cancelled' | 'transferred';
 export type StudentStatusValue = 'active' | 'inactive' | 'cancelled';
+export type EmployeeJobTitleValue =
+  | 'teacher'
+  | 'teaching_assistant'
+  | 'coordinator'
+  | 'director'
+  | 'secretary'
+  | 'financial'
+  | 'administrator'
+  | 'administrative'
+  | 'assistant'
+  | 'other';
 export type EmployeeStatusValue = 'active' | 'inactive' | 'terminated';
 export type SchoolClassStatusValue = 'active' | 'inactive' | 'cancelled';
 export type SchoolClassShiftValue = 'morning' | 'afternoon' | 'evening' | 'full_time';
@@ -104,6 +115,19 @@ export const studentStatusLabels: Record<StudentStatusValue, string> = {
   active: 'Ativo',
   inactive: 'Inativo',
   cancelled: 'Cancelado',
+};
+
+export const employeeJobTitleLabels: Record<EmployeeJobTitleValue, string> = {
+  teacher: 'Professor(a)',
+  teaching_assistant: 'Auxiliar de ensino',
+  coordinator: 'Coordenador(a)',
+  director: 'Diretor(a)',
+  secretary: 'Secretário(a)',
+  financial: 'Financeiro',
+  administrator: 'Administrador(a)',
+  administrative: 'Administrativo',
+  assistant: 'Assistente',
+  other: 'Outro',
 };
 
 export const employeeStatusLabels: Record<EmployeeStatusValue, string> = {
@@ -317,6 +341,9 @@ export const translateAttendanceStatus = (status: AttendanceStatusValue): string
 
 export const translateStudentStatus = (status: StudentStatusValue): string =>
   studentStatusLabels[status];
+
+export const translateEmployeeJobTitle = (jobTitle: EmployeeJobTitleValue): string =>
+  employeeJobTitleLabels[jobTitle];
 
 export const translateEmployeeStatus = (status: EmployeeStatusValue): string =>
   employeeStatusLabels[status];

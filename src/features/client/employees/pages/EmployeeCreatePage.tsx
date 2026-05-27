@@ -1,14 +1,11 @@
-import { AppAlert } from '@shared/components/feedback/AppAlert';
 import { AppPaper } from '@shared/components/data-display/AppPaper';
+import { AppAlert } from '@shared/components/feedback/AppAlert';
 import { AppForm } from '@shared/components/form/AppForm';
 import { FormActions } from '@shared/components/form/FormActions';
-import { FormSelect } from '@shared/components/form/FormSelect';
-import { FormTextField } from '@shared/components/form/FormTextField';
 import { AppStack } from '@shared/components/layout/AppStack';
 import { PageHeader } from '@shared/components/layout/PageHeader';
-import { activeInactiveStatusOptions } from '@shared/constants/selectOptions';
+import { EmployeeCreateFormFields } from '@features/client/employees/components/EmployeeCreateFormFields';
 import { useEmployeeCreatePage } from '@features/client/employees/hooks/useEmployeeCreatePage';
-import type { EmployeeCreateFormValues } from '@features/client/employees/schemas/employeeCreateForm.schema';
 
 const EmployeeCreatePage = () => {
   const employeeCreatePage = useEmployeeCreatePage();
@@ -17,7 +14,7 @@ const EmployeeCreatePage = () => {
     <AppStack spacing={2}>
       <PageHeader
         title="Cadastrar funcionário"
-        subtitle="Informe cargo, departamento e pessoa vinculada."
+        subtitle="Escolha entre vincular uma pessoa existente ou cadastrar a pessoa completa."
         actionLabel="Voltar"
         onAction={() => {
           employeeCreatePage.onBack();
@@ -31,29 +28,14 @@ const EmployeeCreatePage = () => {
           form={employeeCreatePage.form}
           onSubmit={employeeCreatePage.onSubmit}
           useResponsiveGrid
-          columnsByDevice={{ mobile: 1, tablet: 2, desktop: 2 }}
+          columnsByDevice={{ mobile: 1, tablet: 1, desktop: 1 }}
         >
-          <FormTextField<EmployeeCreateFormValues>
-            name="personId"
-            label="Pessoa existente"
-            placeholder="ID da pessoa, se já existir"
-          />
-          <FormTextField<EmployeeCreateFormValues>
-            name="fullName"
-            label="Nome completo"
-            placeholder="Use quando não houver pessoa existente"
-          />
-          <FormTextField<EmployeeCreateFormValues> name="documentNumber" label="Documento" />
-          <FormTextField<EmployeeCreateFormValues>
-            name="jobTitle"
-            label="Cargo"
-            placeholder="Professor, coordenador ou administrativo"
-          />
-          <FormTextField<EmployeeCreateFormValues> name="department" label="Departamento" />
-          <FormSelect<EmployeeCreateFormValues>
-            name="status"
-            label="Status"
-            options={activeInactiveStatusOptions}
+          <EmployeeCreateFormFields
+            form={employeeCreatePage.form}
+            addressLookupLoading={employeeCreatePage.addressLookupLoading}
+            onSearchCep={() => {
+              void employeeCreatePage.onSearchCep();
+            }}
           />
           <FormActions
             secondaryAction={{

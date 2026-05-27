@@ -9,7 +9,10 @@ import { FormTextField } from '@shared/components/form/FormTextField';
 import { AppTextField } from '@shared/components/inputs/AppTextField';
 import { AppStack } from '@shared/components/layout/AppStack';
 import { PageHeader } from '@shared/components/layout/PageHeader';
-import { activeInactiveStatusOptions } from '@shared/constants/selectOptions';
+import {
+  activeInactiveStatusOptions,
+  employeeJobTitleOptionsWithPlaceholder,
+} from '@shared/constants/selectOptions';
 import { useEmployeeEditPage } from '@features/client/employees/hooks/useEmployeeEditPage';
 import type { EmployeeEditFormValues } from '@features/client/employees/schemas/employeeEditForm.schema';
 
@@ -57,7 +60,11 @@ const EmployeeEditPage = () => {
           useResponsiveGrid
           columnsByDevice={{ mobile: 1, tablet: 2, desktop: 2 }}
         >
-          <FormTextField<EmployeeEditFormValues> name="jobTitle" label="Cargo" />
+          <FormSelect<EmployeeEditFormValues>
+            name="jobTitle"
+            label="Cargo"
+            options={employeeJobTitleOptionsWithPlaceholder}
+          />
           <FormTextField<EmployeeEditFormValues> name="department" label="Departamento" />
           <FormSelect<EmployeeEditFormValues>
             name="status"

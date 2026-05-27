@@ -2,7 +2,7 @@ import { createOptionalLocalizedStatusBadge } from '@shared/components/data-disp
 import { RowActionsMenu } from '@shared/components/data-display/data/RowActionsMenu';
 import type { DataListMobileConfig } from '@shared/components/data-display/data/dataList.types';
 import type { DataTableColumn } from '@shared/components/data-display/data/DataTable';
-import { employeeStatusLabels } from '@shared/i18n/pt-BR/enums';
+import { employeeStatusLabels, translateEmployeeJobTitle } from '@shared/i18n/pt-BR/enums';
 import { maskCnpj, maskCpf } from '@shared/masks/inputMasks';
 import { onlyDigits } from '@shared/parsers/stringParsers';
 import type { Employee } from '@features/client/employees/types/employee.types';
@@ -40,7 +40,11 @@ export const buildEmployeeColumns = (
   actions: EmployeeColumnActions,
 ): DataTableColumn<Employee>[] => [
   { key: 'name', header: 'Nome', render: formatEmployeeName },
-  { key: 'jobTitle', header: 'Cargo', render: (employee) => employee.jobTitle },
+  {
+    key: 'jobTitle',
+    header: 'Cargo',
+    render: (employee) => translateEmployeeJobTitle(employee.jobTitle),
+  },
   {
     key: 'department',
     header: 'Departamento',
@@ -71,7 +75,7 @@ export const buildEmployeeMobileConfig = (
   actions: EmployeeColumnActions,
 ): DataListMobileConfig<Employee> => ({
   renderTitle: formatEmployeeName,
-  renderSubtitle: (employee) => employee.jobTitle,
+  renderSubtitle: (employee) => translateEmployeeJobTitle(employee.jobTitle),
   renderStatus: renderEmployeeStatus,
   renderDetails: formatEmployeeDocument,
   renderActions: (employee) => (

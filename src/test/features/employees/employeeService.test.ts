@@ -10,7 +10,7 @@ describe('employeeService', () => {
   it('lista funcionários no endpoint do guia', async () => {
     const getSpy = vi.spyOn(httpClient, 'get').mockResolvedValueOnce({
       data: {
-        data: [{ id: 'employee-1', jobTitle: 'Professor' }],
+        data: [{ id: 'employee-1', jobTitle: 'teacher' }],
         meta: {
           page: 1,
           limit: 10,
@@ -53,11 +53,14 @@ describe('employeeService', () => {
 
   it('cria funcionário no endpoint do guia', async () => {
     const postSpy = vi.spyOn(httpClient, 'post').mockResolvedValueOnce({
-      data: { id: 'employee-1', jobTitle: 'Professor' },
+      data: { id: 'employee-1', jobTitle: 'teacher' },
     });
 
-    await employeeService.create({ jobTitle: 'Professor' });
+    await employeeService.create({ personId: 'person-1', jobTitle: 'teacher' });
 
-    expect(postSpy).toHaveBeenCalledWith('/api/employees', { jobTitle: 'Professor' });
+    expect(postSpy).toHaveBeenCalledWith('/api/employees', {
+      personId: 'person-1',
+      jobTitle: 'teacher',
+    });
   });
 });

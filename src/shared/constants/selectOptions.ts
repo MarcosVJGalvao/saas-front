@@ -4,6 +4,7 @@ import {
   activeInactiveStatusLabels,
   attendanceStatusLabels,
   documentTypeLabels,
+  employeeJobTitleLabels,
   financialCategoryTypeLabels,
   financialEntityStatusLabels,
   financialRecordStatusLabels,
@@ -184,6 +185,20 @@ export const studentStatusOptions: AppSelectOption[] = [
   buildSelectOption('cancelled', studentStatusLabels.cancelled),
 ];
 
+export const employeeJobTitleOptions: AppSelectOption[] = [
+  buildSelectOption('teacher', employeeJobTitleLabels.teacher),
+  buildSelectOption('teaching_assistant', employeeJobTitleLabels.teaching_assistant),
+  buildSelectOption('coordinator', employeeJobTitleLabels.coordinator),
+  buildSelectOption('director', employeeJobTitleLabels.director),
+  buildSelectOption('secretary', employeeJobTitleLabels.secretary),
+  buildSelectOption('financial', employeeJobTitleLabels.financial),
+  buildSelectOption('administrator', employeeJobTitleLabels.administrator),
+  buildSelectOption('administrative', employeeJobTitleLabels.administrative),
+  buildSelectOption('assistant', employeeJobTitleLabels.assistant),
+  buildSelectOption('other', employeeJobTitleLabels.other),
+];
+
+export const employeeJobTitleOptionsWithPlaceholder = withPlaceholder(employeeJobTitleOptions);
 export const yesNoOptions: AppSelectOption[] = [
   buildSelectOption('', 'Não informar'),
   buildSelectOption('true', 'Sim'),

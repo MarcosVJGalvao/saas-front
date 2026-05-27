@@ -1,45 +1,80 @@
 import { describe, expect, it } from 'vitest';
-import { toEmployeeCreatePayload } from '@features/client/employees/normalizers/employeeFormNormalizer';
+import { toEmployeeCreatePayload } from '@features/client/employees/normalizers/employeeForm.normalizer';
 
 describe('employeeFormNormalizer', () => {
-  it('usa pessoa existente quando personId está preenchido', () => {
+  it('usa pessoa existente quando o modo é vincular cadastro já criado', () => {
     const payload = toEmployeeCreatePayload({
+      creationMode: 'existing_person',
       personId: ' person-1 ',
       fullName: ' Ana ',
+      documentType: 'CPF',
       documentNumber: '123.456.789-00',
-      jobTitle: ' Professor ',
+      jobTitle: 'teacher',
       department: ' Acadêmico ',
-      status: 'active',
+      zipCode: '',
+      street: '',
+      number: '',
+      complement: '',
+      neighborhood: '',
+      city: '',
+      state: '',
+      country: 'BR',
+      email: '',
+      phone: '',
     });
 
     expect(payload).toEqual({
       personId: 'person-1',
-      person: undefined,
-      jobTitle: 'Professor',
+      jobTitle: 'teacher',
       department: 'Acadêmico',
-      status: 'active',
     });
   });
 
-  it('normaliza pessoa inline quando personId não está preenchido', () => {
+  it('normaliza pessoa, endereço e contatos ao cadastrar do zero', () => {
     const payload = toEmployeeCreatePayload({
+      creationMode: 'new_person',
       personId: '',
       fullName: ' Ana Silva ',
+      documentType: 'CPF',
       documentNumber: '123.456.789-00',
-      jobTitle: ' Professor ',
+      jobTitle: 'teacher',
       department: '',
-      status: '',
+      zipCode: '40.000-000',
+      street: ' Rua das Flores ',
+      number: ' 100 ',
+      complement: ' Sala 2 ',
+      neighborhood: ' Centro ',
+      city: ' Salvador ',
+      state: ' BA ',
+      country: ' BR ',
+      email: ' ana@escola.com.br ',
+      phone: '(71) 99999-9999',
     });
 
     expect(payload).toEqual({
-      personId: undefined,
       person: {
         fullName: 'Ana Silva',
         documentNumber: '12345678900',
+        documentType: 'CPF',
       },
-      jobTitle: 'Professor',
+      addresses: [
+        {
+          zipCode: '40000000',
+          street: 'Rua das Flores',
+          number: '100',
+          complement: 'Sala 2',
+          neighborhood: 'Centro',
+          city: 'Salvador',
+          state: 'BA',
+          country: 'BR',
+        },
+      ],
+      contacts: [
+        { type: 'email', value: 'ana@escola.com.br' },
+        { type: 'phone', value: '71999999999' },
+      ],
+      jobTitle: 'teacher',
       department: undefined,
-      status: undefined,
     });
   });
 });

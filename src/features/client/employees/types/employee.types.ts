@@ -1,4 +1,8 @@
-import type { EmployeeStatusValue } from '@shared/i18n/pt-BR/enums';
+import type {
+  ContactTypeValue,
+  DocumentTypeValue,
+  EmployeeStatusValue,
+} from '@shared/i18n/pt-BR/enums';
 import type { ClientBaseQueryParams } from '@features/client/shared/types/clientApi.types';
 
 export type EmployeeJobTitle =
@@ -12,6 +16,46 @@ export type EmployeeJobTitle =
   | 'administrative'
   | 'assistant'
   | 'other';
+
+export type EmployeeCreateAddress = {
+  zipCode: string;
+  street: string;
+  number: string;
+  neighborhood: string;
+  city: string;
+  state: string;
+  country: string;
+  complement?: string | undefined;
+};
+
+export type EmployeeCreateContact = {
+  type: ContactTypeValue;
+  value: string;
+};
+
+export type EmployeeCreatePerson = {
+  fullName: string;
+  documentNumber: string;
+  documentType: DocumentTypeValue;
+};
+
+export type EmployeeCreateWithExistingPersonRequest = {
+  personId: string;
+  jobTitle: EmployeeJobTitle;
+  department?: string | undefined;
+};
+
+export type EmployeeCreateFromScratchRequest = {
+  person: EmployeeCreatePerson;
+  addresses: EmployeeCreateAddress[];
+  contacts: EmployeeCreateContact[];
+  jobTitle: EmployeeJobTitle;
+  department?: string | undefined;
+};
+
+export type EmployeeCreateRequest =
+  | EmployeeCreateWithExistingPersonRequest
+  | EmployeeCreateFromScratchRequest;
 
 export type Employee = {
   id: string;

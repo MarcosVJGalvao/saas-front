@@ -1,6 +1,6 @@
 import { formatIsoDate } from '@shared/formatters';
 import { createOptionalLocalizedStatusBadge } from '@shared/components/data-display/statusBadge.utils';
-import { employeeStatusLabels } from '@shared/i18n/pt-BR/enums';
+import { employeeStatusLabels, translateEmployeeJobTitle } from '@shared/i18n/pt-BR/enums';
 import { maskCnpj, maskCpf } from '@shared/masks/inputMasks';
 import { onlyDigits } from '@shared/parsers/stringParsers';
 import type { EntityDetailsPageData } from '@shared/components/data-display/details/entityDetails.types';
@@ -32,9 +32,11 @@ const renderEmployeeStatus = (status: Employee['status'] | undefined) =>
 
 export const toEmployeeDetailsData = (employee: Employee): EntityDetailsPageData => ({
   headerData: {
-    title: employee.person?.fullName ?? employee.jobTitle,
-    subtitle: employee.jobTitle,
-    avatarFallback: (employee.person?.fullName ?? employee.jobTitle).slice(0, 1).toUpperCase(),
+    title: employee.person?.fullName ?? translateEmployeeJobTitle(employee.jobTitle),
+    subtitle: translateEmployeeJobTitle(employee.jobTitle),
+    avatarFallback: (employee.person?.fullName ?? translateEmployeeJobTitle(employee.jobTitle))
+      .slice(0, 1)
+      .toUpperCase(),
     statusLabel: employee.status ? employeeStatusLabels[employee.status] : undefined,
     statusColor: employee.status === 'active' ? 'success' : 'default',
   },
@@ -47,7 +49,7 @@ export const toEmployeeDetailsData = (employee: Employee): EntityDetailsPageData
           id: 'professional',
           title: 'Dados profissionais',
           items: [
-            { label: 'Cargo', value: employee.jobTitle },
+            { label: 'Cargo', value: translateEmployeeJobTitle(employee.jobTitle) },
             { label: 'Departamento', value: employee.department ?? '-' },
             { label: 'Status', value: renderEmployeeStatus(employee.status) },
           ],
