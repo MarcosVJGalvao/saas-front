@@ -64,8 +64,9 @@ const SidebarSectionHeader = ({ label, isCollapsed }: { label: string; isCollaps
       variant="caption"
       sx={{
         px: 1.5,
-        pt: 2,
+        pt: 2.5,
         pb: 0.5,
+        mt: 0.5,
         color: 'text.disabled',
         fontWeight: 600,
         fontSize: '0.7rem',
@@ -117,7 +118,7 @@ const subSelectedSx: SxProps<Theme> = {
 const sidebarPrimaryTextSx = {
   noWrap: true,
   sx: {
-    fontSize: '0.875rem',
+    fontSize: '0.9rem',
     lineHeight: 1.2,
     fontWeight: 500,
   },
@@ -196,7 +197,7 @@ const SidebarSubItem = ({
         sx={{
           borderRadius: 1.5,
           minHeight: submenuItemHeight - 8,
-          py: 0.375,
+          py: 0.5,
           pl: 1.25,
           pr: 1,
           ...subSelectedSx,
@@ -281,7 +282,7 @@ const getSidebarMenuItemSx = (isCollapsed: boolean, sidebarItemHeight: number) =
   color: 'text.primary',
   justifyContent: isCollapsed ? 'center' : 'flex-start',
   px: isCollapsed ? 0 : 1,
-  py: 0.375,
+  py: 0.625,
   transition: 'background-color 0.15s ease, color 0.15s ease',
   ...selectedSx,
 });

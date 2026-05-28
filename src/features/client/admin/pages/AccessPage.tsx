@@ -1,17 +1,17 @@
 import { useSearchParams } from 'react-router-dom';
 import { AppTabs } from '@shared/components/navigation/AppTabs';
 import { AppStack } from '@shared/components/layout/AppStack';
-import SubjectsListTab from '@features/client/academic/components/SubjectsListTab';
-import TeacherSubjectsListTab from '@features/client/academic/components/TeacherSubjectsListTab';
+import UsersListTab from '@features/client/admin/components/UsersListTab';
+import RolesListTab from '@features/client/admin/components/RolesListTab';
 
 const TABS = [
-  { label: 'Disciplinas', value: 'subjects' },
-  { label: 'Prof. - Disciplina', value: 'teacher-subjects' },
+  { label: 'Usuários', value: 'users' },
+  { label: 'Perfis', value: 'roles' },
 ];
 
-const SubjectsPage = () => {
+const AccessPage = () => {
   const [searchParams, setSearchParams] = useSearchParams();
-  const tab = searchParams.get('tab') ?? 'subjects';
+  const tab = searchParams.get('tab') ?? 'users';
 
   const handleTabChange = (nextTab: string) => {
     setSearchParams({ tab: nextTab }, { replace: true });
@@ -20,9 +20,9 @@ const SubjectsPage = () => {
   return (
     <AppStack spacing={2}>
       <AppTabs tabs={TABS} value={tab} onChange={handleTabChange} />
-      {tab === 'subjects' ? <SubjectsListTab /> : <TeacherSubjectsListTab />}
+      {tab === 'users' ? <UsersListTab /> : <RolesListTab />}
     </AppStack>
   );
 };
 
-export default SubjectsPage;
+export default AccessPage;

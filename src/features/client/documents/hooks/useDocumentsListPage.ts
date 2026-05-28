@@ -8,6 +8,7 @@ import {
   buildDocumentMobileConfig,
 } from '@features/client/documents/components/documentListColumns';
 import { useDocumentsList } from '@features/client/documents/hooks/useDocumentsList';
+import { useDocumentPreview } from '@features/client/documents/hooks/useDocumentPreview';
 import { documentsService } from '@features/client/documents/services/service';
 import type {
   DocumentFormat,
@@ -72,6 +73,7 @@ export const useDocumentsListPage = () => {
   const location = useLocation();
   const initialSearch = getLocationStateSearch(location.state);
   const documentsList = useDocumentsList(initialSearch ? { search: initialSearch } : undefined);
+  const preview = useDocumentPreview();
   const [filterValues, setFilterValues] = useState<DocumentFilterValues>({
     ...initialFilterValues,
     query: initialSearch ?? '',
@@ -144,6 +146,20 @@ export const useDocumentsListPage = () => {
         },
       },
       {
+        key: 'preview',
+        label: 'Pré-visualizar',
+        onClick: () => {
+          if (document.status !== 'completed') {
+            setActionErrorMessage(
+              'A pré-visualização fica disponível após a conclusão do processamento.',
+            );
+            return;
+          }
+
+          void preview.openPreview(document);
+        },
+      },
+      {
         key: 'download',
         label: 'Baixar',
         onClick: () => {
@@ -163,7 +179,7 @@ export const useDocumentsListPage = () => {
         },
       },
     ],
-    [handleDownload, navigate],
+    [handleDownload, navigate, preview],
   );
 
   return {
@@ -194,6 +210,13 @@ export const useDocumentsListPage = () => {
         setDocumentPendingDelete(undefined);
       },
       onConfirm: handleDeleteConfirm,
+    },
+    previewModal: {
+      open: preview.previewState.type !== 'idle',
+      previewState: preview.previewState,
+      downloadLoading: preview.downloadLoading,
+      onClose: preview.closePreview,
+      onDownload: preview.downloadFromPreview,
     },
   };
 };

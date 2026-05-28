@@ -5,6 +5,7 @@ import { ConfirmDialog } from '@shared/components/feedback/ConfirmDialog';
 import { ListFilters } from '@shared/components/data-display/data/ListFilters';
 import { PageHeader } from '@shared/components/layout/PageHeader';
 import { QueryDataTable } from '@shared/components/data-display/data/QueryDataTable';
+import { DocumentPreviewModal } from '@features/client/documents/components/DocumentPreviewModal';
 import { useDocumentsListPage } from '@features/client/documents/hooks/useDocumentsListPage';
 
 const DocumentsPage = () => {
@@ -109,6 +110,13 @@ const DocumentsPage = () => {
         onConfirm={() => {
           void documentsListPage.deleteModal.onConfirm();
         }}
+      />
+      <DocumentPreviewModal
+        open={documentsListPage.previewModal.open}
+        previewState={documentsListPage.previewModal.previewState}
+        downloadLoading={documentsListPage.previewModal.downloadLoading}
+        onClose={documentsListPage.previewModal.onClose}
+        onDownload={documentsListPage.previewModal.onDownload}
       />
     </AppStack>
   );

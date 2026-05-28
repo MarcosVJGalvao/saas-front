@@ -78,9 +78,6 @@ const AcademicYearEditPage = lazy(
 const AcademicYearDetailsPage = lazy(
   () => import('@features/client/academic/pages/AcademicYearDetailsPage'),
 );
-const EducationLevelsPage = lazy(
-  () => import('@features/client/academic/pages/EducationLevelsPage'),
-);
 const EducationLevelCreatePage = lazy(
   () => import('@features/client/academic/pages/EducationLevelCreatePage'),
 );
@@ -90,7 +87,6 @@ const EducationLevelEditPage = lazy(
 const EducationLevelDetailsPage = lazy(
   () => import('@features/client/academic/pages/EducationLevelDetailsPage'),
 );
-const GradesPage = lazy(() => import('@features/client/academic/pages/GradesPage'));
 const GradeCreatePage = lazy(() => import('@features/client/academic/pages/GradeCreatePage'));
 const GradeEditPage = lazy(() => import('@features/client/academic/pages/GradeEditPage'));
 const GradeDetailsPage = lazy(() => import('@features/client/academic/pages/GradeDetailsPage'));
@@ -104,13 +100,13 @@ const SchoolClassEditPage = lazy(
 const SchoolClassDetailsPage = lazy(
   () => import('@features/client/academic/pages/SchoolClassDetailsPage'),
 );
+const AcademicStructurePage = lazy(
+  () => import('@features/client/academic/pages/AcademicStructurePage'),
+);
 const SubjectsPage = lazy(() => import('@features/client/academic/pages/SubjectsPage'));
 const SubjectCreatePage = lazy(() => import('@features/client/academic/pages/SubjectCreatePage'));
 const SubjectEditPage = lazy(() => import('@features/client/academic/pages/SubjectEditPage'));
 const SubjectDetailsPage = lazy(() => import('@features/client/academic/pages/SubjectDetailsPage'));
-const TeacherSubjectsPage = lazy(
-  () => import('@features/client/academic/pages/TeacherSubjectsPage'),
-);
 const StudentsPage = lazy(() => import('@features/client/students/pages/StudentsPage'));
 const StudentCreatePage = lazy(() => import('@features/client/students/pages/StudentCreatePage'));
 const StudentDetailsPage = lazy(() => import('@features/client/students/pages/StudentDetailsPage'));
@@ -166,8 +162,8 @@ const AccountsReceivableDetailsPage = lazy(
 const AccountsReceivableEditPage = lazy(
   () => import('@features/client/financial/pages/AccountsReceivableEditPage'),
 );
-const FinancialCategoriesPage = lazy(
-  () => import('@features/client/financial/pages/FinancialCategoriesPage'),
+const FinancialRegistersPage = lazy(
+  () => import('@features/client/financial/pages/FinancialRegistersPage'),
 );
 const FinancialCategoryCreatePage = lazy(
   () => import('@features/client/financial/pages/FinancialCategoryCreatePage'),
@@ -177,9 +173,6 @@ const FinancialCategoryEditPage = lazy(
 );
 const FinancialCategoryDetailsPage = lazy(
   () => import('@features/client/financial/pages/FinancialCategoryDetailsPage'),
-);
-const FinancialCostCentersPage = lazy(
-  () => import('@features/client/financial/pages/FinancialCostCentersPage'),
 );
 const FinancialCostCenterCreatePage = lazy(
   () => import('@features/client/financial/pages/FinancialCostCenterCreatePage'),
@@ -226,7 +219,7 @@ const ReportCardQueriesPage = lazy(
 const ReportCardProcessingsPage = lazy(
   () => import('@features/client/report-cards/pages/ReportCardProcessingsPage'),
 );
-const ClientUsersPage = lazy(() => import('@features/client/admin/pages/ClientUsersPage'));
+const AccessPage = lazy(() => import('@features/client/admin/pages/AccessPage'));
 const ClientUserCreatePage = lazy(
   () => import('@features/client/admin/pages/ClientUserCreatePage'),
 );
@@ -234,7 +227,6 @@ const ClientUserDetailsPage = lazy(
   () => import('@features/client/admin/pages/ClientUserDetailsPage'),
 );
 const ClientUserEditPage = lazy(() => import('@features/client/admin/pages/ClientUserEditPage'));
-const ClientRolesPage = lazy(() => import('@features/client/admin/pages/ClientRolesPage'));
 const ClientRoleCreatePage = lazy(
   () => import('@features/client/admin/pages/ClientRoleCreatePage'),
 );
@@ -573,12 +565,16 @@ export const AppRouter = () => {
             }
           />
           <Route
-            path="/client/education-levels"
+            path="/client/academic-structure"
             element={
               <ProtectedClientRoute>
-                <EducationLevelsPage />
+                <AcademicStructurePage />
               </ProtectedClientRoute>
             }
+          />
+          <Route
+            path="/client/education-levels"
+            element={<Navigate to="/client/academic-structure?tab=education-levels" replace />}
           />
           <Route
             path="/client/education-levels/new"
@@ -606,11 +602,7 @@ export const AppRouter = () => {
           />
           <Route
             path="/client/grades"
-            element={
-              <ProtectedClientRoute>
-                <GradesPage />
-              </ProtectedClientRoute>
-            }
+            element={<Navigate to="/client/academic-structure?tab=grades" replace />}
           />
           <Route
             path="/client/grades/new"
@@ -702,11 +694,7 @@ export const AppRouter = () => {
           />
           <Route
             path="/client/teacher-subjects"
-            element={
-              <ProtectedClientRoute>
-                <TeacherSubjectsPage />
-              </ProtectedClientRoute>
-            }
+            element={<Navigate to="/client/subjects?tab=teacher-subjects" replace />}
           />
           <Route
             path="/client/students"
@@ -893,12 +881,16 @@ export const AppRouter = () => {
             }
           />
           <Route
-            path="/client/financial/categories"
+            path="/client/financial/registers"
             element={
               <ProtectedClientRoute>
-                <FinancialCategoriesPage />
+                <FinancialRegistersPage />
               </ProtectedClientRoute>
             }
+          />
+          <Route
+            path="/client/financial/categories"
+            element={<Navigate to="/client/financial/registers?tab=categories" replace />}
           />
           <Route
             path="/client/financial/categories/new"
@@ -926,11 +918,7 @@ export const AppRouter = () => {
           />
           <Route
             path="/client/financial/cost-centers"
-            element={
-              <ProtectedClientRoute>
-                <FinancialCostCentersPage />
-              </ProtectedClientRoute>
-            }
+            element={<Navigate to="/client/financial/registers?tab=cost-centers" replace />}
           />
           <Route
             path="/client/financial/cost-centers/new"
@@ -1053,12 +1041,16 @@ export const AppRouter = () => {
             }
           />
           <Route
-            path="/client/users"
+            path="/client/access"
             element={
               <ProtectedClientRoute>
-                <ClientUsersPage />
+                <AccessPage />
               </ProtectedClientRoute>
             }
+          />
+          <Route
+            path="/client/users"
+            element={<Navigate to="/client/access?tab=users" replace />}
           />
           <Route
             path="/client/users/new"
@@ -1086,11 +1078,7 @@ export const AppRouter = () => {
           />
           <Route
             path="/client/roles"
-            element={
-              <ProtectedClientRoute>
-                <ClientRolesPage />
-              </ProtectedClientRoute>
-            }
+            element={<Navigate to="/client/access?tab=roles" replace />}
           />
           <Route
             path="/client/roles/new"
