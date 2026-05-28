@@ -31,3 +31,18 @@ export type ReportCardBulkEntryPayload = ClientApiRecord;
 export type ReportCardBulkEntryResponse = ClientApiRecord;
 export type ReportCardBulkEntryDeleteResponse = void;
 export type ReportCardGenericResponse = ClientApiRecord;
+
+export type ClassGradeEntryItem = {
+  studentEnrollmentId: string;
+  gradeValue: number;
+  observations?: string;
+};
+
+export type ClassGradeEntryPayload = {
+  teacherSubjectId: string;
+  academicPeriodId: string;
+  assessmentType: string;
+  entries: ClassGradeEntryItem[];
+};
+
+export type ClassGradeEntryResponse = ClientApiRecord;

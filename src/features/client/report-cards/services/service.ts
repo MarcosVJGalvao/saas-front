@@ -1,5 +1,7 @@
 import { reportCardEndpoints } from './endpoints';
 import type {
+  ClassGradeEntryPayload,
+  ClassGradeEntryResponse,
   ReportCardAcademicPeriodCreatePayload,
   ReportCardAcademicPeriodCreateResponse,
   ReportCardAcademicPeriodDetailsResponse,
@@ -63,6 +65,13 @@ export const reportCardService = {
     schoolClassId: string,
     payload: ReportCardBulkEntryPayload,
   ): Promise<ReportCardBulkEntryResponse> {
+    const { data } = await reportCardEndpoints.createClassEntriesBulk(schoolClassId, payload);
+    return data;
+  },
+  async createClassGradeEntries(
+    schoolClassId: string,
+    payload: ClassGradeEntryPayload,
+  ): Promise<ClassGradeEntryResponse> {
     const { data } = await reportCardEndpoints.createClassEntriesBulk(schoolClassId, payload);
     return data;
   },

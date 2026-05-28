@@ -9,15 +9,15 @@ import { FormTextField } from '@shared/components/form/FormTextField';
 import { PageHeader } from '@shared/components/layout/PageHeader';
 import { SectionCard } from '@shared/components/layout/SectionCard';
 import { reportCardAssessmentTypeOptions } from '@shared/constants/selectOptions';
-import { BulkEntryForm } from '@features/client/report-cards/components/bulk/BulkEntryForm';
 import { BulkRemoveForm } from '@features/client/report-cards/components/bulk/BulkRemoveForm';
 import { BulkUpdateForm } from '@features/client/report-cards/components/bulk/BulkUpdateForm';
+import { ClassGradeEntryForm } from '@features/client/report-cards/components/classGradeEntry/ClassGradeEntryForm';
 import { useReportCardEntriesPage } from '@features/client/report-cards/hooks/useReportCardEntriesPage';
 import type { ReportCardEntryFormValues } from '@features/client/report-cards/schemas/reportCardEntryFormSchema';
 
 const TABS = [
   { label: 'Individual', value: 'entry' },
-  { label: 'Lançamento em lote', value: 'bulk-entry' },
+  { label: 'Lançamento por turma', value: 'bulk-entry' },
   { label: 'Atualização em lote', value: 'update' },
   { label: 'Remoção em lote', value: 'remove' },
 ];
@@ -104,20 +104,7 @@ const ReportCardEntriesPage = () => {
         </SectionCard>
       ) : null}
 
-      {tab === 'bulk-entry' ? (
-        <SectionCard
-          title="Lançamento em lote"
-          subtitle="Cadastre notas para vários alunos de uma turma ao mesmo tempo."
-        >
-          <BulkEntryForm
-            schoolClassOptions={referenceOptions.schoolClassOptions}
-            subjectOptions={referenceOptions.subjectOptions}
-            academicPeriodOptions={referenceOptions.academicPeriodOptions}
-            studentEnrollmentOptions={referenceOptions.studentEnrollmentOptions}
-            referenceLoading={referenceLoading}
-          />
-        </SectionCard>
-      ) : null}
+      {tab === 'bulk-entry' ? <ClassGradeEntryForm /> : null}
 
       {tab === 'update' ? (
         <SectionCard
