@@ -9,6 +9,7 @@ import { AppAlert } from '@shared/components/feedback/AppAlert';
 import { AppForm } from '@shared/components/form/AppForm';
 import { FormActions } from '@shared/components/form/FormActions';
 import { FormTextField } from '@shared/components/form/FormTextField';
+import { AppBox } from '@shared/components/layout/AppBox';
 import { AppStack } from '@shared/components/layout/AppStack';
 import { PageHeader } from '@shared/components/layout/PageHeader';
 import { responsive } from '@theme/utils/responsive';
@@ -43,7 +44,7 @@ const ClientRoleEditPage = () => {
             label="Descrição"
             placeholder="Descrição opcional"
           />
-          <AppStack sx={{ gridColumn: responsive({ xs: '1 / -1' }) }}>
+          <AppBox sx={{ gridColumn: responsive({ xs: '1 / -1' }) }}>
             <Controller
               name="permissionIds"
               control={page.form.control}
@@ -57,7 +58,7 @@ const ClientRoleEditPage = () => {
                 />
               )}
             />
-          </AppStack>
+          </AppBox>
           <FormActions
             secondaryAction={{
               type: 'back',
