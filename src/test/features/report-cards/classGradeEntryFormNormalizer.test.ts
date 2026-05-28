@@ -18,12 +18,14 @@ describe('classGradeEntryFormNormalizer', () => {
     expect(payload.teacherSubjectId).toBe('ts-1');
     expect(payload.academicPeriodId).toBe('period-1');
     expect(payload.assessmentType).toBe('regular');
-    expect(payload.entries[0].gradeValue).toBe(7.5);
-    expect(payload.entries[1].gradeValue).toBe(10);
-    expect(payload.entries[2].gradeValue).toBe(0.01);
+    expect(payload.entries).toMatchObject([
+      { studentEnrollmentId: 'enrollment-1', gradeValue: 7.5, observations: 'Ótimo' },
+      { studentEnrollmentId: 'enrollment-2', gradeValue: 10 },
+      { studentEnrollmentId: 'enrollment-3', gradeValue: 0.01 },
+    ]);
   });
 
-  it('remove observações vazias (undefined no payload)', () => {
+  it('remove observações vazias (propriedade ausente no payload)', () => {
     const payload = toClassGradeEntryPayload({
       schoolClassId: 'class-1',
       teacherSubjectId: 'ts-1',
@@ -36,9 +38,13 @@ describe('classGradeEntryFormNormalizer', () => {
       ],
     });
 
-    expect(payload.entries[0].observations).toBeUndefined();
-    expect(payload.entries[1].observations).toBeUndefined();
-    expect(payload.entries[2].observations).toBe('Nota');
+    expect(payload.entries).toMatchObject([
+      { studentEnrollmentId: 'enrollment-1', gradeValue: 5 },
+      { studentEnrollmentId: 'enrollment-2', gradeValue: 5 },
+      { studentEnrollmentId: 'enrollment-3', gradeValue: 5, observations: 'Nota' },
+    ]);
+    expect('observations' in (payload.entries[0] ?? {})).toBe(false);
+    expect('observations' in (payload.entries[1] ?? {})).toBe(false);
   });
 
   it('faz trim nos IDs antes de enviar', () => {
@@ -53,6 +59,6 @@ describe('classGradeEntryFormNormalizer', () => {
     expect(payload.teacherSubjectId).toBe('ts-1');
     expect(payload.academicPeriodId).toBe('period-1');
     expect(payload.assessmentType).toBe('regular');
-    expect(payload.entries[0].studentEnrollmentId).toBe('enrollment-1');
+    expect(payload.entries).toMatchObject([{ studentEnrollmentId: 'enrollment-1' }]);
   });
 });
