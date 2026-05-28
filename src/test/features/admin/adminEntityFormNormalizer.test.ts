@@ -25,14 +25,14 @@ describe('admin entity form normalizers', () => {
   it('normaliza payload de perfil', () => {
     const values = clientRoleCreateFormSchema.parse({
       name: ' Secretaria ',
-      status: 'active',
       description: ' Operação escolar ',
+      permissionIds: ['5b55f8ac-3b74-4c44-9a32-1f1f0a8d2b10'],
     });
 
     expect(toClientRoleCreatePayload(values)).toEqual({
       name: 'Secretaria',
-      status: 'active',
       description: 'Operação escolar',
+      permissionIds: ['5b55f8ac-3b74-4c44-9a32-1f1f0a8d2b10'],
     });
   });
 });

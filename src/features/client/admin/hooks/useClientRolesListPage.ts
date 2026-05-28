@@ -8,5 +8,8 @@ export const useClientRolesListPage = () =>
     service: clientRolesService,
     errorMessageFallback: 'Não foi possível carregar perfis.',
     showRole: false,
-    showPermissions: true,
+    showPermissions: false,
+    showDescription: true,
+    showEmail: false,
+    showStatus: false,
   });

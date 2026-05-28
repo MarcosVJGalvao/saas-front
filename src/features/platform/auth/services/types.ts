@@ -20,6 +20,11 @@ export interface PlatformVerifySetupResponse {
   verified: boolean;
 }
 
+export interface PlatformChangePasswordRequest {
+  currentPassword: string;
+  newPassword: string;
+}
+
 export type PlatformUserStatus = 'ACTIVE' | 'INACTIVE';
 
 export interface PlatformMeResponse {

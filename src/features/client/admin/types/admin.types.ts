@@ -22,12 +22,19 @@ export type ClientUser = {
   updatedAt?: string | undefined;
 };
 
+export type ClientRolePermission = {
+  id: string;
+  name: string;
+  description: string;
+};
+
 export type ClientRole = {
   id: string;
   name: string;
   description?: string | undefined;
   status?: ClientAdminStatus | undefined;
   permissionsCount?: number | undefined;
+  permissions?: ClientRolePermission[] | undefined;
   createdAt?: string | undefined;
   updatedAt?: string | undefined;
 };
@@ -51,9 +58,13 @@ export type ClientUserUpdatePayload = Partial<ClientUserCreatePayload>;
 export type ClientRoleCreatePayload = {
   name: string;
   description?: string | undefined;
-  status: ClientAdminStatus;
+  permissionIds: string[];
 };
 
-export type ClientRoleUpdatePayload = Partial<ClientRoleCreatePayload>;
+export type ClientRoleUpdatePayload = {
+  name?: string | undefined;
+  description?: string | undefined;
+  permissionIds?: string[] | undefined;
+};
 
 export type ClientAdminQuery = ClientBaseQueryParams & ClientApiRecord;

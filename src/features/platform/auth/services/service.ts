@@ -1,5 +1,6 @@
 import { platformAuthEndpoints } from '@features/platform/auth/services/endpoints';
 import type {
+  PlatformChangePasswordRequest,
   PlatformLoginResponse,
   PlatformMeResponse,
   PlatformTotpSetupResponse,
@@ -44,5 +45,9 @@ export const platformAuthService = {
 
   async resetTotpByLogin(email: string, currentPassword: string): Promise<void> {
     await platformAuthEndpoints.resetTotpByLogin(email, currentPassword);
+  },
+
+  async changePassword(payload: PlatformChangePasswordRequest): Promise<void> {
+    await platformAuthEndpoints.changePassword(payload);
   },
 };

@@ -1,5 +1,6 @@
 import { httpClient } from '@shared/services/httpClient';
 import type {
+  PlatformChangePasswordRequest,
   PlatformLoginResponse,
   PlatformMeResponse,
   PlatformTotpSetupResponse,
@@ -48,4 +49,7 @@ export const platformAuthEndpoints = {
 
   resetTotpByLogin: (email: string, currentPassword: string) =>
     httpClient.post(`${PLATFORM_AUTH_BASE_PATH}/totp/reset-by-login`, { email, currentPassword }),
+
+  changePassword: (payload: PlatformChangePasswordRequest) =>
+    httpClient.post(`${PLATFORM_AUTH_BASE_PATH}/change-password`, payload),
 };

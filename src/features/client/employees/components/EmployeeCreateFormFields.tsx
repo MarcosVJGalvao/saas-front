@@ -3,6 +3,7 @@ import type { UseFormReturn } from 'react-hook-form';
 import { AppText } from '@shared/components/data-display/AppText';
 import { FormSelect } from '@shared/components/form/FormSelect';
 import { FormTextField } from '@shared/components/form/FormTextField';
+import { PersonSearchAutocomplete } from '@shared/components/form/PersonSearchAutocomplete';
 import type { AppSelectOption } from '@shared/components/inputs/AppSelect';
 import { AppTextField } from '@shared/components/inputs/AppTextField';
 import { AppBox } from '@shared/components/layout/AppBox';
@@ -79,12 +80,19 @@ export const EmployeeCreateFormFields = ({
       {creationMode === 'existing_person' ? (
         <SectionCard
           title="Pessoa existente"
-          subtitle="Informe o identificador da pessoa já cadastrada para vincular ao funcionário."
+          subtitle="Busque pelo nome da pessoa já cadastrada para vincular ao funcionário."
         >
-          <FormTextField<EmployeeCreateFormValues>
+          <Controller
             name="personId"
-            label="Identificador da pessoa"
-            placeholder="person-uuid"
+            control={form.control}
+            render={({ field, fieldState }) => (
+              <PersonSearchAutocomplete
+                value={field.value}
+                onChange={field.onChange}
+                error={fieldState.error?.message}
+                label="Buscar pessoa"
+              />
+            )}
           />
         </SectionCard>
       ) : (

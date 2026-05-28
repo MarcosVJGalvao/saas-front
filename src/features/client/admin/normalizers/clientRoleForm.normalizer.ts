@@ -15,18 +15,20 @@ export const toClientRoleCreatePayload = (
   values: ClientRoleCreateFormValues,
 ): ClientRoleCreatePayload => ({
   name: values.name.trim(),
-  status: values.status,
   description: toOptionalText(values.description),
+  permissionIds: values.permissionIds,
 });
 
 export const toClientRoleEditFormValues = (role: ClientRole): ClientRoleEditFormValues => ({
-  status: role.status ?? 'active',
+  name: role.name,
   description: role.description ?? '',
+  permissionIds: role.permissions?.map((permission) => permission.id) ?? [],
 });
 
 export const toClientRoleUpdatePayload = (
   values: ClientRoleEditFormValues,
 ): ClientRoleUpdatePayload => ({
-  status: values.status,
+  name: values.name.trim(),
   description: toOptionalText(values.description),
+  permissionIds: values.permissionIds,
 });

@@ -39,6 +39,9 @@ type UseAdminEntityListBaseParams<TItem extends ClientAdminEntity> = {
   errorMessageFallback: string;
   showRole: boolean;
   showPermissions: boolean;
+  showDescription?: boolean;
+  showEmail?: boolean;
+  showStatus?: boolean;
 };
 
 const initialFilterValues: AdminEntityFilterValues = {
@@ -60,6 +63,9 @@ export const useAdminEntityListBase = <TItem extends ClientAdminEntity>({
   errorMessageFallback,
   showRole,
   showPermissions,
+  showDescription = false,
+  showEmail = true,
+  showStatus = true,
 }: UseAdminEntityListBaseParams<TItem>): {
   adminEntityList: ReturnType<typeof useAdminEntitiesList<TItem>>;
   filterValues: AdminEntityFilterValues;
@@ -117,7 +123,14 @@ export const useAdminEntityListBase = <TItem extends ClientAdminEntity>({
     onFilterChange,
     applyFilters,
     clearFilters,
-    tableColumns: buildAdminEntityColumns(actions, showRole, showPermissions),
+    tableColumns: buildAdminEntityColumns(
+      actions,
+      showRole,
+      showPermissions,
+      showDescription,
+      showEmail,
+      showStatus,
+    ),
     mobileConfig: buildAdminEntityMobileConfig(actions, showRole, showPermissions),
   };
 };

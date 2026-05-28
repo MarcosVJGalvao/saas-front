@@ -142,9 +142,16 @@ export const components: Components<Omit<Theme, 'components'>> = {
   MuiButton: {
     styleOverrides: {
       root: ({ theme }) => ({
-        borderRadius: 10,
+        borderRadius: 8,
         textTransform: 'none',
         boxShadow: 'none',
+        fontWeight: 600,
+        fontSize: '0.875rem',
+        paddingTop: 10,
+        paddingBottom: 10,
+        paddingLeft: 20,
+        paddingRight: 20,
+        minHeight: 40,
         '&.MuiButton-containedPrimary': {
           background: `linear-gradient(180deg, ${theme.palette.primary.light} 0%, ${theme.palette.primary.main} 100%)`,
           boxShadow:

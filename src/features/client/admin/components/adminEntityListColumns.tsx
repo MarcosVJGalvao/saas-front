@@ -5,12 +5,18 @@ import type { DataTableColumn } from '@shared/components/data-display/data/DataT
 import { RowActionsMenu } from '@shared/components/data-display/data/RowActionsMenu';
 import { AppStack } from '@shared/components/layout/AppStack';
 import { translateActiveInactiveStatus } from '@shared/i18n/pt-BR/enums';
-import type { ClientAdminEntity, ClientUser } from '@features/client/admin/types/admin.types';
+import type {
+  ClientAdminEntity,
+  ClientRole,
+  ClientUser,
+} from '@features/client/admin/types/admin.types';
 
 type AdminEntityListActions = {
   onDetails: (entity: ClientAdminEntity) => void;
   onEdit: (entity: ClientAdminEntity) => void;
 };
+
+const hasDescription = (entity: ClientAdminEntity): entity is ClientRole => 'description' in entity;
 
 const hasEmail = (entity: ClientAdminEntity): entity is ClientUser => 'email' in entity;
 
@@ -36,10 +42,16 @@ const renderStatus = (entity: ClientAdminEntity) =>
     '-'
   );
 
+const getDescription = (entity: ClientAdminEntity): string =>
+  hasDescription(entity) ? (entity.description ?? '-') : '-';
+
 export const buildAdminEntityColumns = (
   actions: AdminEntityListActions,
   showRole: boolean,
   showPermissions: boolean,
+  showDescription = false,
+  showEmail = true,
+  showStatus = true,
 ): DataTableColumn<ClientAdminEntity>[] => [
   {
     key: 'name',
@@ -57,6 +69,16 @@ export const buildAdminEntityColumns = (
         } satisfies DataTableColumn<ClientAdminEntity>,
       ]
     : []),
+  ...(showDescription
+    ? [
+        {
+          key: 'description',
+          header: 'Descrição',
+          render: getDescription,
+          mobileRender: getDescription,
+        } satisfies DataTableColumn<ClientAdminEntity>,
+      ]
+    : []),
   ...(showPermissions
     ? [
         {
@@ -67,18 +89,27 @@ export const buildAdminEntityColumns = (
         } satisfies DataTableColumn<ClientAdminEntity>,
       ]
     : []),
-  {
-    key: 'email',
-    header: 'E-mail',
-    render: getEmail,
-    mobileRender: getEmail,
-  },
-  {
-    key: 'status',
-    header: 'Status',
-    render: renderStatus,
-    mobileRender: (entity) => (entity.status ? translateActiveInactiveStatus(entity.status) : '-'),
-  },
+  ...(showEmail
+    ? [
+        {
+          key: 'email',
+          header: 'E-mail',
+          render: getEmail,
+          mobileRender: getEmail,
+        } satisfies DataTableColumn<ClientAdminEntity>,
+      ]
+    : []),
+  ...(showStatus
+    ? [
+        {
+          key: 'status',
+          header: 'Status',
+          render: renderStatus,
+          mobileRender: (entity) =>
+            entity.status ? translateActiveInactiveStatus(entity.status) : '-',
+        } satisfies DataTableColumn<ClientAdminEntity>,
+      ]
+    : []),
   {
     key: 'actions',
     header: 'Ações',

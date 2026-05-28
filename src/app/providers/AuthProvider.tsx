@@ -17,9 +17,23 @@ const SESSION_UPDATED_EVENT = 'app:session-updated';
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const initialClientSession = readClientSession();
   const initialPlatformSession = readPlatformSession();
-  const initialSession = initialClientSession ?? initialPlatformSession;
-  const initialDomain: AuthDomain | null =
-    initialClientSession !== null ? 'client' : initialPlatformSession !== null ? 'platform' : null;
+  const preferPlatform =
+    typeof window !== 'undefined' && window.location.pathname.startsWith('/platform');
+  const initialDomain: AuthDomain | null = preferPlatform
+    ? initialPlatformSession !== null
+      ? 'platform'
+      : initialClientSession !== null
+        ? 'client'
+        : null
+    : initialClientSession !== null
+      ? 'client'
+      : initialPlatformSession !== null
+        ? 'platform'
+        : null;
+  const initialSession =
+    initialDomain === 'platform'
+      ? (initialPlatformSession ?? initialClientSession)
+      : (initialClientSession ?? initialPlatformSession);
   const [authDomain, setAuthDomain] = useState<AuthDomain | null>(initialDomain);
   const [flowStep, setFlowStep] = useState<AuthFlowStep>(
     initialSession === null ? AUTH_FLOW_STEP.IDLE : AUTH_FLOW_STEP.AUTHENTICATED,

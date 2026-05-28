@@ -1,11 +1,9 @@
 import LockResetRoundedIcon from '@mui/icons-material/LockResetRounded';
 import { createOptionalLocalizedStatusBadge } from '@shared/components/data-display/statusBadge.utils';
+import { PermissionChipList } from '@shared/components/data-display/PermissionChipList';
 import type { EntityDetailsPageData } from '@shared/components/data-display/details/entityDetails.types';
 import { translateActiveInactiveStatus } from '@shared/i18n/pt-BR/enums';
 import type { PlatformMeResponse } from '@features/platform/auth/services/types';
-
-const summarizePermissions = (permissions: string[]): string =>
-  permissions.length > 0 ? permissions.slice(0, 4).join(', ') : 'Nenhuma permissão associada.';
 
 export const toPlatformProfileDetailsData = (
   profile: PlatformMeResponse,
@@ -45,7 +43,10 @@ export const toPlatformProfileDetailsData = (
           items: [
             { label: 'Papéis', value: profile.roles.length > 0 ? profile.roles.join(', ') : '-' },
             { label: 'Total de permissões', value: String(profile.permissions.length) },
-            { label: 'Permissões principais', value: summarizePermissions(profile.permissions) },
+            {
+              label: 'Permissões',
+              value: <PermissionChipList permissions={profile.permissions} />,
+            },
           ],
         },
       ],

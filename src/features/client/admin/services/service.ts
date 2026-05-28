@@ -1,5 +1,6 @@
 import { adminEndpoints } from './endpoints';
 import type {
+  ClientPermissionsListResponse,
   ClientRoleCreateRequest,
   ClientRoleCreateResponse,
   ClientRoleDetailsResponse,
@@ -50,6 +51,13 @@ export const clientRolesService = {
   },
   async update(id: string, payload: ClientRoleUpdateRequest): Promise<ClientRoleUpdateResponse> {
     const { data } = await adminEndpoints.updateRole(id, payload);
+    return data;
+  },
+};
+
+export const clientPermissionsService = {
+  async list(params?: { page?: number; limit?: number }): Promise<ClientPermissionsListResponse> {
+    const { data } = await adminEndpoints.listPermissions(params);
     return data;
   },
 };

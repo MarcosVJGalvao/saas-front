@@ -30,7 +30,7 @@ export const usePlatformProfilePage = () => {
   return {
     data: profile
       ? toPlatformProfileDetailsData(profile, () => {
-          void navigate('/platform/login');
+          void navigate('/platform/change-password');
         })
       : emptyDetailsData,
     viewState,

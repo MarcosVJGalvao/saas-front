@@ -28,3 +28,35 @@ export type ClientRoleCreateRequest = ClientRoleCreatePayload;
 export type ClientRoleUpdateRequest = ClientRoleUpdatePayload;
 
 export type ClientAdminReportParams = ClientAdminQuery;
+
+export type ClientPermission = {
+  id: string;
+  name: string;
+  description: string;
+  createdAt: string;
+  updatedAt: string;
+};
+
+export type ClientPermissionsListResponse = {
+  data: ClientPermission[];
+  meta: {
+    page: number;
+    limit: number;
+    total: number;
+    totalPages: number;
+    hasNextPage: boolean;
+    hasPreviousPage: boolean;
+  };
+};
+
+export type ClientRoleWithPermissionsCreateRequest = {
+  name: string;
+  description?: string | undefined;
+  permissionIds: string[];
+};
+
+export type ClientRoleWithPermissionsUpdateRequest = {
+  name?: string | undefined;
+  description?: string | undefined;
+  permissionIds?: string[] | undefined;
+};

@@ -10,11 +10,13 @@ import {
   type ClientRoleEditFormValues,
 } from '@features/client/admin/schemas/clientRoleEditForm.schema';
 import { clientRolesService } from '@features/client/admin/services/service';
+import { usePermissionsList } from '@features/client/admin/hooks/usePermissionsList';
 import type { ClientRole } from '@features/client/admin/types/admin.types';
 
 const initialValues: ClientRoleEditFormValues = {
-  status: 'active',
+  name: '',
   description: '',
+  permissionIds: [],
 };
 
 type ClientRoleEditLocationState = {
@@ -32,6 +34,7 @@ export const useClientRoleEditPage = (id: string) => {
   const [loading, setLoading] = useState(entity === null);
   const [errorMessage, setErrorMessage] = useState<string | undefined>();
   const form = useAppForm<ClientRoleEditFormValues>(clientRoleEditFormSchema, initialValues);
+  const { permissions, loading: loadingPermissions } = usePermissionsList();
 
   const fetchEntity = useCallback(async () => {
     if (entity) {
@@ -64,6 +67,8 @@ export const useClientRoleEditPage = (id: string) => {
     form,
     entity,
     loading,
+    permissions,
+    loadingPermissions,
     submitting: form.formState.isSubmitting,
     errorMessage,
     onBack: () => {

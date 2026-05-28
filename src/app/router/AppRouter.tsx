@@ -50,6 +50,12 @@ const ClientResetPasswordPage = lazy(() => import('@features/client/auth/pages/R
 const ClientDashboardPage = lazy(() => import('@features/client/dashboard/pages/DashboardPage'));
 const ClientHomePage = lazy(() => import('@features/client/home/pages/HomePage'));
 const ClientProfilePage = lazy(() => import('@features/client/profile/pages/ClientProfilePage'));
+const ClientChangePasswordPage = lazy(
+  () => import('@features/client/profile/pages/ClientChangePasswordPage'),
+);
+const PlatformChangePasswordPage = lazy(
+  () => import('@features/platform/profile/pages/PlatformChangePasswordPage'),
+);
 const StudentEnrollmentsListPage = lazy(
   () => import('@features/client/student-enrollments/pages/StudentEnrollmentsListPage'),
 );
@@ -359,6 +365,14 @@ export const AppRouter = () => {
             }
           />
           <Route
+            path="/platform/change-password"
+            element={
+              <ProtectedPlatformRoute>
+                <PlatformChangePasswordPage />
+              </ProtectedPlatformRoute>
+            }
+          />
+          <Route
             path="/platform/clients"
             element={
               <ProtectedPlatformRoute>
@@ -483,6 +497,14 @@ export const AppRouter = () => {
             element={
               <ProtectedClientRoute>
                 <ClientProfilePage />
+              </ProtectedClientRoute>
+            }
+          />
+          <Route
+            path="/client/change-password"
+            element={
+              <ProtectedClientRoute>
+                <ClientChangePasswordPage />
               </ProtectedClientRoute>
             }
           />

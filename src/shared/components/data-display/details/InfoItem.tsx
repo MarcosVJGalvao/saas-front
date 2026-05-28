@@ -12,15 +12,13 @@ export const InfoItem = ({ label, value, noWrap = false }: InfoItemProps) => (
   <Box sx={{ minWidth: 0 }}>
     <AppText
       variant="caption"
-      color="text.disabled"
+      color="text.secondary"
       sx={{
         display: 'block',
-        mb: 0.375,
-        fontWeight: 600,
-        fontSize: '0.7rem',
-        letterSpacing: '0.06em',
-        textTransform: 'uppercase',
-        lineHeight: 1.35,
+        mb: 0.5,
+        fontWeight: 500,
+        fontSize: '0.72rem',
+        lineHeight: 1.4,
       }}
     >
       {label}
@@ -33,8 +31,8 @@ export const InfoItem = ({ label, value, noWrap = false }: InfoItemProps) => (
       title={typeof value === 'string' ? value : undefined}
       sx={{
         fontWeight: 500,
-        fontSize: '0.9rem',
-        lineHeight: 1.5,
+        fontSize: '0.875rem',
+        lineHeight: 1.55,
         overflowWrap: noWrap ? 'normal' : 'anywhere',
       }}
     >

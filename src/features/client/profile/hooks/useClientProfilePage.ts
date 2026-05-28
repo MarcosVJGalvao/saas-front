@@ -30,7 +30,7 @@ export const useClientProfilePage = () => {
   return {
     data: profile
       ? toClientProfileDetailsData(profile, () => {
-          void navigate('/client/forgot-password');
+          void navigate('/client/change-password');
         })
       : emptyDetailsData,
     viewState,

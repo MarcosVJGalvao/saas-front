@@ -1,5 +1,6 @@
 import { httpClient } from '@shared/services/httpClient';
 import type {
+  ClientPermissionsListResponse,
   ClientRoleCreateRequest,
   ClientRoleDetailsResponse,
   ClientRolesListParams,
@@ -16,6 +17,7 @@ import type {
 
 const USERS_BASE_PATH = '/api/users';
 const ROLES_BASE_PATH = '/api/roles';
+const PERMISSIONS_BASE_PATH = '/api/permissions';
 
 export const adminEndpoints = {
   listUsers: (params: ClientUsersListParams) =>
@@ -35,4 +37,7 @@ export const adminEndpoints = {
     httpClient.post<ClientRoleDetailsResponse>(ROLES_BASE_PATH, payload),
   updateRole: (id: string, payload: ClientRoleUpdateRequest) =>
     httpClient.patch<ClientRoleUpdateResponse>(`${ROLES_BASE_PATH}/${id}`, payload),
+
+  listPermissions: (params?: { page?: number; limit?: number }) =>
+    httpClient.get<ClientPermissionsListResponse>(PERMISSIONS_BASE_PATH, { params }),
 };
