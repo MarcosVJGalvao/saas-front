@@ -4,7 +4,6 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import SearchIcon from '@mui/icons-material/Search';
 import Box from '@mui/material/Box';
 import Checkbox from '@mui/material/Checkbox';
-import FormControlLabel from '@mui/material/FormControlLabel';
 import InputAdornment from '@mui/material/InputAdornment';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
@@ -62,18 +61,13 @@ const buildGroups = (options: PermissionOption[]): PermissionGroup[] => {
     .sort((groupA, groupB) => groupA.resourceLabel.localeCompare(groupB.resourceLabel, 'pt-BR'));
 };
 
-const useActionColors = (colorKey: ActionColorKey) => {
-  const theme = useTheme();
-  const palette = theme.palette;
-  const map: Record<ActionColorKey, { main: string; light: string }> = {
-    create: { main: palette.success.main, light: alpha(palette.success.main, 0.08) },
-    read: { main: palette.info.main, light: alpha(palette.info.main, 0.08) },
-    update: { main: palette.warning.main, light: alpha(palette.warning.main, 0.08) },
-    delete: { main: palette.error.main, light: alpha(palette.error.main, 0.08) },
-    write: { main: palette.secondary.main, light: alpha(palette.secondary.main, 0.08) },
-    default: { main: palette.text.secondary, light: alpha(palette.text.secondary, 0.06) },
-  };
-  return map[colorKey];
+const ACTION_COLOR_MAP: Record<ActionColorKey, string> = {
+  create: 'success',
+  read: 'info',
+  update: 'warning',
+  delete: 'error',
+  write: 'secondary',
+  default: 'default',
 };
 
 interface ActionBadgeProps {
@@ -84,32 +78,40 @@ interface ActionBadgeProps {
 }
 
 const ActionBadge = ({ permission, checked, disabled, onToggle }: ActionBadgeProps) => {
+  const theme = useTheme();
   const { action } = parsePermissionName(permission.name);
   const colorKey = getActionColorKey(action);
-  const colors = useActionColors(colorKey);
+  const paletteKey = ACTION_COLOR_MAP[colorKey];
+
+  const colorByPaletteKey: Record<string, string> = {
+    default: theme.palette.text.secondary,
+    secondary: theme.palette.secondary.main,
+    success: theme.palette.success.main,
+    info: theme.palette.info.main,
+    warning: theme.palette.warning.main,
+    error: theme.palette.error.main,
+  };
+  const color = colorByPaletteKey[paletteKey] ?? theme.palette.text.secondary;
 
   return (
     <Box
+      component="button"
+      type="button"
       onClick={disabled ? undefined : onToggle}
+      disabled={disabled}
       sx={{
-        display: 'flex',
+        display: 'inline-flex',
         alignItems: 'center',
-        gap: 0.5,
-        px: 1.25,
-        py: 0.6,
-        borderRadius: 1.5,
-        border: '1.5px solid',
-        borderColor: checked ? colors.main : 'divider',
-        bgcolor: checked ? colors.light : 'transparent',
+        gap: '4px',
+        px: '10px',
+        py: '4px',
+        borderRadius: '8px',
+        border: `1.5px solid ${checked ? color : theme.palette.divider}`,
+        backgroundColor: checked ? alpha(color, 0.08) : 'transparent',
         cursor: disabled ? 'default' : 'pointer',
-        transition: 'all 0.15s ease',
-        userSelect: 'none',
-        '&:hover': disabled
-          ? {}
-          : {
-              borderColor: colors.main,
-              bgcolor: colors.light,
-            },
+        transition: 'border-color 0.15s, background-color 0.15s',
+        outline: 'none',
+        fontFamily: 'inherit',
       }}
     >
       <Checkbox
@@ -120,17 +122,18 @@ const ActionBadge = ({ permission, checked, disabled, onToggle }: ActionBadgePro
         disableRipple
         sx={{
           p: 0,
-          color: checked ? colors.main : 'text.disabled',
-          '&.Mui-checked': { color: colors.main },
-          '& .MuiSvgIcon-root': { fontSize: 16 },
+          color: checked ? color : 'text.disabled',
+          '&.Mui-checked': { color },
+          '& .MuiSvgIcon-root': { fontSize: 15 },
           pointerEvents: 'none',
         }}
       />
       <Typography
+        component="span"
         variant="caption"
         sx={{
           fontWeight: checked ? 600 : 400,
-          color: checked ? colors.main : 'text.secondary',
+          color: checked ? color : 'text.secondary',
           lineHeight: 1,
           whiteSpace: 'nowrap',
         }}
@@ -159,59 +162,66 @@ const ResourceGroup = ({
   const [expanded, setExpanded] = useState(true);
   const theme = useTheme();
 
-  const groupIds = group.permissions.map((permission) => permission.id);
+  const groupIds = group.permissions.map((perm) => perm.id);
   const selectedCount = groupIds.filter((id) => value.includes(id)).length;
   const allSelected = selectedCount === groupIds.length;
   const someSelected = selectedCount > 0 && !allSelected;
 
+  const borderColor =
+    someSelected || allSelected ? alpha(theme.palette.primary.main, 0.3) : theme.palette.divider;
+  const headerBg =
+    someSelected || allSelected ? alpha(theme.palette.primary.main, 0.04) : 'background.default';
+
   return (
     <Box
       sx={{
-        border: '1px solid',
-        borderColor:
-          someSelected || allSelected ? alpha(theme.palette.primary.main, 0.2) : 'divider',
+        border: `1px solid ${borderColor}`,
         borderRadius: 2,
         overflow: 'hidden',
-        transition: 'border-color 0.15s ease',
+        transition: 'border-color 0.15s',
+        alignSelf: 'stretch',
       }}
     >
       <Box
+        role="button"
+        tabIndex={0}
         onClick={() => setExpanded((prev) => !prev)}
+        onKeyDown={(event: React.KeyboardEvent) => {
+          if (event.key === 'Enter' || event.key === ' ') setExpanded((prev) => !prev);
+        }}
         sx={{
           display: 'flex',
           alignItems: 'center',
           gap: 1,
           px: 2,
-          py: 1.25,
-          bgcolor:
-            someSelected || allSelected
-              ? alpha(theme.palette.primary.main, 0.04)
-              : 'background.default',
+          py: 1,
+          bgcolor: headerBg,
           cursor: 'pointer',
           userSelect: 'none',
-          '&:hover': { bgcolor: alpha(theme.palette.primary.main, 0.04) },
         }}
       >
-        <FormControlLabel
+        <Checkbox
+          size="small"
+          checked={allSelected}
+          indeterminate={someSelected}
+          disabled={disabled}
           onClick={(event) => event.stopPropagation()}
-          control={
-            <Checkbox
-              size="small"
-              checked={allSelected}
-              indeterminate={someSelected}
-              disabled={disabled}
-              onChange={(_, checked) => onToggleAll(groupIds, checked)}
-              sx={{ p: 0.5 }}
-            />
-          }
-          label=""
-          sx={{ m: 0 }}
+          onChange={(_, checked) => onToggleAll(groupIds, checked)}
+          sx={{ p: 0.5 }}
         />
-        <Typography variant="body2" sx={{ fontWeight: 600, flex: 1 }}>
+        <Typography
+          variant="body2"
+          component="span"
+          sx={{ fontWeight: 600, flex: 1, color: 'text.primary' }}
+        >
           {group.resourceLabel}
         </Typography>
         {selectedCount > 0 && (
-          <Typography variant="caption" color="primary" sx={{ fontWeight: 600 }}>
+          <Typography
+            variant="caption"
+            component="span"
+            sx={{ fontWeight: 600, color: 'primary.main' }}
+          >
             {selectedCount}/{groupIds.length}
           </Typography>
         )}
@@ -227,11 +237,10 @@ const ResourceGroup = ({
           sx={{
             display: 'flex',
             flexWrap: 'wrap',
-            gap: 0.75,
+            gap: '6px',
             px: 2,
             py: 1.5,
-            borderTop: '1px solid',
-            borderColor: 'divider',
+            borderTop: `1px solid ${theme.palette.divider}`,
             bgcolor: 'background.paper',
           }}
         >
@@ -271,9 +280,9 @@ export const PermissionGroupSelect = ({
         group.resourceLabel.toLowerCase().includes(query) ||
         group.resource.toLowerCase().includes(query) ||
         group.permissions.some(
-          (permission) =>
-            permission.name.toLowerCase().includes(query) ||
-            (permission.description?.toLowerCase().includes(query) ?? false),
+          (perm) =>
+            perm.name.toLowerCase().includes(query) ||
+            (perm.description?.toLowerCase().includes(query) ?? false),
         ),
     );
   }, [groups, search]);
@@ -288,15 +297,11 @@ export const PermissionGroupSelect = ({
 
   const handleToggleAll = (ids: string[], checked: boolean) => {
     if (checked) {
-      const newIds = [...new Set([...value, ...ids])];
-      onChange(newIds);
+      onChange([...new Set([...value, ...ids])]);
     } else {
       onChange(value.filter((existing) => !ids.includes(existing)));
     }
   };
-
-  const totalSelected = value.length;
-  const totalAvailable = options.length;
 
   return (
     <Box sx={sx}>
@@ -324,7 +329,7 @@ export const PermissionGroupSelect = ({
             color={error ? 'error' : 'text.secondary'}
             sx={{ whiteSpace: 'nowrap' }}
           >
-            {loading ? 'Carregando...' : `${totalSelected}/${totalAvailable} selecionadas`}
+            {loading ? 'Carregando...' : `${value.length}/${options.length} selecionadas`}
           </Typography>
         </Box>
 
