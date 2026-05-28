@@ -1,9 +1,12 @@
 import { useState, useMemo } from 'react';
-import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import SearchIcon from '@mui/icons-material/Search';
+import Accordion from '@mui/material/Accordion';
+import AccordionDetails from '@mui/material/AccordionDetails';
+import AccordionSummary from '@mui/material/AccordionSummary';
 import Box from '@mui/material/Box';
 import Checkbox from '@mui/material/Checkbox';
+import Chip from '@mui/material/Chip';
 import InputAdornment from '@mui/material/InputAdornment';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
@@ -94,53 +97,27 @@ const ActionBadge = ({ permission, checked, disabled, onToggle }: ActionBadgePro
   const color = colorByPaletteKey[paletteKey] ?? theme.palette.text.secondary;
 
   return (
-    <Box
-      component="button"
-      type="button"
+    <Chip
+      label={getActionLabel(action) || action}
+      size="small"
       onClick={disabled ? undefined : onToggle}
       disabled={disabled}
+      variant={checked ? 'filled' : 'outlined'}
       sx={{
-        display: 'inline-flex',
-        alignItems: 'center',
-        gap: '4px',
-        px: '10px',
-        py: '4px',
-        borderRadius: '8px',
-        border: `1.5px solid ${checked ? color : theme.palette.divider}`,
-        backgroundColor: checked ? alpha(color, 0.08) : 'transparent',
         cursor: disabled ? 'default' : 'pointer',
-        transition: 'border-color 0.15s, background-color 0.15s',
-        outline: 'none',
-        fontFamily: 'inherit',
+        borderColor: checked ? color : theme.palette.divider,
+        bgcolor: checked ? alpha(color, 0.1) : 'transparent',
+        color: checked ? color : 'text.secondary',
+        fontWeight: checked ? 600 : 400,
+        '& .MuiChip-label': { px: 1.25 },
+        '&:hover': disabled
+          ? {}
+          : {
+              bgcolor: checked ? alpha(color, 0.16) : alpha(theme.palette.action.hover, 0.6),
+              borderColor: color,
+            },
       }}
-    >
-      <Checkbox
-        checked={checked}
-        disabled={disabled}
-        size="small"
-        tabIndex={-1}
-        disableRipple
-        sx={{
-          p: 0,
-          color: checked ? color : 'text.disabled',
-          '&.Mui-checked': { color },
-          '& .MuiSvgIcon-root': { fontSize: 15 },
-          pointerEvents: 'none',
-        }}
-      />
-      <Typography
-        component="span"
-        variant="caption"
-        sx={{
-          fontWeight: checked ? 600 : 400,
-          color: checked ? color : 'text.secondary',
-          lineHeight: 1,
-          whiteSpace: 'nowrap',
-        }}
-      >
-        {getActionLabel(action) || action}
-      </Typography>
-    </Box>
+    />
   );
 };
 
@@ -159,45 +136,43 @@ const ResourceGroup = ({
   onTogglePermission,
   onToggleAll,
 }: ResourceGroupProps) => {
-  const [expanded, setExpanded] = useState(true);
+  const [expanded, setExpanded] = useState(false);
   const theme = useTheme();
 
   const groupIds = group.permissions.map((perm) => perm.id);
   const selectedCount = groupIds.filter((id) => value.includes(id)).length;
   const allSelected = selectedCount === groupIds.length;
   const someSelected = selectedCount > 0 && !allSelected;
-
-  const borderColor =
-    someSelected || allSelected ? alpha(theme.palette.primary.main, 0.3) : theme.palette.divider;
-  const headerBg =
-    someSelected || allSelected ? alpha(theme.palette.primary.main, 0.04) : 'background.default';
+  const hasAny = selectedCount > 0;
 
   return (
-    <Box
+    <Accordion
+      expanded={expanded}
+      onChange={(_, isExpanded) => setExpanded(isExpanded)}
+      disableGutters
+      elevation={0}
       sx={{
-        border: `1px solid ${borderColor}`,
-        borderRadius: 2,
-        overflow: 'hidden',
-        transition: 'border-color 0.15s',
-        alignSelf: 'stretch',
+        border: `1px solid ${hasAny ? alpha(theme.palette.primary.main, 0.3) : theme.palette.divider}`,
+        borderRadius: '8px !important',
+        '&:before': { display: 'none' },
+        '&.Mui-expanded': {
+          borderColor: alpha(theme.palette.primary.main, 0.4),
+        },
+        transition: 'border-color 0.2s',
       }}
     >
-      <Box
-        role="button"
-        tabIndex={0}
-        onClick={() => setExpanded((prev) => !prev)}
-        onKeyDown={(event: React.KeyboardEvent) => {
-          if (event.key === 'Enter' || event.key === ' ') setExpanded((prev) => !prev);
-        }}
+      <AccordionSummary
+        expandIcon={<ExpandMoreIcon sx={{ fontSize: 18, color: 'text.secondary' }} />}
         sx={{
-          display: 'flex',
-          alignItems: 'center',
-          gap: 1,
-          px: 2,
-          py: 1,
-          bgcolor: headerBg,
-          cursor: 'pointer',
-          userSelect: 'none',
+          minHeight: 48,
+          px: 1.5,
+          bgcolor: hasAny ? alpha(theme.palette.primary.main, 0.04) : 'background.default',
+          borderRadius: expanded ? '8px 8px 0 0' : '8px',
+          '& .MuiAccordionSummary-content': {
+            alignItems: 'center',
+            gap: 1,
+            my: 0.75,
+          },
         }}
       >
         <Checkbox
@@ -205,57 +180,47 @@ const ResourceGroup = ({
           checked={allSelected}
           indeterminate={someSelected}
           disabled={disabled}
-          onClick={(event) => event.stopPropagation()}
-          onChange={(_, checked) => onToggleAll(groupIds, checked)}
-          sx={{ p: 0.5 }}
+          onClick={(event) => {
+            event.stopPropagation();
+            onToggleAll(groupIds, !allSelected);
+          }}
+          onChange={() => undefined}
+          sx={{ p: 0.5, mr: 0.5 }}
         />
-        <Typography
-          variant="body2"
-          component="span"
-          sx={{ fontWeight: 600, flex: 1, color: 'text.primary' }}
-        >
+        <Typography variant="body2" sx={{ fontWeight: 600, flex: 1, color: 'text.primary' }}>
           {group.resourceLabel}
         </Typography>
-        {selectedCount > 0 && (
-          <Typography
-            variant="caption"
-            component="span"
-            sx={{ fontWeight: 600, color: 'primary.main' }}
-          >
-            {selectedCount}/{groupIds.length}
-          </Typography>
+        {hasAny && (
+          <Chip
+            label={`${selectedCount}/${groupIds.length}`}
+            size="small"
+            color="primary"
+            sx={{ height: 20, fontSize: '0.7rem', fontWeight: 700, mr: 0.5 }}
+          />
         )}
-        {expanded ? (
-          <ExpandLessIcon sx={{ fontSize: 18, color: 'text.secondary' }} />
-        ) : (
-          <ExpandMoreIcon sx={{ fontSize: 18, color: 'text.secondary' }} />
-        )}
-      </Box>
-
-      {expanded ? (
-        <Box
-          sx={{
-            display: 'flex',
-            flexWrap: 'wrap',
-            gap: '6px',
-            px: 2,
-            py: 1.5,
-            borderTop: `1px solid ${theme.palette.divider}`,
-            bgcolor: 'background.paper',
-          }}
-        >
-          {group.permissions.map((permission) => (
-            <ActionBadge
-              key={permission.id}
-              permission={permission}
-              checked={value.includes(permission.id)}
-              disabled={disabled}
-              onToggle={() => onTogglePermission(permission.id, !value.includes(permission.id))}
-            />
-          ))}
-        </Box>
-      ) : null}
-    </Box>
+      </AccordionSummary>
+      <AccordionDetails
+        sx={{
+          display: 'flex',
+          flexWrap: 'wrap',
+          gap: 0.75,
+          px: 2,
+          py: 1.5,
+          borderTop: `1px solid ${theme.palette.divider}`,
+          bgcolor: 'background.paper',
+        }}
+      >
+        {group.permissions.map((permission) => (
+          <ActionBadge
+            key={permission.id}
+            permission={permission}
+            checked={value.includes(permission.id)}
+            disabled={disabled}
+            onToggle={() => onTogglePermission(permission.id, !value.includes(permission.id))}
+          />
+        ))}
+      </AccordionDetails>
+    </Accordion>
   );
 };
 
@@ -305,71 +270,69 @@ export const PermissionGroupSelect = ({
 
   return (
     <Box sx={sx}>
-      <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1.5 }}>
-        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
-          <TextField
-            size="small"
-            placeholder="Filtrar permissões..."
-            value={search}
-            onChange={(event) => setSearch(event.target.value)}
-            disabled={disabled || loading}
-            sx={{ flex: 1 }}
-            slotProps={{
-              input: {
-                startAdornment: (
-                  <InputAdornment position="start">
-                    <SearchIcon sx={{ fontSize: 18, color: 'text.secondary' }} />
-                  </InputAdornment>
-                ),
-              },
-            }}
-          />
-          <Typography
-            variant="caption"
-            color={error ? 'error' : 'text.secondary'}
-            sx={{ whiteSpace: 'nowrap' }}
-          >
-            {loading ? 'Carregando...' : `${value.length}/${options.length} selecionadas`}
-          </Typography>
-        </Box>
-
-        {error ? (
-          <Typography variant="caption" color="error">
-            {error}
-          </Typography>
-        ) : null}
-
-        <Box
-          sx={{
-            display: 'flex',
-            flexDirection: 'column',
-            gap: 1,
-            maxHeight: 420,
-            overflowY: 'auto',
-            pr: 0.5,
+      <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5, mb: 2 }}>
+        <TextField
+          size="small"
+          placeholder="Filtrar permissões..."
+          value={search}
+          onChange={(event) => setSearch(event.target.value)}
+          disabled={disabled || loading}
+          sx={{ flex: 1 }}
+          slotProps={{
+            input: {
+              startAdornment: (
+                <InputAdornment position="start">
+                  <SearchIcon sx={{ fontSize: 18, color: 'text.secondary' }} />
+                </InputAdornment>
+              ),
+            },
           }}
+        />
+        <Typography
+          variant="caption"
+          color={error ? 'error' : 'text.secondary'}
+          sx={{ whiteSpace: 'nowrap' }}
         >
-          {loading ? (
-            <Typography variant="body2" color="text.secondary" sx={{ textAlign: 'center', py: 3 }}>
-              Carregando permissões...
-            </Typography>
-          ) : filteredGroups.length === 0 ? (
-            <Typography variant="body2" color="text.secondary" sx={{ textAlign: 'center', py: 3 }}>
-              Nenhuma permissão encontrada.
-            </Typography>
-          ) : (
-            filteredGroups.map((group) => (
-              <ResourceGroup
-                key={group.resource}
-                group={group}
-                value={value}
-                disabled={disabled}
-                onTogglePermission={handleTogglePermission}
-                onToggleAll={handleToggleAll}
-              />
-            ))
-          )}
-        </Box>
+          {loading ? 'Carregando...' : `${value.length}/${options.length} selecionadas`}
+        </Typography>
+      </Box>
+
+      {error ? (
+        <Typography variant="caption" color="error" sx={{ mb: 1.5, display: 'block' }}>
+          {error}
+        </Typography>
+      ) : null}
+
+      <Box
+        sx={{
+          display: 'flex',
+          flexDirection: 'column',
+          gap: 1,
+          maxHeight: 480,
+          overflowY: 'auto',
+          pr: 0.5,
+        }}
+      >
+        {loading ? (
+          <Typography variant="body2" color="text.secondary" sx={{ textAlign: 'center', py: 4 }}>
+            Carregando permissões...
+          </Typography>
+        ) : filteredGroups.length === 0 ? (
+          <Typography variant="body2" color="text.secondary" sx={{ textAlign: 'center', py: 4 }}>
+            Nenhuma permissão encontrada.
+          </Typography>
+        ) : (
+          filteredGroups.map((group) => (
+            <ResourceGroup
+              key={group.resource}
+              group={group}
+              value={value}
+              disabled={disabled}
+              onTogglePermission={handleTogglePermission}
+              onToggleAll={handleToggleAll}
+            />
+          ))
+        )}
       </Box>
     </Box>
   );

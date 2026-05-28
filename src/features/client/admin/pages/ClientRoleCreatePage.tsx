@@ -3,14 +3,14 @@ import { useClientRoleCreatePage } from '@features/client/admin/hooks/useClientR
 import { PermissionGroupSelect } from '@shared/components/form/PermissionGroupSelect';
 import type { ClientRoleCreateFormValues } from '@features/client/admin/schemas/clientRoleCreateForm.schema';
 import { AppPaper } from '@shared/components/data-display/AppPaper';
+import { AppText } from '@shared/components/data-display/AppText';
 import { AppAlert } from '@shared/components/feedback/AppAlert';
+import { AppDivider } from '@shared/components/data-display/AppDivider';
 import { AppForm } from '@shared/components/form/AppForm';
 import { FormActions } from '@shared/components/form/FormActions';
 import { FormTextField } from '@shared/components/form/FormTextField';
-import { AppBox } from '@shared/components/layout/AppBox';
 import { AppStack } from '@shared/components/layout/AppStack';
 import { PageHeader } from '@shared/components/layout/PageHeader';
-import { responsive } from '@theme/utils/responsive';
 
 const ClientRoleCreatePage = () => {
   const page = useClientRoleCreatePage();
@@ -37,38 +37,46 @@ const ClientRoleCreatePage = () => {
             label="Descrição"
             placeholder="Descrição opcional"
           />
-          <AppBox sx={{ gridColumn: responsive({ xs: '1 / -1' }) }}>
-            <Controller
-              name="permissionIds"
-              control={page.form.control}
-              render={({ field, fieldState }) => (
-                <PermissionGroupSelect
-                  value={field.value}
-                  onChange={field.onChange}
-                  error={fieldState.error?.message}
-                  options={page.permissions}
-                  loading={page.loadingPermissions}
-                />
-              )}
-            />
-          </AppBox>
-          <FormActions
-            secondaryAction={{
-              type: 'back',
-              label: 'Cancelar',
-              onClick: page.onBack,
-              disabled: page.submitting,
-            }}
-            primaryAction={{
-              type: 'confirm',
-              label: 'Cadastrar',
-              onClick: () => {
-                void page.form.handleSubmit(page.onSubmit)();
-              },
-              loading: page.submitting,
-            }}
-          />
         </AppForm>
+
+        <AppDivider sx={{ my: 3 }} />
+
+        <AppText variant="subtitle2" color="text.secondary" sx={{ mb: 2 }}>
+          Permissões
+        </AppText>
+
+        <Controller
+          name="permissionIds"
+          control={page.form.control}
+          render={({ field, fieldState }) => (
+            <PermissionGroupSelect
+              value={field.value}
+              onChange={field.onChange}
+              error={fieldState.error?.message}
+              options={page.permissions}
+              loading={page.loadingPermissions}
+            />
+          )}
+        />
+
+        <AppDivider sx={{ my: 3 }} />
+
+        <FormActions
+          secondaryAction={{
+            type: 'back',
+            label: 'Cancelar',
+            onClick: page.onBack,
+            disabled: page.submitting,
+          }}
+          primaryAction={{
+            type: 'confirm',
+            label: 'Cadastrar',
+            onClick: () => {
+              void page.form.handleSubmit(page.onSubmit)();
+            },
+            loading: page.submitting,
+          }}
+        />
       </AppPaper>
     </AppStack>
   );
