@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
-import * as XLSX from 'xlsx';
+import { read as xlsxRead, utils as xlsxUtils } from 'xlsx';
+import type { WorkBook } from 'xlsx';
 import { documentsService } from '@features/client/documents/services/service';
 import type {
   DocumentFormat,
@@ -32,20 +33,20 @@ const readSpreadsheetFromBlob = (blob: Blob, format: DocumentFormat): Promise<Sp
     reader.onload = (loadEvent) => {
       try {
         const fileData = loadEvent.target?.result;
-        let workbook: XLSX.WorkBook;
+        let workbook: WorkBook;
 
         if (format === 'csv') {
           if (typeof fileData !== 'string') {
             reject(new Error('Formato CSV inválido'));
             return;
           }
-          workbook = XLSX.read(fileData, { type: 'string' });
+          workbook = xlsxRead(fileData, { type: 'string' });
         } else {
           if (!(fileData instanceof ArrayBuffer)) {
             reject(new Error('Formato de arquivo inválido'));
             return;
           }
-          workbook = XLSX.read(fileData, { type: 'array' });
+          workbook = xlsxRead(fileData, { type: 'array' });
         }
 
         const sheetName = workbook.SheetNames[0];
@@ -60,7 +61,7 @@ const readSpreadsheetFromBlob = (blob: Blob, format: DocumentFormat): Promise<Sp
           return;
         }
 
-        const jsonRows: unknown[][] = XLSX.utils.sheet_to_json(sheet, { header: 1, defval: '' });
+        const jsonRows: unknown[][] = xlsxUtils.sheet_to_json(sheet, { header: 1, defval: '' });
 
         if (jsonRows.length === 0) {
           resolve({ headers: [], rows: [] });

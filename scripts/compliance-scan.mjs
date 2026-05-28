@@ -75,13 +75,9 @@ const ok = (label) => process.stdout.write(`[compliance] ok — ${label}\n`);
  * @param {string} label
  * @param {RegExp} pattern
  * @param {string[]} filePaths
- * @param {{ excludeFiles?: RegExp[] }} [opts]
  */
-const check = (label, pattern, filePaths, opts = {}) => {
-  const paths = opts.excludeFiles
-    ? filePaths.filter((f) => !opts.excludeFiles.some((ex) => ex.test(f.replaceAll('\\', '/'))))
-    : filePaths;
-  const matches = grep(pattern, paths);
+const check = (label, pattern, filePaths) => {
+  const matches = grep(pattern, filePaths);
   if (matches.length > 0) {
     fail(label, matches);
     results.push(false);
@@ -134,7 +130,7 @@ check(
 
 check(
   'TypeScript: proibido cast `as Type` e `as const`',
-  /(?<!\*\s)\bas\s+(?:const\b|[A-Z<(])/,
+  /\bas\s+(?:const\b|[A-Z<(])/,
   srcNonTest,
 );
 
