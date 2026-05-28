@@ -9,7 +9,7 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import InputAdornment from '@mui/material/InputAdornment';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
-import { alpha, useTheme } from '@mui/material/styles';
+import { alpha, useTheme, type SxProps, type Theme } from '@mui/material/styles';
 import {
   getActionColorKey,
   getActionLabel,
@@ -31,6 +31,7 @@ interface PermissionGroupSelectProps {
   loading?: boolean;
   disabled?: boolean;
   error?: string | undefined;
+  sx?: SxProps<Theme>;
 }
 
 interface PermissionGroup {
@@ -257,6 +258,7 @@ export const PermissionGroupSelect = ({
   loading = false,
   disabled = false,
   error,
+  sx,
 }: PermissionGroupSelectProps) => {
   const [search, setSearch] = useState('');
 
@@ -298,70 +300,72 @@ export const PermissionGroupSelect = ({
   const totalAvailable = options.length;
 
   return (
-    <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1.5 }}>
-      <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
-        <TextField
-          size="small"
-          placeholder="Filtrar permissões..."
-          value={search}
-          onChange={(event) => setSearch(event.target.value)}
-          disabled={disabled || loading}
-          sx={{ flex: 1 }}
-          slotProps={{
-            input: {
-              startAdornment: (
-                <InputAdornment position="start">
-                  <SearchIcon sx={{ fontSize: 18, color: 'text.secondary' }} />
-                </InputAdornment>
-              ),
-            },
+    <Box sx={sx}>
+      <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1.5 }}>
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
+          <TextField
+            size="small"
+            placeholder="Filtrar permissões..."
+            value={search}
+            onChange={(event) => setSearch(event.target.value)}
+            disabled={disabled || loading}
+            sx={{ flex: 1 }}
+            slotProps={{
+              input: {
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <SearchIcon sx={{ fontSize: 18, color: 'text.secondary' }} />
+                  </InputAdornment>
+                ),
+              },
+            }}
+          />
+          <Typography
+            variant="caption"
+            color={error ? 'error' : 'text.secondary'}
+            sx={{ whiteSpace: 'nowrap' }}
+          >
+            {loading ? 'Carregando...' : `${totalSelected}/${totalAvailable} selecionadas`}
+          </Typography>
+        </Box>
+
+        {error ? (
+          <Typography variant="caption" color="error">
+            {error}
+          </Typography>
+        ) : null}
+
+        <Box
+          sx={{
+            display: 'flex',
+            flexDirection: 'column',
+            gap: 1,
+            maxHeight: 420,
+            overflowY: 'auto',
+            pr: 0.5,
           }}
-        />
-        <Typography
-          variant="caption"
-          color={error ? 'error' : 'text.secondary'}
-          sx={{ whiteSpace: 'nowrap' }}
         >
-          {loading ? 'Carregando...' : `${totalSelected}/${totalAvailable} selecionadas`}
-        </Typography>
-      </Box>
-
-      {error ? (
-        <Typography variant="caption" color="error">
-          {error}
-        </Typography>
-      ) : null}
-
-      <Box
-        sx={{
-          display: 'flex',
-          flexDirection: 'column',
-          gap: 1,
-          maxHeight: 420,
-          overflowY: 'auto',
-          pr: 0.5,
-        }}
-      >
-        {loading ? (
-          <Typography variant="body2" color="text.secondary" sx={{ textAlign: 'center', py: 3 }}>
-            Carregando permissões...
-          </Typography>
-        ) : filteredGroups.length === 0 ? (
-          <Typography variant="body2" color="text.secondary" sx={{ textAlign: 'center', py: 3 }}>
-            Nenhuma permissão encontrada.
-          </Typography>
-        ) : (
-          filteredGroups.map((group) => (
-            <ResourceGroup
-              key={group.resource}
-              group={group}
-              value={value}
-              disabled={disabled}
-              onTogglePermission={handleTogglePermission}
-              onToggleAll={handleToggleAll}
-            />
-          ))
-        )}
+          {loading ? (
+            <Typography variant="body2" color="text.secondary" sx={{ textAlign: 'center', py: 3 }}>
+              Carregando permissões...
+            </Typography>
+          ) : filteredGroups.length === 0 ? (
+            <Typography variant="body2" color="text.secondary" sx={{ textAlign: 'center', py: 3 }}>
+              Nenhuma permissão encontrada.
+            </Typography>
+          ) : (
+            filteredGroups.map((group) => (
+              <ResourceGroup
+                key={group.resource}
+                group={group}
+                value={value}
+                disabled={disabled}
+                onTogglePermission={handleTogglePermission}
+                onToggleAll={handleToggleAll}
+              />
+            ))
+          )}
+        </Box>
       </Box>
     </Box>
   );

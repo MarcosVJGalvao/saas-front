@@ -260,7 +260,9 @@ export const PlatformAuthPageLayout = ({ children, messages }: PlatformAuthPageL
             flexDirection: 'column',
             alignItems: 'center',
             justifyContent: 'center',
-            p: { xs: 2, md: 3 },
+            px: { xs: 2, md: 3 },
+            pt: { xs: 7, md: 3 },
+            pb: { xs: 2, md: 3 },
           }}
         >
           {children}

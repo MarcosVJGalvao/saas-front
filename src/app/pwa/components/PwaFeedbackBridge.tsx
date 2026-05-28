@@ -47,64 +47,50 @@ const SnackbarBody = ({
   <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
     <Box sx={{ display: 'flex', alignItems: 'flex-start', gap: 1.25 }}>
       <Box
-        sx={(theme) => ({
+        sx={{
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
           width: 36,
           height: 36,
           borderRadius: '50%',
-          bgcolor:
-            theme.palette.mode === 'dark'
-              ? alpha(theme.palette.info.light, 0.16)
-              : alpha(theme.palette.common.white, 0.92),
-          color: theme.palette.mode === 'dark' ? theme.palette.info.light : theme.palette.info.dark,
+          bgcolor: alpha('#fff', 0.15),
+          color: 'common.white',
           flexShrink: 0,
-        })}
+        }}
       >
         <InfoOutlinedIcon fontSize="small" />
       </Box>
       <Box sx={{ display: 'flex', flexDirection: 'column', gap: 0.5 }}>
-        <Typography component="span" sx={{ fontWeight: 700, lineHeight: 1.2 }}>
+        <Typography
+          component="span"
+          sx={{ fontWeight: 700, lineHeight: 1.2, color: 'common.white' }}
+        >
           {title}
         </Typography>
-        <Typography component="span" sx={{ fontSize: '0.875rem', lineHeight: 1.45 }}>
+        <Typography
+          component="span"
+          sx={{ fontSize: '0.875rem', lineHeight: 1.45, color: alpha('#fff', 0.85) }}
+        >
           {description}
         </Typography>
         {emphasis ? (
           <Chip
             size="small"
             label={emphasis}
-            sx={(theme) => ({
+            sx={{
               alignSelf: 'flex-start',
-              bgcolor:
-                theme.palette.mode === 'dark'
-                  ? alpha(theme.palette.info.light, 0.12)
-                  : alpha(theme.palette.common.white, 0.18),
-              color:
-                theme.palette.mode === 'dark' ? theme.palette.info.light : theme.palette.info.dark,
+              bgcolor: alpha('#fff', 0.15),
+              color: 'common.white',
               fontWeight: 600,
-              border: `1px solid ${alpha(
-                theme.palette.mode === 'dark'
-                  ? theme.palette.info.light
-                  : theme.palette.common.white,
-                theme.palette.mode === 'dark' ? 0.2 : 0.28,
-              )}`,
-            })}
+              border: `1px solid ${alpha('#fff', 0.3)}`,
+              '& .MuiChip-label': { color: 'common.white' },
+            }}
           />
         ) : null}
       </Box>
     </Box>
-    {children ? (
-      <Divider
-        sx={(theme) => ({
-          borderColor:
-            theme.palette.mode === 'dark'
-              ? alpha(theme.palette.common.white, 0.08)
-              : alpha(theme.palette.common.white, 0.18),
-        })}
-      />
-    ) : null}
+    {children ? <Divider sx={{ borderColor: alpha('#fff', 0.2) }} /> : null}
     {children}
   </Box>
 );
@@ -186,10 +172,11 @@ export const PwaFeedbackBridge = () => {
         hideCloseAction
         anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
         snackbarSx={{
-          width: responsive({ xs: 'calc(100% - 24px)', sm: 'auto' }),
-          right: responsive({ xs: '12px', sm: '24px' }),
-          left: responsive({ xs: '12px', sm: 'auto' }),
-          bottom: responsive({ xs: '12px', sm: '24px' }),
+          width: responsive({ xs: 'auto', sm: 'auto' }),
+          right: responsive({ xs: '16px', sm: '24px' }),
+          left: responsive({ xs: '16px', sm: 'auto' }),
+          bottom: responsive({ xs: '16px', sm: '24px' }),
+          maxWidth: responsive({ xs: '360px', sm: 'none' }),
         }}
         alertSx={(theme) => ({
           width: '100%',
@@ -199,8 +186,7 @@ export const PwaFeedbackBridge = () => {
           py: 1.5,
           alignItems: 'stretch',
           boxShadow: theme.shadows[8],
-          color:
-            theme.palette.mode === 'dark' ? theme.palette.text.primary : theme.palette.common.white,
+          color: theme.palette.common.white,
           background:
             theme.palette.mode === 'dark'
               ? `linear-gradient(
@@ -235,27 +221,12 @@ export const PwaFeedbackBridge = () => {
                 px: 1.5,
                 py: 0.75,
                 borderRadius: 2,
-                bgcolor:
-                  theme.palette.mode === 'dark'
-                    ? alpha(theme.palette.info.light, 0.14)
-                    : theme.palette.common.white,
-                color:
-                  theme.palette.mode === 'dark'
-                    ? theme.palette.info.light
-                    : theme.palette.info.dark,
+                bgcolor: theme.palette.common.white,
+                color: theme.palette.info.dark,
+                fontWeight: 700,
                 boxShadow: theme.shadows[2],
-                border: `1px solid ${alpha(
-                  theme.palette.mode === 'dark'
-                    ? theme.palette.info.light
-                    : theme.palette.common.white,
-                  theme.palette.mode === 'dark' ? 0.22 : 0.2,
-                )}`,
-                '&:hover': {
-                  bgcolor:
-                    theme.palette.mode === 'dark'
-                      ? alpha(theme.palette.info.light, 0.22)
-                      : theme.palette.grey[100],
-                },
+                border: `1px solid ${alpha(theme.palette.common.white, 0.3)}`,
+                '&:hover': { bgcolor: theme.palette.grey[100] },
               })}
             >
               {isUpdating ? pwaMessages.updatingAction : pwaMessages.updateAction}

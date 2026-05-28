@@ -7,8 +7,8 @@
     "dev": "vite",
     "build": "tsc -b && vite build",
     "preview": "vite preview",
-    "lint": "eslint . --cache --cache-location .eslintcache --max-warnings=0",
-    "lint:fix": "eslint . --cache --cache-location .eslintcache --fix",
+    "lint": "eslint . --max-warnings=0",
+    "lint:fix": "eslint . --fix",
     "compliance": "node scripts/compliance-scan.mjs",
     "format": "prettier . --write",
     "typecheck": "tsc -p tsconfig.app.json --noEmit && tsc -p tsconfig.node.json --noEmit",
@@ -20,7 +20,7 @@
   },
   "lint-staged": {
     "*.{ts,tsx,js,jsx}": [
-      "eslint --cache --cache-location .eslintcache --fix"
+      "eslint --fix"
     ],
     "*.{json,md,css,scss,yml,yaml}": [
       "prettier --write"

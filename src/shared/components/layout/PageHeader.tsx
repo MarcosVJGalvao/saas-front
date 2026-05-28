@@ -38,7 +38,12 @@ const renderPrimaryAction = ({
 
   return (
     <PermissionGate allowed={canShowAction} fallback={null}>
-      <AppButton startIcon={actionIcon} variant="contained" onClick={onAction}>
+      <AppButton
+        startIcon={actionIcon}
+        variant="contained"
+        onClick={onAction}
+        sx={{ width: responsive({ xs: '100%', sm: 'auto' }) }}
+      >
         {actionLabel}
       </AppButton>
     </PermissionGate>
@@ -101,7 +106,15 @@ export const PageHeader = ({
             </AppText>
           ) : null}
         </AppBox>
-        <AppStack direction="row" spacing={1} sx={{ alignItems: 'center', flexShrink: 0 }}>
+        <AppStack
+          direction="row"
+          spacing={1}
+          sx={{
+            alignItems: 'center',
+            flexShrink: 0,
+            width: responsive({ xs: '100%', sm: 'auto' }),
+          }}
+        >
           {actions}
           {renderPrimaryAction({ actionIcon, actionLabel, canShowAction, onAction })}
         </AppStack>

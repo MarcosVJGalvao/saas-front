@@ -21,9 +21,9 @@ export const SessionExpiredDialog = ({ open, onClose }: SessionExpiredDialogProp
   return (
     <Dialog
       open={open}
-      onClose={onClose}
       maxWidth="xs"
       fullWidth
+      disableEscapeKeyDown
       slotProps={{
         paper: {
           sx: {

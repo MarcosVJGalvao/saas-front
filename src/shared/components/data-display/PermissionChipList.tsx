@@ -2,7 +2,7 @@ import { useMemo, useState } from 'react';
 import Box from '@mui/material/Box';
 import Chip from '@mui/material/Chip';
 import Typography from '@mui/material/Typography';
-import { alpha, useTheme } from '@mui/material/styles';
+import { alpha, useTheme, type SxProps, type Theme } from '@mui/material/styles';
 import {
   getActionColorKey,
   getActionLabel,
@@ -13,6 +13,7 @@ import {
 
 interface PermissionChipListProps {
   permissions: string[];
+  sx?: SxProps<Theme>;
 }
 
 interface PermissionGroup {
@@ -83,7 +84,7 @@ const ActionChip = ({ action }: ActionChipProps) => {
 
 const VISIBLE_GROUPS = 6;
 
-export const PermissionChipList = ({ permissions }: PermissionChipListProps) => {
+export const PermissionChipList = ({ permissions, sx }: PermissionChipListProps) => {
   const [expanded, setExpanded] = useState(false);
 
   const groups = useMemo(() => buildGroups(permissions), [permissions]);
@@ -100,56 +101,58 @@ export const PermissionChipList = ({ permissions }: PermissionChipListProps) => 
   const hiddenCount = groups.length - VISIBLE_GROUPS;
 
   return (
-    <Box sx={{ display: 'flex', flexDirection: 'column', gap: 0.75, mt: 0.5 }}>
-      {visibleGroups.map((group) => (
-        <Box
-          key={group.resource}
-          sx={{ display: 'flex', alignItems: 'center', gap: 0.75, flexWrap: 'wrap' }}
-        >
-          <Typography
-            variant="caption"
+    <Box sx={sx}>
+      <Box sx={{ display: 'flex', flexDirection: 'column', gap: 0.75, mt: 0.5 }}>
+        {visibleGroups.map((group) => (
+          <Box
+            key={group.resource}
+            sx={{ display: 'flex', alignItems: 'center', gap: 0.75, flexWrap: 'wrap' }}
+          >
+            <Typography
+              variant="caption"
+              sx={{
+                fontWeight: 600,
+                color: 'text.secondary',
+                minWidth: 90,
+                fontSize: '0.7rem',
+              }}
+            >
+              {group.resourceLabel}
+            </Typography>
+            <Box sx={{ display: 'flex', gap: 0.5, flexWrap: 'wrap' }}>
+              {group.actions.map((action) => (
+                <ActionChip key={action} action={action} />
+              ))}
+            </Box>
+          </Box>
+        ))}
+
+        {!expanded && hiddenCount > 0 && (
+          <Chip
+            label={`+${hiddenCount} recursos`}
+            size="small"
+            color="primary"
+            variant="outlined"
+            onClick={() => setExpanded(true)}
             sx={{
+              cursor: 'pointer',
               fontWeight: 600,
-              color: 'text.secondary',
-              minWidth: 90,
+              alignSelf: 'flex-start',
+              height: 22,
               fontSize: '0.7rem',
             }}
-          >
-            {group.resourceLabel}
-          </Typography>
-          <Box sx={{ display: 'flex', gap: 0.5, flexWrap: 'wrap' }}>
-            {group.actions.map((action) => (
-              <ActionChip key={action} action={action} />
-            ))}
-          </Box>
-        </Box>
-      ))}
-
-      {!expanded && hiddenCount > 0 && (
-        <Chip
-          label={`+${hiddenCount} recursos`}
-          size="small"
-          color="primary"
-          variant="outlined"
-          onClick={() => setExpanded(true)}
-          sx={{
-            cursor: 'pointer',
-            fontWeight: 600,
-            alignSelf: 'flex-start',
-            height: 22,
-            fontSize: '0.7rem',
-          }}
-        />
-      )}
-      {expanded && groups.length > VISIBLE_GROUPS && (
-        <Chip
-          label="Recolher"
-          size="small"
-          variant="outlined"
-          onClick={() => setExpanded(false)}
-          sx={{ cursor: 'pointer', alignSelf: 'flex-start', height: 22, fontSize: '0.7rem' }}
-        />
-      )}
+          />
+        )}
+        {expanded && groups.length > VISIBLE_GROUPS && (
+          <Chip
+            label="Recolher"
+            size="small"
+            variant="outlined"
+            onClick={() => setExpanded(false)}
+            sx={{ cursor: 'pointer', alignSelf: 'flex-start', height: 22, fontSize: '0.7rem' }}
+          />
+        )}
+      </Box>
     </Box>
   );
 };
