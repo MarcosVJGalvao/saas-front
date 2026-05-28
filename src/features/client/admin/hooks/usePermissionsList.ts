@@ -10,7 +10,7 @@ export const usePermissionsList = () => {
   const fetchPermissions = useCallback(async () => {
     setError('');
     try {
-      const response = await clientPermissionsService.list({ page: 1, limit: 200 });
+      const response = await clientPermissionsService.list({ page: 1, limit: 100 });
       setPermissions(response.data);
     } catch {
       setError('Não foi possível carregar as permissões.');
