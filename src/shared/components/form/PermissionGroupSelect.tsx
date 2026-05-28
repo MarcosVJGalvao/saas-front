@@ -99,17 +99,18 @@ const ActionBadge = ({ permission, checked, disabled, onToggle }: ActionBadgePro
   return (
     <Chip
       label={getActionLabel(action) || action}
-      size="small"
       onClick={disabled ? undefined : onToggle}
       disabled={disabled}
       variant={checked ? 'filled' : 'outlined'}
       sx={{
+        height: 34,
+        fontSize: '0.8125rem',
         cursor: disabled ? 'default' : 'pointer',
         borderColor: checked ? color : theme.palette.divider,
         bgcolor: checked ? alpha(color, 0.1) : 'transparent',
         color: checked ? color : 'text.secondary',
         fontWeight: checked ? 600 : 400,
-        '& .MuiChip-label': { px: 1.25 },
+        '& .MuiChip-label': { px: 1.75 },
         '&:hover': disabled
           ? {}
           : {
