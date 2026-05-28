@@ -1,6 +1,6 @@
 import { Controller } from 'react-hook-form';
 import { useClientRoleCreatePage } from '@features/client/admin/hooks/useClientRoleCreatePage';
-import { PermissionMultiSelect } from '@shared/components/form/PermissionMultiSelect';
+import { PermissionGroupSelect } from '@shared/components/form/PermissionGroupSelect';
 import type { ClientRoleCreateFormValues } from '@features/client/admin/schemas/clientRoleCreateForm.schema';
 import { AppPaper } from '@shared/components/data-display/AppPaper';
 import { AppAlert } from '@shared/components/feedback/AppAlert';
@@ -41,7 +41,7 @@ const ClientRoleCreatePage = () => {
               name="permissionIds"
               control={page.form.control}
               render={({ field, fieldState }) => (
-                <PermissionMultiSelect
+                <PermissionGroupSelect
                   value={field.value}
                   onChange={field.onChange}
                   error={fieldState.error?.message}

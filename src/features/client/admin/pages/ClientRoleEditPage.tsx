@@ -1,7 +1,7 @@
 import { Controller } from 'react-hook-form';
 import { useParams } from 'react-router-dom';
 import { useClientRoleEditPage } from '@features/client/admin/hooks/useClientRoleEditPage';
-import { PermissionMultiSelect } from '@shared/components/form/PermissionMultiSelect';
+import { PermissionGroupSelect } from '@shared/components/form/PermissionGroupSelect';
 import type { ClientRoleEditFormValues } from '@features/client/admin/schemas/clientRoleEditForm.schema';
 import { AppCircularProgress } from '@shared/components/data-display/AppCircularProgress';
 import { AppPaper } from '@shared/components/data-display/AppPaper';
@@ -48,7 +48,7 @@ const ClientRoleEditPage = () => {
               name="permissionIds"
               control={page.form.control}
               render={({ field, fieldState }) => (
-                <PermissionMultiSelect
+                <PermissionGroupSelect
                   value={field.value}
                   onChange={field.onChange}
                   error={fieldState.error?.message}
