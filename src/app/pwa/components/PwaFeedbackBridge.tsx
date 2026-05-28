@@ -2,8 +2,7 @@ import DownloadOutlinedIcon from '@mui/icons-material/DownloadOutlined';
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import SystemUpdateOutlinedIcon from '@mui/icons-material/SystemUpdateOutlined';
 import Box from '@mui/material/Box';
-import Chip from '@mui/material/Chip';
-import Divider from '@mui/material/Divider';
+import CircularProgress from '@mui/material/CircularProgress';
 import Typography from '@mui/material/Typography';
 import { alpha } from '@mui/material/styles';
 import { useMemo, useState, type ReactNode } from 'react';
@@ -20,15 +19,7 @@ const shouldShowInstallPromptForPath = (pathname: string): boolean =>
   pathname === '/' || pathname === '/platform/login' || pathname === '/client/login';
 
 const ActionRow = ({ children }: { children: ReactNode }) => (
-  <Box
-    sx={{
-      display: 'flex',
-      alignItems: 'center',
-      gap: 1,
-      flexWrap: 'wrap',
-      mt: 1,
-    }}
-  >
+  <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, flexWrap: 'wrap', mt: 1 }}>
     {children}
   </Box>
 );
@@ -36,12 +27,10 @@ const ActionRow = ({ children }: { children: ReactNode }) => (
 const SnackbarBody = ({
   title,
   description,
-  emphasis,
   children,
 }: {
   title: string;
   description: string;
-  emphasis?: string | undefined;
   children?: ReactNode | undefined;
 }) => (
   <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
@@ -74,23 +63,8 @@ const SnackbarBody = ({
         >
           {description}
         </Typography>
-        {emphasis ? (
-          <Chip
-            size="small"
-            label={emphasis}
-            sx={{
-              alignSelf: 'flex-start',
-              bgcolor: alpha('#fff', 0.15),
-              color: 'common.white',
-              fontWeight: 600,
-              border: `1px solid ${alpha('#fff', 0.3)}`,
-              '& .MuiChip-label': { color: 'common.white' },
-            }}
-          />
-        ) : null}
       </Box>
     </Box>
-    {children ? <Divider sx={{ borderColor: alpha('#fff', 0.2) }} /> : null}
     {children}
   </Box>
 );
@@ -172,72 +146,90 @@ export const PwaFeedbackBridge = () => {
         hideCloseAction
         anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
         snackbarSx={{
-          width: responsive({ xs: 'auto', sm: 'auto' }),
           right: responsive({ xs: '16px', sm: '24px' }),
           left: responsive({ xs: '16px', sm: 'auto' }),
           bottom: responsive({ xs: '16px', sm: '24px' }),
-          maxWidth: responsive({ xs: '360px', sm: 'none' }),
+          width: 'auto',
+          maxWidth: responsive({ xs: '360px', sm: '400px' }),
         }}
         alertSx={(theme) => ({
-          width: '100%',
-          maxWidth: 420,
-          borderRadius: 3,
-          px: 2,
-          py: 1.5,
-          alignItems: 'stretch',
+          borderRadius: 99,
+          px: 1.5,
+          py: 1,
+          alignItems: 'center',
           boxShadow: theme.shadows[8],
-          color: theme.palette.common.white,
-          background:
-            theme.palette.mode === 'dark'
-              ? `linear-gradient(
-                  135deg,
-                  ${alpha(theme.palette.background.paper, 0.98)} 0%,
-                  ${alpha(theme.palette.primary.dark, 0.82)} 100%
-                )`
-              : `linear-gradient(135deg, ${theme.palette.info.main} 0%, ${theme.palette.primary.main} 100%)`,
-          border: `1px solid ${alpha(
-            theme.palette.mode === 'dark' ? theme.palette.info.light : theme.palette.common.white,
-            theme.palette.mode === 'dark' ? 0.18 : 0.12,
-          )}`,
+          background: `linear-gradient(135deg, ${theme.palette.info.main} 0%, ${theme.palette.primary.main} 100%)`,
+          border: `1px solid ${alpha(theme.palette.common.white, 0.15)}`,
           '& .MuiAlert-icon': { display: 'none' },
-          '& .MuiAlert-message': { width: '100%', p: 0 },
+          '& .MuiAlert-message': { p: 0, width: '100%' },
           '& .MuiAlert-action': { display: 'none' },
         })}
       >
-        <SnackbarBody
-          title={pwaMessages.updateTitle}
-          description={pwaMessages.updateDescription}
-          emphasis={pwaMessages.updateHint}
+        <Box
+          sx={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: 1.5,
+          }}
         >
-          <ActionRow>
-            <AppButton
-              size="small"
-              startIcon={<SystemUpdateOutlinedIcon />}
-              onClick={() => void applyUpdate()}
-              disabled={isUpdating}
-              aria-label={isUpdating ? pwaMessages.updatingAction : pwaMessages.updateAction}
-              sx={(theme) => ({
-                minWidth: 0,
-                px: 1.5,
-                py: 0.75,
-                borderRadius: 2,
-                bgcolor: theme.palette.common.white,
-                color: theme.palette.info.dark,
-                fontWeight: 700,
-                boxShadow: theme.shadows[2],
-                border: `1px solid ${alpha(theme.palette.common.white, 0.3)}`,
-                '&:hover': { bgcolor: theme.palette.grey[100] },
-              })}
-            >
-              {isUpdating ? pwaMessages.updatingAction : pwaMessages.updateAction}
-            </AppButton>
-          </ActionRow>
+          <Box
+            sx={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              width: 32,
+              height: 32,
+              borderRadius: '50%',
+              bgcolor: alpha('#fff', 0.15),
+              color: 'common.white',
+              flexShrink: 0,
+            }}
+          >
+            <SystemUpdateOutlinedIcon sx={{ fontSize: 18 }} />
+          </Box>
+
+          <Typography
+            component="span"
+            sx={{ fontWeight: 600, fontSize: '0.875rem', color: 'common.white', flex: 1 }}
+          >
+            {pwaMessages.updateTitle}
+          </Typography>
+
+          <AppButton
+            size="small"
+            onClick={() => void applyUpdate()}
+            disabled={isUpdating}
+            sx={(theme) => ({
+              minWidth: 0,
+              px: 1.75,
+              py: 0.5,
+              borderRadius: 99,
+              bgcolor: theme.palette.common.white,
+              color: theme.palette.primary.dark,
+              fontWeight: 700,
+              fontSize: '0.8125rem',
+              boxShadow: 'none',
+              flexShrink: 0,
+              '&:hover': { bgcolor: theme.palette.grey[100] },
+              '&.Mui-disabled': { bgcolor: alpha(theme.palette.common.white, 0.4) },
+            })}
+          >
+            {isUpdating ? (
+              <CircularProgress size={14} sx={{ color: 'inherit' }} />
+            ) : (
+              pwaMessages.updateAction
+            )}
+          </AppButton>
+
           {updateErrorMessage ? (
-            <Typography component="span" sx={{ fontSize: '0.8125rem', lineHeight: 1.4 }}>
+            <Typography
+              component="span"
+              sx={{ fontSize: '0.75rem', color: alpha('#fff', 0.85), mt: 0.5 }}
+            >
               {updateErrorMessage}
             </Typography>
           ) : null}
-        </SnackbarBody>
+        </Box>
       </AppSnackbar>
     </>
   );

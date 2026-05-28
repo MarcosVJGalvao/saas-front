@@ -4,7 +4,6 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import SearchIcon from '@mui/icons-material/Search';
 import Box from '@mui/material/Box';
 import Checkbox from '@mui/material/Checkbox';
-import Collapse from '@mui/material/Collapse';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import InputAdornment from '@mui/material/InputAdornment';
 import TextField from '@mui/material/TextField';
@@ -223,7 +222,7 @@ const ResourceGroup = ({
         )}
       </Box>
 
-      <Collapse in={expanded}>
+      {expanded ? (
         <Box
           sx={{
             display: 'flex',
@@ -246,7 +245,7 @@ const ResourceGroup = ({
             />
           ))}
         </Box>
-      </Collapse>
+      ) : null}
     </Box>
   );
 };
