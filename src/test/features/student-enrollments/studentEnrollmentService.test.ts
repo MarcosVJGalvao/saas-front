@@ -70,7 +70,7 @@ describe('studentEnrollmentService', () => {
     expect(postSpy).toHaveBeenCalledWith(
       '/api/student-enrollments/enrollment-1/enrollment-contract',
       undefined,
-      { responseType: 'blob' },
+      { responseType: 'blob', timeout: 80000 },
     );
     expect(response).toBe(blob);
   });
