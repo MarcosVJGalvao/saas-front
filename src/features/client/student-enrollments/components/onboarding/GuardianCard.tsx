@@ -1,4 +1,4 @@
-import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
+import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined';
 import { AppText } from '@shared/components/data-display/AppText';
 import { AppDivider } from '@shared/components/data-display/AppDivider';
 import { AppPaper } from '@shared/components/data-display/AppPaper';
@@ -64,7 +64,7 @@ export const GuardianCard = ({
             color="error"
             variant="text"
             disabled={!canRemove}
-            startIcon={<DeleteOutlineIcon />}
+            startIcon={<DeleteOutlinedIcon />}
             onClick={() => actions.removeGuardian(index)}
           >
             Remover

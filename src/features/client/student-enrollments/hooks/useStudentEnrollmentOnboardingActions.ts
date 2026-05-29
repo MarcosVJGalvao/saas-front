@@ -54,7 +54,6 @@ const updateStudentAddress = (
 const updateGuardianAtIndex = (
   setValue: Dispatch<SetStateAction<CreateStudentEnrollmentRequest>>,
   ensureStudent: (currentValue: CreateStudentEnrollmentRequest) => EnrollmentStudentInput,
-  createEmptyGuardian: () => EnrollmentLegalGuardianInput,
   index: number,
   updater: (guardian: EnrollmentLegalGuardianInput) => EnrollmentLegalGuardianInput,
 ) =>
@@ -68,12 +67,11 @@ const updateGuardianAtIndex = (
 const updateGuardianPersonAtIndex = (
   setValue: Dispatch<SetStateAction<CreateStudentEnrollmentRequest>>,
   ensureStudent: (currentValue: CreateStudentEnrollmentRequest) => EnrollmentStudentInput,
-  createEmptyGuardian: () => EnrollmentLegalGuardianInput,
   createEmptyPerson: () => EnrollmentPerson,
   index: number,
   updater: (person: EnrollmentPerson) => EnrollmentPerson,
 ) =>
-  updateGuardianAtIndex(setValue, ensureStudent, createEmptyGuardian, index, (guardian) => ({
+  updateGuardianAtIndex(setValue, ensureStudent, index, (guardian) => ({
     ...guardian,
     person: updater(guardian.person ?? createEmptyPerson()),
   }));
@@ -81,12 +79,11 @@ const updateGuardianPersonAtIndex = (
 const updateGuardianAddressAtIndex = (
   setValue: Dispatch<SetStateAction<CreateStudentEnrollmentRequest>>,
   ensureStudent: (currentValue: CreateStudentEnrollmentRequest) => EnrollmentStudentInput,
-  createEmptyGuardian: () => EnrollmentLegalGuardianInput,
   createEmptyAddress: () => EnrollmentAddress,
   index: number,
   updater: (address: EnrollmentAddress) => EnrollmentAddress,
 ) =>
-  updateGuardianAtIndex(setValue, ensureStudent, createEmptyGuardian, index, (guardian) => {
+  updateGuardianAtIndex(setValue, ensureStudent, index, (guardian) => {
     const primaryAddress = guardian.addresses?.[0] ?? createEmptyAddress();
     return { ...guardian, addresses: [updater(primaryAddress)] };
   });
@@ -271,18 +268,14 @@ export const useStudentEnrollmentOnboardingActions = ({
     }));
   },
   updateGuardianRelationshipType: (index, relationshipType) =>
-    updateGuardianAtIndex(
-      setValue,
-      stateFactories.ensureStudent,
-      stateFactories.createEmptyGuardian,
-      index,
-      (guardian) => ({ ...guardian, relationshipType }),
-    ),
+    updateGuardianAtIndex(setValue, stateFactories.ensureStudent, index, (guardian) => ({
+      ...guardian,
+      relationshipType,
+    })),
   updateGuardianFullName: (index, fullName) =>
     updateGuardianPersonAtIndex(
       setValue,
       stateFactories.ensureStudent,
-      stateFactories.createEmptyGuardian,
       stateFactories.createEmptyPerson,
       index,
       (person) => ({ ...person, fullName }),
@@ -291,7 +284,6 @@ export const useStudentEnrollmentOnboardingActions = ({
     updateGuardianPersonAtIndex(
       setValue,
       stateFactories.ensureStudent,
-      stateFactories.createEmptyGuardian,
       stateFactories.createEmptyPerson,
       index,
       (person) => ({ ...person, documentNumber }),
@@ -300,7 +292,6 @@ export const useStudentEnrollmentOnboardingActions = ({
     updateGuardianPersonAtIndex(
       setValue,
       stateFactories.ensureStudent,
-      stateFactories.createEmptyGuardian,
       stateFactories.createEmptyPerson,
       index,
       (person) => ({ ...person, documentType }),
@@ -309,7 +300,6 @@ export const useStudentEnrollmentOnboardingActions = ({
     updateGuardianPersonAtIndex(
       setValue,
       stateFactories.ensureStudent,
-      stateFactories.createEmptyGuardian,
       stateFactories.createEmptyPerson,
       index,
       (person) => ({ ...person, dateOfBirth }),
@@ -318,7 +308,6 @@ export const useStudentEnrollmentOnboardingActions = ({
     updateGuardianPersonAtIndex(
       setValue,
       stateFactories.ensureStudent,
-      stateFactories.createEmptyGuardian,
       stateFactories.createEmptyPerson,
       index,
       (person) => ({ ...person, gender }),
@@ -327,7 +316,6 @@ export const useStudentEnrollmentOnboardingActions = ({
     updateGuardianPersonAtIndex(
       setValue,
       stateFactories.ensureStudent,
-      stateFactories.createEmptyGuardian,
       stateFactories.createEmptyPerson,
       index,
       (person) => ({ ...person, maritalStatus }),
@@ -336,7 +324,6 @@ export const useStudentEnrollmentOnboardingActions = ({
     updateGuardianPersonAtIndex(
       setValue,
       stateFactories.ensureStudent,
-      stateFactories.createEmptyGuardian,
       stateFactories.createEmptyPerson,
       index,
       (person) => ({ ...person, nationality }),
@@ -345,19 +332,15 @@ export const useStudentEnrollmentOnboardingActions = ({
     updateGuardianPersonAtIndex(
       setValue,
       stateFactories.ensureStudent,
-      stateFactories.createEmptyGuardian,
       stateFactories.createEmptyPerson,
       index,
       (person) => ({ ...person, monthlyIncome }),
     ),
   updateGuardianCanPickUp: (index, canPickUp) =>
-    updateGuardianAtIndex(
-      setValue,
-      stateFactories.ensureStudent,
-      stateFactories.createEmptyGuardian,
-      index,
-      (guardian) => ({ ...guardian, canPickUp }),
-    ),
+    updateGuardianAtIndex(setValue, stateFactories.ensureStudent, index, (guardian) => ({
+      ...guardian,
+      canPickUp,
+    })),
   updateGuardianEmail: (index, value) =>
     updateGuardianUiArrayField(setUiExtras, 'guardianEmails', index, value),
   updateGuardianPhone: (index, value) =>
@@ -370,7 +353,6 @@ export const useStudentEnrollmentOnboardingActions = ({
     updateGuardianAddressAtIndex(
       setValue,
       stateFactories.ensureStudent,
-      stateFactories.createEmptyGuardian,
       stateFactories.createEmptyAddress,
       index,
       (address) => ({ ...address, street }),
@@ -379,7 +361,6 @@ export const useStudentEnrollmentOnboardingActions = ({
     updateGuardianAddressAtIndex(
       setValue,
       stateFactories.ensureStudent,
-      stateFactories.createEmptyGuardian,
       stateFactories.createEmptyAddress,
       index,
       (address) => ({ ...address, number }),
@@ -388,7 +369,6 @@ export const useStudentEnrollmentOnboardingActions = ({
     updateGuardianAddressAtIndex(
       setValue,
       stateFactories.ensureStudent,
-      stateFactories.createEmptyGuardian,
       stateFactories.createEmptyAddress,
       index,
       (address) => ({ ...address, complement }),
@@ -397,7 +377,6 @@ export const useStudentEnrollmentOnboardingActions = ({
     updateGuardianAddressAtIndex(
       setValue,
       stateFactories.ensureStudent,
-      stateFactories.createEmptyGuardian,
       stateFactories.createEmptyAddress,
       index,
       (address) => ({ ...address, neighborhood }),
@@ -406,7 +385,6 @@ export const useStudentEnrollmentOnboardingActions = ({
     updateGuardianAddressAtIndex(
       setValue,
       stateFactories.ensureStudent,
-      stateFactories.createEmptyGuardian,
       stateFactories.createEmptyAddress,
       index,
       (address) => ({ ...address, city }),
@@ -415,7 +393,6 @@ export const useStudentEnrollmentOnboardingActions = ({
     updateGuardianAddressAtIndex(
       setValue,
       stateFactories.ensureStudent,
-      stateFactories.createEmptyGuardian,
       stateFactories.createEmptyAddress,
       index,
       (address) => ({ ...address, state }),
@@ -424,7 +401,6 @@ export const useStudentEnrollmentOnboardingActions = ({
     updateGuardianAddressAtIndex(
       setValue,
       stateFactories.ensureStudent,
-      stateFactories.createEmptyGuardian,
       stateFactories.createEmptyAddress,
       index,
       (address) => ({ ...address, country }),
