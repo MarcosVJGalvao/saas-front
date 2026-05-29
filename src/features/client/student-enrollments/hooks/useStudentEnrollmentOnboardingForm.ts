@@ -31,7 +31,10 @@ export const useStudentEnrollmentOnboardingForm = () => {
   const isStudentStepComplete =
     uiExtras.selectedStudentId.length > 0 ||
     Boolean(value.student?.person.fullName && value.student.person.documentNumber);
-  const isGuardianStepComplete = Boolean(value.student?.legalGuardians[0]?.person?.fullName);
+  const isGuardianStepComplete =
+    (value.student?.legalGuardians.length ?? 0) > 0 &&
+    (value.student?.legalGuardians.every((guardian) => Boolean(guardian.person?.fullName)) ??
+      false);
   const isAcademicStepComplete =
     value.academic.academicYearId.length > 0 && value.academic.enrollmentDate.length > 0;
 

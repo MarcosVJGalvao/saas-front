@@ -51,39 +51,67 @@ const updateStudentAddress = (
     return { ...student, addresses: [updater(primaryAddress)] };
   });
 
-const updateGuardian = (
+const updateGuardianAtIndex = (
   setValue: Dispatch<SetStateAction<CreateStudentEnrollmentRequest>>,
   ensureStudent: (currentValue: CreateStudentEnrollmentRequest) => EnrollmentStudentInput,
   createEmptyGuardian: () => EnrollmentLegalGuardianInput,
+  index: number,
   updater: (guardian: EnrollmentLegalGuardianInput) => EnrollmentLegalGuardianInput,
 ) =>
   updateStudent(setValue, ensureStudent, (student) => {
-    const primaryGuardian = student.legalGuardians[0] ?? createEmptyGuardian();
-    return { ...student, legalGuardians: [updater(primaryGuardian)] };
+    const guardians = student.legalGuardians.map((guardian, i) =>
+      i === index ? updater(guardian) : guardian,
+    );
+    return { ...student, legalGuardians: guardians };
   });
 
-const updateGuardianPerson = (
+const updateGuardianPersonAtIndex = (
   setValue: Dispatch<SetStateAction<CreateStudentEnrollmentRequest>>,
   ensureStudent: (currentValue: CreateStudentEnrollmentRequest) => EnrollmentStudentInput,
   createEmptyGuardian: () => EnrollmentLegalGuardianInput,
   createEmptyPerson: () => EnrollmentPerson,
+  index: number,
   updater: (person: EnrollmentPerson) => EnrollmentPerson,
 ) =>
-  updateGuardian(setValue, ensureStudent, createEmptyGuardian, (guardian) => ({
+  updateGuardianAtIndex(setValue, ensureStudent, createEmptyGuardian, index, (guardian) => ({
     ...guardian,
     person: updater(guardian.person ?? createEmptyPerson()),
   }));
 
-const updateGuardianAddress = (
+const updateGuardianAddressAtIndex = (
   setValue: Dispatch<SetStateAction<CreateStudentEnrollmentRequest>>,
   ensureStudent: (currentValue: CreateStudentEnrollmentRequest) => EnrollmentStudentInput,
   createEmptyGuardian: () => EnrollmentLegalGuardianInput,
   createEmptyAddress: () => EnrollmentAddress,
+  index: number,
   updater: (address: EnrollmentAddress) => EnrollmentAddress,
 ) =>
-  updateGuardian(setValue, ensureStudent, createEmptyGuardian, (guardian) => {
+  updateGuardianAtIndex(setValue, ensureStudent, createEmptyGuardian, index, (guardian) => {
     const primaryAddress = guardian.addresses?.[0] ?? createEmptyAddress();
     return { ...guardian, addresses: [updater(primaryAddress)] };
+  });
+
+const updateGuardianUiArrayField = (
+  setUiExtras: Dispatch<SetStateAction<StudentEnrollmentOnboardingUiExtras>>,
+  field: 'guardianCeps' | 'guardianEmails' | 'guardianPhones',
+  index: number,
+  value: string,
+) =>
+  setUiExtras((current) => {
+    const arr = [...current[field]];
+    arr[index] = value;
+    return { ...current, [field]: arr };
+  });
+
+const updateGuardianPhoneIsWhatsAppAtIndex = (
+  setUiExtras: Dispatch<SetStateAction<StudentEnrollmentOnboardingUiExtras>>,
+  index: number,
+  value: boolean,
+) =>
+  setUiExtras((current) => {
+    const arr = [...current.guardianPhoneIsWhatsApp];
+    arr[index] = value;
+    return { ...current, guardianPhoneIsWhatsApp: arr };
   });
 
 const updateMedicalInfo = (
@@ -148,6 +176,8 @@ export const useStudentEnrollmentOnboardingActions = ({
     setUiExtras((currentUiExtras) => ({ ...currentUiExtras, studentEmail })),
   updateStudentPhone: (studentPhone) =>
     setUiExtras((currentUiExtras) => ({ ...currentUiExtras, studentPhone })),
+  updateStudentPhoneIsWhatsApp: (studentPhoneIsWhatsApp) =>
+    setUiExtras((currentUiExtras) => ({ ...currentUiExtras, studentPhoneIsWhatsApp })),
   updateStudentCep: (studentCep) =>
     setUiExtras((currentUiExtras) => ({ ...currentUiExtras, studentCep })),
   updateStudentStreet: (street) =>
@@ -199,97 +229,204 @@ export const useStudentEnrollmentOnboardingActions = ({
       stateFactories.createEmptyAddress,
       (address) => ({ ...address, country }),
     ),
-  updateGuardianFullName: (fullName) =>
-    updateGuardianPerson(
+  addGuardian: () => {
+    setValue((currentValue) => {
+      const student = stateFactories.ensureStudent(currentValue);
+      return {
+        ...currentValue,
+        student: {
+          ...student,
+          legalGuardians: [
+            ...student.legalGuardians,
+            { ...stateFactories.createEmptyGuardian(), isPrimary: false },
+          ],
+        },
+      };
+    });
+    setUiExtras((current) => ({
+      ...current,
+      guardianCeps: [...current.guardianCeps, ''],
+      guardianEmails: [...current.guardianEmails, ''],
+      guardianPhones: [...current.guardianPhones, ''],
+      guardianPhoneIsWhatsApp: [...current.guardianPhoneIsWhatsApp, false],
+    }));
+  },
+  removeGuardian: (index) => {
+    setValue((currentValue) => {
+      const student = stateFactories.ensureStudent(currentValue);
+      return {
+        ...currentValue,
+        student: {
+          ...student,
+          legalGuardians: student.legalGuardians.filter((_, i) => i !== index),
+        },
+      };
+    });
+    setUiExtras((current) => ({
+      ...current,
+      guardianCeps: current.guardianCeps.filter((_, i) => i !== index),
+      guardianEmails: current.guardianEmails.filter((_, i) => i !== index),
+      guardianPhones: current.guardianPhones.filter((_, i) => i !== index),
+      guardianPhoneIsWhatsApp: current.guardianPhoneIsWhatsApp.filter((_, i) => i !== index),
+    }));
+  },
+  updateGuardianRelationshipType: (index, relationshipType) =>
+    updateGuardianAtIndex(
       setValue,
       stateFactories.ensureStudent,
       stateFactories.createEmptyGuardian,
-      stateFactories.createEmptyPerson,
-      (person) => ({ ...person, fullName }),
-    ),
-  updateGuardianDocumentNumber: (documentNumber) =>
-    updateGuardianPerson(
-      setValue,
-      stateFactories.ensureStudent,
-      stateFactories.createEmptyGuardian,
-      stateFactories.createEmptyPerson,
-      (person) => ({ ...person, documentNumber }),
-    ),
-  updateGuardianDocumentType: (documentType) =>
-    updateGuardianPerson(
-      setValue,
-      stateFactories.ensureStudent,
-      stateFactories.createEmptyGuardian,
-      stateFactories.createEmptyPerson,
-      (person) => ({ ...person, documentType }),
-    ),
-  updateGuardianRelationshipType: (relationshipType) =>
-    updateGuardian(
-      setValue,
-      stateFactories.ensureStudent,
-      stateFactories.createEmptyGuardian,
+      index,
       (guardian) => ({ ...guardian, relationshipType }),
     ),
-  updateGuardianEmail: (guardianEmail) =>
-    setUiExtras((currentUiExtras) => ({ ...currentUiExtras, guardianEmail })),
-  updateGuardianPhone: (guardianPhone) =>
-    setUiExtras((currentUiExtras) => ({ ...currentUiExtras, guardianPhone })),
-  updateGuardianCep: (guardianCep) =>
-    setUiExtras((currentUiExtras) => ({ ...currentUiExtras, guardianCep })),
-  updateGuardianStreet: (street) =>
-    updateGuardianAddress(
+  updateGuardianFullName: (index, fullName) =>
+    updateGuardianPersonAtIndex(
+      setValue,
+      stateFactories.ensureStudent,
+      stateFactories.createEmptyGuardian,
+      stateFactories.createEmptyPerson,
+      index,
+      (person) => ({ ...person, fullName }),
+    ),
+  updateGuardianDocumentNumber: (index, documentNumber) =>
+    updateGuardianPersonAtIndex(
+      setValue,
+      stateFactories.ensureStudent,
+      stateFactories.createEmptyGuardian,
+      stateFactories.createEmptyPerson,
+      index,
+      (person) => ({ ...person, documentNumber }),
+    ),
+  updateGuardianDocumentType: (index, documentType) =>
+    updateGuardianPersonAtIndex(
+      setValue,
+      stateFactories.ensureStudent,
+      stateFactories.createEmptyGuardian,
+      stateFactories.createEmptyPerson,
+      index,
+      (person) => ({ ...person, documentType }),
+    ),
+  updateGuardianDateOfBirth: (index, dateOfBirth) =>
+    updateGuardianPersonAtIndex(
+      setValue,
+      stateFactories.ensureStudent,
+      stateFactories.createEmptyGuardian,
+      stateFactories.createEmptyPerson,
+      index,
+      (person) => ({ ...person, dateOfBirth }),
+    ),
+  updateGuardianGender: (index, gender) =>
+    updateGuardianPersonAtIndex(
+      setValue,
+      stateFactories.ensureStudent,
+      stateFactories.createEmptyGuardian,
+      stateFactories.createEmptyPerson,
+      index,
+      (person) => ({ ...person, gender }),
+    ),
+  updateGuardianMaritalStatus: (index, maritalStatus) =>
+    updateGuardianPersonAtIndex(
+      setValue,
+      stateFactories.ensureStudent,
+      stateFactories.createEmptyGuardian,
+      stateFactories.createEmptyPerson,
+      index,
+      (person) => ({ ...person, maritalStatus }),
+    ),
+  updateGuardianNationality: (index, nationality) =>
+    updateGuardianPersonAtIndex(
+      setValue,
+      stateFactories.ensureStudent,
+      stateFactories.createEmptyGuardian,
+      stateFactories.createEmptyPerson,
+      index,
+      (person) => ({ ...person, nationality }),
+    ),
+  updateGuardianMonthlyIncome: (index, monthlyIncome) =>
+    updateGuardianPersonAtIndex(
+      setValue,
+      stateFactories.ensureStudent,
+      stateFactories.createEmptyGuardian,
+      stateFactories.createEmptyPerson,
+      index,
+      (person) => ({ ...person, monthlyIncome }),
+    ),
+  updateGuardianCanPickUp: (index, canPickUp) =>
+    updateGuardianAtIndex(
+      setValue,
+      stateFactories.ensureStudent,
+      stateFactories.createEmptyGuardian,
+      index,
+      (guardian) => ({ ...guardian, canPickUp }),
+    ),
+  updateGuardianEmail: (index, value) =>
+    updateGuardianUiArrayField(setUiExtras, 'guardianEmails', index, value),
+  updateGuardianPhone: (index, value) =>
+    updateGuardianUiArrayField(setUiExtras, 'guardianPhones', index, value),
+  updateGuardianPhoneIsWhatsApp: (index, value) =>
+    updateGuardianPhoneIsWhatsAppAtIndex(setUiExtras, index, value),
+  updateGuardianCep: (index, value) =>
+    updateGuardianUiArrayField(setUiExtras, 'guardianCeps', index, value),
+  updateGuardianStreet: (index, street) =>
+    updateGuardianAddressAtIndex(
       setValue,
       stateFactories.ensureStudent,
       stateFactories.createEmptyGuardian,
       stateFactories.createEmptyAddress,
+      index,
       (address) => ({ ...address, street }),
     ),
-  updateGuardianNumber: (number) =>
-    updateGuardianAddress(
+  updateGuardianNumber: (index, number) =>
+    updateGuardianAddressAtIndex(
       setValue,
       stateFactories.ensureStudent,
       stateFactories.createEmptyGuardian,
       stateFactories.createEmptyAddress,
+      index,
       (address) => ({ ...address, number }),
     ),
-  updateGuardianComplement: (complement) =>
-    updateGuardianAddress(
+  updateGuardianComplement: (index, complement) =>
+    updateGuardianAddressAtIndex(
       setValue,
       stateFactories.ensureStudent,
       stateFactories.createEmptyGuardian,
       stateFactories.createEmptyAddress,
+      index,
       (address) => ({ ...address, complement }),
     ),
-  updateGuardianNeighborhood: (neighborhood) =>
-    updateGuardianAddress(
+  updateGuardianNeighborhood: (index, neighborhood) =>
+    updateGuardianAddressAtIndex(
       setValue,
       stateFactories.ensureStudent,
       stateFactories.createEmptyGuardian,
       stateFactories.createEmptyAddress,
+      index,
       (address) => ({ ...address, neighborhood }),
     ),
-  updateGuardianCity: (city) =>
-    updateGuardianAddress(
+  updateGuardianCity: (index, city) =>
+    updateGuardianAddressAtIndex(
       setValue,
       stateFactories.ensureStudent,
       stateFactories.createEmptyGuardian,
       stateFactories.createEmptyAddress,
+      index,
       (address) => ({ ...address, city }),
     ),
-  updateGuardianState: (state) =>
-    updateGuardianAddress(
+  updateGuardianState: (index, state) =>
+    updateGuardianAddressAtIndex(
       setValue,
       stateFactories.ensureStudent,
       stateFactories.createEmptyGuardian,
       stateFactories.createEmptyAddress,
+      index,
       (address) => ({ ...address, state }),
     ),
-  updateGuardianCountry: (country) =>
-    updateGuardianAddress(
+  updateGuardianCountry: (index, country) =>
+    updateGuardianAddressAtIndex(
       setValue,
       stateFactories.ensureStudent,
       stateFactories.createEmptyGuardian,
       stateFactories.createEmptyAddress,
+      index,
       (address) => ({ ...address, country }),
     ),
   updateMedicalBloodType: (bloodType) =>

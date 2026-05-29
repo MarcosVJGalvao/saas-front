@@ -12,11 +12,13 @@ import type { AppSelectOption } from '@shared/components/inputs/AppSelect';
 export type StudentEnrollmentOnboardingUiExtras = {
   selectedStudentId: string;
   studentCep: string;
-  guardianCep: string;
-  guardianEmail: string;
-  guardianPhone: string;
   studentEmail: string;
   studentPhone: string;
+  studentPhoneIsWhatsApp: boolean;
+  guardianCeps: string[];
+  guardianEmails: string[];
+  guardianPhones: string[];
+  guardianPhoneIsWhatsApp: boolean[];
 };
 
 export type StudentEnrollmentSummaryData = {
@@ -42,6 +44,7 @@ export type StudentEnrollmentOnboardingActions = {
   updateStudentRegistrationCode: (value: string) => void;
   updateStudentEmail: (value: string) => void;
   updateStudentPhone: (value: string) => void;
+  updateStudentPhoneIsWhatsApp: (value: boolean) => void;
   updateStudentCep: (value: string) => void;
   updateStudentStreet: (value: string) => void;
   updateStudentNumber: (value: string) => void;
@@ -50,20 +53,32 @@ export type StudentEnrollmentOnboardingActions = {
   updateStudentCity: (value: string) => void;
   updateStudentState: (value: string) => void;
   updateStudentCountry: (value: string) => void;
-  updateGuardianFullName: (value: string) => void;
-  updateGuardianDocumentNumber: (value: string) => void;
-  updateGuardianDocumentType: (value: EnrollmentPerson['documentType']) => void;
-  updateGuardianRelationshipType: (value: EnrollmentLegalGuardianInput['relationshipType']) => void;
-  updateGuardianEmail: (value: string) => void;
-  updateGuardianPhone: (value: string) => void;
-  updateGuardianCep: (value: string) => void;
-  updateGuardianStreet: (value: string) => void;
-  updateGuardianNumber: (value: string) => void;
-  updateGuardianComplement: (value: string) => void;
-  updateGuardianNeighborhood: (value: string) => void;
-  updateGuardianCity: (value: string) => void;
-  updateGuardianState: (value: string) => void;
-  updateGuardianCountry: (value: string) => void;
+  addGuardian: () => void;
+  removeGuardian: (index: number) => void;
+  updateGuardianFullName: (index: number, value: string) => void;
+  updateGuardianDocumentNumber: (index: number, value: string) => void;
+  updateGuardianDocumentType: (index: number, value: EnrollmentPerson['documentType']) => void;
+  updateGuardianRelationshipType: (
+    index: number,
+    value: EnrollmentLegalGuardianInput['relationshipType'],
+  ) => void;
+  updateGuardianDateOfBirth: (index: number, value: string) => void;
+  updateGuardianGender: (index: number, value: EnrollmentPerson['gender']) => void;
+  updateGuardianMaritalStatus: (index: number, value: EnrollmentPerson['maritalStatus']) => void;
+  updateGuardianNationality: (index: number, value: EnrollmentPerson['nationality']) => void;
+  updateGuardianMonthlyIncome: (index: number, value: string) => void;
+  updateGuardianCanPickUp: (index: number, value: boolean) => void;
+  updateGuardianEmail: (index: number, value: string) => void;
+  updateGuardianPhone: (index: number, value: string) => void;
+  updateGuardianPhoneIsWhatsApp: (index: number, value: boolean) => void;
+  updateGuardianCep: (index: number, value: string) => void;
+  updateGuardianStreet: (index: number, value: string) => void;
+  updateGuardianNumber: (index: number, value: string) => void;
+  updateGuardianComplement: (index: number, value: string) => void;
+  updateGuardianNeighborhood: (index: number, value: string) => void;
+  updateGuardianCity: (index: number, value: string) => void;
+  updateGuardianState: (index: number, value: string) => void;
+  updateGuardianCountry: (index: number, value: string) => void;
   updateMedicalBloodType: (value: string) => void;
   updateMedicalAllergies: (value: string) => void;
   updateMedicalChronicDiseases: (value: string) => void;

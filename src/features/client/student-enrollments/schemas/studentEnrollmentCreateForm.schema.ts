@@ -67,6 +67,7 @@ export const enrollmentLegalGuardianSchema = z.object({
   legalGuardianId: z.string().optional(),
   relationshipType: guardianRelationshipTypeSchema,
   isPrimary: z.boolean(),
+  canPickUp: z.boolean().optional(),
   person: enrollmentPersonSchema.optional(),
   addresses: z.array(enrollmentAddressSchema).optional(),
   contacts: z.array(enrollmentContactSchema).optional(),

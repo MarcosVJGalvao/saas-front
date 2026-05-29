@@ -1,24 +1,14 @@
+import AddIcon from '@mui/icons-material/Add';
 import FamilyRestroomOutlinedIcon from '@mui/icons-material/FamilyRestroomOutlined';
 import { AppText } from '@shared/components/data-display/AppText';
-import { AppGrid } from '@shared/components/layout/AppGrid';
+import { AppButton } from '@shared/components/inputs/AppButton';
 import { AppStack } from '@shared/components/layout/AppStack';
-import {
-  documentTypeOptions,
-  guardianRelationshipTypeOptions,
-} from '@shared/constants/selectOptions';
-import { maskCnpj, maskCpf, maskPhone } from '@shared/masks/inputMasks';
-import { EnrollmentOnboardingField } from '@features/client/student-enrollments/components/onboarding/EnrollmentOnboardingField';
-import {
-  toEnrollmentDocumentType,
-  toGuardianRelationshipType,
-} from '@features/client/student-enrollments/normalizers/studentEnrollmentFieldNormalizers';
+import { GuardianCard } from '@features/client/student-enrollments/components/onboarding/GuardianCard';
 import type { StudentEnrollmentStepProps } from '@features/client/student-enrollments/types/studentEnrollmentOnboarding.types';
 
 export const GuardiansStep = ({ value, uiExtras, actions }: StudentEnrollmentStepProps) => {
-  const guardian = value.student?.legalGuardians[0];
-  const person = guardian?.person;
-  const documentType = person?.documentType ?? 'CPF';
-  const documentNumber = person?.documentNumber ?? '';
+  const guardians = value.student?.legalGuardians ?? [];
+  const canRemove = guardians.length > 1;
 
   return (
     <AppStack spacing={1.75}>
@@ -29,52 +19,29 @@ export const GuardiansStep = ({ value, uiExtras, actions }: StudentEnrollmentSte
       <AppText variant="body2" color="text.secondary">
         Informe o responsável principal. A matrícula exige ao menos um responsável legal.
       </AppText>
-      <AppGrid container spacing={1.5}>
-        <EnrollmentOnboardingField
-          select
-          label="Vínculo"
-          value={guardian?.relationshipType ?? 'mother'}
-          onChange={(nextValue) => {
-            const relationshipType = toGuardianRelationshipType(nextValue);
-            if (relationshipType) {
-              actions.updateGuardianRelationshipType(relationshipType);
-            }
-          }}
-          options={guardianRelationshipTypeOptions}
-        />
-        <EnrollmentOnboardingField
-          label="Nome completo"
-          value={person?.fullName ?? ''}
-          onChange={actions.updateGuardianFullName}
-        />
-        <EnrollmentOnboardingField
-          select
-          label="Tipo de documento"
-          value={documentType}
-          onChange={(nextValue) => {
-            const nextDocumentType = toEnrollmentDocumentType(nextValue);
-            if (nextDocumentType) {
-              actions.updateGuardianDocumentType(nextDocumentType);
-            }
-          }}
-          options={documentTypeOptions}
-        />
-        <EnrollmentOnboardingField
-          label="Documento"
-          value={documentType === 'CPF' ? maskCpf(documentNumber) : maskCnpj(documentNumber)}
-          onChange={actions.updateGuardianDocumentNumber}
-        />
-        <EnrollmentOnboardingField
-          label="E-mail"
-          value={uiExtras.guardianEmail}
-          onChange={actions.updateGuardianEmail}
-        />
-        <EnrollmentOnboardingField
-          label="Telefone"
-          value={maskPhone(uiExtras.guardianPhone)}
-          onChange={actions.updateGuardianPhone}
-        />
-      </AppGrid>
+
+      <AppStack spacing={2}>
+        {guardians.map((guardian, index) => (
+          <GuardianCard
+            key={index}
+            guardian={guardian}
+            index={index}
+            uiExtras={uiExtras}
+            actions={actions}
+            canRemove={canRemove}
+          />
+        ))}
+      </AppStack>
+
+      <AppButton
+        variant="outlined"
+        size="small"
+        startIcon={<AddIcon />}
+        onClick={actions.addGuardian}
+        sx={{ alignSelf: 'flex-start' }}
+      >
+        Adicionar responsável
+      </AppButton>
     </AppStack>
   );
 };

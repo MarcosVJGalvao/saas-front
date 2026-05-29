@@ -52,9 +52,10 @@ const createEmptyMedicalInfo = (): EnrollmentMedicalInfo => ({
 const createEmptyGuardian = (): EnrollmentLegalGuardianInput => ({
   relationshipType: 'mother',
   isPrimary: true,
+  canPickUp: true,
   person: createEmptyPerson(),
   addresses: [createEmptyAddress()],
-  contacts: createEmptyContactList(),
+  contacts: [],
 });
 
 const ensureStudent = (currentValue: CreateStudentEnrollmentRequest): EnrollmentStudentInput => ({
@@ -96,9 +97,11 @@ export const initialStudentEnrollmentValue: CreateStudentEnrollmentRequest = {
 export const initialStudentEnrollmentUiExtras: StudentEnrollmentOnboardingUiExtras = {
   selectedStudentId: '',
   studentCep: '',
-  guardianCep: '',
-  guardianEmail: '',
-  guardianPhone: '',
   studentEmail: '',
   studentPhone: '',
+  studentPhoneIsWhatsApp: false,
+  guardianCeps: [''],
+  guardianEmails: [''],
+  guardianPhones: [''],
+  guardianPhoneIsWhatsApp: [false],
 };

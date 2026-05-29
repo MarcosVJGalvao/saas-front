@@ -9,11 +9,13 @@ import type { StudentEnrollmentOnboardingUiExtras } from '@features/client/stude
 const baseUiExtras: StudentEnrollmentOnboardingUiExtras = {
   selectedStudentId: '',
   studentCep: '01310-100',
-  guardianCep: '01001-000',
-  guardianEmail: 'responsavel@escola.com',
-  guardianPhone: '(11) 99999-9999',
   studentEmail: 'aluno@escola.com',
   studentPhone: '(11) 98888-7777',
+  studentPhoneIsWhatsApp: false,
+  guardianCeps: ['01001-000'],
+  guardianEmails: ['responsavel@escola.com'],
+  guardianPhones: ['(11) 99999-9999'],
+  guardianPhoneIsWhatsApp: [false],
 };
 
 const baseValue: CreateStudentEnrollmentRequest = {

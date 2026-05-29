@@ -44,12 +44,20 @@ const normalizeContacts = (
   contacts: EnrollmentContact[],
   email: string,
   phone: string,
+  phoneIsWhatsApp: boolean,
 ): EnrollmentContact[] => {
   const normalizedContacts: EnrollmentContact[] = [
     { type: 'email', value: email.trim() },
     { type: 'phone', value: onlyDigits(phone) },
-    ...contacts.filter((contact) => contact.type !== 'email' && contact.type !== 'phone'),
+    ...contacts.filter(
+      (contact) =>
+        contact.type !== 'email' && contact.type !== 'phone' && contact.type !== 'whatsapp',
+    ),
   ];
+
+  if (phoneIsWhatsApp && onlyDigits(phone).length > 0) {
+    normalizedContacts.push({ type: 'whatsapp', value: onlyDigits(phone) });
+  }
 
   return normalizedContacts.filter((contact) => contact.value.length > 0);
 };
@@ -78,15 +86,23 @@ const normalizeMedicalInfo = (
   return hasAnyValue ? normalizedMedicalInfo : undefined;
 };
 
+type GuardianUiExtras = {
+  cep: string;
+  email: string;
+  phone: string;
+  phoneIsWhatsApp: boolean;
+};
+
 const normalizeGuardian = (
   guardian: EnrollmentLegalGuardianInput,
-  uiExtras: StudentEnrollmentOnboardingUiExtras,
+  guardianUiExtras: GuardianUiExtras,
 ): EnrollmentLegalGuardianInput => {
   if (guardian.legalGuardianId && guardian.legalGuardianId.length > 0) {
     return {
       legalGuardianId: guardian.legalGuardianId,
       relationshipType: guardian.relationshipType,
       isPrimary: guardian.isPrimary,
+      canPickUp: guardian.canPickUp,
     };
   }
 
@@ -96,12 +112,14 @@ const normalizeGuardian = (
   return {
     relationshipType: guardian.relationshipType,
     isPrimary: guardian.isPrimary,
+    canPickUp: guardian.canPickUp,
     person: primaryPerson ? normalizePerson(primaryPerson) : undefined,
-    addresses: primaryAddress ? [normalizeAddress(primaryAddress, uiExtras.guardianCep)] : [],
+    addresses: primaryAddress ? [normalizeAddress(primaryAddress, guardianUiExtras.cep)] : [],
     contacts: normalizeContacts(
       guardian.contacts ?? [],
-      uiExtras.guardianEmail,
-      uiExtras.guardianPhone,
+      guardianUiExtras.email,
+      guardianUiExtras.phone,
+      guardianUiExtras.phoneIsWhatsApp,
     ),
   };
 };
@@ -116,9 +134,21 @@ const normalizeStudent = (
     registrationCode: getOptionalText(student.registrationCode),
     person: normalizePerson(student.person),
     addresses: primaryAddress ? [normalizeAddress(primaryAddress, uiExtras.studentCep)] : [],
-    contacts: normalizeContacts(student.contacts, uiExtras.studentEmail, uiExtras.studentPhone),
+    contacts: normalizeContacts(
+      student.contacts,
+      uiExtras.studentEmail,
+      uiExtras.studentPhone,
+      uiExtras.studentPhoneIsWhatsApp,
+    ),
     medicalInfo: normalizeMedicalInfo(student.medicalInfo),
-    legalGuardians: student.legalGuardians.map((guardian) => normalizeGuardian(guardian, uiExtras)),
+    legalGuardians: student.legalGuardians.map((guardian, index) =>
+      normalizeGuardian(guardian, {
+        cep: uiExtras.guardianCeps[index] ?? '',
+        email: uiExtras.guardianEmails[index] ?? '',
+        phone: uiExtras.guardianPhones[index] ?? '',
+        phoneIsWhatsApp: uiExtras.guardianPhoneIsWhatsApp[index] ?? false,
+      }),
+    ),
   };
 };
 

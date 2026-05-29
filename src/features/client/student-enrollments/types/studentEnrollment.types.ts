@@ -55,6 +55,7 @@ export type EnrollmentLegalGuardianInput = {
   legalGuardianId?: string | undefined;
   relationshipType: GuardianRelationshipType;
   isPrimary: boolean;
+  canPickUp?: boolean | undefined;
   person?: EnrollmentPerson | undefined;
   addresses?: EnrollmentAddress[] | undefined;
   contacts?: EnrollmentContact[] | undefined;
