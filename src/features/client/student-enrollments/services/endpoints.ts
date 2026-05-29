@@ -38,6 +38,6 @@ export const studentEnrollmentEndpoints = {
     httpClient.post<StudentEnrollmentContractDownloadResponse>(
       `${STUDENT_ENROLLMENTS_BASE_PATH}/${id}/enrollment-contract`,
       undefined,
-      { responseType: 'blob' },
+      { responseType: 'blob', timeout: 80000 },
     ),
 };

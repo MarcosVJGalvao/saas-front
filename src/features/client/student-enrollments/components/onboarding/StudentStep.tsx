@@ -7,7 +7,6 @@ import { AppStack } from '@shared/components/layout/AppStack';
 import {
   documentTypeOptions,
   genderOptionsWithPlaceholder,
-  maritalStatusOptionsWithPlaceholder,
   nationalityOptions,
 } from '@shared/constants/selectOptions';
 import { maskCnpj, maskCpf } from '@shared/masks/inputMasks';
@@ -15,7 +14,6 @@ import { EnrollmentOnboardingField } from '@features/client/student-enrollments/
 import {
   toEnrollmentDocumentType,
   toEnrollmentGender,
-  toEnrollmentMaritalStatus,
   toEnrollmentNationality,
 } from '@features/client/student-enrollments/normalizers/studentEnrollmentFieldNormalizers';
 import type { StudentEnrollmentStepProps } from '@features/client/student-enrollments/types/studentEnrollmentOnboarding.types';
@@ -98,15 +96,6 @@ export const StudentStep = ({
           value={person?.gender ?? ''}
           onChange={(nextValue) => actions.updateStudentGender(toEnrollmentGender(nextValue))}
           options={genderOptionsWithPlaceholder}
-        />
-        <EnrollmentOnboardingField
-          select
-          label="Estado civil"
-          value={person?.maritalStatus ?? ''}
-          onChange={(nextValue) =>
-            actions.updateStudentMaritalStatus(toEnrollmentMaritalStatus(nextValue))
-          }
-          options={maritalStatusOptionsWithPlaceholder}
         />
         <EnrollmentOnboardingField
           select

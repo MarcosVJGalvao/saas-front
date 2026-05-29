@@ -7,6 +7,7 @@ import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import CircularProgress from '@mui/material/CircularProgress';
 import Stack from '@mui/material/Stack';
+import Tooltip from '@mui/material/Tooltip';
 import Typography from '@mui/material/Typography';
 import { alpha } from '@mui/material/styles';
 import type { ReactNode } from 'react';
@@ -24,6 +25,7 @@ interface StepperWizardProps {
   isLastStep: boolean;
   nextLabel?: string | undefined;
   nextDisabled?: boolean | undefined;
+  nextDisabledTooltip?: string | undefined;
   nextLoading?: boolean | undefined;
 }
 
@@ -47,6 +49,7 @@ export const StepperWizard = ({
   isLastStep,
   nextLabel,
   nextDisabled,
+  nextDisabledTooltip,
   nextLoading = false,
 }: StepperWizardProps) => (
   <Box>
@@ -116,25 +119,33 @@ export const StepperWizard = ({
       >
         {activeStep === 0 ? 'Cancelar' : 'Voltar'}
       </Button>
-      <Button
-        variant="contained"
-        onClick={onNext}
-        disabled={nextDisabled || nextLoading}
-        sx={(theme) => ({
-          px: 3,
-          py: 0.9,
-          boxShadow: `0 2px 6px ${alpha(theme.palette.primary.main, theme.palette.mode === 'dark' ? 0.45 : 0.3)}`,
-        })}
-        startIcon={
-          nextLoading ? (
-            <CircularProgress size={16} color="inherit" aria-label="Carregando" />
-          ) : null
-        }
+      <Tooltip
+        title={nextDisabled && nextDisabledTooltip ? nextDisabledTooltip : ''}
+        placement="top"
+        arrow
       >
-        {nextLoading
-          ? 'Finalizando...'
-          : (nextLabel ?? (isLastStep ? 'Finalizar' : 'Salvar e continuar'))}
-      </Button>
+        <span>
+          <Button
+            variant="contained"
+            onClick={onNext}
+            disabled={nextDisabled || nextLoading}
+            sx={(theme) => ({
+              px: 3,
+              py: 0.9,
+              boxShadow: `0 2px 6px ${alpha(theme.palette.primary.main, theme.palette.mode === 'dark' ? 0.45 : 0.3)}`,
+            })}
+            startIcon={
+              nextLoading ? (
+                <CircularProgress size={16} color="inherit" aria-label="Carregando" />
+              ) : null
+            }
+          >
+            {nextLoading
+              ? 'Finalizando...'
+              : (nextLabel ?? (isLastStep ? 'Finalizar' : 'Salvar e continuar'))}
+          </Button>
+        </span>
+      </Tooltip>
     </Box>
   </Box>
 );

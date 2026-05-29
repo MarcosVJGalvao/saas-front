@@ -13,6 +13,7 @@ type EnrollmentOnboardingFieldProps = {
   label: string;
   value: string;
   onChange: (value: string) => void;
+  onBlur?: (() => void) | undefined;
   gridSize?: EnrollmentOnboardingFieldGridSize | undefined;
   disabled?: boolean | undefined;
   helperText?: ReactNode | undefined;
@@ -27,6 +28,7 @@ export const EnrollmentOnboardingField = ({
   label,
   value,
   onChange,
+  onBlur,
   gridSize,
   disabled = false,
   helperText,
@@ -49,6 +51,7 @@ export const EnrollmentOnboardingField = ({
       multiline={multiline}
       minRows={multiline ? 3 : undefined}
       onChange={(event) => onChange(event.target.value)}
+      onBlur={onBlur}
     >
       {options?.map((option) => (
         <AppMenuItem key={option.value} value={option.value}>

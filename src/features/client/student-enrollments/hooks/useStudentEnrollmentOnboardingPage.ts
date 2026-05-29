@@ -89,5 +89,13 @@ export const useStudentEnrollmentOnboardingPage = () => {
       (onboardingForm.activeStep === 1 && !onboardingForm.isGuardianStepComplete) ||
       (onboardingForm.activeStep === 4 && !onboardingForm.isAcademicStepComplete) ||
       (loading && isLastStep),
+    nextDisabledTooltip:
+      onboardingForm.activeStep === 0 && !onboardingForm.isStudentStepComplete
+        ? 'Selecione um aluno ou preencha nome e documento para continuar.'
+        : onboardingForm.activeStep === 1 && !onboardingForm.isGuardianStepComplete
+          ? 'Preencha o nome completo de todos os responsáveis para continuar.'
+          : onboardingForm.activeStep === 4 && !onboardingForm.isAcademicStepComplete
+            ? 'Selecione o ano letivo e a data de matrícula para continuar.'
+            : undefined,
   };
 };

@@ -1,3 +1,4 @@
+import { useCallback } from 'react';
 import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined';
 import { AppText } from '@shared/components/data-display/AppText';
 import { AppDivider } from '@shared/components/data-display/AppDivider';
@@ -14,7 +15,9 @@ import {
   maritalStatusOptionsWithPlaceholder,
   nationalityOptions,
 } from '@shared/constants/selectOptions';
-import { maskCep, maskCnpj, maskCpf, maskPhone } from '@shared/masks/inputMasks';
+import { useAddressAutoFill } from '@shared/hooks/useAddressAutoFill/useAddressAutoFill';
+import { maskCep, maskCnpj, maskCpf, maskCurrency, maskPhone } from '@shared/masks/inputMasks';
+import { onlyDigits } from '@shared/parsers/stringParsers';
 import { EnrollmentOnboardingField } from '@features/client/student-enrollments/components/onboarding/EnrollmentOnboardingField';
 import {
   toEnrollmentDocumentType,
@@ -51,6 +54,25 @@ export const GuardianCard = ({
   const label = guardian.isPrimary
     ? `Responsável ${index + 1} — Principal`
     : `Responsável ${index + 1}`;
+
+  const onAddressResolved = useCallback(
+    (fields: { street?: string; neighborhood?: string; city?: string; state?: string }) => {
+      if (fields.street) actions.updateGuardianStreet(index, fields.street);
+      if (fields.neighborhood) actions.updateGuardianNeighborhood(index, fields.neighborhood);
+      if (fields.city) actions.updateGuardianCity(index, fields.city);
+      if (fields.state) actions.updateGuardianState(index, fields.state);
+    },
+    [index, actions],
+  );
+
+  const { resolveByCep } = useAddressAutoFill({ onResolved: onAddressResolved });
+
+  const handleCepBlur = useCallback(() => {
+    const cep = uiExtras.guardianCeps[index] ?? '';
+    if (onlyDigits(cep).length === 8) {
+      void resolveByCep(cep);
+    }
+  }, [resolveByCep, uiExtras.guardianCeps, index]);
 
   return (
     <AppPaper variant="outlined" sx={{ p: 2 }}>
@@ -148,7 +170,7 @@ export const GuardianCard = ({
             />
             <EnrollmentOnboardingField
               label="Renda mensal"
-              value={person?.monthlyIncome ?? ''}
+              value={maskCurrency(person?.monthlyIncome ?? '')}
               onChange={(value) => actions.updateGuardianMonthlyIncome(index, value)}
             />
             <AppGrid size={{ xs: 12 }}>
@@ -200,6 +222,7 @@ export const GuardianCard = ({
               label="CEP"
               value={maskCep(uiExtras.guardianCeps[index] ?? '')}
               onChange={(value) => actions.updateGuardianCep(index, value)}
+              onBlur={handleCepBlur}
             />
             <EnrollmentOnboardingField
               label="Rua"

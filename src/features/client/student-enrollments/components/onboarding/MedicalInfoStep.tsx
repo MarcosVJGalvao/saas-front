@@ -4,6 +4,7 @@ import { AppStack } from '@shared/components/layout/AppStack';
 import { AppText } from '@shared/components/data-display/AppText';
 import { EnrollmentOnboardingField } from '@features/client/student-enrollments/components/onboarding/EnrollmentOnboardingField';
 import type { StudentEnrollmentStepProps } from '@features/client/student-enrollments/types/studentEnrollmentOnboarding.types';
+import { bloodTypeOptions } from '@shared/constants/selectOptions';
 import { maskPhone } from '@shared/masks/inputMasks';
 
 export const MedicalInfoStep = ({ value, actions }: StudentEnrollmentStepProps) => {
@@ -20,19 +21,24 @@ export const MedicalInfoStep = ({ value, actions }: StudentEnrollmentStepProps) 
       </AppText>
       <AppGrid container spacing={1.5}>
         <EnrollmentOnboardingField
+          select
           label="Tipo sanguíneo"
           value={medicalInfo?.bloodType ?? ''}
           onChange={actions.updateMedicalBloodType}
+          options={bloodTypeOptions}
+          gridSize={{ xs: 12, md: 3 }}
         />
         <EnrollmentOnboardingField
           label="Nome do contato de emergência"
           value={medicalInfo?.emergencyContactName ?? ''}
           onChange={actions.updateMedicalEmergencyContactName}
+          gridSize={{ xs: 12, md: 6 }}
         />
         <EnrollmentOnboardingField
           label="Telefone de emergência"
           value={maskPhone(medicalInfo?.emergencyContactPhone ?? '')}
           onChange={actions.updateMedicalEmergencyContactPhone}
+          gridSize={{ xs: 12, md: 3 }}
         />
         <EnrollmentOnboardingField
           label="Alergias"

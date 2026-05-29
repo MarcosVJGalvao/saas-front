@@ -205,4 +205,16 @@ export const yesNoOptions: AppSelectOption[] = [
   buildSelectOption('false', 'Não'),
 ];
 
+export const bloodTypeOptions: AppSelectOption[] = [
+  buildSelectOption('', 'Não informar'),
+  buildSelectOption('A+', 'A+'),
+  buildSelectOption('A-', 'A-'),
+  buildSelectOption('B+', 'B+'),
+  buildSelectOption('B-', 'B-'),
+  buildSelectOption('AB+', 'AB+'),
+  buildSelectOption('AB-', 'AB-'),
+  buildSelectOption('O+', 'O+'),
+  buildSelectOption('O-', 'O-'),
+];
+
 export const createOptionsWithPlaceholder = withPlaceholder;

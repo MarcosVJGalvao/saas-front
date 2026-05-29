@@ -44,7 +44,7 @@ export const StudentEnrollmentSummary = ({
 }: StudentEnrollmentSummaryProps) => {
   const summaryTexts = getSummaryTexts(summary);
   const completedSteps = Math.max(0, Math.min(maxCompletedStep, stepLabels.length));
-  const progress = Math.round((completedSteps / stepLabels.length) * 100);
+  const progress = Math.round((completedSteps / (stepLabels.length - 1)) * 100);
 
   return (
     <AppStack

@@ -54,6 +54,7 @@ const StudentEnrollmentOnboardingPage = () => {
               studentEnrollmentOnboardingPage.isLastStep ? 'Finalizar matrícula' : 'Próximo'
             }
             nextDisabled={studentEnrollmentOnboardingPage.nextDisabled}
+            nextDisabledTooltip={studentEnrollmentOnboardingPage.nextDisabledTooltip}
           >
             <StudentEnrollmentSteps
               activeStep={studentEnrollmentOnboardingPage.activeStep}
