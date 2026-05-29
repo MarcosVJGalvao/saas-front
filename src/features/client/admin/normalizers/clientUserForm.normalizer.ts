@@ -18,7 +18,6 @@ export const toClientUserCreatePayload = (
   fullName: values.name.trim(),
   email: toOptionalText(values.email),
   roleId: toOptionalText(values.roleId),
-  status: values.status,
 });
 
 export const toClientUserEditFormValues = (user: ClientUser): ClientUserEditFormValues => ({

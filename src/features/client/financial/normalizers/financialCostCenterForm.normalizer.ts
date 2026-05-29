@@ -12,10 +12,9 @@ const toOptionalText = (value: string | undefined): string | undefined => {
 
 export const toFinancialCostCenterCreatePayload = (
   values: FinancialCostCenterCreateFormValues,
-): FinancialEntityPayload => ({
+): Omit<FinancialEntityPayload, 'status'> => ({
   name: values.name.trim(),
   code: toOptionalText(values.code),
-  status: values.status,
   description: toOptionalText(values.description),
 });
 

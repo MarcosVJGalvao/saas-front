@@ -16,7 +16,6 @@ export const useFinancialCategoryCreatePage = () => {
     name: '',
     code: '',
     type: 'expense',
-    status: 'active',
     description: '',
   });
 

@@ -6,10 +6,7 @@ import { FormTextField } from '@shared/components/form/FormTextField';
 import { AppPaper } from '@shared/components/data-display/AppPaper';
 import { AppStack } from '@shared/components/layout/AppStack';
 import { PageHeader } from '@shared/components/layout/PageHeader';
-import {
-  financialCategoryTypeOptions,
-  financialEntityStatusOptions,
-} from '@shared/constants/selectOptions';
+import { financialCategoryTypeOptions } from '@shared/constants/selectOptions';
 import { useFinancialCategoryCreatePage } from '@features/client/financial/hooks/useFinancialCategoryCreatePage';
 import type { FinancialCategoryCreateFormValues } from '@features/client/financial/schemas/financialCategoryCreateForm.schema';
 
@@ -40,11 +37,6 @@ const FinancialCategoryCreatePage = () => {
             name="type"
             label="Tipo"
             options={financialCategoryTypeOptions}
-          />
-          <FormSelect<FinancialCategoryCreateFormValues>
-            name="status"
-            label="Status"
-            options={financialEntityStatusOptions}
           />
           <FormTextField<FinancialCategoryCreateFormValues>
             name="description"

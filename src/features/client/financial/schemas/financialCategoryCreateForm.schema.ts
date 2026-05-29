@@ -6,9 +6,6 @@ export const financialCategoryCreateFormSchema = z.object({
   type: z.enum(['revenue', 'expense'], {
     required_error: 'Selecione o tipo.',
   }),
-  status: z.enum(['active', 'inactive'], {
-    required_error: 'Selecione o status.',
-  }),
   description: z.string().optional(),
 });
 

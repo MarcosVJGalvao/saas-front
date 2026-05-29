@@ -8,11 +8,7 @@ import { AppSelect } from '@shared/components/inputs/AppSelect';
 import { AppTextField } from '@shared/components/inputs/AppTextField';
 import { AppStack } from '@shared/components/layout/AppStack';
 import { PageHeader } from '@shared/components/layout/PageHeader';
-import {
-  documentTypeOptions,
-  genderOptions,
-  studentStatusOptions,
-} from '@shared/constants/selectOptions';
+import { documentTypeOptions, genderOptions } from '@shared/constants/selectOptions';
 import { useStudentCreatePage } from '@features/client/students/hooks/useStudentCreatePage';
 
 const StudentCreatePage = () => {
@@ -106,19 +102,6 @@ const StudentCreatePage = () => {
               <AppTextField
                 {...field}
                 label="Código do aluno"
-                error={fieldState.invalid}
-                helperText={fieldState.error?.message}
-              />
-            )}
-          />
-          <Controller
-            name="status"
-            control={studentCreatePage.form.control}
-            render={({ field, fieldState }) => (
-              <AppSelect
-                {...field}
-                label="Status"
-                options={studentStatusOptions}
                 error={fieldState.invalid}
                 helperText={fieldState.error?.message}
               />

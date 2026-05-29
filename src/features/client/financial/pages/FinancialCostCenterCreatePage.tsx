@@ -1,12 +1,10 @@
 import { AppAlert } from '@shared/components/feedback/AppAlert';
 import { AppForm } from '@shared/components/form/AppForm';
 import { FormActions } from '@shared/components/form/FormActions';
-import { FormSelect } from '@shared/components/form/FormSelect';
 import { FormTextField } from '@shared/components/form/FormTextField';
 import { AppPaper } from '@shared/components/data-display/AppPaper';
 import { AppStack } from '@shared/components/layout/AppStack';
 import { PageHeader } from '@shared/components/layout/PageHeader';
-import { financialEntityStatusOptions } from '@shared/constants/selectOptions';
 import { useFinancialCostCenterCreatePage } from '@features/client/financial/hooks/useFinancialCostCenterCreatePage';
 import type { FinancialCostCenterCreateFormValues } from '@features/client/financial/schemas/financialCostCenterCreateForm.schema';
 
@@ -33,11 +31,6 @@ const FinancialCostCenterCreatePage = () => {
         >
           <FormTextField<FinancialCostCenterCreateFormValues> name="name" label="Nome" />
           <FormTextField<FinancialCostCenterCreateFormValues> name="code" label="Código" />
-          <FormSelect<FinancialCostCenterCreateFormValues>
-            name="status"
-            label="Status"
-            options={financialEntityStatusOptions}
-          />
           <FormTextField<FinancialCostCenterCreateFormValues>
             name="description"
             label="Descrição"

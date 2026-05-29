@@ -15,12 +15,10 @@ export const createStudentInitialValues = (): StudentCreateFormValues => ({
   dateOfBirth: '',
   gender: 'prefer_not_to_say',
   registrationCode: '',
-  status: 'active',
 });
 
 export const toStudentCreatePayload = (values: StudentCreateFormValues): StudentRequest => ({
   registrationCode: getOptionalText(values.registrationCode),
-  status: values.status,
   person: {
     fullName: values.fullName.trim(),
     documentNumber: onlyDigits(values.documentNumber ?? ''),

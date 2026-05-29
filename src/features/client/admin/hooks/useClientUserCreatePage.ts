@@ -12,7 +12,6 @@ const initialValues: ClientUserCreateFormValues = {
   name: '',
   email: '',
   roleId: '',
-  status: 'active',
 };
 
 export const useClientUserCreatePage = () => {

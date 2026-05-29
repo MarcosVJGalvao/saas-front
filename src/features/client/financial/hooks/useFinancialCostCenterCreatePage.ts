@@ -17,7 +17,6 @@ export const useFinancialCostCenterCreatePage = () => {
     {
       name: '',
       code: '',
-      status: 'active',
       description: '',
     },
   );
