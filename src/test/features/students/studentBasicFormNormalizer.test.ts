@@ -12,7 +12,15 @@ import { studentCreateFormSchema } from '@features/client/students/schemas/stude
 
 describe('student basic form normalizer', () => {
   it('cria estados iniciais padrão', () => {
-    expect(createStudentInitialValues().status).toBe('active');
+    expect(createStudentInitialValues()).toEqual({
+      fullName: '',
+      documentNumber: '',
+      documentType: 'CPF',
+      dateOfBirth: '',
+      gender: 'prefer_not_to_say',
+      registrationCode: '',
+      status: 'active',
+    });
     expect(createLegalGuardianInitialValues().relationshipType).toBe('legal_guardian');
   });
 
