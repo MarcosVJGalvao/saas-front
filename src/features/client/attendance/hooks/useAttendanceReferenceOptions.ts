@@ -17,7 +17,7 @@ import type {
 } from '@features/client/academic/types/academic.types';
 import type { AttendanceSchedule } from '@features/client/attendance/types/attendance.types';
 import type { StudentEnrollment } from '@features/client/student-enrollments/types/studentEnrollment.types';
-import type { Student } from '@features/client/students/types/student.types';
+import type { StudentListItem } from '@features/client/students/types/student.types';
 
 const REFERENCE_LIMIT = 100;
 
@@ -59,13 +59,9 @@ const toEnrollmentOption = (enrollment: StudentEnrollment): AppSelectOption => (
     enrollment.id,
 });
 
-const toStudentOption = (student: Student): AppSelectOption => ({
+const toStudentOption = (student: StudentListItem): AppSelectOption => ({
   value: student.id,
-  label:
-    student.person?.fullName ??
-    student.registrationCode ??
-    student.person?.documentNumber ??
-    student.id,
+  label: student.fullName || student.registrationCode || student.documentNumber || student.id,
 });
 
 export interface UseAttendanceReferenceOptionsParams {
@@ -88,7 +84,7 @@ export const useAttendanceReferenceOptions = ({
   const [studentOptions, setStudentOptions] = useState<AppSelectOption[]>([]);
   const [schedules, setSchedules] = useState<AttendanceSchedule[]>([]);
   const [studentEnrollments, setStudentEnrollments] = useState<StudentEnrollment[]>([]);
-  const [students, setStudents] = useState<Student[]>([]);
+  const [students, setStudents] = useState<StudentListItem[]>([]);
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | undefined>();
 

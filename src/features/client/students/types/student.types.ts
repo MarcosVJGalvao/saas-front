@@ -78,7 +78,7 @@ export type StudentLegalGuardianLink = {
     | undefined;
 };
 
-export type Student = {
+export type StudentListItem = {
   id: string;
   fullName: string;
   registrationCode: string;
@@ -96,6 +96,12 @@ export type Student = {
       name: string;
     } | null;
   } | null;
+  status: StudentStatus;
+};
+
+export type Student = {
+  id: string;
+  registrationCode?: string | undefined;
   status: StudentStatus;
   person?: StudentPerson | null | undefined;
   contacts?: StudentContact[] | undefined;

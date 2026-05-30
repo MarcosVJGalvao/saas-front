@@ -6,7 +6,7 @@ import {
 } from '@features/client/academic/services/service';
 import { studentService } from '@features/client/students/services/service';
 import type { AcademicYear, SchoolClass } from '@features/client/academic/types/academic.types';
-import type { Student } from '@features/client/students/types/student.types';
+import type { StudentListItem } from '@features/client/students/types/student.types';
 
 const REFERENCE_LIMIT = 100;
 const EMPTY_OPTION: AppSelectOption = { value: '', label: 'Não vincular' };
@@ -21,13 +21,9 @@ const toSchoolClassOption = (schoolClass: SchoolClass): AppSelectOption => ({
   label: schoolClass.code ? `${schoolClass.name} (${schoolClass.code})` : schoolClass.name,
 });
 
-const toStudentOption = (student: Student): AppSelectOption => ({
+const toStudentOption = (student: StudentListItem): AppSelectOption => ({
   value: student.id,
-  label:
-    student.person?.fullName ??
-    student.registrationCode ??
-    student.person?.documentNumber ??
-    student.id,
+  label: student.fullName || student.registrationCode || student.documentNumber || student.id,
 });
 
 export const useStudentEnrollmentReferenceOptions = () => {

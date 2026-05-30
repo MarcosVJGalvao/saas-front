@@ -6,7 +6,7 @@ import {
   buildStudentMobileConfig,
 } from '../components/studentListColumns';
 import { useStudentsList } from './useStudentsList';
-import type { Student, StudentQueryParams, StudentStatus } from '../types/student.types';
+import type { StudentListItem, StudentQueryParams, StudentStatus } from '../types/student.types';
 
 type StudentFilterValues = {
   query: string;
@@ -69,10 +69,10 @@ export const useStudentsListPage = () => {
     onPageChange: (page: number) => studentsList.updateQueryParams({ page }),
     onRowsPerPageChange: (limit: number) => studentsList.updateQueryParams({ limit, page: 1 }),
     tableColumns: buildStudentListColumns({
-      onDetails: (student: Student) => {
+      onDetails: (student: StudentListItem) => {
         void navigate(`/client/students/${student.id}`);
       },
-      onEdit: (student: Student) => {
+      onEdit: (student: StudentListItem) => {
         void navigate(`/client/students/${student.id}/edit`, { state: { entity: student } });
       },
       onNewEnrollment: () => {
@@ -80,10 +80,10 @@ export const useStudentsListPage = () => {
       },
     }),
     mobileConfig: buildStudentMobileConfig({
-      onDetails: (student: Student) => {
+      onDetails: (student: StudentListItem) => {
         void navigate(`/client/students/${student.id}`);
       },
-      onEdit: (student: Student) => {
+      onEdit: (student: StudentListItem) => {
         void navigate(`/client/students/${student.id}/edit`, { state: { entity: student } });
       },
       onNewEnrollment: () => {

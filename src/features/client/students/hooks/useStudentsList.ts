@@ -1,10 +1,10 @@
 import { useCallback, useEffect, useState } from 'react';
 import type { PaginationMeta } from '@shared/types/pagination';
 import { studentService } from '../services/service';
-import type { Student, StudentQueryParams } from '../types/student.types';
+import type { StudentListItem, StudentQueryParams } from '../types/student.types';
 
 export const useStudentsList = (initialParams?: Partial<StudentQueryParams>) => {
-  const [rows, setRows] = useState<Student[]>([]);
+  const [rows, setRows] = useState<StudentListItem[]>([]);
   const [pagination, setPagination] = useState<PaginationMeta>({
     page: 1,
     limit: 10,

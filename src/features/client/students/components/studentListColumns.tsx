@@ -7,30 +7,29 @@ import type { DataTableColumn } from '@shared/components/data-display/data/DataT
 import { translateStudentStatus } from '@shared/i18n/pt-BR/enums';
 import { maskCnpj, maskCpf } from '@shared/masks/inputMasks';
 import { onlyDigits } from '@shared/parsers/stringParsers';
-import type { Student } from '../types/student.types';
+import type { StudentListItem } from '../types/student.types';
 
 export interface StudentListColumnActions {
-  onDetails: (student: Student) => void;
-  onEdit: (student: Student) => void;
-  onNewEnrollment: (student: Student) => void;
+  onDetails: (student: StudentListItem) => void;
+  onEdit: (student: StudentListItem) => void;
+  onNewEnrollment: (student: StudentListItem) => void;
 }
 
-const getStudentDisplayName = (student: Student): string => student.fullName ?? '-';
+const getStudentDisplayName = (student: StudentListItem): string => student.fullName;
 
-const getRegistrationCode = (student: Student): string => student.registrationCode ?? '-';
+const getRegistrationCode = (student: StudentListItem): string => student.registrationCode;
 
-const getDocumentNumber = (student: Student): string => {
+const getDocumentNumber = (student: StudentListItem): string => {
   const documentNumber = student.documentNumber;
-  if (!documentNumber) return '-';
   const digits = onlyDigits(documentNumber);
   if (digits.length === 11) return maskCpf(digits);
   if (digits.length === 14) return maskCnpj(digits);
   return documentNumber;
 };
 
-const getCurrentEnrollment = (student: Student): string => student.schoolClass?.name ?? '-';
+const getCurrentEnrollment = (student: StudentListItem): string => student.schoolClass?.name ?? '-';
 
-const renderStatus = (student: Student) => (
+const renderStatus = (student: StudentListItem) => (
   <LocalizedStatusBadge
     label={translateStudentStatus(student.status)}
     tone={student.status === 'active' ? 'active' : 'neutral'}
@@ -39,7 +38,7 @@ const renderStatus = (student: Student) => (
 
 export const buildStudentListColumns = (
   actions: StudentListColumnActions,
-): DataTableColumn<Student>[] => [
+): DataTableColumn<StudentListItem>[] => [
   {
     key: 'student',
     header: 'Aluno',
@@ -93,7 +92,7 @@ export const buildStudentListColumns = (
 
 export const buildStudentMobileConfig = (
   actions: StudentListColumnActions,
-): DataListMobileConfig<Student> => ({
+): DataListMobileConfig<StudentListItem> => ({
   renderTitle: getStudentDisplayName,
   renderSubtitle: getDocumentNumber,
   renderStatus,

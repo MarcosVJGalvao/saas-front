@@ -27,10 +27,7 @@ export const useSchoolClassBindingOptions = () => {
           studentsRes.data.map((student) => ({
             value: student.id,
             label:
-              student.person?.fullName ??
-              student.registrationCode ??
-              student.person?.documentNumber ??
-              student.id,
+              student.fullName || student.registrationCode || student.documentNumber || student.id,
           })),
         );
 

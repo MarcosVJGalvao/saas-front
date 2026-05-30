@@ -120,9 +120,11 @@ describe('reference options expansion hooks', () => {
       data: [
         {
           id: 'student-1',
+          fullName: 'Maria',
           registrationCode: 'ALU-1',
+          documentNumber: '123',
+          schoolClass: null,
           status: 'active',
-          person: { fullName: 'Maria', documentNumber: '123' },
         },
       ],
       meta,
@@ -178,9 +180,11 @@ describe('reference options expansion hooks', () => {
       data: [
         {
           id: 'student-1',
+          fullName: 'Maria',
           registrationCode: 'ALU-1',
+          documentNumber: '123',
+          schoolClass: null,
           status: 'active',
-          person: { fullName: 'Maria', documentNumber: '123' },
         },
       ],
       meta,

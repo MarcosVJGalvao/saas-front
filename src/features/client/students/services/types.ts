@@ -1,5 +1,6 @@
 import type { PaginatedResponse } from '@shared/types/pagination';
 import type {
+  StudentListItem,
   Student,
   StudentFinancialHistoryQueryParams,
   StudentQueryParams,
@@ -7,7 +8,7 @@ import type {
 } from '../types/student.types';
 
 export type StudentsListParams = StudentQueryParams;
-export type StudentsListResponse = PaginatedResponse<Student>;
+export type StudentsListResponse = PaginatedResponse<StudentListItem>;
 export type StudentDetailsResponse = Student;
 export type StudentCreatePayload = StudentRequest;
 export type StudentCreateResponse = Student;

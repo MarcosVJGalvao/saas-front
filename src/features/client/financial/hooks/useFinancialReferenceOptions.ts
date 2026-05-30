@@ -11,7 +11,7 @@ import type {
   FinancialCategory,
   FinancialCostCenter,
 } from '@features/client/financial/types/financial.types';
-import type { Student } from '@features/client/students/types/student.types';
+import type { StudentListItem } from '@features/client/students/types/student.types';
 import type { SchoolClass } from '@features/client/academic/types/academic.types';
 import type { StudentEnrollment } from '@features/client/student-enrollments/types/studentEnrollment.types';
 
@@ -31,9 +31,9 @@ const toCostCenterOption = (costCenter: FinancialCostCenter): AppSelectOption =>
   label: costCenter.code ? `${costCenter.name} (${costCenter.code})` : costCenter.name,
 });
 
-const toStudentOption = (student: Student): AppSelectOption => ({
+const toStudentOption = (student: StudentListItem): AppSelectOption => ({
   value: student.id,
-  label: student.person?.fullName ?? student.registrationCode ?? student.id,
+  label: student.fullName || student.registrationCode || student.documentNumber || student.id,
 });
 
 const toSchoolClassOption = (schoolClass: SchoolClass): AppSelectOption => ({

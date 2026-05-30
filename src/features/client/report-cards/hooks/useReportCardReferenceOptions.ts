@@ -16,7 +16,7 @@ import type {
 } from '@features/client/academic/types/academic.types';
 import type { StudentEnrollment } from '@features/client/student-enrollments/types/studentEnrollment.types';
 import type { ReportCardAcademicPeriod } from '@features/client/report-cards/types/reportCard.types';
-import type { Student } from '@features/client/students/types/student.types';
+import type { StudentListItem } from '@features/client/students/types/student.types';
 
 const REFERENCE_LIMIT = 100;
 
@@ -51,13 +51,9 @@ const toEnrollmentOption = (enrollment: StudentEnrollment): AppSelectOption => (
     enrollment.id,
 });
 
-const toStudentOption = (student: Student): AppSelectOption => ({
+const toStudentOption = (student: StudentListItem): AppSelectOption => ({
   value: student.id,
-  label:
-    student.person?.fullName ??
-    student.registrationCode ??
-    student.person?.documentNumber ??
-    student.id,
+  label: student.fullName || student.registrationCode || student.documentNumber || student.id,
 });
 
 export interface UseReportCardReferenceOptionsParams {
