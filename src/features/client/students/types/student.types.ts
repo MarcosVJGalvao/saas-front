@@ -3,6 +3,8 @@ import type {
   DocumentTypeValue,
   GenderValue,
   GuardianRelationshipTypeValue,
+  MaritalStatusValue,
+  NationalityValue,
   StudentStatusValue,
 } from '@shared/i18n/pt-BR/enums';
 import type { ClientBaseQueryParams } from '@features/client/shared/types/clientApi.types';
@@ -10,8 +12,21 @@ import type { ClientBaseQueryParams } from '@features/client/shared/types/client
 export type StudentStatus = StudentStatusValue;
 export type StudentDocumentType = DocumentTypeValue;
 export type StudentGender = GenderValue;
+export type StudentMaritalStatus = MaritalStatusValue;
+export type StudentNationality = NationalityValue;
 export type StudentContactType = ContactTypeValue;
 export type LegalGuardianRelationshipType = GuardianRelationshipTypeValue;
+
+export type StudentMedicalInfo = {
+  id?: string | undefined;
+  bloodType?: string | undefined;
+  allergies?: string | undefined;
+  chronicDiseases?: string | undefined;
+  medications?: string | undefined;
+  emergencyContactName?: string | undefined;
+  emergencyContactPhone?: string | undefined;
+  notes?: string | undefined;
+};
 
 export type StudentPerson = {
   id?: string | undefined;
@@ -19,7 +34,13 @@ export type StudentPerson = {
   documentNumber?: string | undefined;
   documentType?: StudentDocumentType | undefined;
   dateOfBirth?: string | undefined;
+  nationality?: StudentNationality | undefined;
   gender?: StudentGender | undefined;
+  maritalStatus?: StudentMaritalStatus | null | undefined;
+  monthlyIncome?: string | null | undefined;
+  contacts?: StudentContact[] | undefined;
+  addresses?: StudentAddress[] | undefined;
+  medicalInfo?: StudentMedicalInfo | null | undefined;
 };
 
 export type StudentContact = {
@@ -67,6 +88,7 @@ export type StudentLegalGuardianLink = {
   relationshipType?: LegalGuardianRelationshipType | undefined;
   isPrimary?: boolean | undefined;
   isFinancialResponsible?: boolean | undefined;
+  canPickUp?: boolean | undefined;
   legalGuardian?:
     | {
         id: string;
@@ -103,6 +125,15 @@ export type Student = {
   id: string;
   registrationCode?: string | undefined;
   status: StudentStatus;
+  schoolClass?:
+    | {
+        id: string;
+        name: string;
+        code?: string | undefined;
+      }
+    | null
+    | undefined;
+  medicalInfo?: StudentMedicalInfo | null | undefined;
   person?: StudentPerson | null | undefined;
   contacts?: StudentContact[] | undefined;
   addresses?: StudentAddress[] | undefined;
