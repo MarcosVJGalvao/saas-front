@@ -42,6 +42,7 @@ const TOKEN_EXPIRED_ERROR_CODE = 'TOKEN_EXPIRED';
 const REFRESH_TOKEN_INVALID_ERROR_CODE = 'REFRESH_TOKEN_INVALID';
 const TOKEN_EXPIRED_EVENT = 'app:token-expired';
 const SESSION_UPDATED_EVENT = 'app:session-updated';
+const DEFAULT_REQUEST_TIMEOUT_IN_MILLISECONDS = 80000;
 const isRecord = (value: unknown): value is Record<string, unknown> =>
   typeof value === 'object' && value !== null && !Array.isArray(value);
 
@@ -82,7 +83,7 @@ export const shouldSkipTokenRefreshForRequest = (requestUrl: string): boolean =>
 
 export const httpClient = axios.create({
   baseURL: '',
-  timeout: 10000,
+  timeout: DEFAULT_REQUEST_TIMEOUT_IN_MILLISECONDS,
   headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
 });
 
