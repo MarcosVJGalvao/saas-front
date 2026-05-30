@@ -80,7 +80,22 @@ export type StudentLegalGuardianLink = {
 
 export type Student = {
   id: string;
-  registrationCode?: string | undefined;
+  fullName: string;
+  registrationCode: string;
+  documentNumber: string;
+  schoolClass: {
+    id: string;
+    name: string;
+    code: string;
+    grade: {
+      id: string;
+      name: string;
+    } | null;
+    educationLevel: {
+      id: string;
+      name: string;
+    } | null;
+  } | null;
   status: StudentStatus;
   person?: StudentPerson | null | undefined;
   contacts?: StudentContact[] | undefined;

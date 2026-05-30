@@ -15,29 +15,20 @@ export interface StudentListColumnActions {
   onNewEnrollment: (student: Student) => void;
 }
 
-const getStudentName = (student: Student): string => student.person?.fullName ?? '-';
+const getStudentDisplayName = (student: Student): string => student.fullName ?? '-';
 
 const getRegistrationCode = (student: Student): string => student.registrationCode ?? '-';
 
 const getDocumentNumber = (student: Student): string => {
-  const documentNumber = student.person?.documentNumber;
+  const documentNumber = student.documentNumber;
   if (!documentNumber) return '-';
   const digits = onlyDigits(documentNumber);
-  if (student.person?.documentType === 'CPF' || digits.length === 11) return maskCpf(digits);
-  if (student.person?.documentType === 'CNPJ' || digits.length === 14) return maskCnpj(digits);
+  if (digits.length === 11) return maskCpf(digits);
+  if (digits.length === 14) return maskCnpj(digits);
   return documentNumber;
 };
 
-const getCurrentEnrollment = (student: Student): string => {
-  const enrollment = student.enrollments?.[0];
-  if (!enrollment) return '-';
-  return (
-    enrollment.schoolClass?.name ??
-    enrollment.academicYear?.name ??
-    enrollment.enrollmentCode ??
-    '-'
-  );
-};
+const getCurrentEnrollment = (student: Student): string => student.schoolClass?.name ?? '-';
 
 const renderStatus = (student: Student) => (
   <LocalizedStatusBadge
@@ -52,8 +43,8 @@ export const buildStudentListColumns = (
   {
     key: 'student',
     header: 'Aluno',
-    render: getStudentName,
-    mobileRender: getStudentName,
+    render: getStudentDisplayName,
+    mobileRender: getStudentDisplayName,
   },
   {
     key: 'registration',
@@ -85,7 +76,7 @@ export const buildStudentListColumns = (
     align: 'right',
     render: (student) => (
       <RowActionsMenu
-        triggerAriaLabel={`Abrir ações do aluno ${getStudentName(student)}`}
+        triggerAriaLabel={`Abrir ações do aluno ${getStudentDisplayName(student)}`}
         actions={[
           { key: 'details', label: 'Ver detalhes', onClick: () => actions.onDetails(student) },
           { key: 'edit', label: 'Editar', onClick: () => actions.onEdit(student) },
@@ -103,12 +94,12 @@ export const buildStudentListColumns = (
 export const buildStudentMobileConfig = (
   actions: StudentListColumnActions,
 ): DataListMobileConfig<Student> => ({
-  renderTitle: getStudentName,
+  renderTitle: getStudentDisplayName,
   renderSubtitle: getDocumentNumber,
   renderStatus,
   renderActions: (student) => (
     <RowActionsMenu
-      triggerAriaLabel={`Abrir ações do aluno ${getStudentName(student)}`}
+      triggerAriaLabel={`Abrir ações do aluno ${getStudentDisplayName(student)}`}
       actions={[
         { key: 'details', label: 'Ver detalhes', onClick: () => actions.onDetails(student) },
         { key: 'edit', label: 'Editar', onClick: () => actions.onEdit(student) },

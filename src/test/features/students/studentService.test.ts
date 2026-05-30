@@ -14,8 +14,14 @@ describe('studentService', () => {
           {
             id: 'student-1',
             status: 'active',
-            registrationCode: 'ALU-001',
-            person: { fullName: 'Maria Silva', documentNumber: '12345678900' },
+            fullName: 'Maria Silva',
+            registrationCode: 'STU-2026-000001',
+            documentNumber: '12345678900',
+            schoolClass: {
+              id: 'school-class-1',
+              name: 'Turma A',
+              code: 'TA-01',
+            },
           },
         ],
         meta: {
@@ -35,6 +41,8 @@ describe('studentService', () => {
       params: { page: 1, limit: 10, status: 'active', sortOrder: 'DESC' },
     });
     expect(response.data[0]?.id).toBe('student-1');
+    expect(response.data[0]?.fullName).toBe('Maria Silva');
+    expect(response.data[0]?.schoolClass?.name).toBe('Turma A');
   });
 
   it('busca detalhes do aluno pelo endpoint correto', async () => {
