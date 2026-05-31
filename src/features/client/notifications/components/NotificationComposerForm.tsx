@@ -1,19 +1,23 @@
 import { Controller } from 'react-hook-form';
+import type { AppAutocompleteOption } from '@shared/components/form/AppAutocomplete';
+import { AppAutocompleteMultiple } from '@shared/components/form/AppAutocompleteMultiple';
 import { AppForm } from '@shared/components/form/AppForm';
 import { FormActions } from '@shared/components/form/FormActions';
-import { FormTextField } from '@shared/components/form/FormTextField';
 import { AppTextField } from '@shared/components/inputs/AppTextField';
 import { AppBox } from '@shared/components/layout/AppBox';
 import type { UseSendNotificationPageResult } from '@features/client/notifications/hooks/useSendNotificationPage';
-import type { SendNotificationFormValues } from '@features/client/notifications/schemas/sendNotificationForm.schema';
 
 interface NotificationComposerFormProps {
   model: UseSendNotificationPageResult;
 }
 
+const toSelectedUserOptions = (
+  options: AppAutocompleteOption[],
+  selectedUserIds: string[],
+): AppAutocompleteOption[] => options.filter((option) => selectedUserIds.includes(option.value));
+
 export const NotificationComposerForm = ({ model }: NotificationComposerFormProps) => (
   <AppForm form={model.form} onSubmit={model.onSubmit}>
-    <FormTextField<SendNotificationFormValues> name="eventKey" label="Chave do evento" />
     <Controller
       name="message"
       control={model.form.control}
@@ -32,12 +36,20 @@ export const NotificationComposerForm = ({ model }: NotificationComposerFormProp
       name="targetUserIds"
       control={model.form.control}
       render={({ field, fieldState }) => (
-        <AppTextField
-          {...field}
-          label="IDs de usuários"
-          placeholder="user-1, user-2"
-          helperText={fieldState.error?.message ?? 'Opcional. Separe múltiplos IDs por vírgula.'}
+        <AppAutocompleteMultiple
+          label="Usuários de destino"
+          placeholder="Selecione um ou mais usuários"
+          options={model.recipientOptions.userOptions}
+          value={toSelectedUserOptions(model.recipientOptions.userOptions, field.value)}
+          onChange={(selectedOptions) => {
+            field.onChange(selectedOptions.map((option) => option.value));
+          }}
+          helperText={
+            fieldState.error?.message ??
+            'Opcional. Se nada for selecionado, o backend define o alcance da notificação.'
+          }
           error={fieldState.invalid}
+          disabled={model.submitting || model.recipientOptions.loading}
         />
       )}
     />

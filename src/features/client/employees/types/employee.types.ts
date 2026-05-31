@@ -33,6 +33,12 @@ export type EmployeeCreateContact = {
   value: string;
 };
 
+export type EmployeeContact = {
+  id?: string | undefined;
+  type: ContactTypeValue;
+  value: string;
+};
+
 export type EmployeeCreatePerson = {
   fullName: string;
   documentNumber: string;
@@ -68,7 +74,9 @@ export type Employee = {
     fullName?: string | undefined;
     documentNumber?: string | undefined;
     naturality?: string | undefined;
+    contacts?: EmployeeContact[] | undefined;
   } | null;
+  contacts?: EmployeeContact[] | undefined;
   createdAt?: string | undefined;
   updatedAt?: string | undefined;
 };

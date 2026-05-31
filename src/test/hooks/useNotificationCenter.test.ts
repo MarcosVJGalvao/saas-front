@@ -92,7 +92,7 @@ describe('useNotificationCenter', () => {
     expect(result.current.notifications[0]?.read).toBe(true);
   });
 
-  it('adiciona notificação recebida em tempo real sem duplicar ids', async () => {
+  it('processa notification.created em tempo real sem duplicar ids', async () => {
     listMock.mockResolvedValueOnce({
       data: [{ id: '1', message: 'Primeira', read: false }],
       meta: {
@@ -117,11 +117,20 @@ describe('useNotificationCenter', () => {
     }
 
     act(() => {
-      listenerCandidate({ id: '2', message: 'Segunda', read: false });
-      listenerCandidate({ id: '2', message: 'Segunda', read: false });
+      listenerCandidate({
+        eventKey: 'invoice.overdue',
+        message: 'Segunda',
+        notifications: [{ id: '2', message: 'Segunda', read: false }],
+      });
+      listenerCandidate({
+        eventKey: 'invoice.overdue',
+        message: 'Segunda',
+        notifications: [{ id: '2', message: 'Segunda', read: false }],
+      });
     });
 
     expect(result.current.notifications).toHaveLength(2);
     expect(result.current.notifications[0]?.id).toBe('2');
+    expect(result.current.snackbarMessage).toBe('Segunda');
   });
 });

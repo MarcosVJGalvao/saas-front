@@ -1,9 +1,13 @@
+import { io, type Socket } from 'socket.io-client';
 import {
-  notificationItemSchema,
-  type NotificationItem,
+  notificationCreatedEventSchema,
+  type NotificationCreatedEvent,
 } from '@features/client/notifications/types/notification';
 
-type NotificationListener = (notification: NotificationItem) => void;
+type NotificationListener = (event: NotificationCreatedEvent) => void;
+
+const NOTIFICATION_CREATED_EVENT = 'notification.created';
+const NOTIFICATIONS_NAMESPACE = '/notifications';
 
 const isRecord = (value: unknown): value is Record<string, unknown> =>
   typeof value === 'object' && value !== null && !Array.isArray(value);
@@ -21,34 +25,37 @@ const readEnvironmentValue = (
   return normalizedValue.length > 0 ? normalizedValue : undefined;
 };
 
-const normalizeWebsocketUrl = (baseUrl: string): string => {
-  if (baseUrl.startsWith('ws://') || baseUrl.startsWith('wss://')) {
-    return baseUrl;
+const normalizeSocketBaseUrl = (baseUrl: string): string => {
+  let normalizedProtocol = baseUrl;
+
+  if (baseUrl.startsWith('wss://')) {
+    normalizedProtocol = `https://${baseUrl.slice('wss://'.length)}`;
+  } else if (baseUrl.startsWith('ws://')) {
+    normalizedProtocol = `http://${baseUrl.slice('ws://'.length)}`;
   }
 
-  if (baseUrl.startsWith('https://')) {
-    return `wss://${baseUrl.slice('https://'.length)}`;
-  }
-
-  if (baseUrl.startsWith('http://')) {
-    return `ws://${baseUrl.slice('http://'.length)}`;
-  }
-
-  return baseUrl;
+  return normalizedProtocol.replace(/\/+$/, '');
 };
 
-const getNotificationsWebsocketUrl = (): string => {
+const buildNotificationsSocketUrl = (baseUrl: string): string => {
+  const normalizedBaseUrl = normalizeSocketBaseUrl(baseUrl);
+  return normalizedBaseUrl.endsWith(NOTIFICATIONS_NAMESPACE)
+    ? normalizedBaseUrl
+    : `${normalizedBaseUrl}${NOTIFICATIONS_NAMESPACE}`;
+};
+
+const getNotificationsSocketUrl = (): string => {
   const environmentValue: unknown = Reflect.get(import.meta, 'env');
   if (!isRecord(environmentValue)) {
     return '';
   }
 
-  const explicitWebsocketUrl =
+  const explicitSocketUrl =
     readEnvironmentValue(environmentValue, 'VITE_NOTIFICATIONS_WS_URL') ??
     readEnvironmentValue(environmentValue, 'NOTIFICATIONS_WS_URL');
 
-  if (explicitWebsocketUrl !== undefined) {
-    return normalizeWebsocketUrl(explicitWebsocketUrl);
+  if (explicitSocketUrl !== undefined) {
+    return buildNotificationsSocketUrl(explicitSocketUrl);
   }
 
   const apiUrl =
@@ -59,82 +66,53 @@ const getNotificationsWebsocketUrl = (): string => {
     return '';
   }
 
-  return normalizeWebsocketUrl(apiUrl);
-};
-
-const extractNotificationCandidate = (payload: unknown): unknown => {
-  if (!isRecord(payload)) {
-    return payload;
-  }
-
-  const nestedData = payload.data;
-  if (nestedData !== undefined) {
-    return nestedData;
-  }
-
-  const nestedPayload = payload.payload;
-  if (nestedPayload !== undefined) {
-    return nestedPayload;
-  }
-
-  return payload;
+  return buildNotificationsSocketUrl(apiUrl);
 };
 
 class NotificationsRealtime {
   private listeners = new Set<NotificationListener>();
 
-  private socket: WebSocket | null = null;
-
-  private accessToken: string | null = null;
-
-  private isConnecting = false;
+  private socket: Socket | null = null;
 
   connect(accessToken?: string): void {
-    const notificationsWebsocketUrl = getNotificationsWebsocketUrl();
+    const notificationsSocketUrl = getNotificationsSocketUrl();
 
     if (typeof window === 'undefined') {
       return;
     }
-    if (notificationsWebsocketUrl.length === 0) {
+    if (notificationsSocketUrl.length === 0) {
       return;
     }
-    if (this.socket !== null || this.isConnecting) {
+    if (this.socket !== null) {
       return;
     }
 
-    this.accessToken = accessToken ?? null;
-    this.isConnecting = true;
+    const socketOptions =
+      accessToken === undefined || accessToken.length === 0
+        ? { transports: ['websocket'] }
+        : { transports: ['websocket'], auth: { token: accessToken } };
 
-    const socket = new window.WebSocket(this.buildWebsocketUrl(notificationsWebsocketUrl));
+    const socket = io(notificationsSocketUrl, socketOptions);
 
-    socket.addEventListener('open', () => {
-      this.isConnecting = false;
-    });
-
-    socket.addEventListener('message', (event) => {
-      const parsedNotification = this.parseMessage(event.data);
-      if (parsedNotification === null) {
+    socket.on(NOTIFICATION_CREATED_EVENT, (payload: unknown) => {
+      try {
+        const parsedEvent = notificationCreatedEventSchema.parse(payload);
+        this.listeners.forEach((listener) => listener(parsedEvent));
+      } catch {
         return;
       }
-      this.listeners.forEach((listener) => listener(parsedNotification));
     });
 
-    socket.addEventListener('close', () => {
+    socket.on('disconnect', () => {
       this.socket = null;
-      this.isConnecting = false;
-    });
-
-    socket.addEventListener('error', () => {
-      this.isConnecting = false;
     });
 
     this.socket = socket;
   }
 
   disconnect(): void {
-    this.socket?.close();
+    this.socket?.disconnect();
     this.socket = null;
-    this.isConnecting = false;
   }
 
   subscribe(listener: NotificationListener): () => void {
@@ -143,29 +121,6 @@ class NotificationsRealtime {
     return () => {
       this.listeners.delete(listener);
     };
-  }
-
-  private buildWebsocketUrl(baseUrl: string): string {
-    if (this.accessToken === null || this.accessToken.length === 0) {
-      return baseUrl;
-    }
-
-    const separator = baseUrl.includes('?') ? '&' : '?';
-    return `${baseUrl}${separator}token=${encodeURIComponent(this.accessToken)}`;
-  }
-
-  private parseMessage(rawMessage: unknown): NotificationItem | null {
-    if (typeof rawMessage !== 'string') {
-      return null;
-    }
-
-    try {
-      const parsedValue: unknown = JSON.parse(rawMessage);
-      const candidate = extractNotificationCandidate(parsedValue);
-      return notificationItemSchema.parse(candidate);
-    } catch {
-      return null;
-    }
   }
 }
 

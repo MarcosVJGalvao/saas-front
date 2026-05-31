@@ -13,6 +13,9 @@ const SendNotificationPage = () => {
         title="Enviar notificação"
         subtitle="Dispare notificações in-app para um ou mais usuários."
       />
+      {page.recipientOptions.errorMessage ? (
+        <AppAlert severity="error">{page.recipientOptions.errorMessage}</AppAlert>
+      ) : null}
       {page.errorMessage ? <AppAlert severity="error">{page.errorMessage}</AppAlert> : null}
       {page.successMessage ? <AppAlert severity="success">{page.successMessage}</AppAlert> : null}
       <NotificationComposerForm model={page} />

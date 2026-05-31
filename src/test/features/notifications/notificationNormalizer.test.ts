@@ -1,29 +1,31 @@
 import { describe, expect, it } from 'vitest';
 import {
+  FRONT_SEND_NOTIFICATION_EVENT_KEY,
   createSendNotificationInitialValues,
   toNotificationMenuItems,
   toSendNotificationPayload,
 } from '@features/client/notifications/normalizers/notification.normalizer';
-import { sendNotificationFormSchema } from '@features/client/notifications/schemas/sendNotificationForm.schema';
+import {
+  MESSAGE_MAX_LENGTH,
+  sendNotificationFormSchema,
+} from '@features/client/notifications/schemas/sendNotificationForm.schema';
 
 describe('notification normalizer', () => {
   it('cria valores iniciais do formulário', () => {
     expect(createSendNotificationInitialValues()).toEqual({
-      eventKey: '',
       message: '',
-      targetUserIds: '',
+      targetUserIds: [],
     });
   });
 
-  it('normaliza payload removendo ids vazios', () => {
+  it('normaliza payload com eventKey fixo do front removendo ids vazios', () => {
     const values = sendNotificationFormSchema.parse({
-      eventKey: ' invoice.overdue ',
       message: ' Fatura em atraso. ',
-      targetUserIds: ' user-1, , user-2 ,, ',
+      targetUserIds: [' user-1 ', ' ', 'user-2'],
     });
 
     expect(toSendNotificationPayload(values)).toEqual({
-      eventKey: 'invoice.overdue',
+      eventKey: FRONT_SEND_NOTIFICATION_EVENT_KEY,
       message: 'Fatura em atraso.',
       targetUserIds: ['user-1', 'user-2'],
     });
@@ -31,18 +33,26 @@ describe('notification normalizer', () => {
 
   it('omite targetUserIds quando nenhum id válido é informado', () => {
     const values = sendNotificationFormSchema.parse({
-      eventKey: 'invoice.overdue',
       message: 'Fatura em atraso.',
-      targetUserIds: ' ,  , ',
+      targetUserIds: [' ', '  '],
     });
 
     expect(toSendNotificationPayload(values)).toEqual({
-      eventKey: 'invoice.overdue',
+      eventKey: FRONT_SEND_NOTIFICATION_EVENT_KEY,
       message: 'Fatura em atraso.',
     });
   });
 
-  it('gera itens do menu com limite e ordenação por mais recentes', () => {
+  it('rejeita mensagem acima do limite do backend', () => {
+    const result = sendNotificationFormSchema.safeParse({
+      message: 'a'.repeat(MESSAGE_MAX_LENGTH + 1),
+      targetUserIds: [],
+    });
+
+    expect(result.success).toBe(false);
+  });
+
+  it('gera itens do menu preservando estado de leitura', () => {
     const items = toNotificationMenuItems([
       { id: '1', message: 'Primeira', read: true },
       { id: '2', message: 'Segunda', read: false },

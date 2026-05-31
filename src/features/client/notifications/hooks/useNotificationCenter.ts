@@ -6,6 +6,7 @@ import { notificationsRealtime } from '@features/client/notifications/services/r
 import { notificationService } from '@features/client/notifications/services/service';
 import { dispatchNotificationsUpdated } from '@features/client/notifications/hooks/useNotificationsList';
 import type {
+  NotificationCreatedEvent,
   NotificationItem,
   NotificationMenuItem,
 } from '@features/client/notifications/types/notification';
@@ -21,6 +22,23 @@ const upsertNotification = (
   );
 
   return [nextNotification, ...notificationsWithoutCurrent];
+};
+
+const applyRealtimeEvent = (
+  currentNotifications: NotificationItem[],
+  event: NotificationCreatedEvent,
+): NotificationItem[] => {
+  const nextNotifications = event.notifications ?? [];
+
+  if (nextNotifications.length === 0) {
+    return currentNotifications;
+  }
+
+  return nextNotifications.reduce(
+    (notificationsAccumulator, notification) =>
+      upsertNotification(notificationsAccumulator, notification),
+    currentNotifications,
+  );
 };
 
 export interface UseNotificationCenterResult {
@@ -79,11 +97,11 @@ export const useNotificationCenter = (): UseNotificationCenterResult => {
 
     notificationsRealtime.connect(session.accessToken);
 
-    const unsubscribe = notificationsRealtime.subscribe((incomingNotification) => {
+    const unsubscribe = notificationsRealtime.subscribe((incomingEvent) => {
       setNotifications((currentNotifications) =>
-        upsertNotification(currentNotifications, incomingNotification).slice(0, MENU_LIMIT),
+        applyRealtimeEvent(currentNotifications, incomingEvent).slice(0, MENU_LIMIT),
       );
-      setSnackbarMessage(incomingNotification.message);
+      setSnackbarMessage(incomingEvent.message);
       dispatchNotificationsUpdated();
     });
 

@@ -72,4 +72,21 @@ describe('notificationService', () => {
     });
     expect(response.deliveredCount).toBe(1);
   });
+
+  it('aceita resposta com status diferente de SENT quando o backend concluir a requisição', async () => {
+    vi.spyOn(httpClient, 'post').mockResolvedValueOnce({
+      data: {
+        status: 'SKIPPED',
+        deliveredCount: 0,
+      },
+    });
+
+    const response = await notificationService.sendInApp({
+      eventKey: 'invoice.overdue',
+      message: 'Fatura em atraso.',
+    });
+
+    expect(response.status).toBe('SKIPPED');
+    expect(response.deliveredCount).toBe(0);
+  });
 });

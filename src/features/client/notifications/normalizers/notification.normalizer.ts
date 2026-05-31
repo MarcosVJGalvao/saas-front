@@ -5,32 +5,32 @@ import type {
 } from '@features/client/notifications/types/notification';
 import type { SendNotificationFormValues } from '@features/client/notifications/schemas/sendNotificationForm.schema';
 
-const splitTargetUserIds = (rawTargetUserIds: string): string[] =>
-  rawTargetUserIds
-    .split(',')
+export const FRONT_SEND_NOTIFICATION_EVENT_KEY = 'client.notifications.manual_send';
+
+const normalizeTargetUserIds = (targetUserIds: string[]): string[] =>
+  targetUserIds
     .map((targetUserId) => targetUserId.trim())
     .filter((targetUserId) => targetUserId.length > 0);
 
 export const createSendNotificationInitialValues = (): SendNotificationFormValues => ({
-  eventKey: '',
   message: '',
-  targetUserIds: '',
+  targetUserIds: [],
 });
 
 export const toSendNotificationPayload = (
   values: SendNotificationFormValues,
 ): SendNotificationRequest => {
-  const targetUserIds = splitTargetUserIds(values.targetUserIds);
+  const targetUserIds = normalizeTargetUserIds(values.targetUserIds);
 
   if (targetUserIds.length === 0) {
     return {
-      eventKey: values.eventKey.trim(),
+      eventKey: FRONT_SEND_NOTIFICATION_EVENT_KEY,
       message: values.message.trim(),
     };
   }
 
   return {
-    eventKey: values.eventKey.trim(),
+    eventKey: FRONT_SEND_NOTIFICATION_EVENT_KEY,
     message: values.message.trim(),
     targetUserIds,
   };

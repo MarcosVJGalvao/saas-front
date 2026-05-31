@@ -5,33 +5,30 @@ import { clientRoleCreateFormSchema } from '@features/client/admin/schemas/clien
 import { clientUserCreateFormSchema } from '@features/client/admin/schemas/clientUserCreateForm.schema';
 
 describe('admin entity form normalizers', () => {
-  it('normaliza payload de usuário', () => {
+  it('normaliza payload de usuario', () => {
     const values = clientUserCreateFormSchema.parse({
-      name: ' Maria Souza ',
+      employeeId: ' employee-1 ',
       email: ' maria@escola.com ',
-      roleId: ' role-1 ',
-      status: 'active',
+      password: ' senha-forte-123 ',
     });
 
     expect(toClientUserCreatePayload(values)).toEqual({
-      name: 'Maria Souza',
-      fullName: 'Maria Souza',
+      employeeId: 'employee-1',
       email: 'maria@escola.com',
-      roleId: 'role-1',
-      status: 'active',
+      password: 'senha-forte-123',
     });
   });
 
   it('normaliza payload de perfil', () => {
     const values = clientRoleCreateFormSchema.parse({
       name: ' Secretaria ',
-      description: ' Operação escolar ',
+      description: ' Operacao escolar ',
       permissionIds: ['5b55f8ac-3b74-4c44-9a32-1f1f0a8d2b10'],
     });
 
     expect(toClientRoleCreatePayload(values)).toEqual({
       name: 'Secretaria',
-      description: 'Operação escolar',
+      description: 'Operacao escolar',
       permissionIds: ['5b55f8ac-3b74-4c44-9a32-1f1f0a8d2b10'],
     });
   });

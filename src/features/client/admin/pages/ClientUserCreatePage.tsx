@@ -15,16 +15,26 @@ const ClientUserCreatePage = () => {
   return (
     <AppStack spacing={2}>
       <PageHeader
-        title="Novo usuário"
-        subtitle="Cadastre usuários e vincule perfis de acesso do tenant."
+        title="Novo usuario"
+        subtitle="Selecione o funcionario e configure o acesso ao tenant."
         actionLabel="Voltar"
         onAction={clientUserCreatePage.onBack}
       />
       {clientUserCreatePage.errorMessage ? (
         <AppAlert severity="error">{clientUserCreatePage.errorMessage}</AppAlert>
       ) : null}
-      {clientUserCreatePage.referenceOptions.errorMessage ? (
-        <AppAlert severity="error">{clientUserCreatePage.referenceOptions.errorMessage}</AppAlert>
+      {!clientUserCreatePage.errorMessage && clientUserCreatePage.emailFieldDisabled ? (
+        <AppAlert severity="info">
+          O e-mail foi preenchido com o contato do funcionario selecionado.
+        </AppAlert>
+      ) : null}
+      {!clientUserCreatePage.errorMessage &&
+      !clientUserCreatePage.emailFieldDisabled &&
+      clientUserCreatePage.form.watch('employeeId') ? (
+        <AppAlert severity="info">
+          Este funcionario nao possui e-mail cadastrado em contatos. Informe um e-mail para o
+          usuario.
+        </AppAlert>
       ) : null}
       <AppPaper sx={{ p: 3 }}>
         <AppForm
@@ -33,13 +43,23 @@ const ClientUserCreatePage = () => {
           useResponsiveGrid
           columnsByDevice={{ mobile: 1, tablet: 2, desktop: 2 }}
         >
-          <FormTextField<ClientUserCreateFormValues> name="name" label="Nome" />
-          <FormTextField<ClientUserCreateFormValues> name="email" label="E-mail" />
           <FormSelect<ClientUserCreateFormValues>
-            name="roleId"
-            label="Perfil"
-            options={clientUserCreatePage.referenceOptions.roleOptions}
-            disabled={clientUserCreatePage.referenceOptions.loading}
+            name="employeeId"
+            label="Funcionario"
+            options={clientUserCreatePage.employeeOptions}
+            disabled={clientUserCreatePage.loadingEmployees}
+          />
+          <FormTextField<ClientUserCreateFormValues>
+            name="email"
+            label="E-mail"
+            disabled={
+              clientUserCreatePage.emailFieldDisabled || clientUserCreatePage.resolvingEmployeeEmail
+            }
+          />
+          <FormTextField<ClientUserCreateFormValues>
+            name="password"
+            label="Senha"
+            type="password"
           />
           <FormActions
             secondaryAction={{
