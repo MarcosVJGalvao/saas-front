@@ -2,10 +2,23 @@ import { useNavigate } from 'react-router-dom';
 import { AppText } from '@shared/components/data-display/AppText';
 import { ListFilters } from '@shared/components/data-display/data/ListFilters';
 import { QueryDataTable } from '@shared/components/data-display/data/QueryDataTable';
+import { ConfirmDialog } from '@shared/components/feedback/ConfirmDialog';
 import { AppStack } from '@shared/components/layout/AppStack';
 import { PageHeader } from '@shared/components/layout/PageHeader';
 import { useClientPermission } from '@features/client/shared/hooks/useClientPermission';
 import { useClientUsersListPage } from '@features/client/admin/hooks/useClientUsersListPage';
+import type { ClientAdminEntity, ClientUser } from '@features/client/admin/types/admin.types';
+
+const isClientUser = (entity: ClientAdminEntity | undefined): entity is ClientUser =>
+  entity !== undefined && 'email' in entity;
+
+const getUserDeleteLabel = (entity: ClientAdminEntity | undefined): string => {
+  if (isClientUser(entity)) {
+    return entity.fullName ?? entity.name ?? entity.email ?? '';
+  }
+
+  return entity?.name ?? '';
+};
 
 const ClientUsersPage = () => {
   const navigate = useNavigate();
@@ -72,6 +85,16 @@ const ClientUsersPage = () => {
           <AppText color="text.secondary">Use a busca geral para localizar registros.</AppText>
         }
         hideToolbar
+      />
+      <ConfirmDialog
+        open={Boolean(clientUsersPage.deleteModal.entityPendingDelete)}
+        title="Excluir usuario"
+        description={`Deseja excluir o usuario "${getUserDeleteLabel(clientUsersPage.deleteModal.entityPendingDelete)}"?`}
+        confirmLabel="Excluir"
+        onConfirm={() => {
+          void clientUsersPage.deleteModal.confirm();
+        }}
+        onCancel={clientUsersPage.deleteModal.close}
       />
     </AppStack>
   );

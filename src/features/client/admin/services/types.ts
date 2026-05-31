@@ -15,6 +15,7 @@ export type ClientUsersListResponse = PaginatedResponse<ClientUser>;
 export type ClientUserDetailsResponse = ClientUser;
 export type ClientUserCreateResponse = ClientUser;
 export type ClientUserUpdateResponse = ClientUser;
+export type ClientUserDeleteResponse = void;
 
 export type ClientRolesListParams = ClientAdminQueryParams;
 export type ClientRolesListResponse = PaginatedResponse<ClientRole>;

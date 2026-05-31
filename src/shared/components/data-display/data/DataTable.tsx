@@ -92,7 +92,15 @@ export const DataTable = <TData,>({
         overflowX: 'auto',
       }}
     >
-      <Table>
+      <Table sx={{ tableLayout: 'fixed' }}>
+        <colgroup>
+          {columns.map((column) => (
+            <col
+              key={column.key}
+              style={column.width !== undefined ? { width: column.width } : undefined}
+            />
+          ))}
+        </colgroup>
         <TableHead>
           <TableRow>
             {columns.map((column) => (
@@ -106,6 +114,8 @@ export const DataTable = <TData,>({
                   py: theme.spacing(2.25),
                   width: column.width ?? (column.key === 'actions' ? 1 : undefined),
                   whiteSpace: 'nowrap',
+                  overflow: 'hidden',
+                  textOverflow: 'ellipsis',
                 }}
               >
                 {column.header}
@@ -127,7 +137,14 @@ export const DataTable = <TData,>({
                 <TableCell
                   key={column.key}
                   align={column.align ?? 'left'}
-                  sx={{ fontSize: theme.typography.body2.fontSize, py: theme.spacing(1.5) }}
+                  sx={{
+                    fontSize: theme.typography.body2.fontSize,
+                    py: theme.spacing(1.5),
+                    overflow: 'hidden',
+                    textOverflow: 'ellipsis',
+                    whiteSpace:
+                      column.key === 'status' || column.key === 'actions' ? 'nowrap' : 'normal',
+                  }}
                 >
                   {column.render(row)}
                 </TableCell>

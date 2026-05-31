@@ -30,7 +30,7 @@ export const useClientUserEditPage = (id: string) => {
   const navigate = useNavigate();
   const location = useLocation();
   const locationState = isClientUserEditLocationState(location.state) ? location.state : null;
-  const referenceOptions = useAdminReferenceOptions();
+  const referenceOptions = useAdminReferenceOptions(true);
   const [entity, setEntity] = useState<ClientUser | null>(locationState?.entity ?? null);
   const [loading, setLoading] = useState(entity === null);
   const [errorMessage, setErrorMessage] = useState<string | undefined>();

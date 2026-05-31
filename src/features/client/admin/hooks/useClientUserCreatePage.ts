@@ -3,6 +3,7 @@ import { useWatch } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 import { createOptionsWithPlaceholder } from '@shared/constants/selectOptions';
 import { useAppForm } from '@shared/hooks/useAppForm';
+import { useAdminReferenceOptions } from '@features/client/admin/hooks/useAdminReferenceOptions';
 import {
   getEmployeeContactEmail,
   toClientUserCreatePayload,
@@ -19,6 +20,7 @@ import type { Employee } from '@features/client/employees/types/employee.types';
 const initialValues: ClientUserCreateFormValues = {
   employeeId: '',
   email: '',
+  roleId: '',
   password: '',
 };
 
@@ -30,6 +32,7 @@ const hasEmployeeId = (employee: Employee, employeeId: string): boolean =>
 export const useClientUserCreatePage = () => {
   const navigate = useNavigate();
   const form = useAppForm<ClientUserCreateFormValues>(clientUserCreateFormSchema, initialValues);
+  const referenceOptions = useAdminReferenceOptions();
   const selectedEmployeeId = useWatch({
     control: form.control,
     name: 'employeeId',
@@ -130,6 +133,7 @@ export const useClientUserCreatePage = () => {
     employeeOptions: createOptionsWithPlaceholder(employees.map(toEmployeeSelectOption)),
     loadingEmployees,
     resolvingEmployeeEmail,
+    referenceOptions,
     emailFieldDisabled,
     submitting: form.formState.isSubmitting,
     errorMessage,

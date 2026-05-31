@@ -39,6 +39,7 @@ export const toClientUserCreatePayload = (
 ): ClientUserCreatePayload => ({
   employeeId: values.employeeId.trim(),
   email: values.email.trim(),
+  roleId: values.roleId.trim(),
   password: values.password.trim(),
 });
 
@@ -52,6 +53,6 @@ export const toClientUserUpdatePayload = (
   values: ClientUserEditFormValues,
 ): ClientUserUpdatePayload => ({
   email: toOptionalText(values.email),
-  roleId: toOptionalText(values.roleId),
+  roleId: values.roleId.trim() ? values.roleId.trim() : null,
   status: values.status,
 });

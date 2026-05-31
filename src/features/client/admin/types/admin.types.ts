@@ -48,12 +48,13 @@ export type ClientAdminQueryParams = ClientBaseQueryParams & {
 export type ClientUserCreatePayload = {
   employeeId: string;
   email: string;
+  roleId: string;
   password: string;
 };
 
 export type ClientUserUpdatePayload = {
   email?: string | undefined;
-  roleId?: string | undefined;
+  roleId?: string | null | undefined;
   status?: ClientAdminStatus | undefined;
 };
 

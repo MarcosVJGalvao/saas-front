@@ -1,7 +1,7 @@
 import { act, renderHook, waitFor } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { useClientUserCreatePage } from '@features/client/admin/hooks/useClientUserCreatePage';
-import { clientUsersService } from '@features/client/admin/services/service';
+import { clientRolesService, clientUsersService } from '@features/client/admin/services/service';
 import { employeeService } from '@features/client/employees/services/service';
 import type { EmployeeListResponse } from '@features/client/employees/services/types';
 import type { Employee } from '@features/client/employees/types/employee.types';
@@ -15,6 +15,9 @@ vi.mock('react-router-dom', () => ({
 vi.mock('@features/client/admin/services/service', () => ({
   clientUsersService: {
     create: vi.fn(),
+  },
+  clientRolesService: {
+    list: vi.fn(),
   },
 }));
 
@@ -58,6 +61,17 @@ describe('useClientUserCreatePage', () => {
   beforeEach(() => {
     vi.clearAllMocks();
     vi.mocked(employeeService.list).mockResolvedValue(employeeListResponse);
+    vi.mocked(clientRolesService.list).mockResolvedValue({
+      data: [{ id: 'role-1', name: 'Administrador', description: '', status: 'active' }],
+      meta: {
+        page: 1,
+        limit: 10,
+        total: 1,
+        totalPages: 1,
+        hasNextPage: false,
+        hasPreviousPage: false,
+      },
+    });
   });
 
   it('preenche o email automaticamente quando o funcionario ja possui contato', async () => {
@@ -116,6 +130,7 @@ describe('useClientUserCreatePage', () => {
 
     act(() => {
       result.current.form.setValue('email', 'joao@tenant.com');
+      result.current.form.setValue('roleId', 'role-1');
       result.current.form.setValue('password', 'senha-segura-123');
     });
 
@@ -126,6 +141,7 @@ describe('useClientUserCreatePage', () => {
     expect(clientUsersService.create).toHaveBeenCalledWith({
       employeeId: 'employee-2',
       email: 'joao@tenant.com',
+      roleId: 'role-1',
       password: 'senha-segura-123',
     });
     expect(navigateMock).toHaveBeenCalledWith('/client/users');

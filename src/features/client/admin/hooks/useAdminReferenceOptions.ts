@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import type { AppSelectOption } from '@shared/components/inputs/AppSelect';
+import { createOptionsWithPlaceholder } from '@shared/constants/selectOptions';
 import { clientRolesService } from '@features/client/admin/services/service';
 import type { ClientRole } from '@features/client/admin/types/admin.types';
 
@@ -10,7 +11,7 @@ const toRoleOption = (role: ClientRole): AppSelectOption => ({
   label: role.name,
 });
 
-export const useAdminReferenceOptions = () => {
+export const useAdminReferenceOptions = (includePlaceholder = false) => {
   const [roleOptions, setRoleOptions] = useState<AppSelectOption[]>([]);
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | undefined>();
@@ -29,7 +30,8 @@ export const useAdminReferenceOptions = () => {
           return;
         }
 
-        setRoleOptions(response.data.map(toRoleOption));
+        const options = response.data.map(toRoleOption);
+        setRoleOptions(includePlaceholder ? createOptionsWithPlaceholder(options) : options);
       } catch {
         if (!isMounted) {
           return;
@@ -48,7 +50,7 @@ export const useAdminReferenceOptions = () => {
     return () => {
       isMounted = false;
     };
-  }, []);
+  }, [includePlaceholder]);
 
   return {
     roleOptions,

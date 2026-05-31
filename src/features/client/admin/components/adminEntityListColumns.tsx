@@ -14,6 +14,7 @@ import type {
 type AdminEntityListActions = {
   onDetails: (entity: ClientAdminEntity) => void;
   onEdit: (entity: ClientAdminEntity) => void;
+  onDelete?: ((entity: ClientAdminEntity) => void) | undefined;
 };
 
 const hasDescription = (entity: ClientAdminEntity): entity is ClientRole => 'description' in entity;
@@ -120,6 +121,9 @@ export const buildAdminEntityColumns = (
         actions={[
           { key: 'details', label: 'Ver detalhes', onClick: () => actions.onDetails(entity) },
           { key: 'edit', label: 'Editar', onClick: () => actions.onEdit(entity) },
+          ...(actions.onDelete
+            ? [{ key: 'delete', label: 'Excluir', onClick: () => actions.onDelete?.(entity) }]
+            : []),
         ]}
       />
     ),
@@ -140,6 +144,9 @@ export const buildAdminEntityMobileConfig = (
       actions={[
         { key: 'details', label: 'Ver detalhes', onClick: () => actions.onDetails(entity) },
         { key: 'edit', label: 'Editar', onClick: () => actions.onEdit(entity) },
+        ...(actions.onDelete
+          ? [{ key: 'delete', label: 'Excluir', onClick: () => actions.onDelete?.(entity) }]
+          : []),
       ]}
     />
   ),

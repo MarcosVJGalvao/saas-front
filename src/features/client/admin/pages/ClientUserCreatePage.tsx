@@ -23,6 +23,9 @@ const ClientUserCreatePage = () => {
       {clientUserCreatePage.errorMessage ? (
         <AppAlert severity="error">{clientUserCreatePage.errorMessage}</AppAlert>
       ) : null}
+      {clientUserCreatePage.referenceOptions.errorMessage ? (
+        <AppAlert severity="error">{clientUserCreatePage.referenceOptions.errorMessage}</AppAlert>
+      ) : null}
       {!clientUserCreatePage.errorMessage && clientUserCreatePage.emailFieldDisabled ? (
         <AppAlert severity="info">
           O e-mail foi preenchido com o contato do funcionario selecionado.
@@ -55,6 +58,12 @@ const ClientUserCreatePage = () => {
             disabled={
               clientUserCreatePage.emailFieldDisabled || clientUserCreatePage.resolvingEmployeeEmail
             }
+          />
+          <FormSelect<ClientUserCreateFormValues>
+            name="roleId"
+            label="Perfil"
+            options={clientUserCreatePage.referenceOptions.roleOptions}
+            disabled={clientUserCreatePage.referenceOptions.loading}
           />
           <FormTextField<ClientUserCreateFormValues>
             name="password"

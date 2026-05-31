@@ -34,6 +34,9 @@ export const clientUsersService = {
     const { data } = await adminEndpoints.updateUser(id, payload);
     return data;
   },
+  async remove(id: string): Promise<void> {
+    await adminEndpoints.removeUser(id);
+  },
 };
 
 export const clientRolesService = {

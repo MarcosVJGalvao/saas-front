@@ -64,18 +64,37 @@ export type EmployeeCreateRequest =
   | EmployeeCreateWithExistingPersonRequest
   | EmployeeCreateFromScratchRequest;
 
+export type EmployeeRoleReference = {
+  id: string;
+  role: {
+    id: string;
+    name: string;
+  };
+};
+
+export type EmployeePersonReference = {
+  id: string;
+  fullName?: string | undefined;
+  documentNumber?: string | undefined;
+  naturality?: string | undefined;
+  contacts?: EmployeeContact[] | undefined;
+};
+
+export type EmployeeAccountReference = {
+  id: string;
+  jobTitle: EmployeeJobTitle;
+  person?: EmployeePersonReference | null | undefined;
+};
+
 export type Employee = {
   id: string;
   jobTitle: EmployeeJobTitle;
   department?: string | undefined;
   status?: EmployeeStatusValue | undefined;
-  person?: {
-    id: string;
-    fullName?: string | undefined;
-    documentNumber?: string | undefined;
-    naturality?: string | undefined;
-    contacts?: EmployeeContact[] | undefined;
-  } | null;
+  email?: string | undefined;
+  roles?: EmployeeRoleReference[] | undefined;
+  person?: EmployeePersonReference | null | undefined;
+  employee?: EmployeeAccountReference | null | undefined;
   contacts?: EmployeeContact[] | undefined;
   createdAt?: string | undefined;
   updatedAt?: string | undefined;

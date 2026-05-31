@@ -8,6 +8,7 @@ import type {
   ClientRoleUpdateRequest,
   ClientRoleUpdateResponse,
   ClientUserCreateRequest,
+  ClientUserDeleteResponse,
   ClientUserDetailsResponse,
   ClientUsersListParams,
   ClientUsersListResponse,
@@ -28,6 +29,8 @@ export const adminEndpoints = {
     httpClient.post<ClientUserDetailsResponse>(USERS_BASE_PATH, payload),
   updateUser: (id: string, payload: ClientUserUpdateRequest) =>
     httpClient.patch<ClientUserUpdateResponse>(`${USERS_BASE_PATH}/${id}`, payload),
+  removeUser: (id: string) =>
+    httpClient.delete<ClientUserDeleteResponse>(`${USERS_BASE_PATH}/${id}`),
 
   listRoles: (params: ClientRolesListParams) =>
     httpClient.get<ClientRolesListResponse>(ROLES_BASE_PATH, { params }),

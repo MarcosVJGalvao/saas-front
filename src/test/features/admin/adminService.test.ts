@@ -46,6 +46,14 @@ describe('admin services', () => {
     expect(response.email).toBe('maria@escola.com');
   });
 
+  it('remove usuário pelo endpoint correto', async () => {
+    const deleteSpy = vi.spyOn(httpClient, 'delete').mockResolvedValueOnce({ data: undefined });
+
+    await clientUsersService.remove('user-1');
+
+    expect(deleteSpy).toHaveBeenCalledWith('/api/users/user-1');
+  });
+
   it('lista perfis pelo endpoint correto', async () => {
     const getSpy = vi.spyOn(httpClient, 'get').mockResolvedValueOnce({
       data: {

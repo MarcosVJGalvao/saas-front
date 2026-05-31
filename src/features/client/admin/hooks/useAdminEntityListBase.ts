@@ -26,6 +26,7 @@ type AdminEntityListService<TItem extends ClientAdminEntity> = {
       hasPreviousPage: boolean;
     };
   }>;
+  remove?: ((id: string) => Promise<void>) | undefined;
 };
 
 type AdminEntityFilterValues = {
@@ -74,6 +75,12 @@ export const useAdminEntityListBase = <TItem extends ClientAdminEntity>({
   clearFilters: () => void;
   tableColumns: DataTableColumn<ClientAdminEntity>[];
   mobileConfig: DataListMobileConfig<ClientAdminEntity>;
+  deleteModal: {
+    entityPendingDelete: ClientAdminEntity | undefined;
+    close: () => void;
+    confirm: () => Promise<void>;
+    deleting: boolean;
+  };
 } => {
   const navigate = useNavigate();
   const location = useLocation();
@@ -83,6 +90,8 @@ export const useAdminEntityListBase = <TItem extends ClientAdminEntity>({
     ...initialFilterValues,
     query: initialSearch,
   });
+  const [entityPendingDelete, setEntityPendingDelete] = useState<ClientAdminEntity | undefined>();
+  const [deleting, setDeleting] = useState(false);
 
   const onFilterChange = (fieldName: string, fieldValue: unknown): void => {
     setFilterValues((currentValues) => ({
@@ -115,6 +124,24 @@ export const useAdminEntityListBase = <TItem extends ClientAdminEntity>({
     onEdit: (entity: ClientAdminEntity) => {
       void navigate(`${routeBase}/${entity.id}/edit`, { state: { entity } });
     },
+    onDelete: service.remove
+      ? (entity: ClientAdminEntity) => setEntityPendingDelete(entity)
+      : undefined,
+  };
+
+  const confirmDelete = async (): Promise<void> => {
+    if (!entityPendingDelete || !service.remove) {
+      return;
+    }
+
+    setDeleting(true);
+    try {
+      await service.remove(entityPendingDelete.id);
+      setEntityPendingDelete(undefined);
+      await adminEntityList.reload();
+    } finally {
+      setDeleting(false);
+    }
   };
 
   return {
@@ -132,5 +159,11 @@ export const useAdminEntityListBase = <TItem extends ClientAdminEntity>({
       showStatus,
     ),
     mobileConfig: buildAdminEntityMobileConfig(actions, showRole, showPermissions),
+    deleteModal: {
+      entityPendingDelete,
+      close: () => setEntityPendingDelete(undefined),
+      confirm: confirmDelete,
+      deleting,
+    },
   };
 };
