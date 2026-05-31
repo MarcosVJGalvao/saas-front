@@ -16,7 +16,7 @@ export const initialClientOnboardingValue: CreateClientOnboardingRequest = {
   planId: '',
   adminPassword: '',
   employee: {
-    person: { fullName: '', documentNumber: '', documentType: 'CPF' },
+    person: { fullName: '', documentNumber: '', documentType: 'CPF', naturality: '' },
     contacts: [{ type: 'email', value: '' }],
     department: '',
   },

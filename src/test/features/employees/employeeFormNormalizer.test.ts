@@ -9,6 +9,7 @@ describe('employeeFormNormalizer', () => {
       fullName: ' Ana ',
       documentType: 'CPF',
       documentNumber: '123.456.789-00',
+      naturality: '',
       jobTitle: 'teacher',
       department: ' Acadêmico ',
       zipCode: '',
@@ -37,6 +38,7 @@ describe('employeeFormNormalizer', () => {
       fullName: ' Ana Silva ',
       documentType: 'CPF',
       documentNumber: '123.456.789-00',
+      naturality: ' Salvador ',
       jobTitle: 'teacher',
       department: '',
       zipCode: '40.000-000',
@@ -56,6 +58,7 @@ describe('employeeFormNormalizer', () => {
         fullName: 'Ana Silva',
         documentNumber: '12345678900',
         documentType: 'CPF',
+        naturality: 'Salvador',
       },
       addresses: [
         {

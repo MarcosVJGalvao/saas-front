@@ -60,6 +60,11 @@ export const AdminStep = ({ value, actions }: ClientOnboardingStepProps) => (
         />
       </AppGrid>
       <OnboardingField
+        label="Naturalidade"
+        value={value.employee.person.naturality ?? ''}
+        onChange={actions.updateAdminNaturality}
+      />
+      <OnboardingField
         select
         label="Gênero"
         value={value.employee.person.gender ?? ''}

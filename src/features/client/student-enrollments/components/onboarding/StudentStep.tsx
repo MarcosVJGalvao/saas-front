@@ -91,6 +91,11 @@ export const StudentStep = ({
           />
         </AppGrid>
         <EnrollmentOnboardingField
+          label="Naturalidade"
+          value={person?.naturality ?? ''}
+          onChange={actions.updateStudentNaturality}
+        />
+        <EnrollmentOnboardingField
           select
           label="Gênero"
           value={person?.gender ?? ''}

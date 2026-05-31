@@ -26,6 +26,7 @@ const baseValue: CreateStudentEnrollmentRequest = {
       documentNumber: '123.456.789-00',
       documentType: 'CPF',
       dateOfBirth: '10/02/2015',
+      naturality: ' São Paulo ',
       gender: 'female',
       maritalStatus: undefined,
       nationality: 'brazilian',
@@ -56,6 +57,7 @@ const baseValue: CreateStudentEnrollmentRequest = {
           fullName: 'Ana da Silva',
           documentNumber: '987.654.321-00',
           documentType: 'CPF',
+          naturality: ' Santos ',
           nationality: 'brazilian',
         },
         addresses: [
@@ -90,12 +92,14 @@ describe('toStudentEnrollmentCreatePayload', () => {
     expect(payload.studentId).toBeUndefined();
     expect(payload.student?.person.documentNumber).toBe('12345678900');
     expect(payload.student?.person.dateOfBirth).toBe('2015-02-10');
+    expect(payload.student?.person.naturality).toBe('São Paulo');
     expect(payload.student?.addresses[0]?.zipCode).toBe('01310100');
     expect(payload.student?.contacts).toEqual([
       { type: 'email', value: 'aluno@escola.com' },
       { type: 'phone', value: '11988887777' },
     ]);
     expect(payload.student?.legalGuardians[0]?.person?.documentNumber).toBe('98765432100');
+    expect(payload.student?.legalGuardians[0]?.person?.naturality).toBe('Santos');
     expect(payload.student?.legalGuardians[0]?.contacts).toEqual([
       { type: 'email', value: 'responsavel@escola.com' },
       { type: 'phone', value: '11999999999' },

@@ -9,6 +9,7 @@ export const employeeCreateFormSchema = z
     fullName: z.string(),
     documentType: z.enum(['CPF', 'CNPJ', 'RG', 'PASSPORT', 'OTHER']),
     documentNumber: z.string(),
+    naturality: z.string().max(110, 'A naturalidade deve ter no máximo 110 caracteres.').optional(),
     jobTitle: z.string().min(1, 'Selecione o cargo.'),
     department: z.string().optional(),
     zipCode: z.string(),

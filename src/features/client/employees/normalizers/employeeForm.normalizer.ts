@@ -56,6 +56,7 @@ export const createEmployeeInitialValues = (): EmployeeCreateFormValues => ({
   fullName: '',
   documentType: 'CPF',
   documentNumber: '',
+  naturality: '',
   jobTitle: '',
   department: '',
   zipCode: '',
@@ -88,6 +89,7 @@ export const toEmployeeCreatePayload = (
       fullName: values.fullName.trim(),
       documentNumber: onlyDigits(values.documentNumber),
       documentType: values.documentType,
+      naturality: getOptionalText(values.naturality),
     },
     addresses: [
       {

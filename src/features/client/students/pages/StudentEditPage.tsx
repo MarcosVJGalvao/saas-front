@@ -92,6 +92,18 @@ const StudentEditPage = () => {
               )}
             />
             <Controller
+              name="naturality"
+              control={studentEditPage.form.control}
+              render={({ field, fieldState }) => (
+                <AppTextField
+                  {...field}
+                  label="Naturalidade"
+                  error={fieldState.invalid}
+                  helperText={fieldState.error?.message}
+                />
+              )}
+            />
+            <Controller
               name="gender"
               control={studentEditPage.form.control}
               render={({ field, fieldState }) => (

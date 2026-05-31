@@ -12,6 +12,7 @@ export type Person = {
   documentType?: DocumentTypeValue | undefined;
   documentNumber?: string | undefined;
   dateOfBirth?: string | undefined;
+  naturality?: string | undefined;
   gender?: GenderValue | undefined;
   maritalStatus?: MaritalStatusValue | undefined;
   nationality?: NationalityValue | undefined;

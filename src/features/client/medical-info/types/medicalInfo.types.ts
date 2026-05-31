@@ -14,6 +14,7 @@ export type MedicalInfo = {
     id: string;
     fullName?: string | undefined;
     documentNumber?: string | undefined;
+    naturality?: string | undefined;
   } | null;
   createdAt?: string | undefined;
   updatedAt?: string | undefined;

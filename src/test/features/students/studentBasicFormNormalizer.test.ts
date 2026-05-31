@@ -17,6 +17,7 @@ describe('student basic form normalizer', () => {
       documentNumber: '',
       documentType: 'CPF',
       dateOfBirth: '',
+      naturality: '',
       gender: 'prefer_not_to_say',
       registrationCode: '',
       status: 'active',
@@ -30,6 +31,7 @@ describe('student basic form normalizer', () => {
       documentNumber: '123.456.789-00',
       documentType: 'CPF',
       dateOfBirth: '2015-01-10',
+      naturality: ' Salvador ',
       gender: 'female',
       registrationCode: ' A-10 ',
       status: 'active',
@@ -43,6 +45,7 @@ describe('student basic form normalizer', () => {
         documentNumber: '12345678900',
         documentType: 'CPF',
         dateOfBirth: '2015-01-10',
+        naturality: 'Salvador',
         gender: 'female',
       },
     });

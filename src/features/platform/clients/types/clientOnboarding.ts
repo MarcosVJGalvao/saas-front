@@ -43,6 +43,7 @@ export type ClientOnboardingActions = {
   updateAdminDocumentType: (value: DocumentType) => void;
   updateAdminDocumentNumber: (value: string) => void;
   updateAdminDateOfBirth: (value: string) => void;
+  updateAdminNaturality: (value: string) => void;
   updateAdminGender: (value: Gender | undefined) => void;
   updateAdminMaritalStatus: (value: MaritalStatus | undefined) => void;
   updateAdminMonthlyIncome: (value: string) => void;

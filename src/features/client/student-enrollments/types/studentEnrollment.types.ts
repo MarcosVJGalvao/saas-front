@@ -19,6 +19,7 @@ export type EnrollmentPerson = {
   documentNumber: string;
   documentType: DocumentType;
   dateOfBirth?: string | undefined;
+  naturality?: string | undefined;
   gender?: Gender | undefined;
   maritalStatus?: MaritalStatus | undefined;
   nationality?: Nationality | undefined;
@@ -96,6 +97,7 @@ export type StudentEnrollment = {
       fullName: string;
       documentNumber: string;
       documentType?: DocumentType | undefined;
+      naturality?: string | undefined;
     } | null;
   } | null;
   academicYear?: {

@@ -149,6 +149,11 @@ export const useStudentEnrollmentOnboardingActions = ({
       ...person,
       dateOfBirth,
     })),
+  updateStudentNaturality: (naturality) =>
+    updateStudentPerson(setValue, stateFactories.ensureStudent, (person) => ({
+      ...person,
+      naturality,
+    })),
   updateStudentGender: (gender) =>
     updateStudentPerson(setValue, stateFactories.ensureStudent, (person) => ({
       ...person,
@@ -303,6 +308,14 @@ export const useStudentEnrollmentOnboardingActions = ({
       stateFactories.createEmptyPerson,
       index,
       (person) => ({ ...person, dateOfBirth }),
+    ),
+  updateGuardianNaturality: (index, naturality) =>
+    updateGuardianPersonAtIndex(
+      setValue,
+      stateFactories.ensureStudent,
+      stateFactories.createEmptyPerson,
+      index,
+      (person) => ({ ...person, naturality }),
     ),
   updateGuardianGender: (index, gender) =>
     updateGuardianPersonAtIndex(

@@ -23,6 +23,7 @@ const normalizePerson = (person: EnrollmentPerson): EnrollmentPerson => ({
   documentNumber: onlyDigits(person.documentNumber),
   documentType: person.documentType,
   dateOfBirth: normalizeOptionalDateToIsoDate(person.dateOfBirth),
+  naturality: getOptionalText(person.naturality),
   gender: person.gender,
   maritalStatus: person.maritalStatus,
   nationality: person.nationality,

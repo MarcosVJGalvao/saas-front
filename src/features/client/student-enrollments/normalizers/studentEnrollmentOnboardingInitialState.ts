@@ -17,6 +17,7 @@ const createEmptyPerson = (): EnrollmentPerson => ({
   documentNumber: '',
   documentType: 'CPF',
   dateOfBirth: '',
+  naturality: '',
   gender: undefined,
   maritalStatus: undefined,
   nationality: 'brazilian',

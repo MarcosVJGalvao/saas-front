@@ -145,6 +145,7 @@ export type OnboardingPerson = {
   documentNumber: string;
   documentType: DocumentType;
   dateOfBirth?: string | undefined;
+  naturality?: string | undefined;
   gender?: Gender | undefined;
   maritalStatus?: MaritalStatus | undefined;
   monthlyIncome?: string | undefined;

@@ -146,6 +146,18 @@ export const useClientOnboardingActions = ({
           },
         }));
       },
+      updateAdminNaturality: (nextValue) => {
+        setValue((previousValue) => ({
+          ...previousValue,
+          employee: {
+            ...previousValue.employee,
+            person: {
+              ...previousValue.employee.person,
+              naturality: nextValue,
+            },
+          },
+        }));
+      },
       updateAdminGender: (nextValue) => {
         setValue((previousValue) => ({
           ...previousValue,

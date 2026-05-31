@@ -13,6 +13,7 @@ export const createStudentInitialValues = (): StudentCreateFormValues => ({
   documentNumber: '',
   documentType: 'CPF',
   dateOfBirth: '',
+  naturality: '',
   gender: 'prefer_not_to_say',
   registrationCode: '',
   status: 'active',
@@ -26,6 +27,7 @@ export const toStudentCreatePayload = (values: StudentCreateFormValues): Student
     documentNumber: onlyDigits(values.documentNumber ?? ''),
     documentType: values.documentType,
     dateOfBirth: getOptionalText(values.dateOfBirth),
+    naturality: getOptionalText(values.naturality),
     gender: values.gender,
   },
 });
@@ -34,6 +36,7 @@ export const toStudentEditFormValues = (entity: Student): StudentEditFormValues 
   documentNumber: entity.person?.documentNumber ?? '',
   documentType: entity.person?.documentType ?? 'CPF',
   dateOfBirth: entity.person?.dateOfBirth ?? '',
+  naturality: entity.person?.naturality ?? '',
   gender: entity.person?.gender ?? 'prefer_not_to_say',
   registrationCode: entity.registrationCode ?? '',
   status: entity.status,
@@ -46,6 +49,7 @@ export const toStudentEditPayload = (values: StudentEditFormValues): StudentRequ
     documentNumber: onlyDigits(values.documentNumber ?? ''),
     documentType: values.documentType,
     dateOfBirth: getOptionalText(values.dateOfBirth),
+    naturality: getOptionalText(values.naturality),
     gender: values.gender,
   },
 });

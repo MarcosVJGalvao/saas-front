@@ -37,6 +37,7 @@ export type EmployeeCreatePerson = {
   fullName: string;
   documentNumber: string;
   documentType: DocumentTypeValue;
+  naturality?: string | undefined;
 };
 
 export type EmployeeCreateWithExistingPersonRequest = {
@@ -66,6 +67,7 @@ export type Employee = {
     id: string;
     fullName?: string | undefined;
     documentNumber?: string | undefined;
+    naturality?: string | undefined;
   } | null;
   createdAt?: string | undefined;
   updatedAt?: string | undefined;

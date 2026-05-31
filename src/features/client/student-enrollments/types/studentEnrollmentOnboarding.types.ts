@@ -38,6 +38,7 @@ export type StudentEnrollmentOnboardingActions = {
   updateStudentDocumentNumber: (value: string) => void;
   updateStudentDocumentType: (value: EnrollmentPerson['documentType']) => void;
   updateStudentDateOfBirth: (value: string) => void;
+  updateStudentNaturality: (value: string) => void;
   updateStudentGender: (value: EnrollmentPerson['gender']) => void;
   updateStudentMaritalStatus: (value: EnrollmentPerson['maritalStatus']) => void;
   updateStudentNationality: (value: EnrollmentPerson['nationality']) => void;
@@ -63,6 +64,7 @@ export type StudentEnrollmentOnboardingActions = {
     value: EnrollmentLegalGuardianInput['relationshipType'],
   ) => void;
   updateGuardianDateOfBirth: (index: number, value: string) => void;
+  updateGuardianNaturality: (index: number, value: string) => void;
   updateGuardianGender: (index: number, value: EnrollmentPerson['gender']) => void;
   updateGuardianMaritalStatus: (index: number, value: EnrollmentPerson['maritalStatus']) => void;
   updateGuardianNationality: (index: number, value: EnrollmentPerson['nationality']) => void;

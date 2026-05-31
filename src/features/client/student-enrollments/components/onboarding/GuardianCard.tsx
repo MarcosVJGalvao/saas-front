@@ -52,7 +52,7 @@ export const GuardianCard = ({
   const documentNumber = person?.documentNumber ?? '';
   const guardianAddress = guardian.addresses?.[0];
   const label = guardian.isPrimary
-    ? `Responsável ${index + 1} — Principal`
+    ? `Responsável ${index + 1} - Principal`
     : `Responsável ${index + 1}`;
 
   const onAddressResolved = useCallback(
@@ -141,6 +141,11 @@ export const GuardianCard = ({
                 textFieldSlotProps={{ size: 'small' }}
               />
             </AppGrid>
+            <EnrollmentOnboardingField
+              label="Naturalidade"
+              value={person?.naturality ?? ''}
+              onChange={(value) => actions.updateGuardianNaturality(index, value)}
+            />
             <EnrollmentOnboardingField
               select
               label="Gênero"

@@ -129,6 +129,7 @@ export const EmployeeCreateFormFields = ({
                   />
                 )}
               />
+              <FormTextField<EmployeeCreateFormValues> name="naturality" label="Naturalidade" />
             </AppBox>
           </SectionCard>
 

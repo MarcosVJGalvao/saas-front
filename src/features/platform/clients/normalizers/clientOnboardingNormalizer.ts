@@ -26,6 +26,7 @@ export const toOnboardingPayload = (
       ...value.employee.person,
       documentNumber: onlyDigits(value.employee.person.documentNumber),
       dateOfBirth: normalizeOptionalDateToIsoDate(value.employee.person.dateOfBirth),
+      naturality: value.employee.person.naturality?.trim() || undefined,
     },
   },
 });

@@ -31,6 +31,7 @@ export const enrollmentPersonSchema = z.object({
   documentNumber: z.string().min(3, 'Informe o documento.'),
   documentType: enrollmentDocumentTypeSchema,
   dateOfBirth: z.string().optional(),
+  naturality: z.string().max(110, 'A naturalidade deve ter no máximo 110 caracteres.').optional(),
   gender: enrollmentGenderSchema.optional(),
   maritalStatus: enrollmentMaritalStatusSchema.optional(),
   nationality: enrollmentNationalitySchema.optional(),

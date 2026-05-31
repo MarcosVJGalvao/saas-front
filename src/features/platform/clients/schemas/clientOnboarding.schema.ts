@@ -47,6 +47,10 @@ export const clientOnboardingAdminStepSchema = z.object({
       documentNumber: z.string().min(8, 'Informe um documento válido.').max(30),
       documentType: documentTypeSchema,
       dateOfBirth: z.string().optional(),
+      naturality: z
+        .string()
+        .max(110, 'A naturalidade deve ter no máximo 110 caracteres.')
+        .optional(),
       gender: genderSchema.optional(),
       maritalStatus: maritalStatusSchema.optional(),
       monthlyIncome: z.string().optional(),

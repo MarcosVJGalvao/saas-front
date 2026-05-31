@@ -49,6 +49,11 @@ const formatNationality = (value: StudentNationality | undefined): string =>
 const formatMaritalStatus = (value: StudentMaritalStatus | null | undefined): string =>
   value ? maritalStatusLabels[value] : '-';
 
+const formatNaturality = (value: string | undefined): string => {
+  const trimmedValue = value?.trim() ?? '';
+  return trimmedValue.length > 0 ? trimmedValue : '-';
+};
+
 const formatStudentDocument = (student: Student): string => {
   const documentNumber = student.person?.documentNumber;
   if (!documentNumber) return '-';
@@ -173,6 +178,10 @@ const buildLegalGuardianSections = (legalGuardians: StudentLegalGuardianLink[]) 
           value: formatNationality(guardian?.person?.nationality),
         },
         {
+          label: 'Naturalidade',
+          value: formatNaturality(guardian?.person?.naturality),
+        },
+        {
           label: 'Estado civil',
           value: formatMaritalStatus(guardian?.person?.maritalStatus),
         },
@@ -240,6 +249,10 @@ export const toStudentDetailsData = (
               {
                 label: 'Nacionalidade',
                 value: formatNationality(student.person?.nationality),
+              },
+              {
+                label: 'Naturalidade',
+                value: formatNaturality(student.person?.naturality),
               },
               {
                 label: 'Estado civil',

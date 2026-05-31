@@ -34,6 +34,7 @@ export type StudentPerson = {
   documentNumber?: string | undefined;
   documentType?: StudentDocumentType | undefined;
   dateOfBirth?: string | undefined;
+  naturality?: string | undefined;
   nationality?: StudentNationality | undefined;
   gender?: StudentGender | undefined;
   maritalStatus?: StudentMaritalStatus | null | undefined;
@@ -153,6 +154,7 @@ export type StudentPersonRequest = {
   documentNumber?: string | undefined;
   documentType?: StudentDocumentType | undefined;
   dateOfBirth?: string | undefined;
+  naturality?: string | undefined;
   gender?: StudentGender | undefined;
 };
 

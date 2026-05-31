@@ -8,6 +8,11 @@ import type { Employee } from '@features/client/employees/types/employee.types';
 
 const formatDate = (value: string | undefined): string => (value ? formatIsoDate(value) : '-');
 
+const formatNaturality = (value: string | undefined): string => {
+  const trimmedValue = value?.trim() ?? '';
+  return trimmedValue.length > 0 ? trimmedValue : '-';
+};
+
 const formatEmployeeDocument = (employee: Employee): string => {
   const documentNumber = employee.person?.documentNumber;
   if (!documentNumber) {
@@ -60,6 +65,7 @@ export const toEmployeeDetailsData = (employee: Employee): EntityDetailsPageData
           items: [
             { label: 'Nome', value: employee.person?.fullName ?? '-' },
             { label: 'Documento', value: formatEmployeeDocument(employee) },
+            { label: 'Naturalidade', value: formatNaturality(employee.person?.naturality) },
           ],
         },
         {

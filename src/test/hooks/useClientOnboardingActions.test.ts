@@ -67,10 +67,12 @@ describe('useClientOnboardingActions', () => {
 
     act(() => {
       result.current.actions.updateAdminDateOfBirth('1996-05-22');
+      result.current.actions.updateAdminNaturality('Salvador');
     });
 
     rerender({ currentUiExtras: onboardingUiExtras });
 
     expect(onboardingValue.employee.person.dateOfBirth).toBe('1996-05-22');
+    expect(onboardingValue.employee.person.naturality).toBe('Salvador');
   });
 });

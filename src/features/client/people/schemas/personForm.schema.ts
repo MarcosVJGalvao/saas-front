@@ -5,6 +5,7 @@ export const personFormSchema = z.object({
   documentType: z.enum(['CPF', 'CNPJ', 'RG', 'PASSPORT', 'OTHER']).optional(),
   documentNumber: z.string().optional(),
   dateOfBirth: z.string().optional(),
+  naturality: z.string().max(110, 'A naturalidade deve ter no máximo 110 caracteres.').optional(),
   gender: z.enum(['male', 'female', 'other', 'prefer_not_to_say']).optional(),
   maritalStatus: z.enum(['single', 'married', 'divorced', 'widowed', 'other']).optional(),
   nationality: z.enum(['brazilian', 'foreign', 'other']).optional(),

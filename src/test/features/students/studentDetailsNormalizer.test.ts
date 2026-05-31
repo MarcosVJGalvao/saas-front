@@ -32,6 +32,7 @@ describe('studentDetails.normalizer', () => {
         documentNumber: '35919029501',
         documentType: 'CPF',
         dateOfBirth: '2023-04-11',
+        naturality: 'Salvador',
         nationality: 'brazilian',
         gender: 'male',
         maritalStatus: null,
@@ -65,6 +66,7 @@ describe('studentDetails.normalizer', () => {
               documentNumber: '90634347071',
               documentType: 'CPF',
               dateOfBirth: '1999-12-31',
+              naturality: 'Feira de Santana',
               nationality: 'brazilian',
               gender: 'female',
               maritalStatus: 'single',
@@ -129,10 +131,16 @@ describe('studentDetails.normalizer', () => {
     expect(summaryItems.some((item) => hasStringValue(item, 'Nacionalidade', 'Brasileira'))).toBe(
       true,
     );
+    expect(summaryItems.some((item) => hasStringValue(item, 'Naturalidade', 'Salvador'))).toBe(
+      true,
+    );
     expect(summaryItems.some((item) => hasStringValue(item, 'Gênero', 'Masculino'))).toBe(true);
     expect(addressItems.some((item) => includesStringValue(item, 'Rua Martacênia'))).toBe(true);
     expect(medicalItems.some((item) => hasStringValue(item, 'Tipo sanguíneo', 'O+'))).toBe(true);
     expect(medicalItems.some((item) => hasStringValue(item, 'Alergias', 'Dipirona'))).toBe(true);
     expect(guardianItems.some((item) => hasStringValue(item, 'Pode buscar', 'Sim'))).toBe(true);
+    expect(
+      guardianItems.some((item) => hasStringValue(item, 'Naturalidade', 'Feira de Santana')),
+    ).toBe(true);
   });
 });
