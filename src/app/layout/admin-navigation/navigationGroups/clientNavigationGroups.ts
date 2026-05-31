@@ -228,7 +228,7 @@ export const clientNavigationGroups: NavigationGroup[] = [
       {
         id: 'notifications',
         label: 'Notificações',
-        href: '/client/notifications',
+        href: '/notifications',
         permission: 'dashboard:read',
         icon: NotificationsOutlinedIcon,
       },
