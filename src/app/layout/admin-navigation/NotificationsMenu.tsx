@@ -1,4 +1,3 @@
-import type { ReactNode } from 'react';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Divider from '@mui/material/Divider';
@@ -7,23 +6,19 @@ import Typography from '@mui/material/Typography';
 import { useTheme } from '@mui/material/styles';
 import { getUiColorTokens } from '@theme/uiColors';
 import { appLayoutMessages } from '@app/layout/admin-navigation/messages';
-
-interface NotificationItem {
-  id: string;
-  title: string;
-  description: string;
-  time: string;
-  unread: boolean;
-  icon: ReactNode;
-  iconBg: string;
-  iconColor: string;
-}
+import { NotificationMenuList } from '@features/client/notifications/components/NotificationMenuList';
+import type { NotificationMenuItem } from '@features/client/notifications/types/notification';
 
 interface NotificationsMenuProps {
   anchorEl: HTMLElement | null;
   open: boolean;
   onClose: () => void;
-  notifications: NotificationItem[];
+  notifications: NotificationMenuItem[];
+  loading: boolean;
+  errorMessage: string | undefined;
+  onNotificationClick: (notificationId: string) => void;
+  onMarkAllRead: () => void;
+  onViewAllNotifications: () => void;
 }
 
 export const NotificationsMenu = ({
@@ -31,6 +26,11 @@ export const NotificationsMenu = ({
   open,
   onClose,
   notifications,
+  loading,
+  errorMessage,
+  onNotificationClick,
+  onMarkAllRead,
+  onViewAllNotifications,
 }: NotificationsMenuProps) => {
   const themeObj = useTheme();
   const uiColors = getUiColorTokens(themeObj.palette.mode);
@@ -67,72 +67,30 @@ export const NotificationsMenu = ({
         }}
       >
         <Typography sx={{ fontWeight: 700 }}>{appLayoutMessages.notificationsTitle}</Typography>
-        <Button size="small" sx={{ textTransform: 'none', minWidth: 0, p: 0 }}>
+        <Button
+          size="small"
+          sx={{ textTransform: 'none', minWidth: 0, p: 0 }}
+          onClick={onMarkAllRead}
+        >
           {appLayoutMessages.markAllRead}
         </Button>
       </Box>
 
       <Divider sx={{ borderColor: uiColors.menuDivider }} />
 
-      <Box sx={{ maxHeight: '70vh', overflowY: 'auto' }}>
-        {notifications.map((notification) => (
-          <Box key={notification.id}>
-            <Box sx={{ px: 2, py: 1.25, display: 'flex', gap: 1.25, alignItems: 'flex-start' }}>
-              <Box
-                sx={{
-                  width: 34,
-                  height: 34,
-                  borderRadius: '50%',
-                  bgcolor: notification.iconBg,
-                  color: notification.iconColor,
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  flexShrink: 0,
-                }}
-              >
-                {notification.icon}
-              </Box>
-              <Box sx={{ minWidth: 0, flex: 1 }}>
-                <Box
-                  sx={{
-                    display: 'flex',
-                    alignItems: 'flex-start',
-                    justifyContent: 'space-between',
-                    gap: 1,
-                  }}
-                >
-                  <Typography sx={{ fontWeight: 600, fontSize: 14 }}>
-                    {notification.title}
-                  </Typography>
-                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.75, flexShrink: 0 }}>
-                    <Typography sx={{ fontSize: 12, color: 'text.secondary' }}>
-                      {notification.time}
-                    </Typography>
-                    <Box
-                      sx={{
-                        width: 7,
-                        height: 7,
-                        borderRadius: '50%',
-                        bgcolor: notification.unread ? 'primary.main' : 'transparent',
-                        border: notification.unread ? 0 : '1px solid',
-                        borderColor: 'divider',
-                      }}
-                    />
-                  </Box>
-                </Box>
-                <Typography sx={{ fontSize: 13, color: 'text.secondary', mt: 0.25 }}>
-                  {notification.description}
-                </Typography>
-              </Box>
-            </Box>
-            <Divider sx={{ borderColor: uiColors.menuDivider }} />
-          </Box>
-        ))}
-      </Box>
+      <NotificationMenuList
+        notifications={notifications}
+        loading={loading}
+        errorMessage={errorMessage}
+        onNotificationClick={onNotificationClick}
+      />
 
       <Box sx={{ px: 2, py: 1.25 }}>
-        <Button size="small" sx={{ textTransform: 'none', p: 0, minWidth: 0 }}>
+        <Button
+          size="small"
+          sx={{ textTransform: 'none', p: 0, minWidth: 0 }}
+          onClick={onViewAllNotifications}
+        >
           {appLayoutMessages.viewAllNotifications}
         </Button>
       </Box>

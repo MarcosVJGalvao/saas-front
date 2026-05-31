@@ -1,6 +1,5 @@
 import type { MouseEventHandler } from 'react';
 import Avatar from '@mui/material/Avatar';
-import Badge from '@mui/material/Badge';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
@@ -17,6 +16,7 @@ import { responsive } from '@theme/utils/responsive';
 import { appLayoutMessages } from '@app/layout/admin-navigation/messages';
 import { SessionTimer } from '@app/layout/admin-navigation/SessionTimer';
 import { useMediaQuery } from '@shared/hooks/useMediaQuery';
+import { NotificationBellBadge } from '@features/client/notifications/components/NotificationBellBadge';
 
 interface TopBarProps {
   appBarHeight: number;
@@ -32,6 +32,7 @@ interface TopBarProps {
   onOpenCommandPalette: () => void;
   onOpenNotificationsMenu: MouseEventHandler<HTMLElement>;
   onOpenProfileMenu: MouseEventHandler<HTMLElement>;
+  unreadNotificationsCount: number;
 }
 
 const getSearchContainerSx = (isMobile: boolean) => ({
@@ -129,6 +130,7 @@ export const TopBar = ({
   onOpenCommandPalette,
   onOpenNotificationsMenu,
   onOpenProfileMenu,
+  unreadNotificationsCount,
 }: TopBarProps) => {
   const themeObj = useTheme();
   const uiColors = getUiColorTokens(themeObj.palette.mode);
@@ -261,9 +263,9 @@ export const TopBar = ({
             bgcolor: isDarkMode ? alpha(themeObj.palette.common.white, 0.03) : 'transparent',
           }}
         >
-          <Badge color="primary" variant="dot">
+          <NotificationBellBadge unreadCount={unreadNotificationsCount}>
             <NotificationsOutlinedIcon />
-          </Badge>
+          </NotificationBellBadge>
         </IconButton>
         <Button
           onClick={onOpenProfileMenu}

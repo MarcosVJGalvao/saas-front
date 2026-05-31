@@ -1,4 +1,5 @@
 import AccountBalanceOutlinedIcon from '@mui/icons-material/AccountBalanceOutlined';
+import AccountTreeOutlinedIcon from '@mui/icons-material/AccountTreeOutlined';
 import AssessmentOutlinedIcon from '@mui/icons-material/AssessmentOutlined';
 import AssignmentIndOutlinedIcon from '@mui/icons-material/AssignmentIndOutlined';
 import BadgeOutlinedIcon from '@mui/icons-material/BadgeOutlined';
@@ -15,6 +16,7 @@ import InsightsOutlinedIcon from '@mui/icons-material/InsightsOutlined';
 import LayersOutlinedIcon from '@mui/icons-material/LayersOutlined';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import MenuBookOutlinedIcon from '@mui/icons-material/MenuBookOutlined';
+import NotificationsOutlinedIcon from '@mui/icons-material/NotificationsOutlined';
 import PaymentsOutlinedIcon from '@mui/icons-material/PaymentsOutlined';
 import PeopleOutlinedIcon from '@mui/icons-material/PeopleOutlined';
 import ReceiptLongOutlinedIcon from '@mui/icons-material/ReceiptLongOutlined';
@@ -22,7 +24,6 @@ import RequestQuoteOutlinedIcon from '@mui/icons-material/RequestQuoteOutlined';
 import ScheduleOutlinedIcon from '@mui/icons-material/ScheduleOutlined';
 import SummarizeOutlinedIcon from '@mui/icons-material/SummarizeOutlined';
 import SyncOutlinedIcon from '@mui/icons-material/SyncOutlined';
-import AccountTreeOutlinedIcon from '@mui/icons-material/AccountTreeOutlined';
 import type { NavigationGroup } from '@app/layout/admin-navigation/navigationBuilder';
 
 export const clientNavigationGroups: NavigationGroup[] = [
@@ -224,6 +225,13 @@ export const clientNavigationGroups: NavigationGroup[] = [
   {
     section: { id: 'section-administration', label: 'Administração' },
     items: [
+      {
+        id: 'notifications',
+        label: 'Notificações',
+        href: '/client/notifications',
+        permission: 'dashboard:read',
+        icon: NotificationsOutlinedIcon,
+      },
       {
         id: 'employees',
         label: 'Funcionários',

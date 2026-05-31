@@ -50,6 +50,12 @@ const ClientResetPasswordPage = lazy(() => import('@features/client/auth/pages/R
 const ClientDashboardPage = lazy(() => import('@features/client/dashboard/pages/DashboardPage'));
 const ClientHomePage = lazy(() => import('@features/client/home/pages/HomePage'));
 const ClientProfilePage = lazy(() => import('@features/client/profile/pages/ClientProfilePage'));
+const ClientNotificationsPage = lazy(
+  () => import('@features/client/notifications/pages/NotificationsPage'),
+);
+const ClientSendNotificationPage = lazy(
+  () => import('@features/client/notifications/pages/SendNotificationPage'),
+);
 const ClientChangePasswordPage = lazy(
   () => import('@features/client/profile/pages/ClientChangePasswordPage'),
 );
@@ -497,6 +503,22 @@ export const AppRouter = () => {
             element={
               <ProtectedClientRoute>
                 <ClientChangePasswordPage />
+              </ProtectedClientRoute>
+            }
+          />
+          <Route
+            path="/client/notifications"
+            element={
+              <ProtectedClientRoute>
+                <ClientNotificationsPage />
+              </ProtectedClientRoute>
+            }
+          />
+          <Route
+            path="/client/notifications/send"
+            element={
+              <ProtectedClientRoute>
+                <ClientSendNotificationPage />
               </ProtectedClientRoute>
             }
           />

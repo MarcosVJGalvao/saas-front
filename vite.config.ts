@@ -99,6 +99,9 @@ export const viteConfig = defineConfig({
       '@theme': path.resolve(__dirname, 'src/app/theme'),
     },
   },
+  define: {
+    'import.meta.env.API_URL': JSON.stringify(apiUrl ?? ''),
+  },
   ...(proxy === undefined ? {} : { server: { proxy } }),
   build: {
     rollupOptions: {

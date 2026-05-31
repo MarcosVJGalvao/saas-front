@@ -4,11 +4,6 @@ import CircularProgress from '@mui/material/CircularProgress';
 import Drawer from '@mui/material/Drawer';
 import GlobalStyles from '@mui/material/GlobalStyles';
 import { useTheme } from '@mui/material/styles';
-import AttachMoneyOutlinedIcon from '@mui/icons-material/AttachMoneyOutlined';
-import DescriptionOutlinedIcon from '@mui/icons-material/DescriptionOutlined';
-import PersonOutlineOutlinedIcon from '@mui/icons-material/PersonOutlineOutlined';
-import SchoolOutlinedIcon from '@mui/icons-material/SchoolOutlined';
-import WarningAmberOutlinedIcon from '@mui/icons-material/WarningAmberOutlined';
 import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { useAppLayoutState, buildUserInitials } from '@shared/hooks/useAppLayoutState';
 import { useAuth } from '@shared/hooks/useAuth/useAuth';
@@ -23,15 +18,15 @@ import { useSidebarState } from '@shared/hooks/useSidebarState';
 import { useThemePreference } from '@shared/hooks/useThemePreference';
 import { densityMetrics } from '@shared/types/density';
 import type { NavigationItem } from '@shared/types/navigation';
-import { getUiColorTokens } from '@theme/uiColors';
 import { responsive } from '@theme/utils/responsive';
 import { CommandPalette } from '@app/layout/admin-navigation/CommandPalette';
 import { brandByDomain } from '@app/layout/admin-navigation/config';
-import { appLayoutNotifications } from '@app/layout/admin-navigation/messages';
 import { NotificationsMenu } from '@app/layout/admin-navigation/NotificationsMenu';
 import { ProfileMenu } from '@app/layout/admin-navigation/ProfileMenu';
 import { SidebarContent } from '@app/layout/admin-navigation/SidebarContent';
 import { TopBar } from '@app/layout/admin-navigation/TopBar';
+import { AppSnackbar } from '@shared/components/feedback/AppSnackbar';
+import { useNotificationCenter } from '@features/client/notifications/hooks/useNotificationCenter';
 
 const TOKEN_EXPIRED_EVENT = 'app:token-expired';
 
@@ -42,25 +37,10 @@ const pageEnterStyles = {
   },
 };
 
-const notificationIconsById: Record<string, ReactNode> = {
-  matricula: <SchoolOutlinedIcon sx={{ fontSize: 18 }} />,
-  pagamento: <AttachMoneyOutlinedIcon sx={{ fontSize: 18 }} />,
-  vencimento: <WarningAmberOutlinedIcon sx={{ fontSize: 18 }} />,
-  boleto: <DescriptionOutlinedIcon sx={{ fontSize: 18 }} />,
-  usuario: <PersonOutlineOutlinedIcon sx={{ fontSize: 18 }} />,
-};
-type ResolvedNotification = {
-  id: string;
-  title: string;
-  description: string;
-  time: string;
-  unread: boolean;
-  icon: ReactNode;
-  iconBg: string;
-  iconColor: string;
-};
-
 const getCurrentPageLabel = (pathname: string, navigationItems: NavigationItem[]): string => {
+  if (pathname.startsWith('/client/notifications')) {
+    return 'Notificações';
+  }
   const entries = navigationItems.reduce<NavigationItem[]>(
     (accumulator, item) => accumulator.concat(item, item.children ?? []),
     [],
@@ -84,16 +64,6 @@ const resolvePermissions = (
   }
   return [];
 };
-
-const buildNotifications = (
-  uiColors: ReturnType<typeof getUiColorTokens>,
-): ResolvedNotification[] =>
-  appLayoutNotifications.map((notification) => ({
-    ...notification,
-    icon: notificationIconsById[notification.id],
-    iconBg: uiColors[notification.iconBgToken],
-    iconColor: uiColors[notification.iconColorToken],
-  }));
 
 const getProfileHookEnabled = (
   authDomain: string | null,
@@ -136,7 +106,6 @@ export const AppLayout = ({ children }: { children?: ReactNode }) => {
   const navigate = useNavigate();
   const location = useLocation();
   const themeObj = useTheme();
-  const uiColors = getUiColorTokens(themeObj.palette.mode);
   const { authDomain, session, clearAuth } = useAuth();
   const { profile: platformProfile, errorMessage: platformProfileError } = usePlatformProfile({
     enabled: getProfileHookEnabled(authDomain, session, 'platform'),
@@ -176,6 +145,8 @@ export const AppLayout = ({ children }: { children?: ReactNode }) => {
   });
 
   const contentRef = useRef<HTMLElement>(null);
+  const notificationCenter = useNotificationCenter();
+
   useLayoutEffect(() => {
     const element = contentRef.current;
     if (element === null) {
@@ -186,8 +157,6 @@ export const AppLayout = ({ children }: { children?: ReactNode }) => {
     element.style.animation = 'page-enter 220ms ease-out both';
   }, [location.key]);
 
-  const notifications = buildNotifications(uiColors);
-
   const appBarHeight = densityMetrics[density].appBarHeight;
   const brand = brandByDomain[domain];
   const { userName, userEmail, userRole } = resolveUserDisplay(
@@ -197,17 +166,27 @@ export const AppLayout = ({ children }: { children?: ReactNode }) => {
   );
   const userInitials = buildUserInitials(userName);
   const currentPageLabel = getCurrentPageLabel(location.pathname, navigationItems);
+
   const handleSessionExpired = () => {
     window.dispatchEvent(new CustomEvent(TOKEN_EXPIRED_EVENT));
     clearAuth();
   };
+
   const sidebarLeft = isMobile ? 0 : `${sidebarWidth}px`;
   const shouldRenderDesktopSidebar = !isMobile;
   const shouldRenderMobileDrawer = isMobile;
   const layoutContent = children ?? <Outlet />;
+
   const handleOpenProfilePage = () => {
     closeProfileMenu();
     void navigate(resolveProfilePathByDomain(domain));
+  };
+
+  const handleOpenNotificationsPage = () => {
+    closeNotificationsMenu();
+    if (domain === 'client') {
+      void navigate('/client/notifications');
+    }
   };
 
   if (sessionGate.blockingLabel !== null) {
@@ -291,6 +270,7 @@ export const AppLayout = ({ children }: { children?: ReactNode }) => {
           onOpenCommandPalette={palette.open}
           onOpenNotificationsMenu={openNotificationsMenu}
           onOpenProfileMenu={openProfileMenu}
+          unreadNotificationsCount={notificationCenter.unreadCount}
         />
       </Box>
 
@@ -343,7 +323,16 @@ export const AppLayout = ({ children }: { children?: ReactNode }) => {
         anchorEl={notificationsAnchor}
         open={notificationsAnchor !== null}
         onClose={closeNotificationsMenu}
-        notifications={notifications}
+        notifications={notificationCenter.menuItems}
+        loading={notificationCenter.loading}
+        errorMessage={notificationCenter.errorMessage}
+        onNotificationClick={(notificationId) => {
+          void notificationCenter.markAsRead(notificationId);
+        }}
+        onMarkAllRead={() => {
+          void notificationCenter.markAllVisibleAsRead();
+        }}
+        onViewAllNotifications={handleOpenNotificationsPage}
       />
 
       <ProfileMenu
@@ -368,6 +357,13 @@ export const AppLayout = ({ children }: { children?: ReactNode }) => {
         items={navigationItems}
         onClose={palette.close}
         onToggleFavorite={palette.toggleFavorite}
+      />
+
+      <AppSnackbar
+        open={notificationCenter.snackbarMessage !== undefined}
+        message={notificationCenter.snackbarMessage}
+        severity="info"
+        onClose={notificationCenter.clearSnackbar}
       />
     </Box>
   );
