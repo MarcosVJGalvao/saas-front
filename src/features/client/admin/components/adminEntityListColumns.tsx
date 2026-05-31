@@ -21,14 +21,19 @@ const hasDescription = (entity: ClientAdminEntity): entity is ClientRole => 'des
 
 const hasEmail = (entity: ClientAdminEntity): entity is ClientUser => 'email' in entity;
 
+const getLinkedEmployeeName = (entity: ClientUser): string | undefined =>
+  entity.employee?.person?.fullName?.trim() || undefined;
+
 const getName = (entity: ClientAdminEntity): string =>
-  hasEmail(entity) ? (entity.fullName ?? entity.name ?? '-') : entity.name;
+  hasEmail(entity)
+    ? (getLinkedEmployeeName(entity) ?? entity.fullName ?? entity.name ?? '-')
+    : entity.name;
 
 const getEmail = (entity: ClientAdminEntity): string =>
   hasEmail(entity) ? (entity.email ?? '-') : '-';
 
 const getRole = (entity: ClientAdminEntity): string =>
-  hasEmail(entity) ? (entity.role?.name ?? '-') : '-';
+  hasEmail(entity) ? (entity.role?.name ?? entity.roles?.[0]?.role.name ?? '-') : '-';
 
 const getPermissions = (entity: ClientAdminEntity): string =>
   'permissionsCount' in entity ? String(entity.permissionsCount ?? 0) : '-';
@@ -59,6 +64,7 @@ export const buildAdminEntityColumns = (
     header: 'Nome',
     render: getName,
     mobileRender: getName,
+    width: '28%',
   },
   ...(showRole
     ? [
@@ -67,6 +73,7 @@ export const buildAdminEntityColumns = (
           header: 'Perfil',
           render: getRole,
           mobileRender: getRole,
+          width: '18%',
         } satisfies DataTableColumn<ClientAdminEntity>,
       ]
     : []),
@@ -74,7 +81,7 @@ export const buildAdminEntityColumns = (
     ? [
         {
           key: 'description',
-          header: 'Descrição',
+          header: 'Descricao',
           render: getDescription,
           mobileRender: getDescription,
         } satisfies DataTableColumn<ClientAdminEntity>,
@@ -84,7 +91,7 @@ export const buildAdminEntityColumns = (
     ? [
         {
           key: 'permissions',
-          header: 'Permissões',
+          header: 'Permissoes',
           render: getPermissions,
           mobileRender: getPermissions,
         } satisfies DataTableColumn<ClientAdminEntity>,
@@ -97,6 +104,7 @@ export const buildAdminEntityColumns = (
           header: 'E-mail',
           render: getEmail,
           mobileRender: getEmail,
+          width: '32%',
         } satisfies DataTableColumn<ClientAdminEntity>,
       ]
     : []),
@@ -108,16 +116,18 @@ export const buildAdminEntityColumns = (
           render: renderStatus,
           mobileRender: (entity) =>
             entity.status ? translateActiveInactiveStatus(entity.status) : '-',
+          width: '12%',
         } satisfies DataTableColumn<ClientAdminEntity>,
       ]
     : []),
   {
     key: 'actions',
-    header: 'Ações',
+    header: 'Acoes',
     align: 'right',
+    width: '10%',
     render: (entity) => (
       <RowActionsMenu
-        triggerAriaLabel={`Abrir ações de ${getName(entity)}`}
+        triggerAriaLabel={`Abrir acoes de ${getName(entity)}`}
         actions={[
           { key: 'details', label: 'Ver detalhes', onClick: () => actions.onDetails(entity) },
           { key: 'edit', label: 'Editar', onClick: () => actions.onEdit(entity) },
@@ -140,7 +150,7 @@ export const buildAdminEntityMobileConfig = (
   renderStatus,
   renderActions: (entity) => (
     <RowActionsMenu
-      triggerAriaLabel={`Abrir ações de ${getName(entity)}`}
+      triggerAriaLabel={`Abrir acoes de ${getName(entity)}`}
       actions={[
         { key: 'details', label: 'Ver detalhes', onClick: () => actions.onDetails(entity) },
         { key: 'edit', label: 'Editar', onClick: () => actions.onEdit(entity) },
@@ -165,7 +175,7 @@ export const buildAdminEntityMobileConfig = (
       {showPermissions ? (
         <AppStack spacing={0.5}>
           <AppText variant="body2" color="text.secondary" sx={{ fontWeight: 600 }}>
-            Permissões
+            Permissoes
           </AppText>
           <AppText variant="body2" sx={{ fontWeight: 700 }}>
             {getPermissions(entity)}

@@ -11,6 +11,22 @@ export type ClientUserRole = {
   name: string;
 };
 
+export type ClientUserEmployeeReference = {
+  id: string;
+  jobTitle?: string | undefined;
+  person?:
+    | {
+        fullName?: string | undefined;
+      }
+    | null
+    | undefined;
+};
+
+export type ClientUserRoleLink = {
+  id: string;
+  role: ClientUserRole;
+};
+
 export type ClientUser = {
   id: string;
   name?: string | undefined;
@@ -18,6 +34,8 @@ export type ClientUser = {
   email?: string | undefined;
   status?: ClientAdminStatus | undefined;
   role?: ClientUserRole | null;
+  roles?: ClientUserRoleLink[] | undefined;
+  employee?: ClientUserEmployeeReference | null | undefined;
   createdAt?: string | undefined;
   updatedAt?: string | undefined;
 };

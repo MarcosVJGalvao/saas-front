@@ -3,10 +3,25 @@ import { useNavigate } from 'react-router-dom';
 import { AppText } from '@shared/components/data-display/AppText';
 import { ListFilters } from '@shared/components/data-display/data/ListFilters';
 import { QueryDataTable } from '@shared/components/data-display/data/QueryDataTable';
+import { ConfirmDialog } from '@shared/components/feedback/ConfirmDialog';
 import { AppButton } from '@shared/components/inputs/AppButton';
 import { AppStack } from '@shared/components/layout/AppStack';
 import { useClientPermission } from '@features/client/shared/hooks/useClientPermission';
 import { useClientUsersListPage } from '@features/client/admin/hooks/useClientUsersListPage';
+import type { ClientAdminEntity, ClientUser } from '@features/client/admin/types/admin.types';
+
+const isClientUser = (entity: ClientAdminEntity | undefined): entity is ClientUser =>
+  entity !== undefined && 'email' in entity;
+
+const getUserDeleteLabel = (entity: ClientAdminEntity | undefined): string => {
+  if (isClientUser(entity)) {
+    return (
+      entity.employee?.person?.fullName ?? entity.fullName ?? entity.name ?? entity.email ?? ''
+    );
+  }
+
+  return entity?.name ?? '';
+};
 
 const UsersListTab = () => {
   const navigate = useNavigate();
@@ -74,6 +89,16 @@ const UsersListTab = () => {
           <AppText color="text.secondary">Use a busca geral para localizar registros.</AppText>
         }
         hideToolbar
+      />
+      <ConfirmDialog
+        open={Boolean(listPage.deleteModal.entityPendingDelete)}
+        title="Excluir usuario"
+        description={`Deseja excluir o usuario "${getUserDeleteLabel(listPage.deleteModal.entityPendingDelete)}"?`}
+        confirmLabel="Excluir"
+        onConfirm={() => {
+          void listPage.deleteModal.confirm();
+        }}
+        onCancel={listPage.deleteModal.close}
       />
     </AppStack>
   );
